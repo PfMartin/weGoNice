@@ -32,11 +32,44 @@ const create = async (req, res) => {
 };
 
 
+// Retrieve all users from the database
+const findAll = async (req, res) => {
+  const lastName = req.query.lastName;
+
+  const condition = lastName ? { lastName: { [Op.iLike]: `%${lastName}%`}} : null;
+
+  try {
+    const data = await User.findAll({ where: condition });
+    res.send(data);
+  } catch(err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving users.'
+    })
+  }
+
+};
+
+
+// Retrieve on user from the database
+const findOne = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const data = await User.findByPk(id);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: `Error retrieving User with id=${id}.`,
+    });
+  };
+};
+
+
 module.exports = {
   create: create,
   findAll: findAll,
   findOne: findOne,
-  update: update,
-  delete: delete,
-  deleteAll: deleteAll,
+  // update: update,
+  // delete: delete,
+  // deleteAll: deleteAll,
 }
