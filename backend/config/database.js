@@ -8,7 +8,8 @@ const db = new Sequelize('wegonice', 'postgres', 'postgres', {
     min: 0,
     acquire: 30000,
     idle: 10000,
-  }
+  },
+  logging: true,
 });
 
 export default db;
