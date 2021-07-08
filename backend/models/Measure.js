@@ -1,23 +1,23 @@
 import { Sequelize } from 'sequelize';
 import db from '../config/database.js';
+import Time from './Time.js';
 
 const { DataTypes } = Sequelize;
 
-const User = db.define('users', {
-  user_name: {
-    type: DataTypes.STRING, // size 255
-  },
-  first_name: {
+const Measure = db.define('measures', {
+  title: {
     type: DataTypes.STRING,
   },
-  last_name: {
+  abbreviation: {
     type: DataTypes.STRING,
   },
-  email: {
+  category: {
     type: DataTypes.STRING,
   }
 }, {
   freezeTableName: true,
 });
 
-export default User;
+Measure.hasMany(Time);
+
+export default Measure;

@@ -2,8 +2,8 @@ import User from '../models/User.js';
 
 export const getUsers = async (req, res) => {
   try {
-    const user = await User.findAll();
-    res.send(user);
+    const users = await User.findAll();
+    res.send(users);
   } catch (err) {
     console.error(err);
   }
@@ -11,12 +11,12 @@ export const getUsers = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   try {
-    const user = await User.findAll({
+    const users = await User.findAll({
       where: {
         id: req.params.id,
       }
     });
-    res.send(user[0]);
+    res.send(users[0]);
   } catch (err) {
     console.error(err);
   }
