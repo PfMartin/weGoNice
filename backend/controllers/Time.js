@@ -1,8 +1,13 @@
 import Time from '../models/Time.js';
+import Measure from '../models/Measure.js';
 
 export const getTimes = async (req, res) => {
   try {
-    const times = await Time.findAll();
+    const times = await Time.findAll({
+      include: [{
+        model: Measure,
+      }]
+    });
     res.send(times);
   } catch (err) {
     console.error(err);

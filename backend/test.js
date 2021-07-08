@@ -50,8 +50,8 @@ const createMeasures = async () => {
 // Times
 const createTimes = async () => {
   await Time.create({
-    'time': 5,
-    'measureId': 2,
+    'time': 24,
+    'measureId': 3,
   })
 }
 

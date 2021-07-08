@@ -1,6 +1,5 @@
 import { Sequelize } from 'sequelize';
 import db from '../config/database.js';
-import Time from './Time.js';
 
 const { DataTypes } = Sequelize;
 
@@ -17,7 +16,5 @@ const Measure = db.define('measures', {
 }, {
   freezeTableName: true,
 });
-
-Measure.hasMany(Time);
 
 export default Measure;
