@@ -17,7 +17,7 @@ const User = db.define('users', {
     type: DataTypes.STRING,
   }
 }, {
-  freezeTableName: true,
+  underscored: true,
 });
 
 export default User;

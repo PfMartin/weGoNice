@@ -9,7 +9,7 @@ const Time = db.define('times', {
     type: DataTypes.INTEGER,
   },
 }, {
-  freezeTableName: true,
+  underscored: true,
 });
 
 Time.belongsTo(Measure);

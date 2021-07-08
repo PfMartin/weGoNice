@@ -6,15 +6,17 @@ const { DataTypes } = Sequelize;
 const Measure = db.define('measures', {
   title: {
     type: DataTypes.STRING,
+    unique: true,
   },
   abbreviation: {
     type: DataTypes.STRING,
+    unique: true,
   },
   category: {
     type: DataTypes.STRING,
   }
 }, {
-  freezeTableName: true,
+  underscored: true,
 });
 
 export default Measure;
