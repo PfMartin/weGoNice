@@ -4,9 +4,15 @@ import RecipeCategory from '../models/RecipeCategory.js';
 
 export const createUsers = async () => {
   await User.create({
-    'first_name': 'Martin',
-    'last_name': 'Pfatrisch',
-    'user_name': 'martin',
+    'firstName': 'Martin',
+    'lastName': 'Pfatrisch',
+    'userName': 'martin',
+  })
+
+  await User.create({
+    'userName': 'lea',
+    'firstName': 'Lea',
+    'lastName': 'Haberl',
   })
 
   console.log('Done.');

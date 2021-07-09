@@ -15,8 +15,6 @@ const Measure = db.define('measures', {
   category: {
     type: DataTypes.STRING,
   }
-}, {
-  underscored: true,
 });
 
 export default Measure;

@@ -8,8 +8,6 @@ const Time = db.define('times', {
   time: {
     type: DataTypes.INTEGER,
   },
-}, {
-  underscored: true,
 });
 
 Time.belongsTo(Measure);

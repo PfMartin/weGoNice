@@ -6,9 +6,8 @@ const { DataTypes } = Sequelize;
 const RecipeCategory = db.define('recipeCategory', {
   title: {
     type: DataTypes.STRING,
+    unique: true,
   }
-}, {
-  underscored: true
 });
 
 export default RecipeCategory;

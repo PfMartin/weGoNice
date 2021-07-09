@@ -4,20 +4,20 @@ import db from '../config/database.js';
 const { DataTypes } = Sequelize;
 
 const User = db.define('users', {
-  user_name: {
+  userName: {
     type: DataTypes.STRING, // size 255
   },
-  first_name: {
+  firstName: {
     type: DataTypes.STRING,
   },
-  last_name: {
+  lastName: {
     type: DataTypes.STRING,
   },
   email: {
     type: DataTypes.STRING,
   }
 }, {
-  underscored: true,
+  freezeTableName: true,
 });
 
 export default User;

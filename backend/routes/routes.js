@@ -3,7 +3,7 @@ import express from 'express';
 import * as usersCtrl from '../controllers/User.js';
 import * as measureCtrl from '../controllers/Measure.js';
 import * as timeCtrl from '../controllers/Time.js';
-import * as recipeCtrl from '../controllers/RecipeCategory.js';
+import * as recipeCategoryCtrl from '../controllers/RecipeCategory.js';
 
 const router = express.Router();
 
@@ -24,5 +24,11 @@ router.get('/measures/:id', measureCtrl.getMeasureById);
 router.post('/measures', measureCtrl.createMeasure);
 router.put('/measures/:id', measureCtrl.updateMeasure);
 router.delete('/measures/:id', measureCtrl.deleteMeasure);
+
+router.get('/recipe_categories', recipeCategoryCtrl.getRecipeCategories);
+router.get('/recipeCategories/:id', recipeCategoryCtrl.getRecipeCategoryById);
+router.post('/recipeCategories', recipeCategoryCtrl.createRecipeCategory);
+router.put('/recipeCategories/:id', recipeCategoryCtrl.updateRecipeCategory);
+router.delete('/recipeCategories/:id', recipeCategoryCtrl.deleteRecipeCategory);
 
 export default router;
