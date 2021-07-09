@@ -1,6 +1,5 @@
 import User from '../models/User.js';
 import Measure from '../models/Measure.js';
-import RecipeCategory from '../models/RecipeCategory.js';
 
 export const createUsers = async () => {
   await User.create({
@@ -39,35 +38,6 @@ export const createMeasures = async () => {
     'title': 'Hours',
     'abbreviation': 'h',
     'category': 'time',
-  });
-
-  console.log('Done.');
-}
-
-
-/**
- * Creates recipe categories for select fields
- * @return {Promise}
- */
-export const createRecipeCategories = async () => {
-  await RecipeCategory.create({
-    'title': 'Basics',
-  });
-
-  await RecipeCategory.create({
-    'title': 'Breakfast',
-  });
-
-  await RecipeCategory.create({
-    'title': 'Dessert',
-  });
-
-  await RecipeCategory.create({
-    'title': 'Drinks',
-  });
-
-  await RecipeCategory.create({
-    'title': 'Main',
   });
 
   console.log('Done.');

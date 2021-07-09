@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import db from '../config/database.js';
+import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
@@ -8,6 +8,8 @@ const RecipeCategory = db.define('recipeCategory', {
     type: DataTypes.STRING,
     unique: true,
   }
+}, {
+  tableName: 'recipeRecipeCategories',
 });
 
 export default RecipeCategory;

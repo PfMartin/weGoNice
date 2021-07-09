@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import db from '../config/database.js';
+import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
@@ -15,6 +15,8 @@ const Measure = db.define('measures', {
   category: {
     type: DataTypes.STRING,
   }
+}, {
+  tableName: 'generalMeasure',
 });
 
 export default Measure;
