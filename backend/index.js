@@ -3,6 +3,7 @@ import cors from 'cors';
 import db from './config/database.js';
 import generalRouter from './general/routes/routes.js';
 import recipeRouter from './recipes/routes/routes.js';
+import referenceRouter from './references/routes/routes.js';
 
 const app = express();
 app.use(express.json());
@@ -19,5 +20,6 @@ try {
 
 app.use(generalRouter);
 app.use(recipeRouter);
+app.use(referenceRouter);
 
 app.listen(8000, () => console.log(`Server running at http://localhost:8000`));

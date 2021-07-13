@@ -2,12 +2,12 @@ import express from 'express';
 
 import * as recipeCategoryCtrl from '../controllers/RecipeCategory.js';
 
-const recipeRouter = express.Router();
+const referenceRouter = express.Router();
 
-recipeRouter.get('/recipes/recipe_categories', recipeCategoryCtrl.getRecipeCategories);
-recipeRouter.get('/recipes/recipeCategories/:id', recipeCategoryCtrl.getRecipeCategoryById);
-recipeRouter.post('/recipes/recipeCategories', recipeCategoryCtrl.createRecipeCategory);
-recipeRouter.put('/recipes/recipeCategories/:id', recipeCategoryCtrl.updateRecipeCategory);
-recipeRouter.delete('/recipes/recipeCategories/:id', recipeCategoryCtrl.deleteRecipeCategory);
+referenceRouter.get('/recipes/recipe_categories', recipeCategoryCtrl.getRecipeCategories);
+referenceRouter.get('/recipes/recipe_categories/:id', recipeCategoryCtrl.getRecipeCategoryById);
+referenceRouter.post('/recipes/recipe_categories', recipeCategoryCtrl.createRecipeCategory);
+referenceRouter.put('/recipes/recipe_categories/:id', recipeCategoryCtrl.updateRecipeCategory);
+referenceRouter.delete('/recipes/recipe_categories/:id', recipeCategoryCtrl.deleteRecipeCategory);
 
-export default recipeRouter;
+export default referenceRouter;

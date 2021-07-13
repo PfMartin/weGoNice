@@ -3,13 +3,15 @@ import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
-const RecipeCategory = db.define('recipeCategory', {
+const Salutation = db.define('referencesSalutation', {
   title: {
     type: DataTypes.STRING,
-    unique: true,
+  },
+  description: {
+    type: DataTypes.STRING,
   }
 }, {
-  tableName: 'recipeRecipeCategory',
+  tableName: 'referencesSalutation',
 });
 
-export default RecipeCategory;
+export default Salutation;
