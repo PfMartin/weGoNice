@@ -7,21 +7,22 @@ WeGoNice is an App taylored for Vegans and especially wannabe Vegans. The App sh
 - **Environment**: This category will provide the user important information about environmental fact and how a vegan diet can save lives.
 - **Life-Style**: This category will provide the user important information about life style ideas and recommendations
 
-## Recipes
+## Apps
+#### Recipes
 - Manage recipes
 - References
 
-## Health
+#### Health
 - Facts
 - Book recommendations
 - References
 
-## Environment
+#### Environment
 - Facts
 - Book recommendations
 - References
 
-## Life-Style
+#### Life-Style
 - Vegan Restaurants per city
 - Vegan clothing
 - Vegan blog and stories
