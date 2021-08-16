@@ -1,21 +1,21 @@
-import User from '../models/User.js';
-import Measure from '../models/Measure.js';
+import User from "../models/User.js";
+import Measure from "../models/Measure.js";
 
 export const createUsers = async () => {
   await User.create({
-    'firstName': 'Martin',
-    'lastName': 'Pfatrisch',
-    'userName': 'martin',
-  })
+    firstName: "Martin",
+    lastName: "Pfatrisch",
+    userName: "martin",
+  });
 
   await User.create({
-    'userName': 'lea',
-    'firstName': 'Lea',
-    'lastName': 'Haberl',
-  })
+    userName: "lea",
+    firstName: "Lea",
+    lastName: "Haberl",
+  });
 
-  console.log('Done.');
-}
+  console.log("Done.");
+};
 
 /**
  * Creates time measures for select fields
@@ -23,22 +23,22 @@ export const createUsers = async () => {
  */
 export const createMeasures = async () => {
   await Measure.create({
-    'title': 'Seconds',
-    'abbreviation': 'sec',
-    'category': 'time',
+    title: "Seconds",
+    abbreviation: "sec",
+    category: "time",
   });
 
   await Measure.create({
-    'title': 'Minutes',
-    'abbreviation': 'min',
-    'category': 'time',
+    title: "Minutes",
+    abbreviation: "min",
+    category: "time",
   });
 
   await Measure.create({
-    'title': 'Hours',
-    'abbreviation': 'h',
-    'category': 'time',
+    title: "Hours",
+    abbreviation: "h",
+    category: "time",
   });
 
-  console.log('Done.');
-}
+  console.log("Done.");
+};
