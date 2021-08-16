@@ -33,3 +33,8 @@ WeGoNice is an App taylored for Vegans and especially wannabe Vegans. The App sh
 - Vegan Restaurants per city
 - Vegan clothing
 - Vegan blog and stories
+
+## To-Dos
+
+- [ ] Create and delete functions for initial data for the recipe section
+- [ ] Model for recipes
