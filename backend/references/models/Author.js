@@ -20,7 +20,7 @@ const Author = db.define(
   }
 );
 
-Author.belongsTo(AcademicTitle);
-Author.belongsTo(Salutation);
+Author.belongsTo(AcademicTitle); // Select field for an academic title
+Author.belongsTo(Salutation); // Select field for a salutation
 
 export default Author;

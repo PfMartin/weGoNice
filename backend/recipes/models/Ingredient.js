@@ -18,7 +18,7 @@ const Ingredient = db.define(
   }
 );
 
-Ingredient.belongsTo(Value);
-Ingredient.belongsTo(Recipe);
+Ingredient.belongsTo(Value); // Select field for a value
+Ingredient.belongsTo(Recipe); // Foreign key to a recipe
 
 export default Ingredient;

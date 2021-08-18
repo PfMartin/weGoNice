@@ -17,6 +17,6 @@ const PrepStep = db.define(
   }
 );
 
-PrepStep.belongsTo(Recipe);
+PrepStep.belongsTo(Recipe); // ForeignKey to a recipe
 
 export default PrepStep;

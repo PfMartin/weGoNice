@@ -19,8 +19,8 @@ const Recipe = db.define(
   }
 );
 
-Recipe.belongsTo(Reference);
-Recipe.belongsTo(Category);
-Recipe.belongsTo(Value); // Time field
+Recipe.belongsTo(Reference); // Foreign key to a reference
+Recipe.belongsTo(Category); // Select field for a category
+Recipe.belongsTo(Value); // Foreign key to a value (preparation time)
 
 export default Recipe;

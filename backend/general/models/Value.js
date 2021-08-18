@@ -4,7 +4,6 @@ import Measure from './Measure.js';
 
 const { DataTypes } = Sequelize;
 
-// Input field for the time
 const Value = db.define(
   'generalValue',
   {
@@ -17,6 +16,6 @@ const Value = db.define(
   }
 );
 
-Value.belongsTo(Measure);
+Value.belongsTo(Measure); // Select field for a measure
 
 export default Value;

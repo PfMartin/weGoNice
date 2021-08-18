@@ -3,7 +3,6 @@ import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
-// Select field for measures
 const Measure = db.define(
   'generalMeasure',
   {

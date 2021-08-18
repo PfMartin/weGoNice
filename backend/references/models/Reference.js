@@ -32,7 +32,7 @@ const Reference = db.define(
 );
 
 // M:N relationship with Author: Automatically creates the through table "References_Author"
-Reference.belongsToMany(Author, { through: 'referencesReferenceAuthor' });
-Reference.belongsTo(ReferenceType);
+Reference.belongsToMany(Author, { through: 'referencesReferenceAuthor' }); // Multiple Select field to a reference
+Reference.belongsTo(ReferenceType); // Select field for a reference type
 
 export default Reference;
