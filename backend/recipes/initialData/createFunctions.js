@@ -1,29 +1,29 @@
-import RecipeCategory from '../models/RecipeCategory.js';
+import Category from "../models/Category.js";
 
 /**
  * Creates recipe categories for select fields
  * @return {Promise}
  */
 export const createRecipeCategories = async () => {
-  await RecipeCategory.create({
-    'title': 'Basics',
+  await Category.create({
+    title: "Basics",
   });
 
-  await RecipeCategory.create({
-    'title': 'Breakfast',
+  await Category.create({
+    title: "Breakfast",
   });
 
-  await RecipeCategory.create({
-    'title': 'Dessert',
+  await Category.create({
+    title: "Dessert",
   });
 
-  await RecipeCategory.create({
-    'title': 'Drinks',
+  await Category.create({
+    title: "Drinks",
   });
 
-  await RecipeCategory.create({
-    'title': 'Main',
+  await Category.create({
+    title: "Main",
   });
 
-  console.log('Done.');
-}
+  console.log("Done.");
+};

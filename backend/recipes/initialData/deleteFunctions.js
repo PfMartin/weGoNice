@@ -1,17 +1,17 @@
-import RecipeCategory from "../models/RecipeCategory.js";
+import Category from "../models/Category.js";
 
 export const deleteRecipeCategories = async () => {
-  const recipeCategories = await RecipeCategory.findAll();
+  const recipeCategories = await Category.findAll();
 
-  const recipeCategoryIds = recipeCategories.map((user) => {
+  const categoryIds = recipeCategories.map((user) => {
     return user.id;
   });
 
-  recipeCategoryIds.forEach((recipeCategoryId) => {
+  categoryIds.forEach((categoryId) => {
     try {
-      RecipeCategory.destroy({
+      Category.destroy({
         where: {
-          id: recipeCategoryId,
+          id: categoryId,
         },
       });
     } catch (err) {
