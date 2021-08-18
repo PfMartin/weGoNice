@@ -1,5 +1,11 @@
 import Measure from '../models/Measure.js';
 
+/**
+ * Finds all measures in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getMeasures = async (req, res) => {
   try {
     const measures = await Measure.findAll();
@@ -9,6 +15,12 @@ export const getMeasures = async (req, res) => {
   }
 };
 
+/**
+ * Finds a measure with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getMeasureById = async (req, res) => {
   try {
     const measures = await Measure.findAll({
@@ -22,6 +34,12 @@ export const getMeasureById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new measure
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createMeasure = async (req, res) => {
   try {
     await Measure.create(req.body);
@@ -33,6 +51,12 @@ export const createMeasure = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific measure with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateMeasure = async (req, res) => {
   try {
     await Measure.update(req.body, {
@@ -48,6 +72,12 @@ export const updateMeasure = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific measure
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteMeasure = async (req, res) => {
   try {
     await Measure.destroy({

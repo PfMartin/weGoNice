@@ -1,5 +1,11 @@
 import Category from '../models/Category.js';
 
+/**
+ * Finds all recipe categories in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getRecipeCategories = async (req, res) => {
   try {
     const recipeCategories = await Category.findAll();
@@ -9,6 +15,12 @@ export const getRecipeCategories = async (req, res) => {
   }
 };
 
+/**
+ * Finds a category with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getCategoryById = async (req, res) => {
   try {
     const recipeCategories = await Category.findAll({
@@ -22,6 +34,12 @@ export const getCategoryById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new category
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createCategory = async (req, res) => {
   try {
     await Category.create(req.body);
@@ -33,6 +51,12 @@ export const createCategory = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific category with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateCategory = async (req, res) => {
   try {
     await Category.update(req.body, {
@@ -48,6 +72,12 @@ export const updateCategory = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific category
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteCategory = async (req, res) => {
   try {
     await Category.destroy({

@@ -1,5 +1,11 @@
 import User from '../models/User.js';
 
+/**
+ * Finds all users in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
@@ -9,6 +15,12 @@ export const getUsers = async (req, res) => {
   }
 };
 
+/**
+ * Finds a user with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getUserById = async (req, res) => {
   try {
     const users = await User.findAll({
@@ -22,6 +34,12 @@ export const getUserById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new user
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createUser = async (req, res) => {
   try {
     await User.create(req.body);
@@ -33,6 +51,12 @@ export const createUser = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific user with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateUser = async (req, res) => {
   try {
     await User.update(req.body, {
@@ -48,6 +72,12 @@ export const updateUser = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific user
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteUser = async (req, res) => {
   try {
     await User.destroy({

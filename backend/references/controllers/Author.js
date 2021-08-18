@@ -1,5 +1,11 @@
 import Author from '../models/Author.js';
 
+/**
+ * Finds all authors in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getAuthors = async (req, res) => {
   try {
     const measures = await Author.findAll();
@@ -9,6 +15,12 @@ export const getAuthors = async (req, res) => {
   }
 };
 
+/**
+ * Finds an author with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getAuthorById = async (req, res) => {
   try {
     const measures = await Author.findAll({
@@ -22,6 +34,12 @@ export const getAuthorById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new author
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createAuthor = async (req, res) => {
   try {
     await Author.create(req.body);
@@ -33,6 +51,12 @@ export const createAuthor = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific author with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateAuthor = async (req, res) => {
   try {
     await Author.update(req.body, {
@@ -48,6 +72,12 @@ export const updateAuthor = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific author
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteAuthor = async (req, res) => {
   try {
     await Author.destroy({

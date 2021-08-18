@@ -1,5 +1,11 @@
 import PrepStep from '../models/PrepStep.js';
 
+/**
+ * Finds all preparation steps in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getPrepSteps = async (req, res) => {
   try {
     const prepSteps = await PrepStep.findAll();
@@ -9,6 +15,12 @@ export const getPrepSteps = async (req, res) => {
   }
 };
 
+/**
+ * Finds a preparation step with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getPrepStepById = async (req, res) => {
   try {
     const prepSteps = await PrepStep.findAll({
@@ -22,6 +34,12 @@ export const getPrepStepById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new preparation step
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createPrepStep = async (req, res) => {
   try {
     await PrepStep.create(req.body);
@@ -33,6 +51,12 @@ export const createPrepStep = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific preparation step with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updatePrepStep = async (req, res) => {
   try {
     await PrepStep.update(req.body, {
@@ -48,6 +72,12 @@ export const updatePrepStep = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific preparation step
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deletePrepStep = async (req, res) => {
   try {
     await PrepStep.destroy({

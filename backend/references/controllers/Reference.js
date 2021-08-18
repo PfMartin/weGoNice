@@ -1,5 +1,11 @@
 import Reference from '../models/Reference.js';
 
+/**
+ * Finds all references in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getReferences = async (req, res) => {
   try {
     const measures = await Reference.findAll();
@@ -9,6 +15,12 @@ export const getReferences = async (req, res) => {
   }
 };
 
+/**
+ * Finds a reference with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getReferenceById = async (req, res) => {
   try {
     const measures = await Reference.findAll({
@@ -22,6 +34,12 @@ export const getReferenceById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new reference
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createReference = async (req, res) => {
   try {
     await Reference.create(req.body);
@@ -33,6 +51,12 @@ export const createReference = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific reference with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateReference = async (req, res) => {
   try {
     await Reference.update(req.body, {
@@ -48,6 +72,12 @@ export const updateReference = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific reference
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteReference = async (req, res) => {
   try {
     await Reference.destroy({

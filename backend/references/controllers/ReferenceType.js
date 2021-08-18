@@ -1,5 +1,11 @@
 import ReferenceType from '../models/ReferenceType.js';
 
+/**
+ * Finds all reference types in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getReferenceTypes = async (req, res) => {
   try {
     const measures = await ReferenceType.findAll();
@@ -9,6 +15,12 @@ export const getReferenceTypes = async (req, res) => {
   }
 };
 
+/**
+ * Finds a reference type with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getReferenceTypeById = async (req, res) => {
   try {
     const measures = await ReferenceType.findAll({
@@ -22,6 +34,12 @@ export const getReferenceTypeById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new reference type
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createReferenceType = async (req, res) => {
   try {
     await ReferenceType.create(req.body);
@@ -33,6 +51,12 @@ export const createReferenceType = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific reference type with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateReferenceType = async (req, res) => {
   try {
     await ReferenceType.update(req.body, {
@@ -48,6 +72,12 @@ export const updateReferenceType = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific reference type
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteReferenceType = async (req, res) => {
   try {
     await ReferenceType.destroy({

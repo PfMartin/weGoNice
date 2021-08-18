@@ -1,5 +1,9 @@
 import { Sequelize } from 'sequelize';
 
+/**
+ * Configuration for the database
+ * @type {Sequelize}
+ */
 const db = new Sequelize('wegonice', 'postgres', 'postgres', {
   host: 'localhost',
   dialect: 'postgres',

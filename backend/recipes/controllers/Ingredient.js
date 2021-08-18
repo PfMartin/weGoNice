@@ -1,5 +1,11 @@
 import Ingredient from '../models/Ingredient.js';
 
+/**
+ * Finds all ingredients in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getIngredients = async (req, res) => {
   try {
     const ingredients = await Ingredient.findAll();
@@ -9,6 +15,12 @@ export const getIngredients = async (req, res) => {
   }
 };
 
+/**
+ * Finds an ingredient with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getIngredientById = async (req, res) => {
   try {
     const ingredients = await Ingredient.findAll({
@@ -22,6 +34,12 @@ export const getIngredientById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new ingredient
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createIngredient = async (req, res) => {
   try {
     await Ingredient.create(req.body);
@@ -33,6 +51,12 @@ export const createIngredient = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific ingredient with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateIngredient = async (req, res) => {
   try {
     await Ingredient.update(req.body, {
@@ -48,6 +72,12 @@ export const updateIngredient = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific ingredient
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteIngredient = async (req, res) => {
   try {
     await Ingredient.destroy({

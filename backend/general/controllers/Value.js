@@ -1,6 +1,12 @@
 import Value from '../models/Value.js';
 import Measure from '../models/Measure.js';
 
+/**
+ * Finds all values in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getValues = async (req, res) => {
   try {
     const values = await Value.findAll({
@@ -16,6 +22,12 @@ export const getValues = async (req, res) => {
   }
 };
 
+/**
+ * Finds a value with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getValueById = async (req, res) => {
   try {
     const values = await Value.findAll({
@@ -29,6 +41,12 @@ export const getValueById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new value
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createValue = async (req, res) => {
   try {
     await Value.create(req.body);
@@ -40,6 +58,12 @@ export const createValue = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific value with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateValue = async (req, res) => {
   try {
     await Value.update(req.body, {
@@ -55,6 +79,12 @@ export const updateValue = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific value
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteValue = async (req, res) => {
   try {
     await Value.destroy({

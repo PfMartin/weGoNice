@@ -1,5 +1,11 @@
 import Salutation from '../models/Salutation.js';
 
+/**
+ * Finds all salutations in the database and returns them in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getSalutations = async (req, res) => {
   try {
     const measures = await Salutation.findAll();
@@ -9,6 +15,12 @@ export const getSalutations = async (req, res) => {
   }
 };
 
+/**
+ * Finds a salutation with a specific id in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const getSalutationById = async (req, res) => {
   try {
     const measures = await Salutation.findAll({
@@ -22,6 +34,12 @@ export const getSalutationById = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new salutation
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const createSalutation = async (req, res) => {
   try {
     await Salutation.create(req.body);
@@ -33,6 +51,12 @@ export const createSalutation = async (req, res) => {
   }
 };
 
+/**
+ * Updates a specific salutation with the sent data
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const updateSalutation = async (req, res) => {
   try {
     await Salutation.update(req.body, {
@@ -48,6 +72,12 @@ export const updateSalutation = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a specific salutation
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
 export const deleteSalutation = async (req, res) => {
   try {
     await Salutation.destroy({
