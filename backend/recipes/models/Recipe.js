@@ -19,3 +19,4 @@ const Recipe = db.define("recipesRecipe", {
 
 Recipe.belongsTo(Reference);
 Recipe.belongsTo(Category);
+Recipe.belongsTo(Value); // Time field

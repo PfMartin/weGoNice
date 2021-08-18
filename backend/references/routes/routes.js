@@ -1,42 +1,115 @@
-import express from 'express';
+import express from "express";
 
-import * as referencesAcademicTitleCtrl from '../controllers/AcademicTitle.js';
-import * as referencesSalutationCtrl from '../controllers/Salutation.js';
-import * as referencesAuthorCtrl from '../controllers/Author.js';
-import * as referencesReferenceTypeCtrl from '../controllers/ReferenceType.js';
-import * as referencesReferenceCtrl from '../controllers/Reference.js';
+import * as referencesAcademicTitleCtrl from "../controllers/AcademicTitle.js";
+import * as referencesSalutationCtrl from "../controllers/Salutation.js";
+import * as referencesAuthorCtrl from "../controllers/Author.js";
+import * as referencesReferenceTypeCtrl from "../controllers/ReferenceType.js";
+import * as referencesReferenceCtrl from "../controllers/Reference.js";
 
+const referenceRouter = express.Router();
 
-const recipeRouter = express.Router();
+// Academic Title
+referenceRouter.get(
+  "/references/academic_titles",
+  referencesAcademicTitleCtrl.getAcademicTitles
+);
+referenceRouter.get(
+  "/references/academic_titles/:id",
+  referencesAcademicTitleCtrl.getAcademicTitleById
+);
+referenceRouter.post(
+  "/references/academic_titles",
+  referencesAcademicTitleCtrl.createAcademicTitle
+);
+referenceRouter.put(
+  "/references/academic_titles/:id",
+  referencesAcademicTitleCtrl.updateAcademicTitle
+);
+referenceRouter.delete(
+  "/references/academic_titles/:id",
+  referencesAcademicTitleCtrl.deleteAcademicTitle
+);
 
-recipeRouter.get('/references/academic_titles', referencesAcademicTitleCtrl.getAcademicTitles);
-recipeRouter.get('/references/academic_titles/:id', referencesAcademicTitleCtrl.getAcademicTitleById);
-recipeRouter.post('/references/academic_titles', referencesAcademicTitleCtrl.createAcademicTitle);
-recipeRouter.put('/references/academic_titles/:id', referencesAcademicTitleCtrl.updateAcademicTitle);
-recipeRouter.delete('/references/academic_titles/:id', referencesAcademicTitleCtrl.deleteAcademicTitle);
+// Salutation
+referenceRouter.get(
+  "/references/salutations",
+  referencesSalutationCtrl.getSalutations
+);
+referenceRouter.get(
+  "/references/salutations/:id",
+  referencesSalutationCtrl.getSalutationById
+);
+referenceRouter.post(
+  "/references/salutations",
+  referencesSalutationCtrl.createSalutation
+);
+referenceRouter.put(
+  "/references/salutations/:id",
+  referencesSalutationCtrl.updateSalutation
+);
+referenceRouter.delete(
+  "/references/salutations/:id",
+  referencesSalutationCtrl.deleteSalutation
+);
 
-recipeRouter.get('/references/salutations', referencesSalutationCtrl.getSalutations);
-recipeRouter.get('/references/salutations/:id', referencesSalutationCtrl.getSalutationById);
-recipeRouter.post('/references/salutations', referencesSalutationCtrl.createSalutation);
-recipeRouter.put('/references/salutations/:id', referencesSalutationCtrl.updateSalutation);
-recipeRouter.delete('/references/salutations/:id', referencesSalutationCtrl.deleteSalutation);
+// Author
+referenceRouter.get("/references/authors", referencesAuthorCtrl.getAuthors);
+referenceRouter.get(
+  "/references/authors/:id",
+  referencesAuthorCtrl.getAuthorById
+);
+referenceRouter.post("/references/authors", referencesAuthorCtrl.createAuthor);
+referenceRouter.put(
+  "/references/authors/:id",
+  referencesAuthorCtrl.updateAuthor
+);
+referenceRouter.delete(
+  "/references/authors/:id",
+  referencesAuthorCtrl.deleteAuthor
+);
 
-recipeRouter.get('/references/authors', referencesAuthorCtrl.getAuthors);
-recipeRouter.get('/references/authors/:id', referencesAuthorCtrl.getAuthorById);
-recipeRouter.post('/references/authors', referencesAuthorCtrl.createAuthor);
-recipeRouter.put('/references/authors/:id', referencesAuthorCtrl.updateAuthor);
-recipeRouter.delete('/references/authors/:id', referencesAuthorCtrl.deleteAuthor);
+// ReferenceType
+referenceRouter.get(
+  "/references/reference_types",
+  referencesReferenceTypeCtrl.getReferenceTypes
+);
+referenceRouter.get(
+  "/references/reference_types/:id",
+  referencesReferenceTypeCtrl.getReferenceTypeById
+);
+referenceRouter.post(
+  "/references/reference_types",
+  referencesReferenceTypeCtrl.createReferenceType
+);
+referenceRouter.put(
+  "/references/reference_types/:id",
+  referencesReferenceTypeCtrl.updateReferenceType
+);
+referenceRouter.delete(
+  "/references/reference_types/:id",
+  referencesReferenceTypeCtrl.deleteReferenceType
+);
 
-recipeRouter.get('/references/reference_types', referencesReferenceTypeCtrl.getReferenceTypes);
-recipeRouter.get('/references/reference_types/:id', referencesReferenceTypeCtrl.getReferenceTypeById);
-recipeRouter.post('/references/reference_types', referencesReferenceTypeCtrl.createReferenceType);
-recipeRouter.put('/references/reference_types/:id', referencesReferenceTypeCtrl.updateReferenceType);
-recipeRouter.delete('/references/reference_types/:id', referencesReferenceTypeCtrl.deleteReferenceType);
+// Reference
+referenceRouter.get(
+  "/references/references",
+  referencesReferenceCtrl.getReferences
+);
+referenceRouter.get(
+  "/references/references/:id",
+  referencesReferenceCtrl.getReferenceById
+);
+referenceRouter.post(
+  "/references/references",
+  referencesReferenceCtrl.createReference
+);
+referenceRouter.put(
+  "/references/references/:id",
+  referencesReferenceCtrl.updateReference
+);
+referenceRouter.delete(
+  "/references/references/:id",
+  referencesReferenceCtrl.deleteReference
+);
 
-recipeRouter.get('/references/references', referencesReferenceCtrl.getReferences);
-recipeRouter.get('/references/references/:id', referencesReferenceCtrl.getReferenceById);
-recipeRouter.post('/references/references', referencesReferenceCtrl.createReference);
-recipeRouter.put('/references/references/:id', referencesReferenceCtrl.updateReference);
-recipeRouter.delete('/references/references/:id', referencesReferenceCtrl.deleteReference);
-
-export default recipeRouter;
+export default referenceRouter;

@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Measure from "../models/Measure.js";
+import Value from "../models/Value.js";
 
 export const createUsers = async () => {
   await User.create({
@@ -41,4 +42,11 @@ export const createMeasures = async () => {
   });
 
   console.log("Done.");
+};
+
+export const createTestValues = async () => {
+  await Value.create({
+    value: 5,
+    generalMeasureId: 1,
+  });
 };
