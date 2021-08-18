@@ -6,17 +6,17 @@ import Recipe from "../Recipe.js";
 
 const { DataTypes } = Sequelize;
 
-const Ingredient = db.define(
-  "recipesIngredient",
+const Time = db.define(
+  "recipesTime",
   {
     title: {
       type: DataTypes.STRING,
     },
   },
   {
-    tableName: "recipesIngredient",
+    tableName: "recipesTime",
   }
 );
 
-Ingredient.belongsTo(Value);
-Ingredient.belongsTo(Recipe);
+Time.belongsTo(Value);
+Time.belongsTo(Recipe);
