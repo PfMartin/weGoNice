@@ -1,4 +1,4 @@
-import Category from "../models/Category.js";
+import Category from '../models/Category.js';
 
 export const getRecipeCategories = async (req, res) => {
   try {
@@ -26,7 +26,7 @@ export const createCategory = async (req, res) => {
   try {
     await Category.create(req.body);
     res.json({
-      message: "Category created",
+      message: 'Category created',
     });
   } catch (err) {
     console.error(err);
@@ -41,7 +41,7 @@ export const updateCategory = async (req, res) => {
       },
     });
     res.json({
-      message: "Category Updated",
+      message: 'Category Updated',
     });
   } catch (err) {
     console.error(err);
@@ -56,7 +56,7 @@ export const deleteCategory = async (req, res) => {
       },
     });
     res.json({
-      message: "Category Deleted",
+      message: 'Category Deleted',
     });
   } catch (err) {
     console.error(err);

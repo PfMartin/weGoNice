@@ -7,58 +7,58 @@ export const getReferences = async (req, res) => {
   } catch (err) {
     console.error(err);
   }
-}
+};
 
 export const getReferenceById = async (req, res) => {
   try {
     const measures = await Reference.findAll({
       where: {
         id: req.params.id,
-      }
+      },
     });
     res.send(measures[0]);
   } catch (err) {
     console.error(err);
   }
-}
+};
 
 export const createReference = async (req, res) => {
   try {
     await Reference.create(req.body);
     res.json({
-      'message': 'Reference created',
+      message: 'Reference created',
     });
   } catch (err) {
     console.error(err);
   }
-}
+};
 
 export const updateReference = async (req, res) => {
   try {
     await Reference.update(req.body, {
       where: {
         id: param.req.id,
-      }
+      },
     });
     res.json({
-      'message': 'Reference Updated',
-    })
+      message: 'Reference Updated',
+    });
   } catch (err) {
     console.error(err);
   }
-}
+};
 
 export const deleteReference = async (req, res) => {
   try {
     await Reference.destroy({
       where: {
         id: req.params.id,
-      }
+      },
     });
     res.json({
-      'message': 'Reference Deleted',
-    })
+      message: 'Reference Deleted',
+    });
   } catch (err) {
     console.error(err);
   }
-}
+};

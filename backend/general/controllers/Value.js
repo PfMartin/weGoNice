@@ -1,5 +1,5 @@
-import Value from "../models/Value.js";
-import Measure from "../models/Measure.js";
+import Value from '../models/Value.js';
+import Measure from '../models/Measure.js';
 
 export const getValues = async (req, res) => {
   try {
@@ -33,7 +33,7 @@ export const createValue = async (req, res) => {
   try {
     await Value.create(req.body);
     res.json({
-      message: "Value created",
+      message: 'Value created',
     });
   } catch (err) {
     console.error(err);
@@ -48,7 +48,7 @@ export const updateValue = async (req, res) => {
       },
     });
     res.json({
-      message: "Value Updated",
+      message: 'Value Updated',
     });
   } catch (err) {
     console.error(err);
@@ -63,7 +63,7 @@ export const deleteValue = async (req, res) => {
       },
     });
     res.json({
-      message: "Value Deleted",
+      message: 'Value Deleted',
     });
   } catch (err) {
     console.error(err);

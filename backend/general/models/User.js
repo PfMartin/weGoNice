@@ -1,10 +1,10 @@
-import { Sequelize } from "sequelize";
-import db from "../../config/database.js";
+import { Sequelize } from 'sequelize';
+import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
 const User = db.define(
-  "generalUser",
+  'generalUser',
   {
     userName: {
       type: DataTypes.STRING, // size 255
@@ -20,7 +20,7 @@ const User = db.define(
     },
   },
   {
-    tableName: "generalUser",
+    tableName: 'generalUser',
   }
 );
 

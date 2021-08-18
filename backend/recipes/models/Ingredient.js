@@ -1,20 +1,20 @@
-import { Sequelize } from "sequelize";
-import db from "../../config/database.js";
+import { Sequelize } from 'sequelize';
+import db from '../../config/database.js';
 
-import Value from "../general/models/Value.js";
-import Recipe from "../Recipe.js";
+import Value from '../general/models/Value.js';
+import Recipe from '../Recipe.js';
 
 const { DataTypes } = Sequelize;
 
 const Ingredient = db.define(
-  "recipesIngredient",
+  'recipesIngredient',
   {
     title: {
       type: DataTypes.STRING,
     },
   },
   {
-    tableName: "recipesIngredient",
+    tableName: 'recipesIngredient',
   }
 );
 

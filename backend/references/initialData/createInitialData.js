@@ -1,4 +1,4 @@
-import * as createFunctions from "./createFunctions.js";
+import * as createFunctions from './createFunctions.js';
 
 createFunctions.createAcademicTitles();
 createFunctions.createSalutations();

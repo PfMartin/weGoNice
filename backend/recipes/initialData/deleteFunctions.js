@@ -1,4 +1,4 @@
-import Category from "../models/Category.js";
+import Category from '../models/Category.js';
 
 export const deleteRecipeCategories = async () => {
   const recipeCategories = await Category.findAll();

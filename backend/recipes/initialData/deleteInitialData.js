@@ -1,3 +1,3 @@
-import * as deleteFunctions from "./deleteFunctions.js";
+import * as deleteFunctions from './deleteFunctions.js';
 
 deleteFunctions.deleteRecipeCategories();

@@ -3,15 +3,19 @@ import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
-const AcademicTitle = db.define('referencesAcademicTitle', {
-  title: {
-    type: DataTypes.STRING,
+const AcademicTitle = db.define(
+  'referencesAcademicTitle',
+  {
+    title: {
+      type: DataTypes.STRING,
+    },
+    description: {
+      type: DataTypes.STRING,
+    },
   },
-  description: {
-    type: DataTypes.STRING,
+  {
+    tableName: 'referencesAcademicTitle',
   }
-}, {
-  tableName: 'referencesAcademicTitle',
-});
+);
 
 export default AcademicTitle;

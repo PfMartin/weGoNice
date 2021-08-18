@@ -3,15 +3,19 @@ import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
-const ReferenceType = db.define('referencesReferenceType', {
-  title: {
-    type: DataTypes.STRING,
+const ReferenceType = db.define(
+  'referencesReferenceType',
+  {
+    title: {
+      type: DataTypes.STRING,
+    },
+    description: {
+      type: DataTypes.STRING,
+    },
   },
-  description: {
-    type: DataTypes.STRING,
+  {
+    tableName: 'referencesReferenceType',
   }
-}, {
-  tableName: 'referencesReferenceType',
-});
+);
 
 export default ReferenceType;

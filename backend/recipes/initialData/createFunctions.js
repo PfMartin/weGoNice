@@ -1,4 +1,4 @@
-import Category from "../models/Category.js";
+import Category from '../models/Category.js';
 
 /**
  * Creates recipe categories for select fields
@@ -6,24 +6,24 @@ import Category from "../models/Category.js";
  */
 export const createRecipeCategories = async () => {
   await Category.create({
-    title: "Basics",
+    title: 'Basics',
   });
 
   await Category.create({
-    title: "Breakfast",
+    title: 'Breakfast',
   });
 
   await Category.create({
-    title: "Dessert",
+    title: 'Dessert',
   });
 
   await Category.create({
-    title: "Drinks",
+    title: 'Drinks',
   });
 
   await Category.create({
-    title: "Main",
+    title: 'Main',
   });
 
-  console.log("Done.");
+  console.log('Done.');
 };

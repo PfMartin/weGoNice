@@ -1,11 +1,11 @@
-import { Sequelize } from "sequelize";
-import db from "../../config/database.js";
+import { Sequelize } from 'sequelize';
+import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
 // Select field for measures
 const Measure = db.define(
-  "generalMeasure",
+  'generalMeasure',
   {
     title: {
       type: DataTypes.STRING, // The verbose name of the measure: Minute, Gramm, ...
@@ -20,7 +20,7 @@ const Measure = db.define(
     },
   },
   {
-    tableName: "generalMeasure",
+    tableName: 'generalMeasure',
   }
 );
 

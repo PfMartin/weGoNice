@@ -5,16 +5,20 @@ import Salutation from './Salutation.js';
 
 const { DataTypes } = Sequelize;
 
-const Author = db.define('referencesAuthor', {
-  lastName: {
-    type: DataTypes.STRING,
+const Author = db.define(
+  'referencesAuthor',
+  {
+    lastName: {
+      type: DataTypes.STRING,
+    },
+    firstName: {
+      type: DataTypes.STRING,
+    },
   },
-  firstName: {
-    type: DataTypes.STRING,
-  },
-}, {
-  tableName: 'referencesAuthor',
-});
+  {
+    tableName: 'referencesAuthor',
+  }
+);
 
 Author.belongsTo(AcademicTitle);
 Author.belongsTo(Salutation);

@@ -1,12 +1,12 @@
-import { Sequelize } from "sequelize";
-import db from "../../config/database.js";
-import Author from "./Author.js";
-import ReferenceType from "./ReferenceType.js";
+import { Sequelize } from 'sequelize';
+import db from '../../config/database.js';
+import Author from './Author.js';
+import ReferenceType from './ReferenceType.js';
 
 const { DataTypes } = Sequelize;
 
 const Reference = db.define(
-  "referencesReference",
+  'referencesReference',
   {
     title: {
       type: DataTypes.STRING,
@@ -27,12 +27,12 @@ const Reference = db.define(
     },
   },
   {
-    tableName: "referencesReference",
+    tableName: 'referencesReference',
   }
 );
 
 // M:N relationship with Author: Automatically creates the through table "References_Author"
-Reference.belongsToMany(Author, { through: "referencesReferenceAuthor" });
+Reference.belongsToMany(Author, { through: 'referencesReferenceAuthor' });
 Reference.belongsTo(ReferenceType);
 
 export default Reference;

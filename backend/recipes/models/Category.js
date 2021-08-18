@@ -1,10 +1,10 @@
-import { Sequelize } from "sequelize";
-import db from "../../config/database.js";
+import { Sequelize } from 'sequelize';
+import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
 const Category = db.define(
-  "recipesCategory",
+  'recipesCategory',
   {
     title: {
       type: DataTypes.STRING,
@@ -12,7 +12,7 @@ const Category = db.define(
     },
   },
   {
-    tableName: "recipesCategory",
+    tableName: 'recipesCategory',
   }
 );
 
