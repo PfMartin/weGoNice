@@ -6,8 +6,27 @@
   --light-grey: #e8e7ed;
   --mid-grey: #8e8990;
   --dark-grey: #34323d;
+  --black: #333;
+  --white: #fff;
 }
 
 * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
+}
+
+.btn {
+  padding: 0.5rem;
+  margin: 1rem;
+  border: 1px solid var(--black);
+  border-radius: 3px;
+  transition: 0.5s;
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: var(--white);
+  cursor: pointer;
 }
