@@ -1,10 +1,14 @@
-import React, { Fragment } from "react";
+import './Navbar.css';
+import React from 'react';
 
 const Navbar = () => {
   return (
-    <Fragment>
-      <h1>Navbar</h1>
-    </Fragment>
+    <nav className="navbar">
+      <ul>
+        <li className="btn">Add Recipe</li>
+        <li className="btn">Recipe book</li>
+      </ul>
+    </nav>
   );
 };
 
