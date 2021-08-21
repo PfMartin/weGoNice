@@ -1,0 +1,15 @@
+nav {
+  /* display: grid;
+  grid-template-columns: 1fr 7fr; */
+  display: flex;
+}
+
+nav .apps-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-center;
+  align-items: center;
+  height: 75px;
+  border-bottom: 2px solid var(--mid-grey);
+  width: 100%;
+}

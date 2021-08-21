@@ -6,7 +6,6 @@
   --light-grey: #e8e7ed;
   --mid-grey: #8e8990;
   --dark-grey: #34323d;
-  --black: #333;
   --white: #fff;
 }
 
@@ -15,6 +14,15 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
+}
+
+body {
+  color: var(--dark-grey);
+}
+
+.app {
+  position: relative;
+  min-height: 100vh;
 }
 
 .btn {

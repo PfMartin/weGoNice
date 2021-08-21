@@ -1,13 +1,14 @@
-import React, { Fragment } from 'react';
-import Navbar from './components/Navbar.js';
-
 import './App.css';
+import React from 'react';
+import Navbar from 'src/components/Structure/Navbar.js';
+import Footer from 'src/components/Structure/Footer.js';
 
 const App = () => {
   return (
-    <Fragment>
+    <div className="app">
       <Navbar />
-    </Fragment>
+      <Footer />
+    </div>
   );
 };
 
