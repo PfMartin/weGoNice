@@ -1,9 +1,0 @@
-nav ul {
-  height: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  list-style: none;
-  border-bottom: 1px solid var(--black);
-  /* background: var(--); */
-}
