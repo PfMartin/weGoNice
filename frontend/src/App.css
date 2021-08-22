@@ -23,6 +23,7 @@ body {
 .app {
   position: relative;
   min-height: 100vh;
+  margin: 0.5rem;
 }
 
 .btn {
