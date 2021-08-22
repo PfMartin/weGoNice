@@ -1,10 +1,10 @@
 import './Navbar.css';
 import React from 'react';
 import { BiFoodMenu, BiUser } from 'react-icons/bi';
-
+import colors from 'src/colors.js';
 import IconFrame from 'src/components/Structure/IconFrame.js';
 
-const Navbar = () => {
+const Navbar = (props) => {
   return (
     <nav className="navbar">
       <div className="logo">
@@ -16,10 +16,22 @@ const Navbar = () => {
         />
       </div>
       <div className="apps-container">
-        <IconFrame color="#8e8990" size="40px">
+        <IconFrame
+          color={props.app === 'recipes' ? colors.lightAccent : colors.midGrey}
+          size="35px"
+          onChangeApp={props.onChangeApp}
+          targetApp="recipes"
+        >
           <BiFoodMenu />
         </IconFrame>
-        <IconFrame color="#8e8990" size="40px">
+        <IconFrame
+          color={
+            props.app === 'references' ? colors.lightAccent : colors.midGrey
+          }
+          size="35px"
+          onChangeApp={props.onChangeApp}
+          targetApp="references"
+        >
           <BiUser />
         </IconFrame>
       </div>
