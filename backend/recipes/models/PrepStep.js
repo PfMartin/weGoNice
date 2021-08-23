@@ -6,14 +6,14 @@ import Recipe from './Recipe.js';
 const { DataTypes } = Sequelize;
 
 const PrepStep = db.define(
-  'recipePrepStep',
+  'recipesPrepStep',
   {
     title: {
       type: DataTypes.STRING,
     },
   },
   {
-    tableName: 'recipePrepStep',
+    tableName: 'recipesPrepStep',
   }
 );
 
