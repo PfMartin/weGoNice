@@ -14,6 +14,10 @@ const RecipesOverview = (props) => {
     drinks: false,
   });
 
+  const onRemoveFilter = () => {
+    console.log('Remove Filter');
+  };
+
   return (
     <div className="recipes-overview">
       <SiteHeader headline="Recipes" />
@@ -25,7 +29,11 @@ const RecipesOverview = (props) => {
           </IconFrame>
         </div>
         <div className="filter-tags">
-          {filter.basics ? <FilterTag>basics</FilterTag> : ''}
+          {filter.basics ? (
+            <FilterTag onRemoveFilter={onRemoveFilter}>basics</FilterTag>
+          ) : (
+            ''
+          )}
           {filter.breakfast ? <FilterTag>breakfast</FilterTag> : ''}
           {filter.main ? <FilterTag>main</FilterTag> : ''}
           {filter.dessert ? <FilterTag>dessert</FilterTag> : ''}
