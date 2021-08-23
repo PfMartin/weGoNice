@@ -1,0 +1,14 @@
+.filter-tag {
+  border: 1px solid var(--mid-grey);
+  color: var(--mid-grey);
+  padding: 0.3rem;
+  position: relative;
+  font-size: 0.8rem;
+  border-radius: 3px;
+}
+
+.filter-tag:hover {
+  cursor: pointer;
+  color: var(--light-accent);
+  border-color: var(--light-accent);
+}
