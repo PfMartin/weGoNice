@@ -26,6 +26,31 @@ body {
   margin: 0.5rem;
 }
 
+/*************************************************
+Froms
+*************************************************/
+input {
+  padding: 0.3rem;
+  border: 1px solid var(--dark-grey);
+  border-radius: 3px;
+}
+
+input:focus {
+  outline: none;
+  border: 1px solid var(--light-accent);
+}
+
+input::placeholder {
+  color: var(--mid-grey);
+}
+
+input:focus::placeholder {
+  color: var(--light-accent);
+}
+
+/*************************************************
+Buttons
+*************************************************/
 .btn {
   padding: 0.5rem;
   margin: 1rem;

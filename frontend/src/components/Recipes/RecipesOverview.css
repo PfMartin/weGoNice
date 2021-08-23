@@ -1,0 +1,27 @@
+.filter-section {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+  border-bottom: 1px solid var(--dark-grey);
+  padding: ;
+}
+
+.filter-headline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.filter-tags {
+  display: flex;
+  align-items: center;
+}
+
+.filter-tags div:not(:last-child) {
+  margin-right: 0.3rem;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+}
