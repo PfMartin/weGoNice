@@ -9,13 +9,21 @@ const RecipesOverview = (props) => {
   const [filter, setFilter] = useState({
     basics: true,
     breakfast: true,
-    main: false,
-    dessert: false,
-    drinks: false,
+    main: true,
+    dessert: true,
+    drinks: true,
   });
 
-  const onRemoveFilter = () => {
-    console.log('Remove Filter');
+  /**
+   * Removes the cicked filter from the filter tags section
+   * @param  {Object} e EventObject
+   */
+  const onRemoveFilter = (e) => {
+    const name = e.currentTarget.getAttribute('name');
+    setFilter({
+      ...filter,
+      ...{ [name]: false },
+    });
   };
 
   return (
@@ -30,14 +38,40 @@ const RecipesOverview = (props) => {
         </div>
         <div className="filter-tags">
           {filter.basics ? (
-            <FilterTag onRemoveFilter={onRemoveFilter}>basics</FilterTag>
+            <FilterTag name="basics" onRemoveFilter={onRemoveFilter}>
+              basics
+            </FilterTag>
           ) : (
             ''
           )}
-          {filter.breakfast ? <FilterTag>breakfast</FilterTag> : ''}
-          {filter.main ? <FilterTag>main</FilterTag> : ''}
-          {filter.dessert ? <FilterTag>dessert</FilterTag> : ''}
-          {filter.drinks ? <FilterTag>drinks</FilterTag> : ''}
+          {filter.breakfast ? (
+            <FilterTag name="breakfast" onRemoveFilter={onRemoveFilter}>
+              breakfast
+            </FilterTag>
+          ) : (
+            ''
+          )}
+          {filter.main ? (
+            <FilterTag name="main" onRemoveFilter={onRemoveFilter}>
+              main
+            </FilterTag>
+          ) : (
+            ''
+          )}
+          {filter.dessert ? (
+            <FilterTag name="dessert" onRemoveFilter={onRemoveFilter}>
+              dessert
+            </FilterTag>
+          ) : (
+            ''
+          )}
+          {filter.drinks ? (
+            <FilterTag name="drinks" onRemoveFilter={onRemoveFilter}>
+              drinks
+            </FilterTag>
+          ) : (
+            ''
+          )}
         </div>
         <form className="search-section">
           <input placeholder="Search Recipes"></input>
