@@ -1,15 +1,18 @@
-.filter-section {
-  margin-top: 1rem;
-  display: grid;
-  grid-template-columns: 1fr 5fr 1fr;
+.recipe-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid var(--dark-grey);
 }
 
-.filter-headline {
+.filter-section {
   display: flex;
-  align-items: center;
   justify-content: flex-start;
-  position: relative;
+  align-items: center;
+}
+
+.filter-section h3 {
+  margin-right: 1rem;
 }
 
 .filter-tags {
