@@ -7,7 +7,7 @@ const IconFrame = (props) => {
     <IconContext.Provider value={{ size: props.size || '20px' }}>
       <div
         className={props.className}
-        onClick={props.onChangeApp}
+        onClick={props.onClick}
         targetapp={props.targetApp}
       >
         {props.children}

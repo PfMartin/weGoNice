@@ -18,7 +18,7 @@ const Navbar = (props) => {
         <IconFrame
           className={props.app === 'recipes' ? 'icon selected' : 'icon'}
           size="35px"
-          onChangeApp={props.onChangeApp}
+          onClick={props.onChangeApp}
           targetApp="recipes"
         >
           <BiFoodMenu />
@@ -26,7 +26,7 @@ const Navbar = (props) => {
         <IconFrame
           className={props.app === 'references' ? 'icon selected' : 'icon'}
           size="35px"
-          onChangeApp={props.onChangeApp}
+          onClick={props.onChangeApp}
           targetApp="references"
         >
           <BiUser />

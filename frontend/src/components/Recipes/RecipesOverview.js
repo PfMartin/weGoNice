@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import SiteHeader from 'src/components/Structure/SiteHeader.js';
 import IconFrame from 'src/components/Structure/IconFrame.js';
 import FilterTag from 'src/components/Structure/FilterTag.js';
+import FilterOptions from 'src/components/Recipes/FilterOptions.js';
 import { BiFilterAlt, BiSearch } from 'react-icons/bi';
 
 const RecipesOverview = (props) => {
@@ -13,6 +14,7 @@ const RecipesOverview = (props) => {
     dessert: true,
     drinks: true,
   });
+  const [filterOptions, setFilterOptions] = useState(true);
 
   /**
    * Removes the cicked filter from the filter tags section
@@ -26,15 +28,21 @@ const RecipesOverview = (props) => {
     });
   };
 
+  const onToggleFilterOptions = () => {
+    const prevFilterOptions = filterOptions;
+    setFilterOptions(!prevFilterOptions);
+  };
+
   return (
     <div className="recipes-overview">
       <SiteHeader headline="Recipes" />
       <div className="filter-section">
         <div className="filter-headline">
           <h3>Filter</h3>
-          <IconFrame>
+          <IconFrame onClick={onToggleFilterOptions}>
             <BiFilterAlt />
           </IconFrame>
+          {filterOptions ? <FilterOptions /> : ''}
         </div>
         <div className="filter-tags">
           {filter.basics ? (
