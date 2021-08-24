@@ -4,9 +4,9 @@ import React from 'react';
 const FilterTag = (props) => {
   return (
     <div
-      className="filter-tag"
+      className={props.isSelected ? 'filter-tag selected' : 'filter-tag'}
       name={props.name}
-      onClick={props.onRemoveFilter}
+      onClick={props.onToggleFilter}
     >
       <p>{props.children}</p>
     </div>

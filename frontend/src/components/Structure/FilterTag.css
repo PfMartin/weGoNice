@@ -9,6 +9,9 @@
 
 .filter-tag:hover {
   cursor: pointer;
-  color: var(--light-accent);
+}
+
+.filter-tag.selected {
   border-color: var(--light-accent);
+  color: var(--light-accent);
 }

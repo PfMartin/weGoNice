@@ -15,15 +15,17 @@ const RecipesOverview = (props) => {
   });
 
   /**
-   * Removes the cicked filter from the filter tags section
+   * Toggles the clicked filter
    * @param  {Object} e EventObject
    */
-  const onRemoveFilter = (e) => {
+  const onToggleFilter = (e) => {
     const name = e.currentTarget.getAttribute('name');
     setFilter({
       ...filter,
-      ...{ [name]: false },
+      ...{ [name]: !filter[name] },
     });
+
+    console.log(filter);
   };
 
   return (
@@ -33,41 +35,41 @@ const RecipesOverview = (props) => {
         <div className="filter-section">
           <h3>Filter</h3>
           <div className="filter-tags">
-            {filter.basics ? (
-              <FilterTag name="basics" onRemoveFilter={onRemoveFilter}>
-                basics
-              </FilterTag>
-            ) : (
-              ''
-            )}
-            {filter.breakfast ? (
-              <FilterTag name="breakfast" onRemoveFilter={onRemoveFilter}>
-                breakfast
-              </FilterTag>
-            ) : (
-              ''
-            )}
-            {filter.main ? (
-              <FilterTag name="main" onRemoveFilter={onRemoveFilter}>
-                main
-              </FilterTag>
-            ) : (
-              ''
-            )}
-            {filter.dessert ? (
-              <FilterTag name="dessert" onRemoveFilter={onRemoveFilter}>
-                dessert
-              </FilterTag>
-            ) : (
-              ''
-            )}
-            {filter.drinks ? (
-              <FilterTag name="drinks" onRemoveFilter={onRemoveFilter}>
-                drinks
-              </FilterTag>
-            ) : (
-              ''
-            )}
+            <FilterTag
+              name="basics"
+              onToggleFilter={onToggleFilter}
+              isSelected={filter.basics}
+            >
+              basics
+            </FilterTag>
+            <FilterTag
+              name="breakfast"
+              onToggleFilter={onToggleFilter}
+              isSelected={filter.breakfast}
+            >
+              breakfast
+            </FilterTag>
+            <FilterTag
+              name="main"
+              onToggleFilter={onToggleFilter}
+              isSelected={filter.main}
+            >
+              main
+            </FilterTag>
+            <FilterTag
+              name="dessert"
+              onToggleFilter={onToggleFilter}
+              isSelected={filter.dessert}
+            >
+              dessert
+            </FilterTag>
+            <FilterTag
+              name="drinks"
+              onToggleFilter={onToggleFilter}
+              isSelected={filter.drinks}
+            >
+              drinks
+            </FilterTag>
           </div>
         </div>
         <form className="search-section">
