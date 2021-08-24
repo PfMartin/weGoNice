@@ -4,11 +4,9 @@ import { IconContext } from 'react-icons';
 
 const IconFrame = (props) => {
   return (
-    <IconContext.Provider
-      value={{ color: props.color, size: props.size || '20px' }}
-    >
+    <IconContext.Provider value={{ size: props.size || '20px' }}>
       <div
-        className="icon"
+        className={props.className}
         onClick={props.onChangeApp}
         targetapp={props.targetApp}
       >
@@ -16,6 +14,10 @@ const IconFrame = (props) => {
       </div>
     </IconContext.Provider>
   );
+};
+
+IconFrame.defaultProps = {
+  className: 'icon',
 };
 
 export default IconFrame;

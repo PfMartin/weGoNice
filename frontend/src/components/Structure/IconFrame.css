@@ -9,3 +9,7 @@
   cursor: pointer;
   color: var(--light-accent);
 }
+
+.icon.selected {
+  color: var(--light-accent);
+}
