@@ -9,6 +9,7 @@ const IconFrame = (props) => {
         className={props.className}
         onClick={props.onClick}
         targetapp={props.targetApp}
+        targetview={props.targetView}
       >
         {props.children}
       </div>

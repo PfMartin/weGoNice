@@ -123,7 +123,10 @@ const RecipesOverview = (props) => {
 
   return (
     <div className="recipes-overview">
-      <SiteHeader headline="Recipes" />
+      <SiteHeader
+        headline="Recipes"
+        onClickPlus={(e) => props.onChangeView('create')}
+      />
       <div className="recipe-options">
         <div className="filter-section">
           <h3>Filter</h3>
