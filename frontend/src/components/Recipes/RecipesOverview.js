@@ -168,7 +168,7 @@ const RecipesOverview = (props) => {
             </FilterTag>
           </div>
         </div>
-        <form className="search-section">
+        <form onSubmit={(e) => e.preventDefault()} className="search-section">
           <input placeholder="Search Recipes"></input>
           <IconFrame>
             <BiSearch />
