@@ -1,0 +1,14 @@
+.recipe-card {
+  background: var(--light-grey);
+  color: var(--dark-grey);
+  height: 150px;
+  padding: 0.5rem;
+  border: 1px solid var(--dark-grey);
+  border-radius: 3px;
+}
+
+.recipe-card:hover {
+  cursor: pointer;
+  background: var(--mid-grey);
+  color: var(--white);
+}
