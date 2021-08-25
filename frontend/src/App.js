@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState } from 'react';
 import Navbar from 'src/components/Structure/Navbar.js';
-import RecipesOverview from 'src/components/Recipes/RecipesOverview.js';
+import Recipes from 'src/components/Recipes/Recipes.js';
 import ReferencesOverview from 'src/components/References/ReferencesOverview.js';
 import Footer from 'src/components/Structure/Footer.js';
 
@@ -21,7 +21,7 @@ const App = () => {
   return (
     <div className="app">
       <Navbar onChangeApp={onChangeApp} app={app} />
-      {app === 'recipes' ? <RecipesOverview /> : <ReferencesOverview />}
+      {app === 'recipes' ? <Recipes /> : <ReferencesOverview />}
       <Footer />
     </div>
   );
