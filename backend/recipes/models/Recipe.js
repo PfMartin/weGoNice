@@ -13,6 +13,9 @@ const Recipe = db.define(
     title: {
       type: DataTypes.STRING,
     },
+    url: {
+      type: DataTypes.STRING,
+    },
   },
   {
     tableName: 'recipesRecipe',
