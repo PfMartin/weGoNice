@@ -38,9 +38,14 @@ Froms
 *************************************************/
 input {
   padding: 0.3rem;
-  border: 1px solid var(--dark-grey);
+  border: 1px solid var(--light-grey);
   border-radius: 3px;
   transition: 0.5s;
+  background: var(--light-grey);
+}
+
+input:hover {
+  border: 1px solid var(--light-accent);
 }
 
 input:focus {
@@ -52,9 +57,9 @@ input::placeholder {
   color: var(--mid-grey);
 }
 
-input:focus::placeholder {
+/* input:focus::placeholder {
   color: var(--light-accent);
-}
+} */
 
 /*************************************************
 Buttons
@@ -70,5 +75,89 @@ Buttons
 .btn:hover {
   background: var(--accent);
   color: var(--white);
+  cursor: pointer;
+}
+
+/*************************************************
+Forms
+*************************************************/
+
+.form-element {
+  width: 300px;
+}
+
+.form-element {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.form-element input {
+  width: 250px;
+}
+
+.form-element input:focus {
+  border: 1px solid var(--light-accent);
+}
+
+.form-element label {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.input-element {
+}
+
+.value-element .value-input {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+.value-input input {
+  width: 40px;
+  margin-right: 1rem;
+}
+
+.select-element .select-container {
+  padding: 0.3rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 3px;
+  transition: 0.5s;
+  background: var(--light-grey);
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.select-element .select-container:hover {
+  cursor: pointer;
+  border: 1px solid var(--light-accent);
+}
+
+.select-element .options-container {
+  position: relative;
+}
+
+.select-element .options-list {
+  position: absolute;
+  left: -125px;
+  top: 0;
+  width: 250px;
+  background: var(--mid-grey);
+  color: var(--white);
+}
+
+.select-element .options-list li {
+  padding: 0.3rem;
+  transition: 0.1s;
+}
+
+.select-element .options-container li:hover {
+  color: var(--light-accent);
+  background: var(--dark-grey);
   cursor: pointer;
 }

@@ -17,8 +17,10 @@ const Recipes = (props) => {
     <div className="recipes">
       {view === 'overview' ? (
         <RecipesOverview onChangeView={onChangeView} />
+      ) : view === 'create' ? (
+        <RecipeForm view={view} onChangeView={onChangeView} />
       ) : (
-        <RecipeForm onChangeView={onChangeView} />
+        ''
       )}
     </div>
   );

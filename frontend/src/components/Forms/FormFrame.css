@@ -1,0 +1,7 @@
+.form-frame {
+  margin-top: 1rem;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-row-gap: 0.5rem;
+}
