@@ -11,6 +11,8 @@ const SelectElement = ({ labelText, value, onSelect, selectOptions }) => {
       <div
         className="select-container"
         onClick={() => setHasOptions(!hasOptions)}
+        onBlur={() => setHasOptions(false)}
+        tabIndex="0"
       >
         <div className="select-field" value={value}>
           {value === '' ? 'Choose an Option' : value}
