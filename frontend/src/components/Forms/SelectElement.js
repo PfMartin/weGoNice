@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import IconFrame from 'src/components/Structure/IconFrame.js';
 import { BiChevronDown } from 'react-icons/bi';
 
 const SelectElement = ({ labelText, value, onSelect, selectOptions }) => {
   const [hasOptions, setHasOptions] = useState(false);
 
-  return (
+  return labelText !== '' ? (
     <div className="form-element select-element">
       <label>{labelText}</label>
       <div
@@ -15,7 +15,11 @@ const SelectElement = ({ labelText, value, onSelect, selectOptions }) => {
         tabIndex="0"
       >
         <div className="select-field" value={value}>
-          {value === '' ? 'Choose an Option' : value}
+          {value === '' ? (
+            <p className="placeholder">Choose an Option</p>
+          ) : (
+            value
+          )}
         </div>
         <BiChevronDown />
       </div>
@@ -31,7 +35,36 @@ const SelectElement = ({ labelText, value, onSelect, selectOptions }) => {
         ''
       )}
     </div>
+  ) : (
+    <Fragment>
+      <div
+        className="select-container"
+        onClick={() => setHasOptions(!hasOptions)}
+        onBlur={() => setHasOptions(false)}
+        tabIndex="0"
+      >
+        <div className="select-field" value={value}>
+          <p>{value}</p>
+        </div>
+        <BiChevronDown />
+      </div>
+      {hasOptions ? (
+        <div className="options-container">
+          <ul className="options-list">
+            {selectOptions.map((option, index) => {
+              return <li key={index}>{option.title}</li>;
+            })}
+          </ul>
+        </div>
+      ) : (
+        ''
+      )}
+    </Fragment>
   );
+};
+
+SelectElement.defaultProps = {
+  labelText: '',
 };
 
 export default SelectElement;

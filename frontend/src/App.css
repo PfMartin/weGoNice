@@ -37,6 +37,10 @@ ul {
 Froms
 *************************************************/
 input {
+  all: unset;
+}
+
+input {
   padding: 0.3rem;
   border: 1px solid var(--light-grey);
   border-radius: 3px;
@@ -55,6 +59,14 @@ input:focus {
 
 input::placeholder {
   color: var(--mid-grey);
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 /* input:focus::placeholder {
@@ -111,15 +123,23 @@ Forms
 }
 
 .value-element .value-input {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: space-around;
 }
 
 .value-input input {
   width: 40px;
-  margin-right: 1rem;
+}
+
+.value-input .select-container {
+  padding: 0.3rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 3px;
+  transition: 0.5s;
+  background: var(--light-grey);
+  display: flex;
+  justify-content: space-between;
 }
 
 .select-element .select-container {
@@ -133,13 +153,26 @@ Forms
   justify-content: space-between;
 }
 
-.select-element .select-container:hover {
+.select-element .select-container .placeholder {
+  color: var(--mid-grey);
+}
+
+.select-container:hover {
   cursor: pointer;
   border: 1px solid var(--light-accent);
 }
 
-.select-element .options-container {
+.options-container {
   position: relative;
+}
+
+.options-list {
+  position: absolute;
+  left: 56px;
+  top: 0;
+  width: 53px;
+  background: var(--mid-grey);
+  color: var(--white);
 }
 
 .select-element .options-list {
@@ -151,12 +184,12 @@ Forms
   color: var(--white);
 }
 
-.select-element .options-list li {
+.options-list li {
   padding: 0.3rem;
   transition: 0.1s;
 }
 
-.select-element .options-container li:hover {
+.options-container li:hover {
   color: var(--light-accent);
   background: var(--dark-grey);
   cursor: pointer;

@@ -15,30 +15,42 @@ const references = [
   },
 ];
 
+const measures = [
+  {
+    id: 1,
+    title: 'hr',
+  },
+  {
+    id: 2,
+    title: 'min',
+  },
+  {
+    id: 3,
+    title: 's',
+  },
+];
+
 const RecipeForm = (props) => {
   const [recipe, setRecipe] = useState({
     title: '',
-    prepTime: {
-      value: 0,
-      measure: '',
-    },
     category: '',
     reference: '',
     url: '',
   });
+  const [prepTime, setPrepTime] = useState({ value: 0, measure: 'min' });
   const [ingredients, setIngredients] = useState([]);
   const [prepSteps, setPrepSteps] = useState([]);
 
-  const onChange = (e) => {
+  const onChange = (e, state, setterFunction) => {
     const name = e.target.id;
-    const value = e.target.value;
+    const input = e.target.value;
 
-    setRecipe({
-      ...recipe,
-      ...{ [name]: value },
+    setterFunction({
+      ...state,
+      ...{ [name]: input },
     });
 
-    console.log(recipe);
+    console.log(state);
   };
 
   return (
@@ -53,30 +65,34 @@ const RecipeForm = (props) => {
           labelText="Title"
           type="text"
           value={recipe.title}
-          onChange={onChange}
+          onChange={(e) => onChange(e, recipe, setRecipe)}
         />
         <div className="form-element value-element">
           <label htmlFor="value">Preparation time</label>
           <div className="value-input">
-            <input
+            <InputElement
+              title="value"
               type="number"
-              id="value"
-              value={recipe.prepTime.value}
-              onChange={onChange}
+              value={prepTime.value}
+              onChange={(e) => onChange(e, prepTime, setPrepTime)}
             />
-            <div className="select-field">---</div>
+            <SelectElement
+              value={prepTime.measure}
+              onSelect={(e) => onChange(e, prepTime, setPrepTime)}
+              selectOptions={measures}
+            />
           </div>
         </div>
         <SelectElement
           labelText="Category"
           value={recipe.category}
-          onClick={onChange}
+          onSelect={onChange}
           selectOptions={references}
         />
         <SelectElement
           labelText="Reference"
           value={recipe.reference}
-          onSelect={onChange}
+          onSelect={(e) => onChange(e, recipe, setRecipe)}
           selectOptions={references}
         />
         <InputElement
@@ -84,7 +100,7 @@ const RecipeForm = (props) => {
           labelText="Url"
           type="text"
           value={recipe.url}
-          onChange={onChange}
+          onChange={(e) => onChange(e, recipe, setRecipe)}
         />
       </FormFrame>
     </div>
