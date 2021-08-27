@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from 'react';
-import IconFrame from 'src/components/Structure/IconFrame.js';
 import { BiChevronDown } from 'react-icons/bi';
 
 const SelectElement = ({ labelText, value, onSelect, selectOptions }) => {
