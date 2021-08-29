@@ -149,7 +149,8 @@ Forms
   transition: 0.5s;
   background: var(--light-grey);
   width: 250px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 10fr 1fr;
   justify-content: space-between;
 }
 
@@ -168,8 +169,8 @@ Forms
 
 .options-list {
   position: absolute;
-  left: 56px;
-  top: 0;
+  left: -49px;
+  top: 25px;
   width: 53px;
   background: var(--mid-grey);
   color: var(--white);
@@ -177,8 +178,8 @@ Forms
 
 .select-element .options-list {
   position: absolute;
-  left: -125px;
-  top: 0;
+  left: -6px;
+  top: 5px;
   width: 250px;
   background: var(--mid-grey);
   color: var(--white);

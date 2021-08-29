@@ -1,7 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import { BiChevronDown } from 'react-icons/bi';
 
-const SelectElement = ({ labelText, value, onSelect, selectOptions }) => {
+const SelectElement = ({
+  title,
+  labelText,
+  value,
+  onSelect,
+  selectOptions,
+}) => {
   const [hasOptions, setHasOptions] = useState(false);
 
   return labelText !== '' ? (
@@ -21,22 +27,31 @@ const SelectElement = ({ labelText, value, onSelect, selectOptions }) => {
           )}
         </div>
         <BiChevronDown />
+        {hasOptions ? (
+          <div className="options-container">
+            <ul className="options-list">
+              {selectOptions.map((option, index) => {
+                return (
+                  <li
+                    id={title}
+                    key={index}
+                    onClick={() => console.log('clicked')}
+                  >
+                    {option.title}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
-      {hasOptions ? (
-        <div className="options-container">
-          <ul className="options-list">
-            {selectOptions.map((option, index) => {
-              return <li key={index}>{option.title}</li>;
-            })}
-          </ul>
-        </div>
-      ) : (
-        ''
-      )}
     </div>
   ) : (
     <Fragment>
       <div
+        title={title}
         className="select-container"
         onClick={() => setHasOptions(!hasOptions)}
         onBlur={() => setHasOptions(false)}
@@ -46,18 +61,22 @@ const SelectElement = ({ labelText, value, onSelect, selectOptions }) => {
           <p>{value}</p>
         </div>
         <BiChevronDown />
+        {hasOptions ? (
+          <div className="options-container">
+            <ul className="options-list">
+              {selectOptions.map((option, index) => {
+                return (
+                  <li id={title} key={index} onClick={() => console.log('hey')}>
+                    {option.title}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
-      {hasOptions ? (
-        <div className="options-container">
-          <ul className="options-list">
-            {selectOptions.map((option, index) => {
-              return <li key={index}>{option.title}</li>;
-            })}
-          </ul>
-        </div>
-      ) : (
-        ''
-      )}
     </Fragment>
   );
 };

@@ -43,7 +43,16 @@ const RecipeForm = (props) => {
 
   const onChange = (e, state, setterFunction) => {
     const name = e.target.id;
-    const input = e.target.value;
+
+    let input;
+    if (name === 'measure') {
+      input = e.target.getAttribute('value');
+    } else {
+      input = e.target.value;
+    }
+
+    console.log(name);
+    console.log(input);
 
     setterFunction({
       ...state,
@@ -77,6 +86,7 @@ const RecipeForm = (props) => {
               onChange={(e) => onChange(e, prepTime, setPrepTime)}
             />
             <SelectElement
+              title="measure"
               value={prepTime.measure}
               onSelect={(e) => onChange(e, prepTime, setPrepTime)}
               selectOptions={measures}
