@@ -34,8 +34,9 @@ const SelectElement = ({
                 return (
                   <li
                     id={title}
+                    value={option.title}
                     key={index}
-                    onClick={() => console.log('clicked')}
+                    onClick={onSelect}
                   >
                     {option.title}
                   </li>
@@ -66,7 +67,12 @@ const SelectElement = ({
             <ul className="options-list">
               {selectOptions.map((option, index) => {
                 return (
-                  <li id={title} key={index} onClick={() => console.log('hey')}>
+                  <li
+                    id={title}
+                    value={option.title}
+                    key={index}
+                    onClick={onSelect}
+                  >
                     {option.title}
                   </li>
                 );

@@ -4,6 +4,29 @@ import FormFrame from 'src/components/Forms/FormFrame.js';
 import InputElement from 'src/components/Forms/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement.js';
 
+const categories = [
+  {
+    id: 1,
+    title: 'breakfast',
+  },
+  {
+    id: 2,
+    title: 'main',
+  },
+  {
+    id: 3,
+    title: 'basics',
+  },
+  {
+    id: 4,
+    title: 'dessert',
+  },
+  {
+    id: 5,
+    title: 'drinks',
+  },
+];
+
 const references = [
   {
     id: 1,
@@ -42,24 +65,20 @@ const RecipeForm = (props) => {
   const [prepSteps, setPrepSteps] = useState([]);
 
   const onChange = (e, state, setterFunction) => {
+    const selectFieldNames = ['measure', 'reference', 'category'];
     const name = e.target.id;
 
     let input;
-    if (name === 'measure') {
+    if (selectFieldNames.includes(name)) {
       input = e.target.getAttribute('value');
     } else {
       input = e.target.value;
     }
 
-    console.log(name);
-    console.log(input);
-
     setterFunction({
       ...state,
       ...{ [name]: input },
     });
-
-    console.log(state);
   };
 
   return (
@@ -94,12 +113,14 @@ const RecipeForm = (props) => {
           </div>
         </div>
         <SelectElement
+          title="category"
           labelText="Category"
           value={recipe.category}
-          onSelect={onChange}
-          selectOptions={references}
+          onSelect={(e) => onChange(e, recipe, setRecipe)}
+          selectOptions={categories}
         />
         <SelectElement
+          title="reference"
           labelText="Reference"
           value={recipe.reference}
           onSelect={(e) => onChange(e, recipe, setRecipe)}
