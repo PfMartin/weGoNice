@@ -132,26 +132,29 @@ Forms
   width: 40px;
 }
 
-/* For select fields in combination with a value input */
-.value-input .select-container {
+.select-container {
   padding: 0.3rem;
   border: 1px solid var(--light-grey);
   border-radius: 3px;
   transition: 0.5s;
   background: var(--light-grey);
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+}
+
+.select-container:hover {
+  cursor: pointer;
+  border: 1px solid var(--light-accent);
+}
+
+/* For select fields in combination with a value input */
+.value-input .select-container {
+  grid-template-columns: 10fr 5fr;
+  justify-content: space-around;
 }
 
 /* For isolated select fields */
 .select-element .select-container {
-  padding: 0.3rem;
-  border: 1px solid var(--light-grey);
-  border-radius: 3px;
-  transition: 0.5s;
-  background: var(--light-grey);
   width: 250px;
-  display: grid;
   grid-template-columns: 10fr 1fr;
   justify-content: space-between;
 }
@@ -160,43 +163,38 @@ Forms
   color: var(--mid-grey);
 }
 
-.select-container:hover {
-  cursor: pointer;
-  border: 1px solid var(--light-accent);
-}
-
 .options-container {
   position: relative;
 }
 
-/* Option list for select fields in combination with a value input */
+/* Option list for select fields in general */
 .options-list {
   position: absolute;
-  left: -48px;
-  top: 25px;
-  width: 53px;
+  left: -5px;
+  top: 7px;
   background: var(--mid-grey);
   color: var(--white);
   border-radius: 3px;
 }
 
-/* Option list for an isolated select field */
-.select-element .options-list {
-  position: absolute;
-  left: -5px;
-  top: 5px;
-  width: 250px;
-  background: var(--mid-grey);
-  color: var(--white);
-}
-
 .options-list li {
   padding: 0.3rem;
   transition: 0.1s;
+  border-radius: 3px;
 }
 
-.options-container li:hover {
+.options-list li:hover {
   color: var(--light-accent);
   background: var(--dark-grey);
   cursor: pointer;
+}
+
+/* Options list for select fields in combination with a value */
+.value-input .options-list {
+  width: 58px;
+}
+
+/* Option list for an isolated select field */
+.select-element .options-list {
+  width: 250px;
 }
