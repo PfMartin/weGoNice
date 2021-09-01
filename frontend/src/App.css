@@ -132,6 +132,7 @@ Forms
   width: 40px;
 }
 
+/* For select fields in combination with a value input */
 .value-input .select-container {
   padding: 0.3rem;
   border: 1px solid var(--light-grey);
@@ -142,6 +143,7 @@ Forms
   justify-content: space-between;
 }
 
+/* For isolated select fields */
 .select-element .select-container {
   padding: 0.3rem;
   border: 1px solid var(--light-grey);
@@ -167,18 +169,21 @@ Forms
   position: relative;
 }
 
+/* Option list for select fields in combination with a value input */
 .options-list {
   position: absolute;
-  left: -49px;
+  left: -48px;
   top: 25px;
   width: 53px;
   background: var(--mid-grey);
   color: var(--white);
+  border-radius: 3px;
 }
 
+/* Option list for an isolated select field */
 .select-element .options-list {
   position: absolute;
-  left: -6px;
+  left: -5px;
   top: 5px;
   width: 250px;
   background: var(--mid-grey);
