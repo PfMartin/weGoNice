@@ -3,6 +3,7 @@ import SiteHeader from 'src/components/Structure/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame.js';
 import InputElement from 'src/components/Forms/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement.js';
+import ValueInput from 'src/components/Forms/ValueInput.js';
 
 const categories = [
   {
@@ -95,23 +96,12 @@ const RecipeForm = (props) => {
           value={recipe.title}
           onChange={(e) => onChange(e, recipe, setRecipe)}
         />
-        <div className="form-element value-element">
-          <label htmlFor="value">Preparation time</label>
-          <div className="value-input">
-            <InputElement
-              title="value"
-              type="number"
-              value={prepTime.value}
-              onChange={(e) => onChange(e, prepTime, setPrepTime)}
-            />
-            <SelectElement
-              title="measure"
-              value={prepTime.measure}
-              onSelect={(e) => onChange(e, prepTime, setPrepTime)}
-              selectOptions={measures}
-            />
-          </div>
-        </div>
+        <ValueInput
+          headline="Preparation Time"
+          inputValueState={prepTime}
+          onChange={(e) => onChange(e, prepTime, setPrepTime)}
+          selectOptions={measures}
+        />
         <SelectElement
           title="category"
           labelText="Category"
