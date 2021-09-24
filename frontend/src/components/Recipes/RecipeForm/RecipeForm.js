@@ -1,14 +1,19 @@
 import './RecipeForm.css';
 
+import { arrayMoveImmutable } from 'array-move';
+
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
+import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ValueInput from 'src/components/Forms/ValueInput/ValueInput.js';
 import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
+
+import { BiPlus } from 'react-icons/bi';
 
 const categories = [
   {
@@ -130,6 +135,44 @@ const RecipeForm = ({ onChangeView, view }) => {
     setIngredients(stateCopy);
   };
 
+  const addIngredient = (e) => {
+    let stateCopy = [...ingredients];
+    stateCopy.push({
+      id: '',
+      value: 0,
+      measure: 'g',
+      text: '',
+    });
+
+    setIngredients(stateCopy);
+  };
+
+  const moveIngredientUp = (e) => {
+    const index = e.currentTarget.parentNode.getAttribute('index');
+
+    let stateCopy = [...ingredients];
+    stateCopy = arrayMoveImmutable(stateCopy, index, index - 1);
+
+    setIngredients(stateCopy);
+  };
+
+  const moveIngredientDown = (e) => {
+    const index = e.currentTarget.parentNode.getAttribute('index');
+
+    let stateCopy = [...ingredients];
+    stateCopy = arrayMoveImmutable(stateCopy, index, index + 1);
+
+    setIngredients(stateCopy);
+  };
+
+  const deleteIngredient = (e) => {
+    const index = e.currentTarget.parentNode.getAttribute('index');
+    console.log(e.currentTarget.parentNode);
+    let stateCopy = [...ingredients];
+    stateCopy.splice(index, 1);
+    setIngredients(stateCopy);
+  };
+
   const onSave = () => {
     console.log('onSave');
   };
@@ -181,16 +224,24 @@ const RecipeForm = ({ onChangeView, view }) => {
           onChange={(e) => onChange(e, recipe, setRecipe)}
         />
         <div className="multiple-section form-element">
-          <p className="section-title">Ingredients</p>
+          <div className="section-title">
+            <p>Ingredients</p>
+          </div>
           {ingredients.map((ingredient, index) => {
             return (
               <IngredientInput
                 index={index}
                 ingredient={ingredient}
                 onChange={updateIngredients}
+                onDelete={deleteIngredient}
+                moveUp={moveIngredientUp}
+                moveDown={moveIngredientDown}
               />
             );
           })}
+          <IconFrame>
+            <BiPlus onClick={addIngredient} />
+          </IconFrame>
         </div>
         {view === 'create' ? (
           <ButtonBar onSave={onSave} />

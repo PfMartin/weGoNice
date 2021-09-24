@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 
 import InputElement from 'src/components/Forms/InputElement/InputElement';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
+import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
+
+import { BiTrash, BiDownArrowAlt, BiUpArrowAlt } from 'react-icons/bi';
 
 const measures = [
   {
@@ -25,7 +28,14 @@ const measures = [
   },
 ];
 
-const IngredientInput = ({ index, ingredient, onChange }) => {
+const IngredientInput = ({
+  index,
+  ingredient,
+  onChange,
+  onDelete,
+  moveUp,
+  moveDown,
+}) => {
   return (
     <div className="ingredient-input">
       <div className="value-input">
@@ -51,6 +61,17 @@ const IngredientInput = ({ index, ingredient, onChange }) => {
         value={ingredient.text}
         onChange={onChange}
       />
+      <div className="ingredient-control" index={index}>
+        <IconFrame onClick={moveUp}>
+          <BiUpArrowAlt />
+        </IconFrame>
+        <IconFrame onClick={moveDown}>
+          <BiDownArrowAlt />
+        </IconFrame>
+        <IconFrame onClick={onDelete}>
+          <BiTrash />
+        </IconFrame>
+      </div>
     </div>
   );
 };
