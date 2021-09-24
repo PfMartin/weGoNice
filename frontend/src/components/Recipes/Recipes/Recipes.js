@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import RecipesOverview from 'src/components/Recipes/RecipesOverview.js';
-import RecipeForm from 'src/components/Recipes/RecipeForm.js';
+import RecipesOverview from 'src/components/Recipes/RecipesOverview/RecipesOverview.js';
+import RecipeForm from 'src/components/Recipes/RecipeForm/RecipeForm.js';
 
 const Recipes = (props) => {
   const [view, setView] = useState('overview');

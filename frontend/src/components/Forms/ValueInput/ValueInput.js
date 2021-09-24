@@ -1,6 +1,6 @@
 import React from 'react';
-import InputElement from 'src/components/Forms/InputElement.js';
-import SelectElement from 'src/components/Forms/SelectElement.js';
+import InputElement from 'src/components/Forms/InputElement/InputElement.js';
+import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 
 const ValueInput = ({ headline, inputValueState, onChange, selectOptions }) => {
   return (

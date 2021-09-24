@@ -1,7 +1,7 @@
 import './Navbar.css';
 import React from 'react';
 import { BiFoodMenu, BiUser } from 'react-icons/bi';
-import IconFrame from 'src/components/Structure/IconFrame.js';
+import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
 const Navbar = (props) => {
   return (

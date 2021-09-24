@@ -1,5 +1,5 @@
 import React from 'react';
-import SiteHeader from 'src/components/Structure/SiteHeader.js';
+import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 
 const ReferencesOverview = (props) => {
   return (

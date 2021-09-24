@@ -1,10 +1,10 @@
 import './RecipesOverview.css';
 import React, { useState } from 'react';
-import SiteHeader from 'src/components/Structure/SiteHeader.js';
-import IconFrame from 'src/components/Structure/IconFrame.js';
-import FilterTag from 'src/components/Structure/FilterTag.js';
+import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
+import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
+import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import { BiSearch } from 'react-icons/bi';
-import RecipeCard from 'src/components/Recipes/RecipeCard.js';
+import RecipeCard from 'src/components/Recipes/RecipeCard/RecipeCard.js';
 
 const RecipesOverview = (props) => {
   const [filterTags, setFilterTags] = useState({

@@ -1,7 +1,7 @@
 import './SiteHeader.css';
 import React from 'react';
 import { BiPlus, BiArrowBack } from 'react-icons/bi';
-import IconFrame from 'src/components/Structure/IconFrame.js';
+import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
 const SiteHeader = (props) => {
   return (

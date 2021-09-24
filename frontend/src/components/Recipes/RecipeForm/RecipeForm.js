@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import SiteHeader from 'src/components/Structure/SiteHeader.js';
-import FormFrame from 'src/components/Forms/FormFrame.js';
-import InputElement from 'src/components/Forms/InputElement.js';
-import SelectElement from 'src/components/Forms/SelectElement.js';
-import ValueInput from 'src/components/Forms/ValueInput.js';
+import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
+import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
+import InputElement from 'src/components/Forms/InputElement/InputElement.js';
+import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
+import ValueInput from 'src/components/Forms/ValueInput/ValueInput.js';
 
 const categories = [
   {
