@@ -1,5 +1,6 @@
 import './RecipeCard.css';
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 
 const RecipeCard = ({ recipe, filterTags }) => {
   /**
@@ -27,12 +28,18 @@ const RecipeCard = ({ recipe, filterTags }) => {
             {recipe.generalValueId.generalMeasureId.abbreviation}
           </p>
           <p>{recipe.referenceReferenceId.author.name}</p>
+          <p className="category-tag">{recipe.recipesCategoryId.title}</p>
         </div>
       ) : (
         ''
       )}
     </Fragment>
   );
+};
+
+RecipeCard.propTypes = {
+  recipe: PropTypes.object,
+  filterTags: PropTypes.object,
 };
 
 export default RecipeCard;
