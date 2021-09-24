@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { BiChevronDown } from 'react-icons/bi';
 
 const SelectElement = ({
+  index,
   labelText,
   onSelect,
   selectOptions,
@@ -32,13 +33,13 @@ const SelectElement = ({
         <BiChevronDown />
         {hasOptions ? (
           <div className="options-container">
-            <ul className="options-list">
-              {selectOptions.map((option, index) => {
+            <ul index={index} className="options-list">
+              {selectOptions.map((option, optionIndex) => {
                 return (
                   <li
                     id={title}
                     value={option.title}
-                    key={index}
+                    key={optionIndex}
                     onClick={onSelect}
                   >
                     {option.title}
@@ -67,13 +68,13 @@ const SelectElement = ({
         <BiChevronDown />
         {hasOptions ? (
           <div className="options-container">
-            <ul className="options-list">
-              {selectOptions.map((option, index) => {
+            <ul index={index} className="options-list">
+              {selectOptions.map((option, optionIndex) => {
                 return (
                   <li
                     id={title}
                     value={option.title}
-                    key={index}
+                    key={optionIndex}
                     onClick={onSelect}
                   >
                     {option.title}
@@ -95,6 +96,8 @@ SelectElement.defaultProps = {
 };
 
 SelectElement.propTypes = {
+  /** Index of the Select Element in an array of Select Elements */
+  index: PropTypes.number,
   /** Defines the label text and the place holder */
   labelText: PropTypes.string,
   /** List of select options to choose */

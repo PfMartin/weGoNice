@@ -56,17 +56,22 @@ Forms
   margin-bottom: 0.5rem;
 }
 
-.input-element {
-}
-
 .value-element .value-input {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  justify-content: space-around;
+  display: flex;
+  justify-content: space-between;
 }
 
 .value-input input {
-  width: 40px;
+  width: 50px;
+  margin-right: 0.5rem;
+}
+
+.value-input .select-container {
+  width: 50px;
+}
+
+.value-input .options-list {
+  width: 50px;
 }
 
 .select-container {
@@ -76,6 +81,7 @@ Forms
   transition: 0.5s;
   background: var(--light-grey);
   display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .select-container:hover {
@@ -107,7 +113,16 @@ Forms
 /* Option list for select fields in general */
 .options-list {
   position: absolute;
-  left: -5px;
+  left: -6px;
+  top: 7px;
+  background: var(--mid-grey);
+  color: var(--white);
+  border-radius: 3px;
+}
+
+.value-input .options-list {
+  position: absolute;
+  left: -3px;
   top: 7px;
   background: var(--mid-grey);
   color: var(--white);
@@ -124,9 +139,4 @@ Forms
   color: var(--light-accent);
   background: var(--dark-grey);
   cursor: pointer;
-}
-
-/* Options list for select fields in combination with a value */
-.value-input .options-list {
-  width: 58px;
 }

@@ -1,3 +1,5 @@
+import './RecipeForm.css';
+
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
@@ -5,6 +7,7 @@ import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
 import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ValueInput from 'src/components/Forms/ValueInput/ValueInput.js';
+import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const categories = [
@@ -64,7 +67,20 @@ const RecipeForm = ({ onChangeView, view }) => {
     url: '',
   });
   const [prepTime, setPrepTime] = useState({ value: 0, measure: 'min' });
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState([
+    {
+      id: 1,
+      value: 0,
+      measure: 'g',
+      text: '',
+    },
+    {
+      id: 2,
+      value: 0,
+      measure: 'g',
+      text: '',
+    },
+  ]);
   const [prepSteps, setPrepSteps] = useState([]);
 
   const onChange = (e, state, setterFunction) => {
@@ -74,6 +90,8 @@ const RecipeForm = ({ onChangeView, view }) => {
     let input;
     if (selectFieldNames.includes(name)) {
       input = e.target.getAttribute('value');
+    } else if (name === 'value') {
+      input = parseInt(e.target.value);
     } else {
       input = e.target.value;
     }
@@ -82,6 +100,34 @@ const RecipeForm = ({ onChangeView, view }) => {
       ...state,
       ...{ [name]: input },
     });
+
+    console.log(state);
+  };
+
+  const updateIngredients = (e) => {
+    const name = e.target.id;
+
+    let index;
+    let input;
+    if (name === 'value' || name === 'text') {
+      index = e.target.getAttribute('index');
+      input = e.target.value;
+    } else if (name === 'measure') {
+      index = e.target.parentNode.getAttribute('index');
+      input = e.target.getAttribute('value');
+    }
+
+    console.log(name, index, input);
+
+    let stateCopy = [...ingredients];
+    stateCopy[index] = {
+      ...stateCopy[index],
+      ...{ [name]: input },
+    };
+
+    console.log(stateCopy);
+
+    setIngredients(stateCopy);
   };
 
   const onSave = () => {
@@ -134,7 +180,18 @@ const RecipeForm = ({ onChangeView, view }) => {
           value={recipe.url}
           onChange={(e) => onChange(e, recipe, setRecipe)}
         />
-
+        <div className="multiple-section form-element">
+          <p className="section-title">Ingredients</p>
+          {ingredients.map((ingredient, index) => {
+            return (
+              <IngredientInput
+                index={index}
+                ingredient={ingredient}
+                onChange={updateIngredients}
+              />
+            );
+          })}
+        </div>
         {view === 'create' ? (
           <ButtonBar onSave={onSave} />
         ) : (

@@ -63,6 +63,7 @@ ul {
   width: 250px;
   grid-template-columns: 10fr 1fr;
   justify-content: space-between;
+  align-items: center;
 }
 
 .select-element .select-container .placeholder {
