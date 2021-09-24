@@ -1,3 +1,5 @@
+import './SelectElement.css';
+
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { BiChevronDown } from 'react-icons/bi';
