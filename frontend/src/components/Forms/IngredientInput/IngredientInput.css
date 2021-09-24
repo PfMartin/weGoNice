@@ -3,8 +3,12 @@
   align-items: center;
 }
 
+.ingredient-input input {
+  width: 200px;
+}
+
 .ingredient-input > * {
-  margin: 0.5rem;
+  margin: 0.3rem;
 }
 
 .ingredient-input .value-input {
@@ -12,7 +16,7 @@
 }
 
 .ingredient-input .value-input > *:first-child {
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .ingredient-input .value-input input {
