@@ -38,7 +38,9 @@ const RecipeCard = ({ recipe, filterTags }) => {
 };
 
 RecipeCard.propTypes = {
+  /** Recipe object that should be displayed */
   recipe: PropTypes.object,
+  /** Object that tells, which filters are set */
   filterTags: PropTypes.object,
 };
 
