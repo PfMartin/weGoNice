@@ -10,8 +10,7 @@ const App = () => {
 
   /**
    * Changes the app on click according to the targetapp attribute of the clicked element. The clicked element is usually an Icon. So you may look into 'src/components/Structure/IconFrame/IconFrame.js'
-   * @param  {[type]} e [description]
-   * @return {[type]}   [description]
+   * @param  {Object}   e   Event object
    */
   const onChangeApp = (e) => {
     const targetApp = e.currentTarget.getAttribute('targetapp');

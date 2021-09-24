@@ -1,0 +1,32 @@
+input {
+  all: unset;
+}
+
+input {
+  padding: 0.3rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 3px;
+  transition: 0.5s;
+  background: var(--light-grey);
+}
+
+input:hover {
+  border: 1px solid var(--light-accent);
+}
+
+input:focus {
+  outline: none;
+  border: 1px solid var(--light-accent);
+}
+
+input::placeholder {
+  color: var(--mid-grey);
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}

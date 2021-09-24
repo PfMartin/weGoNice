@@ -1,17 +1,26 @@
-import React from 'react';
 import './IconFrame.css';
+
+import React from 'react';
+import PropTypes from 'prop-types';
 import { IconContext } from 'react-icons';
 
-const IconFrame = (props) => {
+const IconFrame = ({
+  className,
+  children,
+  onClick,
+  size,
+  targetApp,
+  targetView,
+}) => {
   return (
-    <IconContext.Provider value={{ size: props.size || '20px' }}>
+    <IconContext.Provider value={{ size: size || '20px' }}>
       <div
-        className={props.className}
-        onClick={props.onClick}
-        targetapp={props.targetApp}
-        targetview={props.targetView}
+        className={className}
+        onClick={onClick}
+        targetapp={targetApp}
+        targetview={targetView}
       >
-        {props.children}
+        {children}
       </div>
     </IconContext.Provider>
   );
@@ -19,6 +28,21 @@ const IconFrame = (props) => {
 
 IconFrame.defaultProps = {
   className: 'icon',
+};
+
+IconFrame.propTypes = {
+  /** Defines styling using css */
+  className: PropTypes.string,
+  /** Allows strings (for <div>) and components as children */
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  /** Callback for the click event */
+  onClick: PropTypes.func,
+  /** Defines the size of the icon */
+  size: PropTypes.string,
+  /** Defines the target app for the click event */
+  targetApp: PropTypes.string,
+  /** Defines the target view for the click event */
+  targetView: PropTypes.string,
 };
 
 export default IconFrame;

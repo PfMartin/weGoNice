@@ -1,4 +1,6 @@
+import './InputElement.css';
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 
 const InputElement = ({ title, labelText, type, value, onChange }) => {
   return labelText !== '' ? (
@@ -21,6 +23,19 @@ const InputElement = ({ title, labelText, type, value, onChange }) => {
 
 InputElement.defaultProps = {
   labelText: '',
+};
+
+InputElement.propTypes = {
+  /** Defines the corresponding property name in the state */
+  title: PropTypes.string,
+  /** Defines the label text and the place holder */
+  labelText: PropTypes.string,
+  /** Defines the type of the input tag*/
+  type: PropTypes.string,
+  /** Defines the value, which controls the value */
+  value: PropTypes.string,
+  /** Callback for the change event */
+  onChange: PropTypes.func,
 };
 
 export default InputElement;
