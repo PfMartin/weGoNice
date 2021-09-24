@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
 import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ValueInput from 'src/components/Forms/ValueInput/ValueInput.js';
+import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const categories = [
   {
@@ -54,7 +56,7 @@ const measures = [
   },
 ];
 
-const RecipeForm = (props) => {
+const RecipeForm = ({ onChangeView, view }) => {
   const [recipe, setRecipe] = useState({
     title: '',
     category: '',
@@ -82,11 +84,19 @@ const RecipeForm = (props) => {
     });
   };
 
+  const onSave = () => {
+    console.log('onSave');
+  };
+
+  const onDelete = () => {
+    console.log('onDelete');
+  };
+
   return (
     <div className="recipe-form">
       <SiteHeader
-        headline={props.view === 'create' ? 'Create Recipe' : 'Modify Recipe'}
-        onClickBack={(e) => props.onChangeView('overview')}
+        headline={view === 'create' ? 'Create Recipe' : 'Modify Recipe'}
+        onClickBack={(e) => onChangeView('overview')}
       />
       <FormFrame>
         <InputElement
@@ -124,9 +134,22 @@ const RecipeForm = (props) => {
           value={recipe.url}
           onChange={(e) => onChange(e, recipe, setRecipe)}
         />
+
+        {view === 'create' ? (
+          <ButtonBar onSave={onSave} />
+        ) : (
+          <ButtonBar onSave={onSave} onDelete={onDelete} />
+        )}
       </FormFrame>
     </div>
   );
+};
+
+RecipeForm.propTypes = {
+  /** Callback for changing the global view */
+  onChangeView: PropTypes.func,
+  /** Gloabal view that defines what components are displayed */
+  view: PropTypes.string,
 };
 
 export default RecipeForm;

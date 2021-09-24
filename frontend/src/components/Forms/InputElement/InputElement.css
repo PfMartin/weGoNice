@@ -71,6 +71,7 @@ input:focus {
 
 input::placeholder {
   color: var(--mid-grey);
+  opacity: 1;
 }
 
 input[type='number']::-webkit-inner-spin-button,
