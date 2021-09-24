@@ -1,12 +1,13 @@
 import React, { Fragment, useState } from 'react';
+import PropTypes from 'prop-types';
 import { BiChevronDown } from 'react-icons/bi';
 
 const SelectElement = ({
-  title,
   labelText,
-  value,
   onSelect,
   selectOptions,
+  title,
+  value,
 }) => {
   const [hasOptions, setHasOptions] = useState(false);
 
@@ -89,6 +90,19 @@ const SelectElement = ({
 
 SelectElement.defaultProps = {
   labelText: '',
+};
+
+SelectElement.propTypes = {
+  /** Defines the label text and the place holder */
+  labelText: PropTypes.string,
+  /** List of select options to choose */
+  selectOptions: PropTypes.array,
+  /** Defines the corresponding property name in the state */
+  title: PropTypes.string,
+  /** Defines the value, which controls the value */
+  value: PropTypes.string,
+  /** Callback for clicking on a select option */
+  onSelect: PropTypes.func,
 };
 
 export default SelectElement;

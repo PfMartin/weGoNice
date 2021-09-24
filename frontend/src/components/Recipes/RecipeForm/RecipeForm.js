@@ -97,8 +97,9 @@ const RecipeForm = (props) => {
           onChange={(e) => onChange(e, recipe, setRecipe)}
         />
         <ValueInput
-          headline="Preparation Time"
-          inputValueState={prepTime}
+          labelText="Preparation Time"
+          value={prepTime.value}
+          measure={prepTime.measure}
           onChange={(e) => onChange(e, prepTime, setPrepTime)}
           selectOptions={measures}
         />
