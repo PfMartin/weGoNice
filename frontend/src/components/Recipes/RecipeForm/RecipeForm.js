@@ -2,7 +2,7 @@ import './RecipeForm.css';
 
 import { arrayMoveImmutable } from 'array-move';
 
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
@@ -11,6 +11,7 @@ import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ValueInput from 'src/components/Forms/ValueInput/ValueInput.js';
 import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInput.js';
+import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 import { BiPlus } from 'react-icons/bi';
@@ -74,19 +75,18 @@ const RecipeForm = ({ onChangeView, view }) => {
   const [prepTime, setPrepTime] = useState({ value: 0, measure: 'min' });
   const [ingredients, setIngredients] = useState([
     {
-      id: 1,
-      value: 0,
-      measure: 'g',
-      text: '',
-    },
-    {
-      id: 2,
+      id: '',
       value: 0,
       measure: 'g',
       text: '',
     },
   ]);
-  const [prepSteps, setPrepSteps] = useState([]);
+  const [prepSteps, setPrepSteps] = useState([
+    {
+      id: '',
+      text: '',
+    },
+  ]);
 
   const onChange = (e, state, setterFunction) => {
     const selectFieldNames = ['measure', 'reference', 'category'];
@@ -173,6 +173,56 @@ const RecipeForm = ({ onChangeView, view }) => {
     setIngredients(stateCopy);
   };
 
+  const updatePrepSteps = (e) => {
+    const name = e.target.id;
+
+    const index = e.target.getAttribute('index');
+    const input = e.target.value;
+
+    let stateCopy = [...prepSteps];
+    stateCopy[index] = {
+      ...stateCopy[index],
+      ...{ [name]: input },
+    };
+
+    setPrepSteps(stateCopy);
+  };
+
+  const addPrepStep = () => {
+    let stateCopy = [...prepSteps];
+    stateCopy.push({
+      id: '',
+      text: '',
+    });
+
+    setPrepSteps(stateCopy);
+  };
+
+  const movePrepStepUp = (e) => {
+    const index = e.currentTarget.parentNode.getAttribute('index');
+
+    let stateCopy = [...prepSteps];
+    stateCopy = arrayMoveImmutable(stateCopy, index, index - 1);
+
+    setPrepSteps(stateCopy);
+  };
+
+  const movePrepStepDown = (e) => {
+    const index = e.currentTarget.parentNode.getAttribute('index');
+
+    let stateCopy = [...prepSteps];
+    stateCopy = arrayMoveImmutable(stateCopy, index, index + 1);
+
+    setPrepSteps(stateCopy);
+  };
+
+  const deletePrepStep = (e) => {
+    const index = e.currentTarget.parentNode.getAttribute('index');
+    let stateCopy = [...prepSteps];
+    stateCopy.splice(index, 1);
+    setPrepSteps(stateCopy);
+  };
+
   const onSave = () => {
     console.log('onSave');
   };
@@ -229,18 +279,42 @@ const RecipeForm = ({ onChangeView, view }) => {
           </div>
           {ingredients.map((ingredient, index) => {
             return (
-              <IngredientInput
-                index={index}
-                ingredient={ingredient}
-                onChange={updateIngredients}
-                onDelete={deleteIngredient}
-                moveUp={moveIngredientUp}
-                moveDown={moveIngredientDown}
-              />
+              <Fragment key={index}>
+                <IngredientInput
+                  index={index}
+                  ingredient={ingredient}
+                  onChange={updateIngredients}
+                  onDelete={deleteIngredient}
+                  moveUp={moveIngredientUp}
+                  moveDown={moveIngredientDown}
+                />
+              </Fragment>
             );
           })}
           <IconFrame>
             <BiPlus onClick={addIngredient} />
+          </IconFrame>
+        </div>
+        <div className="multiple-section form-element">
+          <div className="section-title">
+            <p>Preparation Steps</p>
+          </div>
+          {prepSteps.map((prepStep, index) => {
+            return (
+              <Fragment key={index}>
+                <PrepStepInput
+                  prepStep={prepStep}
+                  index={index}
+                  onChange={updatePrepSteps}
+                  moveUp={movePrepStepUp}
+                  moveDown={movePrepStepDown}
+                  onDelete={deletePrepStep}
+                />
+              </Fragment>
+            );
+          })}
+          <IconFrame>
+            <BiPlus onClick={addPrepStep} />
           </IconFrame>
         </div>
         {view === 'create' ? (
