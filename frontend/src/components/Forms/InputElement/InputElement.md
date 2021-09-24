@@ -5,7 +5,7 @@
 ```jsx
 <InputElement
   title="title"
-  labelText="Title"
+  labelText="Input Element"
   type="text"
   onChange={() => console.log('onChange')}
 />

@@ -1,3 +1,5 @@
+import './ValueInput.css';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import InputElement from 'src/components/Forms/InputElement/InputElement.js';
@@ -35,7 +37,7 @@ ValueInput.propTypes = {
   /** Array of all select options to choose from */
   selectOptions: PropTypes.array,
   /** State value that controls input value */
-  value: PropTypes.string,
+  value: PropTypes.number,
 };
 
 export default ValueInput;

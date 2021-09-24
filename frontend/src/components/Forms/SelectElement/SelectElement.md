@@ -4,7 +4,7 @@
 
 ```jsx
 <SelectElement
-  labelText="Title"
+  labelText="Select Element"
   onSelect={() => console.log('onSelect')}
   selectOptions={[
     { id: 1, title: 'Option 1' },
