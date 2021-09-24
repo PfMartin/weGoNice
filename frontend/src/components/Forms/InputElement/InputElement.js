@@ -2,6 +2,8 @@ import './InputElement.css';
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
+// import 'src/App.css';
+
 const InputElement = ({ title, labelText, type, value, onChange }) => {
   return labelText !== '' ? (
     <Fragment>
