@@ -3,7 +3,7 @@ import './PrepStepInput.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import InputElement from 'src/components/Forms/InputElement/InputElement';
+import TextElement from 'src/components/Forms/TextElement/TextElement';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
 import { BiTrash, BiDownArrowAlt, BiUpArrowAlt } from 'react-icons/bi';
@@ -18,10 +18,9 @@ const PrepStepInput = ({
 }) => {
   return (
     <div className="prepstep-input">
-      <InputElement
+      <TextElement
         index={index}
         title="text"
-        type="text"
         value={prepStep.text}
         onChange={onChange}
       />
