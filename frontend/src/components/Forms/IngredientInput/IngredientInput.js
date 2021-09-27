@@ -31,35 +31,35 @@ const measures = [
 const IngredientInput = ({
   index,
   ingredient,
+  moveDown,
+  moveUp,
   onChange,
   onDelete,
-  moveUp,
-  moveDown,
 }) => {
   return (
     <div className="ingredient-input">
       <div className="value-input">
         <InputElement
           index={index}
+          onChange={onChange}
           title="value"
           type="number"
           value={ingredient.value}
-          onChange={onChange}
         />
         <SelectElement
           index={index}
-          title="measure"
-          value={ingredient.measure}
           onSelect={onChange}
           selectOptions={measures}
+          title="measure"
+          value={ingredient.measure}
         />
       </div>
       <InputElement
         index={index}
+        onChange={onChange}
         title="text"
         type="text"
         value={ingredient.text}
-        onChange={onChange}
       />
       <div className="ingredient-control" index={index}>
         <IconFrame onClick={moveUp}>
@@ -81,8 +81,14 @@ IngredientInput.propTypes = {
   index: PropTypes.number,
   /** Ingredient that should be modified */
   ingredient: PropTypes.object,
+  /** Function to move an ingredient one position down in the array */
+  moveDown: PropTypes.func,
+  /** Function to move an ingredient one position up in the array */
+  moveUp: PropTypes.func,
   /** Callback for the change event of one of the form elements */
   onChange: PropTypes.func,
+  /** Callback for the delete event */
+  onDelete: PropTypes.func,
 };
 
 export default IngredientInput;

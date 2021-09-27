@@ -283,10 +283,10 @@ const RecipeForm = ({ onChangeView, view }) => {
                 <IngredientInput
                   index={index}
                   ingredient={ingredient}
+                  moveDown={moveIngredientDown}
+                  moveUp={moveIngredientUp}
                   onChange={updateIngredients}
                   onDelete={deleteIngredient}
-                  moveUp={moveIngredientUp}
-                  moveDown={moveIngredientDown}
                 />
               </Fragment>
             );
@@ -303,12 +303,12 @@ const RecipeForm = ({ onChangeView, view }) => {
             return (
               <Fragment key={index}>
                 <PrepStepInput
-                  prepStep={prepStep}
                   index={index}
-                  onChange={updatePrepSteps}
-                  moveUp={movePrepStepUp}
                   moveDown={movePrepStepDown}
+                  moveUp={movePrepStepUp}
+                  onChange={updatePrepSteps}
                   onDelete={deletePrepStep}
+                  prepStep={prepStep}
                 />
               </Fragment>
             );
