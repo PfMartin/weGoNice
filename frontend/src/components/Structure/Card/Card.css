@@ -1,3 +1,4 @@
+.card-hoverable,
 .card {
   position: relative;
   background: var(--light-grey);
@@ -10,7 +11,7 @@
   min-width: 300px;
 }
 
-.card:hover {
+.card-hoverable:hover {
   cursor: pointer;
   background: var(--mid-grey);
   color: var(--white);

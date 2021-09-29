@@ -130,6 +130,9 @@ const RecipesOverview = (props) => {
   const displayCheck = (recipe, category) => {
     const shouldBeDisplayed =
       recipe.recipesCategoryId.title === category && filterTags[category];
+
+    console.log(category);
+
     return shouldBeDisplayed;
   };
 

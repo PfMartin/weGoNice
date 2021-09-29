@@ -7,8 +7,16 @@ import Card from 'src/components/Structure/Card/Card.js';
 import { BiWorld } from 'react-icons/bi';
 import { FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi';
 import LinkIcon from 'src/components/Structure/LinkIcon/LinkIcon.js';
+import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 
 const ReferencesOverview = (props) => {
+  const [filterTags, setFilterTags] = useState({
+    homepage: true,
+    instagram: true,
+    youtube: true,
+    facebook: true,
+  });
+
   const [references, setReferences] = useState([
     {
       id: 1,
@@ -84,17 +92,64 @@ const ReferencesOverview = (props) => {
     },
   ]);
 
+  const onToggleFilter = (e) => {
+    const name = e.currentTarget.getAttribute('name');
+    setFilterTags({
+      ...filterTags,
+      ...{ [name]: !filterTags[name] },
+    });
+  };
+
+  const displayCheck = (reference, socialMedia) => {
+    const shouldBeDisplayed =
+      reference[socialMedia] !== '' && filterTags[socialMedia];
+
+    return shouldBeDisplayed;
+  };
+
   return (
     <div className="references-overview">
       <SiteHeader
         headline="References"
         onClickPlus={() => console.log('create reference')}
       />
-      <OptionsBar searchPlaceholder="Search References" />
+      <OptionsBar searchPlaceholder="Search References">
+        <FilterTag
+          name="homepage"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.homepage}
+        >
+          homepage
+        </FilterTag>
+        <FilterTag
+          name="instagram"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.instagram}
+        >
+          instagram
+        </FilterTag>
+        <FilterTag
+          name="facebook"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.facebook}
+        >
+          facebook
+        </FilterTag>
+        <FilterTag
+          name="youtube"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.youtube}
+        >
+          youtube
+        </FilterTag>
+      </OptionsBar>
       <div className="content-section">
         {references.map((reference) => {
-          return (
-            <Card>
+          return displayCheck(reference, 'homepage') ||
+            displayCheck(reference, 'instagram') ||
+            displayCheck(reference, 'facebook') ||
+            displayCheck(reference, 'youtube') ? (
+            <Card hoverable={false}>
               <h3>
                 {`${reference.academicTitle.title} ${reference.firstName} ${reference.lastName}`}
               </h3>
@@ -130,6 +185,8 @@ const ReferencesOverview = (props) => {
                 )}
               </div>
             </Card>
+          ) : (
+            ''
           );
         })}
       </div>
