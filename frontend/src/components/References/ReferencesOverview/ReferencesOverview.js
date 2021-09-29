@@ -1,6 +1,6 @@
 import './ReferencesOverview.css';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
@@ -132,6 +132,10 @@ const ReferencesOverview = ({ onChangeView, view }) => {
     return shouldBeDisplayed;
   };
 
+  const onModify = () => {
+    console.log('Modify');
+  };
+
   return (
     <div className="references-overview">
       <SiteHeader
@@ -181,9 +185,11 @@ const ReferencesOverview = ({ onChangeView, view }) => {
               <h3>
                 {`${reference.academicTitle.title} ${reference.firstName} ${reference.lastName}`}
               </h3>
-              <p>{reference.nickName}</p>
+              <p>
+                {reference.nickName} {reference.id}
+              </p>
               <div className="modify-box">
-                <IconFrame>
+                <IconFrame onClick={onModify}>
                   <BiPencil />
                 </IconFrame>
               </div>

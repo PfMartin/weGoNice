@@ -13,10 +13,8 @@ const References = () => {
     <div className="references">
       {view === 'overview' ? (
         <ReferencesOverview view={view} onChangeView={onChangeView} />
-      ) : view === 'create' ? (
-        <ReferenceForm view={view} onChangeView={onChangeView} />
       ) : (
-        ''
+        <ReferenceForm view={view} onChangeView={onChangeView} />
       )}
     </div>
   );
