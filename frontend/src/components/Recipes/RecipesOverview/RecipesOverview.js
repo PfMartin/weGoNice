@@ -1,7 +1,6 @@
 import './RecipesOverview.css';
 import React, { useState } from 'react';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
-import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import Card from 'src/components/Structure/Card/Card.js';
@@ -129,8 +128,6 @@ const RecipesOverview = (props) => {
   const displayCheck = (recipe, category) => {
     const shouldBeDisplayed =
       recipe.recipesCategoryId.title === category && filterTags[category];
-
-    console.log(category);
 
     return shouldBeDisplayed;
   };

@@ -13,7 +13,10 @@ const FormFrame = ({ children }) => {
 
 FormFrame.propTypes = {
   /** Allows strings (for <div>) and components as children */
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
 };
 
 export default FormFrame;

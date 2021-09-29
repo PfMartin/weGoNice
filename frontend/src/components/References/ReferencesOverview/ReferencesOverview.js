@@ -3,8 +3,9 @@ import './ReferencesOverview.css';
 import React, { useState } from 'react';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
+import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import Card from 'src/components/Structure/Card/Card.js';
-import { BiWorld } from 'react-icons/bi';
+import { BiWorld, BiPencil, BiTrash } from 'react-icons/bi';
 import { FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi';
 import LinkIcon from 'src/components/Structure/LinkIcon/LinkIcon.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
@@ -154,6 +155,11 @@ const ReferencesOverview = (props) => {
                 {`${reference.academicTitle.title} ${reference.firstName} ${reference.lastName}`}
               </h3>
               <p>{reference.nickName}</p>
+              <div className="modify-box">
+                <IconFrame>
+                  <BiPencil />
+                </IconFrame>
+              </div>
               <div className="icon-box">
                 {reference.homepage ? (
                   <LinkIcon href={reference.homepage}>
