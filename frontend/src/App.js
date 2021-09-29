@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState } from 'react';
 import Navbar from 'src/components/Structure/Navbar/Navbar.js';
 import Recipes from 'src/components/Recipes/Recipes/Recipes.js';
-import ReferencesOverview from 'src/components/References/ReferencesOverview/ReferencesOverview.js';
+import References from 'src/components/References/References/References.js';
 import Footer from 'src/components/Structure/Footer/Footer.js';
 
 const App = () => {
@@ -20,7 +20,7 @@ const App = () => {
   return (
     <div className="app">
       <Navbar onChangeApp={onChangeApp} app={app} />
-      {app === 'recipes' ? <Recipes /> : <ReferencesOverview />}
+      {app === 'recipes' ? <Recipes /> : <References />}
       <Footer />
     </div>
   );
