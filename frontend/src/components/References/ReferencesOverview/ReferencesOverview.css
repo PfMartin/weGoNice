@@ -4,3 +4,10 @@
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 0.5rem;
 }
+
+.icon-box {
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  align-items: left;
+}

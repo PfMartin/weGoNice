@@ -6,7 +6,7 @@ import ReferencesOverview from 'src/components/References/ReferencesOverview/Ref
 import Footer from 'src/components/Structure/Footer/Footer.js';
 
 const App = () => {
-  const [app, setApp] = useState('recipes');
+  const [app, setApp] = useState('references');
 
   /**
    * Changes the app on click according to the targetapp attribute of the clicked element. The clicked element is usually an Icon. So you may look into 'src/components/Structure/IconFrame/IconFrame.js'
