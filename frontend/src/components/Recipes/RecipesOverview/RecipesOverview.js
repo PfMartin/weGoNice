@@ -109,13 +109,29 @@ const RecipesOverview = (props) => {
   ]);
 
   const onToggleAllFilter = (e) => {
-    setFilterTags({
-      basics: !filterTags.basics,
-      breakfast: !filterTags.breakfast,
-      main: !filterTags.main,
-      dessert: !filterTags.dessert,
-      drinks: !filterTags.drinks,
-    });
+    if (
+      filterTags.basics ||
+      filterTags.breakfast ||
+      filterTags.main ||
+      filterTags.dessert ||
+      filterTags.drinks
+    ) {
+      setFilterTags({
+        basics: false,
+        breakfast: false,
+        main: false,
+        dessert: false,
+        drinks: false,
+      });
+    } else {
+      setFilterTags({
+        basics: true,
+        breakfast: true,
+        main: true,
+        dessert: true,
+        drinks: true,
+      });
+    }
   };
 
   /**

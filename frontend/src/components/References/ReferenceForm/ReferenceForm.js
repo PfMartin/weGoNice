@@ -10,18 +10,22 @@ import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 const salutations = [
   {
     id: 1,
-    title: 'Mrs.',
+    title: '---',
   },
   {
     id: 2,
-    title: 'Ms.',
+    title: 'Mrs.',
   },
   {
     id: 3,
-    title: 'Mr.',
+    title: 'Ms.',
   },
   {
     id: 4,
+    title: 'Mr.',
+  },
+  {
+    id: 5,
     title: 'Div.',
   },
 ];
@@ -29,19 +33,19 @@ const salutations = [
 const academicTitles = [
   {
     id: 1,
-    title: 'B.Sc.',
+    title: '---',
   },
   {
     id: 2,
-    title: 'M.Sc.',
+    title: 'B.Sc.',
   },
   {
     id: 3,
-    title: 'Dr.',
+    title: 'M.Sc.',
   },
   {
     id: 4,
-    title: '---',
+    title: 'Dr.',
   },
 ];
 

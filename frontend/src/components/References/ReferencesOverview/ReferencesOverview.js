@@ -95,12 +95,26 @@ const ReferencesOverview = ({ onChangeView, view }) => {
   ]);
 
   const onToggleAllFilter = (e) => {
-    setFilterTags({
-      homepage: !filterTags.homepage,
-      instagram: !filterTags.instagram,
-      youtube: !filterTags.youtube,
-      facebook: !filterTags.facebook,
-    });
+    if (
+      filterTags.homepage |
+      filterTags.instagram |
+      filterTags.youtube |
+      filterTags.facebook
+    ) {
+      setFilterTags({
+        homepage: false,
+        instagram: false,
+        youtube: false,
+        facebook: false,
+      });
+    } else {
+      setFilterTags({
+        homepage: true,
+        instagram: true,
+        youtube: true,
+        facebook: true,
+      });
+    }
   };
 
   const onToggleFilter = (e) => {
