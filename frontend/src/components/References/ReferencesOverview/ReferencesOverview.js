@@ -93,6 +93,15 @@ const ReferencesOverview = (props) => {
     },
   ]);
 
+  const onToggleAllFilter = (e) => {
+    setFilterTags({
+      homepage: !filterTags.homepage,
+      instagram: !filterTags.instagram,
+      youtube: !filterTags.youtube,
+      facebook: !filterTags.facebook,
+    });
+  };
+
   const onToggleFilter = (e) => {
     const name = e.currentTarget.getAttribute('name');
     setFilterTags({
@@ -114,7 +123,10 @@ const ReferencesOverview = (props) => {
         headline="References"
         onClickPlus={() => console.log('create reference')}
       />
-      <OptionsBar searchPlaceholder="Search References">
+      <OptionsBar
+        searchPlaceholder="Search References"
+        onClickFilter={onToggleAllFilter}
+      >
         <FilterTag
           name="homepage"
           onToggleFilter={onToggleFilter}

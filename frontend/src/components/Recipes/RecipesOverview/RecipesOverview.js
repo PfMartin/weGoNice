@@ -108,6 +108,16 @@ const RecipesOverview = (props) => {
     },
   ]);
 
+  const onToggleAllFilter = (e) => {
+    setFilterTags({
+      basics: !filterTags.basics,
+      breakfast: !filterTags.breakfast,
+      main: !filterTags.main,
+      dessert: !filterTags.dessert,
+      drinks: !filterTags.drinks,
+    });
+  };
+
   /**
    * Toggles the clicked filterTags
    * @param  {Object} e EventObject
@@ -138,7 +148,10 @@ const RecipesOverview = (props) => {
         headline="Recipes"
         onClickPlus={(e) => props.onChangeView('create')}
       />
-      <OptionsBar searchPlaceholder="Search Recipes">
+      <OptionsBar
+        searchPlaceholder="Search Recipes"
+        onClickFilter={onToggleAllFilter}
+      >
         <FilterTag
           name="basics"
           onToggleFilter={onToggleFilter}
