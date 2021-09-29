@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); */
 
 :root {
   --accent: #0066cc;
@@ -31,29 +31,4 @@ Tags
 *************************************************/
 ul {
   list-style: none;
-}
-
-/*************************************************
-Froms
-*************************************************/
-
-/* input:focus::placeholder {
-  color: var(--light-accent);
-} */
-
-/*************************************************
-Buttons
-*************************************************/
-.btn {
-  padding: 0.5rem;
-  margin: 1rem;
-  border: 1px solid var(--black);
-  border-radius: 3px;
-  transition: 0.5s;
-}
-
-.btn:hover {
-  background: var(--accent);
-  color: var(--white);
-  cursor: pointer;
 }
