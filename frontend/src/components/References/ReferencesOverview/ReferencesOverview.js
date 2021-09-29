@@ -1,16 +1,17 @@
 import './ReferencesOverview.css';
 
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import Card from 'src/components/Structure/Card/Card.js';
-import { BiWorld, BiPencil, BiTrash } from 'react-icons/bi';
+import { BiWorld, BiPencil } from 'react-icons/bi';
 import { FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi';
 import LinkIcon from 'src/components/Structure/LinkIcon/LinkIcon.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 
-const ReferencesOverview = (props) => {
+const ReferencesOverview = ({ onChangeView, view }) => {
   const [filterTags, setFilterTags] = useState({
     homepage: true,
     instagram: true,
@@ -121,7 +122,7 @@ const ReferencesOverview = (props) => {
     <div className="references-overview">
       <SiteHeader
         headline="References"
-        onClickPlus={() => console.log('create reference')}
+        onClickPlus={(e) => onChangeView('create')}
       />
       <OptionsBar
         searchPlaceholder="Search References"
@@ -210,6 +211,13 @@ const ReferencesOverview = (props) => {
       </div>
     </div>
   );
+};
+
+ReferencesOverview.propTypes = {
+  /** Function for changing the view inside references */
+  onChangeView: PropTypes.func,
+  /** View inside references */
+  view: PropTypes.string,
 };
 
 export default ReferencesOverview;
