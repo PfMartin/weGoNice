@@ -34,7 +34,10 @@ IconFrame.propTypes = {
   /** Defines styling using css */
   className: PropTypes.string,
   /** Allows strings (for <div>) and components as children */
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
   /** Callback for the click event */
   onClick: PropTypes.func,
   /** Defines the size of the icon */

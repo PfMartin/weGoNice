@@ -1,10 +1,9 @@
 import './RecipesOverview.css';
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
-import { BiSearch } from 'react-icons/bi';
 import Card from 'src/components/Structure/Card/Card.js';
 
 const RecipesOverview = (props) => {
@@ -186,7 +185,7 @@ const RecipesOverview = (props) => {
             displayCheck(recipe, 'main') ||
             displayCheck(recipe, 'dessert') ||
             displayCheck(recipe, 'drinks') ? (
-            <Card>
+            <Card key={recipe.id}>
               <h3>{recipe.title}</h3>
               <p>
                 {recipe.generalValueId.value}{' '}

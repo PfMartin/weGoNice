@@ -8,7 +8,7 @@ import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 const LinkIcon = ({ children, href }) => {
   return (
     <div className="link-icon">
-      <a href={href} target="_blank">
+      <a href={href} target="_blank" rel="noreferrer">
         <IconFrame>{children}</IconFrame>
       </a>
     </div>

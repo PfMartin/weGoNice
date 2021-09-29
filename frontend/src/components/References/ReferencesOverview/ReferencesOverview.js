@@ -149,7 +149,7 @@ const ReferencesOverview = (props) => {
             displayCheck(reference, 'instagram') ||
             displayCheck(reference, 'facebook') ||
             displayCheck(reference, 'youtube') ? (
-            <Card hoverable={false}>
+            <Card key={reference.id} hoverable={false}>
               <h3>
                 {`${reference.academicTitle.title} ${reference.firstName} ${reference.lastName}`}
               </h3>

@@ -1,5 +1,5 @@
 import './Card.css';
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 const Card = ({ children, hoverable }) => {
