@@ -1,10 +1,11 @@
 import './RecipesOverview.css';
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
+import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import { BiSearch } from 'react-icons/bi';
-import RecipeCard from 'src/components/Recipes/RecipeCard/RecipeCard.js';
+import Card from 'src/components/Structure/Card/Card.js';
 
 const RecipesOverview = (props) => {
   const [filterTags, setFilterTags] = useState({
@@ -121,68 +122,78 @@ const RecipesOverview = (props) => {
     });
   };
 
+  /**
+   * Checks if a category should be displayed according to the set filterTags
+   * @param  {String} category The category, which should be checked for displaying
+   * @return {Bool}          Is true, if both statements are true
+   */
+  const displayCheck = (recipe, category) => {
+    const shouldBeDisplayed =
+      recipe.recipesCategoryId.title === category && filterTags[category];
+    return shouldBeDisplayed;
+  };
+
   return (
     <div className="recipes-overview">
       <SiteHeader
         headline="Recipes"
         onClickPlus={(e) => props.onChangeView('create')}
       />
-      <div className="recipe-options">
-        <div className="filter-section">
-          <h3>Filter</h3>
-          <div className="filter-tags">
-            <FilterTag
-              name="basics"
-              onToggleFilter={onToggleFilter}
-              isSelected={filterTags.basics}
-            >
-              basics
-            </FilterTag>
-            <FilterTag
-              name="breakfast"
-              onToggleFilter={onToggleFilter}
-              isSelected={filterTags.breakfast}
-            >
-              breakfast
-            </FilterTag>
-            <FilterTag
-              name="main"
-              onToggleFilter={onToggleFilter}
-              isSelected={filterTags.main}
-            >
-              main
-            </FilterTag>
-            <FilterTag
-              name="dessert"
-              onToggleFilter={onToggleFilter}
-              isSelected={filterTags.dessert}
-            >
-              dessert
-            </FilterTag>
-            <FilterTag
-              name="drinks"
-              onToggleFilter={onToggleFilter}
-              isSelected={filterTags.drinks}
-            >
-              drinks
-            </FilterTag>
-          </div>
-        </div>
-        <form onSubmit={(e) => e.preventDefault()} className="search-section">
-          <input placeholder="Search Recipes"></input>
-          <IconFrame>
-            <BiSearch />
-          </IconFrame>
-        </form>
-      </div>
+      <OptionsBar searchPlaceholder="Search Recipes">
+        <FilterTag
+          name="basics"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.basics}
+        >
+          basics
+        </FilterTag>
+        <FilterTag
+          name="breakfast"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.breakfast}
+        >
+          breakfast
+        </FilterTag>
+        <FilterTag
+          name="main"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.main}
+        >
+          main
+        </FilterTag>
+        <FilterTag
+          name="dessert"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.dessert}
+        >
+          dessert
+        </FilterTag>
+        <FilterTag
+          name="drinks"
+          onToggleFilter={onToggleFilter}
+          isSelected={filterTags.drinks}
+        >
+          drinks
+        </FilterTag>
+      </OptionsBar>
       <div className="content-section">
         {recipes.map((recipe) => {
-          return (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              filterTags={filterTags}
-            />
+          return displayCheck(recipe, 'basics') ||
+            displayCheck(recipe, 'breakfast') ||
+            displayCheck(recipe, 'main') ||
+            displayCheck(recipe, 'dessert') ||
+            displayCheck(recipe, 'drinks') ? (
+            <Card>
+              <h3>{recipe.title}</h3>
+              <p>
+                {recipe.generalValueId.value}{' '}
+                {recipe.generalValueId.generalMeasureId.abbreviation}
+              </p>
+              <p>{recipe.referenceReferenceId.author.name}</p>
+              <p className="category-tag">{recipe.recipesCategoryId.title}</p>
+            </Card>
+          ) : (
+            ''
           );
         })}
       </div>
