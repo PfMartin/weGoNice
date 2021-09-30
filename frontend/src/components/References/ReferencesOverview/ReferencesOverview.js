@@ -122,7 +122,7 @@ const ReferencesOverview = ({
                 {`${reference.academicTitle.title} ${reference.firstName} ${reference.lastName}`}
               </h3>
               <p>
-                {reference.nickName} {reference.id}
+                {reference.nickname} {reference.id}
               </p>
               <div className="modify-box">
                 <IconFrame onClick={onModify}>

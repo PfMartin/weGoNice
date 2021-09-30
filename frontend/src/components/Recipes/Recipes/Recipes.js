@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import RecipesOverview from 'src/components/Recipes/RecipesOverview/RecipesOverview.js';
 import RecipeForm from 'src/components/Recipes/RecipeForm/RecipeForm.js';
+import RecipeDetail from 'src/components/Recipes/RecipeDetail/RecipeDetail.js';
 
 const Recipes = () => {
   const [view, setView] = useState('overview');
@@ -11,9 +12,20 @@ const Recipes = () => {
       title: 'Breakfast',
       referenceReferenceId: {
         id: 1,
-        author: {
-          id: 1,
-          name: 'Nico Rittenau',
+        homepage: 'https://www.nikorittenau.com',
+        facebook: '',
+        instagram: 'https://www.instagram.com/niko_rittenau',
+        youtube: '',
+        salutation: {
+          title: 'Mr.',
+          description: '',
+        },
+        nickname: 'Niko Rittenau',
+        firstName: 'Niko',
+        lastName: 'Rittenau',
+        academicTitle: {
+          title: '',
+          description: '',
         },
       },
       recipesCategoryId: {
@@ -33,10 +45,21 @@ const Recipes = () => {
       id: 2,
       title: 'Main',
       referenceReferenceId: {
-        id: 1,
-        author: {
-          id: 1,
-          name: 'Nico Rittenau',
+        id: 2,
+        homepage: 'https://biancazapatka.com',
+        facebook: '',
+        instagram: 'https://www.instagram.com/biancazapatka/',
+        youtube: '',
+        salutation: {
+          title: 'Mrs.',
+          description: '',
+        },
+        nickname: 'Bianca Zapatka',
+        firstName: 'Bianca',
+        lastName: 'Zapatka',
+        academicTitle: {
+          title: '',
+          description: '',
         },
       },
       recipesCategoryId: {
@@ -56,10 +79,21 @@ const Recipes = () => {
       id: 3,
       title: 'Drink',
       referenceReferenceId: {
-        id: 1,
-        author: {
-          id: 1,
-          name: 'Nico Rittenau',
+        id: 3,
+        homepage: 'https://schnabularasa.com',
+        facebook: '',
+        instagram: 'https://www.instagram.com/schnabula_rasa/',
+        youtube: '',
+        salutation: {
+          title: 'Mrs.',
+          description: '',
+        },
+        nickname: 'Schnabularasa',
+        firstName: 'Jelena',
+        lastName: '',
+        academicTitle: {
+          title: '',
+          description: '',
         },
       },
       recipesCategoryId: {
@@ -79,10 +113,21 @@ const Recipes = () => {
       id: 4,
       title: 'Dessert',
       referenceReferenceId: {
-        id: 1,
-        author: {
-          id: 1,
-          name: 'Nico Rittenau',
+        id: 4,
+        homepage: 'https://maxlamanna.com',
+        facebook: 'https://www.facebook.com/maxlmanna74',
+        instagram: 'https://www.instagram.com/maxlamanna/',
+        youtube: 'https://www.youtube.com/channel/UCusvG_uAvkU_4qzx788Z3HQ',
+        salutation: {
+          title: 'Mr.',
+          description: '',
+        },
+        nickname: 'maxlamanna',
+        firstName: 'Max',
+        lastName: 'La Manna',
+        academicTitle: {
+          title: '',
+          description: '',
         },
       },
       recipesCategoryId: {
@@ -123,7 +168,10 @@ const Recipes = () => {
           recipes={recipes}
         />
       ) : view === 'detail' ? (
-        <h1>Hi</h1>
+        <RecipeDetail
+          currentRecipe={currentRecipe}
+          onChangeView={onChangeView}
+        />
       ) : (
         <RecipeForm view={view} onChangeView={onChangeView} />
       )}

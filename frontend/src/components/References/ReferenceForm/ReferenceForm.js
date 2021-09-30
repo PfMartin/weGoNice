@@ -101,7 +101,7 @@ const ReferenceForm = ({ currentReference, onChangeView, view }) => {
       academicTitle: currentReference.academicTitle.title,
       firstName: currentReference.firstName,
       lastName: currentReference.lastName,
-      nickname: currentReference.nickName,
+      nickname: currentReference.nickname,
       homepage: currentReference.homepage,
       instagram: currentReference.instagram,
       youtube: currentReference.youtube,
@@ -146,7 +146,7 @@ const ReferenceForm = ({ currentReference, onChangeView, view }) => {
         />
         <InputElement
           title="nickname"
-          labelText="Nickname"
+          labelText="nickname"
           type="text"
           value={reference.nickname}
           onChange={updateReference}

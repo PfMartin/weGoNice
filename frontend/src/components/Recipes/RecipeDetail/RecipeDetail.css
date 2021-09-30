@@ -1,0 +1,46 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid var(--dark-grey);
+  margin-bottom: 1rem;
+}
+
+.right {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+th,
+td {
+  padding: 0.3rem;
+}
+
+th {
+  border-bottom: 1px solid var(--dark-grey);
+}
+
+h2 {
+  margin: 1rem 0;
+}
+
+table.prep-steps {
+  width: 100%;
+}
+
+table.ingredients > tr:nth-child(even) {
+  background: var(--light-grey);
+}
+
+table.prep-steps td:nth-child(1) {
+  width: 40px;
+  vertical-align: top;
+}
+
+.accent {
+  color: var(--light-accent);
+}

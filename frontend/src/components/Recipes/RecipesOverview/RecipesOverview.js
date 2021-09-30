@@ -131,7 +131,7 @@ const RecipesOverview = ({ onChangeView, onSetCurrentRecipe, recipes }) => {
                 {recipe.generalValueId.value}{' '}
                 {recipe.generalValueId.generalMeasureId.abbreviation}
               </p>
-              <p>{recipe.referenceReferenceId.author.name}</p>
+              <p>{recipe.referenceReferenceId.nickname}</p>
               <p className="category-tag">{recipe.recipesCategoryId.title}</p>
             </Card>
           ) : (

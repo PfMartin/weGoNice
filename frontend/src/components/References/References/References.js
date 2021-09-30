@@ -15,7 +15,7 @@ const References = () => {
         title: 'Mr.',
         description: '',
       },
-      nickName: '',
+      nickname: '',
       firstName: 'Niko',
       lastName: 'Rittenau',
       academicTitle: {
@@ -33,7 +33,7 @@ const References = () => {
         title: 'Mrs.',
         description: '',
       },
-      nickName: '',
+      nickname: '',
       firstName: 'Bianca',
       lastName: 'Zapatka',
       academicTitle: {
@@ -51,7 +51,7 @@ const References = () => {
         title: 'Mrs.',
         description: '',
       },
-      nickName: 'Schnabularasa',
+      nickname: 'Schnabularasa',
       firstName: 'Jelena',
       lastName: '',
       academicTitle: {
@@ -69,7 +69,7 @@ const References = () => {
         title: 'Mr.',
         description: '',
       },
-      nickName: 'maxlamanna',
+      nickname: 'maxlamanna',
       firstName: 'Max',
       lastName: 'La Manna',
       academicTitle: {
