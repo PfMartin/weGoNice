@@ -6,6 +6,7 @@ import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
 import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
+import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const salutations = [
   {
@@ -79,6 +80,14 @@ const ReferenceForm = ({ onChangeView, view }) => {
     console.log(reference);
   };
 
+  const onSave = () => {
+    console.log('Save');
+  };
+
+  const onDelete = () => {
+    console.log('Delete');
+  };
+
   return (
     <div className="recipe-form">
       <SiteHeader
@@ -149,6 +158,11 @@ const ReferenceForm = ({ onChangeView, view }) => {
           value={reference.facebook}
           onChange={updateReference}
         />
+        {view === 'create' ? (
+          <ButtonBar onSave={onSave} />
+        ) : (
+          <ButtonBar onSave={onSave} onDelete={onDelete} />
+        )}
       </FormFrame>
     </div>
   );
