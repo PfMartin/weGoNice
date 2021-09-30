@@ -1,6 +1,6 @@
 import './ReferenceForm.css';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
@@ -50,7 +50,7 @@ const academicTitles = [
   },
 ];
 
-const ReferenceForm = ({ onChangeView, view }) => {
+const ReferenceForm = ({ currentReference, onChangeView, view }) => {
   const [reference, setReference] = useState({
     id: '',
     salutation: '',
@@ -63,6 +63,12 @@ const ReferenceForm = ({ onChangeView, view }) => {
     youtube: '',
     facebook: '',
   });
+
+  useEffect(() => {
+    if (view === 'modify') {
+      onInitial();
+    }
+  }, []);
 
   const updateReference = (e) => {
     const title = e.target.getAttribute('id');
@@ -86,6 +92,21 @@ const ReferenceForm = ({ onChangeView, view }) => {
 
   const onDelete = () => {
     console.log('Delete');
+  };
+
+  const onInitial = () => {
+    setReference({
+      id: currentReference.id,
+      salutation: currentReference.salutation.title,
+      academicTitle: currentReference.academicTitle.title,
+      firstName: currentReference.firstName,
+      lastName: currentReference.lastName,
+      nickname: currentReference.nickName,
+      homepage: currentReference.homepage,
+      instagram: currentReference.instagram,
+      youtube: currentReference.youtube,
+      facebook: currentReference.facebook,
+    });
   };
 
   return (

@@ -98,7 +98,11 @@ const References = () => {
           view={view}
         />
       ) : (
-        <ReferenceForm view={view} onChangeView={onChangeView} />
+        <ReferenceForm
+          currentReference={currentReference}
+          onChangeView={onChangeView}
+          view={view}
+        />
       )}
     </div>
   );
