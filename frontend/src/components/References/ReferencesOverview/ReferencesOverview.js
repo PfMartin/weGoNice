@@ -11,88 +11,18 @@ import { FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi';
 import LinkIcon from 'src/components/Structure/LinkIcon/LinkIcon.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 
-const ReferencesOverview = ({ onChangeView, view }) => {
+const ReferencesOverview = ({
+  onChangeView,
+  onSetCurrentReference,
+  references,
+  view,
+}) => {
   const [filterTags, setFilterTags] = useState({
     homepage: true,
     instagram: true,
     youtube: true,
     facebook: true,
   });
-
-  const [references, setReferences] = useState([
-    {
-      id: 1,
-      homepage: 'https://www.nikorittenau.com',
-      facebook: '',
-      instagram: 'https://www.instagram.com/niko_rittenau',
-      youtube: '',
-      salutation: {
-        title: 'Mr.',
-        description: '',
-      },
-      nickName: '',
-      firstName: 'Niko',
-      lastName: 'Rittenau',
-      academicTitle: {
-        title: '',
-        description: '',
-      },
-    },
-    {
-      id: 2,
-      homepage: 'https://biancazapatka.com',
-      facebook: '',
-      instagram: 'https://www.instagram.com/biancazapatka/',
-      youtube: '',
-      salutation: {
-        title: 'Mrs.',
-        description: '',
-      },
-      nickName: '',
-      firstName: 'Bianca',
-      lastName: 'Zapatka',
-      academicTitle: {
-        title: '',
-        description: '',
-      },
-    },
-    {
-      id: 3,
-      homepage: 'https://schnabularasa.com',
-      facebook: '',
-      instagram: 'https://www.instagram.com/schnabula_rasa/',
-      youtube: '',
-      salutation: {
-        title: 'Mrs.',
-        description: '',
-      },
-      nickName: 'Schnabularasa',
-      firstName: 'Jelena',
-      lastName: '',
-      academicTitle: {
-        title: '',
-        description: '',
-      },
-    },
-    {
-      id: 4,
-      homepage: 'https://maxlamanna.com',
-      facebook: 'https://www.facebook.com/maxlmanna74',
-      instagram: 'https://www.instagram.com/maxlamanna/',
-      youtube: 'https://www.youtube.com/channel/UCusvG_uAvkU_4qzx788Z3HQ',
-      salutation: {
-        title: 'Mr.',
-        description: '',
-      },
-      nickName: 'maxlamanna',
-      firstName: 'Max',
-      lastName: 'La Manna',
-      academicTitle: {
-        title: '',
-        description: '',
-      },
-    },
-  ]);
 
   const onToggleAllFilter = (e) => {
     if (
@@ -132,8 +62,13 @@ const ReferencesOverview = ({ onChangeView, view }) => {
     return shouldBeDisplayed;
   };
 
-  const onModify = () => {
-    console.log('Modify');
+  const onModify = (e) => {
+    const id = parseInt(e.currentTarget.parentNode.getAttribute('id'));
+
+    const filteredReference = references.filter((r) => r.id === id)[0];
+
+    onSetCurrentReference(filteredReference);
+    onChangeView('modify');
   };
 
   return (
@@ -188,7 +123,7 @@ const ReferencesOverview = ({ onChangeView, view }) => {
               <p>
                 {reference.nickName} {reference.id}
               </p>
-              <div className="modify-box">
+              <div id={reference.id} className="modify-box">
                 <IconFrame onClick={onModify}>
                   <BiPencil />
                 </IconFrame>
