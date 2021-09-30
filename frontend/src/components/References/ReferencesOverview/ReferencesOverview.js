@@ -63,8 +63,9 @@ const ReferencesOverview = ({
   };
 
   const onModify = (e) => {
-    const id = parseInt(e.currentTarget.parentNode.getAttribute('id'));
-
+    const id = parseInt(
+      e.currentTarget.parentNode.parentNode.getAttribute('id')
+    );
     const filteredReference = references.filter((r) => r.id === id)[0];
 
     onSetCurrentReference(filteredReference);
@@ -116,14 +117,14 @@ const ReferencesOverview = ({
             displayCheck(reference, 'instagram') ||
             displayCheck(reference, 'facebook') ||
             displayCheck(reference, 'youtube') ? (
-            <Card key={reference.id} hoverable={false}>
+            <Card id={reference.id} key={reference.id} hoverable={false}>
               <h3>
                 {`${reference.academicTitle.title} ${reference.firstName} ${reference.lastName}`}
               </h3>
               <p>
                 {reference.nickName} {reference.id}
               </p>
-              <div id={reference.id} className="modify-box">
+              <div className="modify-box">
                 <IconFrame onClick={onModify}>
                   <BiPencil />
                 </IconFrame>

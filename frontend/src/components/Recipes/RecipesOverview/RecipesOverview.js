@@ -5,7 +5,7 @@ import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import Card from 'src/components/Structure/Card/Card.js';
 
-const RecipesOverview = (props) => {
+const RecipesOverview = ({ onChangeView, onSetCurrentRecipe, recipes }) => {
   const [filterTags, setFilterTags] = useState({
     basics: true,
     breakfast: true,
@@ -13,100 +13,6 @@ const RecipesOverview = (props) => {
     dessert: true,
     drinks: true,
   });
-  const [recipes, setRecipes] = useState([
-    {
-      id: 1,
-      title: 'Breakfast',
-      referenceReferenceId: {
-        id: 1,
-        author: {
-          id: 1,
-          name: 'Nico Rittenau',
-        },
-      },
-      recipesCategoryId: {
-        id: 1,
-        title: 'breakfast',
-      },
-      generalValueId: {
-        id: 1,
-        value: 15,
-        generalMeasureId: {
-          id: 1,
-          abbreviation: 'min',
-        },
-      },
-    },
-    {
-      id: 2,
-      title: 'Main',
-      referenceReferenceId: {
-        id: 1,
-        author: {
-          id: 1,
-          name: 'Nico Rittenau',
-        },
-      },
-      recipesCategoryId: {
-        id: 1,
-        title: 'main',
-      },
-      generalValueId: {
-        id: 1,
-        value: 30,
-        generalMeasureId: {
-          id: 1,
-          abbreviation: 'min',
-        },
-      },
-    },
-    {
-      id: 3,
-      title: 'Drink',
-      referenceReferenceId: {
-        id: 1,
-        author: {
-          id: 1,
-          name: 'Nico Rittenau',
-        },
-      },
-      recipesCategoryId: {
-        id: 1,
-        title: 'drinks',
-      },
-      generalValueId: {
-        id: 1,
-        value: 30,
-        generalMeasureId: {
-          id: 1,
-          abbreviation: 'min',
-        },
-      },
-    },
-    {
-      id: 4,
-      title: 'Dessert',
-      referenceReferenceId: {
-        id: 1,
-        author: {
-          id: 1,
-          name: 'Nico Rittenau',
-        },
-      },
-      recipesCategoryId: {
-        id: 1,
-        title: 'dessert',
-      },
-      generalValueId: {
-        id: 1,
-        value: 30,
-        generalMeasureId: {
-          id: 1,
-          abbreviation: 'min',
-        },
-      },
-    },
-  ]);
 
   const onToggleAllFilter = (e) => {
     if (
@@ -158,11 +64,19 @@ const RecipesOverview = (props) => {
     return shouldBeDisplayed;
   };
 
+  const onGetDetail = (e) => {
+    const id = parseInt(e.currentTarget.getAttribute('id'));
+    const recipe = recipes.filter((r) => r.id === id)[0];
+
+    onSetCurrentRecipe(recipe);
+    onChangeView('detail');
+  };
+
   return (
     <div className="recipes-overview">
       <SiteHeader
         headline="Recipes"
-        onClickPlus={(e) => props.onChangeView('create')}
+        onClickPlus={(e) => onChangeView('create')}
       />
       <OptionsBar
         searchPlaceholder="Search Recipes"
@@ -211,7 +125,7 @@ const RecipesOverview = (props) => {
             displayCheck(recipe, 'main') ||
             displayCheck(recipe, 'dessert') ||
             displayCheck(recipe, 'drinks') ? (
-            <Card key={recipe.id}>
+            <Card id={recipe.id} key={recipe.id} onClick={onGetDetail}>
               <h3>{recipe.title}</h3>
               <p>
                 {recipe.generalValueId.value}{' '}
