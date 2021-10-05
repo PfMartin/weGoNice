@@ -5,9 +5,11 @@ import PropTypes from 'prop-types';
 
 const FormFrame = ({ children }) => {
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="form-frame">
-      {children}
-    </form>
+    <div className="form-content">
+      <form onSubmit={(e) => e.preventDefault()} className="form-frame">
+        {children}
+      </form>
+    </div>
   );
 };
 

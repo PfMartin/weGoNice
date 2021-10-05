@@ -1,61 +1,3 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); */
-
-/* :root {
-  --accent: #0066cc;
-  --light-accent: #d0b691;
-  --light-grey: #e8e7ed;
-  --mid-grey: #8e8990;
-  --dark-grey: #34323d;
-  --white: #fff;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
-}
-
-body {
-  color: var(--dark-grey);
-} */
-
-/*************************************************
-Tags
-*************************************************/
-ul {
-  list-style: none;
-}
-
-/*************************************************
-Forms
-*************************************************/
-
-.form-element {
-  width: 300px;
-}
-
-.form-element {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.form-element input {
-  width: 250px;
-}
-
-.form-element input:focus {
-  border: 1px solid var(--light-accent);
-}
-
-.form-element label {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
-}
-
 .value-element .value-input {
   display: flex;
   justify-content: space-between;
@@ -74,50 +16,10 @@ Forms
   width: 50px;
 }
 
-.select-container {
-  padding: 0.3rem;
-  border: 1px solid var(--light-grey);
-  border-radius: 3px;
-  transition: 0.5s;
-  background: var(--light-grey);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.select-container:hover {
-  cursor: pointer;
-  border: 1px solid var(--light-accent);
-}
-
 /* For select fields in combination with a value input */
 .value-input .select-container {
   grid-template-columns: 10fr 5fr;
   justify-content: space-around;
-}
-
-/* For isolated select fields */
-.select-element .select-container {
-  width: 250px;
-  grid-template-columns: 10fr 1fr;
-  justify-content: space-between;
-}
-
-.select-element .select-container .placeholder {
-  color: var(--mid-grey);
-}
-
-.options-container {
-  position: relative;
-}
-
-/* Option list for select fields in general */
-.options-list {
-  position: absolute;
-  left: -6px;
-  top: 7px;
-  background: var(--mid-grey);
-  color: var(--white);
-  border-radius: 3px;
 }
 
 .value-input .options-list {
@@ -127,16 +29,4 @@ Forms
   background: var(--mid-grey);
   color: var(--white);
   border-radius: 3px;
-}
-
-.options-list li {
-  padding: 0.3rem;
-  transition: 0.1s;
-  border-radius: 3px;
-}
-
-.options-list li:hover {
-  color: var(--light-accent);
-  background: var(--dark-grey);
-  cursor: pointer;
 }

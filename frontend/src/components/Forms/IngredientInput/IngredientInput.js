@@ -26,6 +26,10 @@ const measures = [
     id: 4,
     title: 'l',
   },
+  {
+    id: 5,
+    title: 'pc',
+  },
 ];
 
 const IngredientInput = ({

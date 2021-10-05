@@ -1,55 +1,9 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); */
-
-/* :root {
-  --accent: #0066cc;
-  --light-accent: #d0b691;
-  --light-grey: #e8e7ed;
-  --mid-grey: #8e8990;
-  --dark-grey: #34323d;
-  --white: #fff;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
-}
-
-body {
-  color: var(--dark-grey);
-} */
-
-/*************************************************
-Tags
-*************************************************/
-ul {
-  list-style: none;
-}
-
-.form-element {
-  width: 300px;
-}
-
-.form-element {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.form-element label {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
-}
-
 .select-container {
   padding: 0.3rem;
-  border: 1px solid var(--light-grey);
+  border: 1px solid var(--mid-grey);
   border-radius: 3px;
   transition: 0.5s;
-  background: var(--light-grey);
+  background: var(--white);
   display: grid;
 }
 

@@ -146,7 +146,7 @@ const ReferenceForm = ({ currentReference, onChangeView, view }) => {
         />
         <InputElement
           title="nickname"
-          labelText="nickname"
+          labelText="Nickname"
           type="text"
           value={reference.nickname}
           onChange={updateReference}
