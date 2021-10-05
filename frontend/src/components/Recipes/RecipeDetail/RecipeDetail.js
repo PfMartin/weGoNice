@@ -128,11 +128,19 @@ const RecipeDetail = ({ currentRecipe, onChangeView }) => {
   return (
     <div className="recipe-detail">
       <SiteHeader
-        headline={`${currentRecipe.title} by ${currentRecipe.referenceReferenceId.nickname}`}
+        headline={currentRecipe.title}
         onClickBack={(e) => onChangeView('overview')}
       />
       <div className="section">
         <h2>General</h2>
+        <h4>
+          {currentRecipe.title} by {currentRecipe.referenceReferenceId.nickname}
+        </h4>
+        <h4>
+          {currentRecipe.generalValueId.value}{' '}
+          {currentRecipe.generalValueId.generalMeasureId.abbreviation}
+        </h4>
+        <h4>{currentRecipe.recipesCategoryId.title}</h4>
       </div>
       <div className="section">
         <h2>Ingredients</h2>

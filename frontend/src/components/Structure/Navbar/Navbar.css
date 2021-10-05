@@ -10,6 +10,6 @@ nav .apps-container {
   justify-content: flex-center;
   align-items: center;
   height: 60px;
-  border-bottom: 2px solid var(--mid-grey);
+  border-bottom: 2px solid var(--dark-grey);
   width: 100%;
 }

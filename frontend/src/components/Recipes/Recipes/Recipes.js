@@ -9,7 +9,7 @@ const Recipes = () => {
   const [recipes, setRecipes] = useState([
     {
       id: 1,
-      title: 'Breakfast',
+      title: 'Breakfast recipe',
       referenceReferenceId: {
         id: 1,
         homepage: 'https://www.nikorittenau.com',
@@ -43,7 +43,7 @@ const Recipes = () => {
     },
     {
       id: 2,
-      title: 'Main',
+      title: 'Main recipe',
       referenceReferenceId: {
         id: 2,
         homepage: 'https://biancazapatka.com',
@@ -77,7 +77,7 @@ const Recipes = () => {
     },
     {
       id: 3,
-      title: 'Drink',
+      title: 'Drink recipe',
       referenceReferenceId: {
         id: 3,
         homepage: 'https://schnabularasa.com',
@@ -111,7 +111,7 @@ const Recipes = () => {
     },
     {
       id: 4,
-      title: 'Dessert',
+      title: 'Dessert recipe',
       referenceReferenceId: {
         id: 4,
         homepage: 'https://maxlamanna.com',
