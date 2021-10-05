@@ -1,14 +1,14 @@
 import './FilterTag.css';
 import React from 'react';
 
-const FilterTag = (props) => {
+const FilterTag = ({ isSelected, name, onToggleFilter, children }) => {
   return (
     <div
-      className={props.isSelected ? 'filter-tag selected' : 'filter-tag'}
-      name={props.name}
-      onClick={props.onToggleFilter}
+      className={isSelected ? 'filter-tag selected' : 'filter-tag'}
+      name={name}
+      onClick={onToggleFilter}
     >
-      <p>{props.children}</p>
+      <p>{children}</p>
     </div>
   );
 };
