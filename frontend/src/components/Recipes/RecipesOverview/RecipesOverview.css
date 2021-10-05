@@ -41,8 +41,20 @@
   text-align: center;
   right: 0;
   color: var(--light-accent);
-  font-size: 0.8rem;
   padding: 0.3rem 0.5rem;
   border-radius: 3px;
   bottom: 0;
+}
+
+.info-line {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.info-icon {
+  padding: 0.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,9 +1,13 @@
 import './RecipesOverview.css';
 import React, { useState } from 'react';
+
+import { BiAlarm, BiUser } from 'react-icons/bi';
+
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import Card from 'src/components/Structure/Card/Card.js';
+import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
 const RecipesOverview = ({ onChangeView, onSetCurrentRecipe, recipes }) => {
   const [filterTags, setFilterTags] = useState({
@@ -127,11 +131,21 @@ const RecipesOverview = ({ onChangeView, onSetCurrentRecipe, recipes }) => {
             displayCheck(recipe, 'drinks') ? (
             <Card id={recipe.id} key={recipe.id} onClick={onGetDetail}>
               <h3>{recipe.title}</h3>
-              <p>
-                {recipe.generalValueId.value}{' '}
-                {recipe.generalValueId.generalMeasureId.abbreviation}
-              </p>
-              <p>{recipe.referenceReferenceId.nickname}</p>
+              <div className="info-line">
+                <IconFrame className="info-icon">
+                  <BiAlarm />
+                </IconFrame>
+                <p>
+                  {recipe.generalValueId.value}{' '}
+                  {recipe.generalValueId.generalMeasureId.abbreviation}
+                </p>
+              </div>
+              <div className="info-line">
+                <IconFrame className="info-icon">
+                  <BiUser />
+                </IconFrame>
+                <p>{recipe.referenceReferenceId.nickname}</p>
+              </div>
               <p className="category-tag">{recipe.recipesCategoryId.title}</p>
             </Card>
           ) : (
