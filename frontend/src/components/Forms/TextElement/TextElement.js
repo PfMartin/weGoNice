@@ -14,7 +14,6 @@ const TextElement = ({ index, labelText, onChange, title, value }) => {
           id={title}
           vavlue={value}
           onChange={onChange}
-          placeHolder={labelText}
         />
       </div>
     </Fragment>

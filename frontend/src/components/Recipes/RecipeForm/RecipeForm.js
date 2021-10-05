@@ -309,6 +309,7 @@ const RecipeForm = ({ onChangeView, view }) => {
                   onChange={updatePrepSteps}
                   onDelete={deletePrepStep}
                   prepStep={prepStep}
+                  placeholder="hey"
                 />
               </Fragment>
             );
