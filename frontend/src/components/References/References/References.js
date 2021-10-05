@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import ReferencesOverview from 'src/components/References/ReferencesOverview/ReferencesOverview.js';
 import ReferenceForm from 'src/components/References/ReferenceForm/ReferenceForm.js';
 
-const References = () => {
-  const [view, setView] = useState('overview');
+const References = ({ view, onChangeView }) => {
+  console.log(view);
+
   const [references, setReferences] = useState([
     {
       id: 1,
@@ -79,10 +80,6 @@ const References = () => {
     },
   ]);
   const [currentReference, setCurrentReference] = useState({});
-
-  const onChangeView = (input) => {
-    setView(input);
-  };
 
   const onSetCurrentReference = (input) => {
     setCurrentReference(input);

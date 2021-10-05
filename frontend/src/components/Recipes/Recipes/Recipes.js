@@ -3,9 +3,7 @@ import RecipesOverview from 'src/components/Recipes/RecipesOverview/RecipesOverv
 import RecipeForm from 'src/components/Recipes/RecipeForm/RecipeForm.js';
 import RecipeDetail from 'src/components/Recipes/RecipeDetail/RecipeDetail.js';
 
-const Recipes = () => {
-  const [view, setView] = useState('overview');
-
+const Recipes = ({ view, onChangeView }) => {
   const [recipes, setRecipes] = useState([
     {
       id: 1,
@@ -146,14 +144,6 @@ const Recipes = () => {
   ]);
 
   const [currentRecipe, setCurrentRecipe] = useState({});
-
-  /**
-   * Function to change the view in child components
-   * @param  {String} input Value the view should be changed to
-   */
-  const onChangeView = (input) => {
-    setView(input);
-  };
 
   const onSetCurrentRecipe = (input) => {
     setCurrentRecipe(input);

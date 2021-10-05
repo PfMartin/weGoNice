@@ -3,7 +3,7 @@ import React from 'react';
 import { BiFoodMenu, BiUser } from 'react-icons/bi';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
-const Navbar = (props) => {
+const Navbar = ({ app, onChangeApp, onChangeView }) => {
   return (
     <nav className="navbar">
       <div className="logo">
@@ -16,17 +16,23 @@ const Navbar = (props) => {
       </div>
       <div className="apps-container">
         <IconFrame
-          className={props.app === 'recipes' ? 'icon selected' : 'icon'}
+          className={app === 'recipes' ? 'icon selected' : 'icon'}
           size="35px"
-          onClick={props.onChangeApp}
+          onClick={(e) => {
+            onChangeApp(e);
+            onChangeView('overview');
+          }}
           targetApp="recipes"
         >
           <BiFoodMenu />
         </IconFrame>
         <IconFrame
-          className={props.app === 'references' ? 'icon selected' : 'icon'}
+          className={app === 'references' ? 'icon selected' : 'icon'}
           size="35px"
-          onClick={props.onChangeApp}
+          onClick={(e) => {
+            onChangeApp(e);
+            onChangeView('overview');
+          }}
           targetApp="references"
         >
           <BiUser />
