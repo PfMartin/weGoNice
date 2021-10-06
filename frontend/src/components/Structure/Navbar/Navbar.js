@@ -1,9 +1,10 @@
 import './Navbar.css';
 import React from 'react';
+import { connect } from 'react-redux';
 import { BiFoodMenu, BiUser } from 'react-icons/bi';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
-const Navbar = ({ app, onChangeApp, onChangeView }) => {
+const Navbar = ({ selectedApp, app, onChangeApp, onChangeView }) => {
   return (
     <nav className="navbar">
       <div className="logo">
@@ -42,4 +43,10 @@ const Navbar = ({ app, onChangeApp, onChangeView }) => {
   );
 };
 
-export default Navbar;
+const mapStateToProps = (state) => {
+  return {
+    selectedApp: state.selectedApp,
+  };
+};
+
+export default connect(mapStateToProps)(Navbar);
