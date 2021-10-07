@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { switchView } from 'src/actions';
+
 import ReferencesOverview from 'src/components/References/ReferencesOverview/ReferencesOverview.js';
 import ReferenceForm from 'src/components/References/ReferenceForm/ReferenceForm.js';
 
-const References = ({ view, onChangeView }) => {
-  console.log(view);
-
+const References = ({ selectedView }) => {
   const [references, setReferences] = useState([
     {
       id: 1,
@@ -87,22 +88,22 @@ const References = ({ view, onChangeView }) => {
 
   return (
     <div className="references">
-      {view === 'overview' ? (
+      {selectedView === 'overview' ? (
         <ReferencesOverview
-          onChangeView={onChangeView}
           onSetCurrentReference={onSetCurrentReference}
           references={references}
-          view={view}
         />
       ) : (
-        <ReferenceForm
-          currentReference={currentReference}
-          onChangeView={onChangeView}
-          view={view}
-        />
+        <ReferenceForm currentReference={currentReference} />
       )}
     </div>
   );
 };
 
-export default References;
+const mapStateToProps = (state) => {
+  return {
+    selectedView: state.selectedView,
+  };
+};
+
+export default connect(mapStateToProps, { switchView })(References);

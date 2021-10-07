@@ -2,6 +2,9 @@ import './ReferencesOverview.css';
 
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { switchView } from 'src/actions';
+
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
@@ -12,10 +15,9 @@ import LinkIcon from 'src/components/Structure/LinkIcon/LinkIcon.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 
 const ReferencesOverview = ({
-  onChangeView,
+  switchView,
   onSetCurrentReference,
   references,
-  view,
 }) => {
   const [filterTags, setFilterTags] = useState({
     homepage: true,
@@ -69,14 +71,14 @@ const ReferencesOverview = ({
     const filteredReference = references.filter((r) => r.id === id)[0];
 
     onSetCurrentReference(filteredReference);
-    onChangeView('modify');
+    switchView('modify');
   };
 
   return (
     <div className="references-overview">
       <SiteHeader
         headline="References"
-        onClickPlus={(e) => onChangeView('create')}
+        onClickPlus={(e) => switchView('create')}
       />
       <OptionsBar
         searchPlaceholder="Search References"
@@ -169,11 +171,11 @@ const ReferencesOverview = ({
   );
 };
 
-ReferencesOverview.propTypes = {
-  /** Function for changing the view inside references */
-  onChangeView: PropTypes.func,
-  /** View inside references */
-  view: PropTypes.string,
-};
+// ReferencesOverview.propTypes = {
+//   /** Function for changing the view inside references */
+//   switchView: PropTypes.func,
+//   /** View inside references */
+//   view: PropTypes.string,
+// };
 
-export default ReferencesOverview;
+export default connect(null, { switchView })(ReferencesOverview);

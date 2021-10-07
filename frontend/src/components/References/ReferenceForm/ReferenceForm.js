@@ -2,6 +2,9 @@ import './ReferenceForm.css';
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { switchView } from 'src/actions';
+
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
 import InputElement from 'src/components/Forms/InputElement/InputElement.js';
@@ -50,7 +53,7 @@ const academicTitles = [
   },
 ];
 
-const ReferenceForm = ({ currentReference, onChangeView, view }) => {
+const ReferenceForm = ({ selectedView, switchView, currentReference }) => {
   const [reference, setReference] = useState({
     id: '',
     salutation: '',
@@ -65,7 +68,7 @@ const ReferenceForm = ({ currentReference, onChangeView, view }) => {
   });
 
   useEffect(() => {
-    if (view === 'modify') {
+    if (selectedView === 'modify') {
       onInitial();
     }
   }, []);
@@ -112,8 +115,10 @@ const ReferenceForm = ({ currentReference, onChangeView, view }) => {
   return (
     <div className="recipe-form">
       <SiteHeader
-        headline={view === 'create' ? 'Create Reference' : 'Modify References'}
-        onClickBack={(e) => onChangeView('overview')}
+        headline={
+          selectedView === 'create' ? 'Create Reference' : 'Modify References'
+        }
+        onClickBack={() => switchView('overview')}
       />
       <FormFrame>
         <SelectElement
@@ -179,7 +184,7 @@ const ReferenceForm = ({ currentReference, onChangeView, view }) => {
           value={reference.facebook}
           onChange={updateReference}
         />
-        {view === 'create' ? (
+        {selectedView === 'create' ? (
           <ButtonBar onSave={onSave} />
         ) : (
           <ButtonBar onSave={onSave} onDelete={onDelete} />
@@ -189,4 +194,10 @@ const ReferenceForm = ({ currentReference, onChangeView, view }) => {
   );
 };
 
-export default ReferenceForm;
+const mapStateToProps = (state) => {
+  return {
+    selectedView: state.selectedView,
+  };
+};
+
+export default connect(mapStateToProps, { switchView })(ReferenceForm);
