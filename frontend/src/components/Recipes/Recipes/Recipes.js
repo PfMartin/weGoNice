@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { switchView } from 'src/actions';
+
 import RecipesOverview from 'src/components/Recipes/RecipesOverview/RecipesOverview.js';
 import RecipeForm from 'src/components/Recipes/RecipeForm/RecipeForm.js';
 import RecipeDetail from 'src/components/Recipes/RecipeDetail/RecipeDetail.js';
 
-const Recipes = ({ view, onChangeView }) => {
+const Recipes = ({ selectedView, switchView }) => {
   const [recipes, setRecipes] = useState([
     {
       id: 1,
@@ -151,22 +154,24 @@ const Recipes = ({ view, onChangeView }) => {
 
   return (
     <div className="recipes">
-      {view === 'overview' ? (
+      {selectedView === 'overview' ? (
         <RecipesOverview
-          onChangeView={onChangeView}
           onSetCurrentRecipe={onSetCurrentRecipe}
           recipes={recipes}
         />
-      ) : view === 'detail' ? (
-        <RecipeDetail
-          currentRecipe={currentRecipe}
-          onChangeView={onChangeView}
-        />
+      ) : selectedView === 'detail' ? (
+        <RecipeDetail currentRecipe={currentRecipe} />
       ) : (
-        <RecipeForm view={view} onChangeView={onChangeView} />
+        <RecipeForm />
       )}
     </div>
   );
 };
 
-export default Recipes;
+const mapStateToProps = (state) => {
+  return {
+    selectedView: state.selectedView,
+  };
+};
+
+export default connect(mapStateToProps, { switchView })(Recipes);

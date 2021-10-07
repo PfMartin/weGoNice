@@ -1,5 +1,7 @@
 import './RecipesOverview.css';
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { switchView } from 'src/actions';
 
 import { BiAlarm, BiUser } from 'react-icons/bi';
 
@@ -9,7 +11,7 @@ import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import Card from 'src/components/Structure/Card/Card.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
-const RecipesOverview = ({ onChangeView, onSetCurrentRecipe, recipes }) => {
+const RecipesOverview = ({ switchView, onSetCurrentRecipe, recipes }) => {
   const [filterTags, setFilterTags] = useState({
     basics: true,
     breakfast: true,
@@ -73,14 +75,14 @@ const RecipesOverview = ({ onChangeView, onSetCurrentRecipe, recipes }) => {
     const recipe = recipes.filter((r) => r.id === id)[0];
 
     onSetCurrentRecipe(recipe);
-    onChangeView('detail');
+    switchView('detail');
   };
 
   return (
     <div className="recipes-overview">
       <SiteHeader
         headline="Recipes"
-        onClickPlus={(e) => onChangeView('create')}
+        onClickPlus={(e) => switchView('create')}
       />
       <OptionsBar
         searchPlaceholder="Search Recipes"
@@ -157,4 +159,4 @@ const RecipesOverview = ({ onChangeView, onSetCurrentRecipe, recipes }) => {
   );
 };
 
-export default RecipesOverview;
+export default connect(null, { switchView })(RecipesOverview);

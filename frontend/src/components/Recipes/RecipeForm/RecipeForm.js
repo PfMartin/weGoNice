@@ -1,8 +1,9 @@
 import './RecipeForm.css';
+import React, { useState, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { switchView } from 'src/actions';
 
 import { arrayMoveImmutable } from 'array-move';
-
-import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
@@ -65,7 +66,7 @@ const measures = [
   },
 ];
 
-const RecipeForm = ({ onChangeView, view }) => {
+const RecipeForm = ({ switchView, selectedView }) => {
   const [recipe, setRecipe] = useState({
     title: '',
     category: '',
@@ -234,8 +235,8 @@ const RecipeForm = ({ onChangeView, view }) => {
   return (
     <div className="recipe-form">
       <SiteHeader
-        headline={view === 'create' ? 'Create Recipe' : 'Modify Recipe'}
-        onClickBack={(e) => onChangeView('overview')}
+        headline={selectedView === 'create' ? 'Create Recipe' : 'Modify Recipe'}
+        onClickBack={() => switchView('overview')}
       />
       <FormFrame>
         <InputElement
@@ -318,7 +319,7 @@ const RecipeForm = ({ onChangeView, view }) => {
             <BiPlus onClick={addPrepStep} />
           </IconFrame>
         </div>
-        {view === 'create' ? (
+        {selectedView === 'create' ? (
           <ButtonBar onSave={onSave} />
         ) : (
           <ButtonBar onSave={onSave} onDelete={onDelete} />
@@ -328,11 +329,17 @@ const RecipeForm = ({ onChangeView, view }) => {
   );
 };
 
-RecipeForm.propTypes = {
-  /** Callback for changing the global view */
-  onChangeView: PropTypes.func,
-  /** Gloabal view that defines what components are displayed */
-  view: PropTypes.string,
+const mapStateToProps = (state) => {
+  return {
+    selectedView: state.selectedView,
+  };
 };
 
-export default RecipeForm;
+// RecipeForm.propTypes = {
+//   /** Callback for changing the global view */
+//   onChangeView: PropTypes.func,
+//   /** Gloabal view that defines what components are displayed */
+//   view: PropTypes.string,
+// };
+
+export default connect(mapStateToProps, { switchView })(RecipeForm);

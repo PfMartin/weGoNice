@@ -2,6 +2,8 @@ import './RecipeDetail.css';
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { switchView } from 'src/actions';
 
 import { BiAlarm } from 'react-icons/bi';
 
@@ -127,12 +129,12 @@ const prepSteps = [
   },
 ];
 
-const RecipeDetail = ({ currentRecipe, onChangeView }) => {
+const RecipeDetail = ({ currentRecipe, switchView }) => {
   return (
     <div className="recipe-detail">
       <SiteHeader
         headline={currentRecipe.title}
-        onClickBack={(e) => onChangeView('overview')}
+        onClickBack={() => switchView('overview')}
       />
       <div className="content-frame">
         <div className="detail-content">
@@ -205,4 +207,4 @@ const RecipeDetail = ({ currentRecipe, onChangeView }) => {
   );
 };
 
-export default RecipeDetail;
+export default connect(null, { switchView })(RecipeDetail);
