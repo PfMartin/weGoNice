@@ -1,5 +1,5 @@
 import './RecipeForm.css';
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { switchView } from 'src/actions';
 
@@ -18,11 +18,12 @@ import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const RecipeForm = ({
-  timeMeasures,
   recipeCategories,
   references,
   switchView,
+  selectedRecipe,
   selectedView,
+  timeMeasures,
 }) => {
   const [recipe, setRecipe] = useState({
     title: '',
@@ -45,6 +46,21 @@ const RecipeForm = ({
       text: '',
     },
   ]);
+
+  useEffect(() => {
+    if (selectedView === 'modify') {
+      setRecipe({
+        title: selectedRecipe.title,
+        category: selectedRecipe.recipesCategoryId.title,
+        reference: selectedRecipe.referenceReferenceId.title,
+        url: selectedRecipe.url,
+      });
+      setPrepTime({
+        value: selectedRecipe.generalValueId.value,
+        measure: selectedRecipe.generalValueId.generalMeasureId.abbreviation,
+      });
+    }
+  }, []);
 
   const onChange = (e, state, setterFunction) => {
     const selectFieldNames = ['measure', 'reference', 'category'];
@@ -80,15 +96,11 @@ const RecipeForm = ({
       input = e.target.getAttribute('value');
     }
 
-    console.log(name, index, input);
-
     let stateCopy = [...ingredients];
     stateCopy[index] = {
       ...stateCopy[index],
       ...{ [name]: input },
     };
-
-    console.log(stateCopy);
 
     setIngredients(stateCopy);
   };
@@ -105,22 +117,15 @@ const RecipeForm = ({
     setIngredients(stateCopy);
   };
 
-  const moveIngredientUp = (e) => {
+  const moveInput = (e, isUp, state, setterFunction) => {
     const index = e.currentTarget.parentNode.getAttribute('index');
 
-    let stateCopy = [...ingredients];
-    stateCopy = arrayMoveImmutable(stateCopy, index, index - 1);
+    let stateCopy = [...state];
+    stateCopy = isUp
+      ? arrayMoveImmutable(stateCopy, index, index - 1)
+      : arrayMoveImmutable(stateCopy, index, index + 1);
 
-    setIngredients(stateCopy);
-  };
-
-  const moveIngredientDown = (e) => {
-    const index = e.currentTarget.parentNode.getAttribute('index');
-
-    let stateCopy = [...ingredients];
-    stateCopy = arrayMoveImmutable(stateCopy, index, index + 1);
-
-    setIngredients(stateCopy);
+    setterFunction(stateCopy);
   };
 
   const deleteIngredient = (e) => {
@@ -151,24 +156,6 @@ const RecipeForm = ({
       id: '',
       text: '',
     });
-
-    setPrepSteps(stateCopy);
-  };
-
-  const movePrepStepUp = (e) => {
-    const index = e.currentTarget.parentNode.getAttribute('index');
-
-    let stateCopy = [...prepSteps];
-    stateCopy = arrayMoveImmutable(stateCopy, index, index - 1);
-
-    setPrepSteps(stateCopy);
-  };
-
-  const movePrepStepDown = (e) => {
-    const index = e.currentTarget.parentNode.getAttribute('index');
-
-    let stateCopy = [...prepSteps];
-    stateCopy = arrayMoveImmutable(stateCopy, index, index + 1);
 
     setPrepSteps(stateCopy);
   };
@@ -244,8 +231,12 @@ const RecipeForm = ({
                 <IngredientInput
                   index={index}
                   ingredient={ingredient}
-                  moveDown={moveIngredientDown}
-                  moveUp={moveIngredientUp}
+                  moveDown={(e) =>
+                    moveInput(e, false, ingredients, setIngredients)
+                  }
+                  moveUp={(e) =>
+                    moveInput(e, true, ingredients, setIngredients)
+                  }
                   onChange={updateIngredients}
                   onDelete={deleteIngredient}
                 />
@@ -265,8 +256,8 @@ const RecipeForm = ({
               <Fragment key={index}>
                 <PrepStepInput
                   index={index}
-                  moveDown={movePrepStepDown}
-                  moveUp={movePrepStepUp}
+                  moveDown={(e) => moveInput(e, false, prepSteps, setPrepSteps)}
+                  moveUp={(e) => moveInput(e, true, prepSteps, setPrepSteps)}
                   onChange={updatePrepSteps}
                   onDelete={deletePrepStep}
                   prepStep={prepStep}
@@ -293,6 +284,7 @@ const mapStateToProps = (state) => {
   return {
     recipeCategories: state.recipeCategories,
     references: state.references,
+    selectedRecipe: state.selectedRecipe,
     selectedView: state.selectedView,
     timeMeasures: state.timeMeasures,
   };

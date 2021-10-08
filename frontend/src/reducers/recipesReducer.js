@@ -32,6 +32,7 @@ const staticRecipes = [
         abbreviation: 'min',
       },
     },
+    url: 'Test url',
   },
   {
     id: 2,
@@ -66,6 +67,7 @@ const staticRecipes = [
         abbreviation: 'min',
       },
     },
+    url: 'Test url',
   },
   {
     id: 3,
@@ -100,6 +102,7 @@ const staticRecipes = [
         abbreviation: 'min',
       },
     },
+    url: 'Test url',
   },
   {
     id: 4,
@@ -134,6 +137,7 @@ const staticRecipes = [
         abbreviation: 'min',
       },
     },
+    url: 'Test url',
   },
 ];
 
