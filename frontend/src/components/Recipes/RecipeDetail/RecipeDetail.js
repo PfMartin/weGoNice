@@ -10,126 +10,12 @@ import { BiAlarm } from 'react-icons/bi';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
-const ingredients = [
-  {
-    id: 1,
-    value: 150,
-    measure: 'g',
-    text: 'Butter',
-  },
-  {
-    id: 2,
-    value: 150,
-    measure: 'g',
-    text: 'Flour',
-  },
-  {
-    id: 3,
-    value: 200,
-    measure: 'ml',
-    text: 'Water',
-  },
-  {
-    id: 4,
-    value: 20,
-    measure: 'g',
-    text: 'Chocolate',
-  },
-  {
-    id: 5,
-    value: 20,
-    measure: 'g',
-    text: 'Ginger',
-  },
-  {
-    id: 6,
-    value: 200,
-    measure: 'ml',
-    text: 'Vinegar',
-  },
-  {
-    id: 7,
-    value: 50,
-    measure: 'ml',
-    text: 'Almond milk',
-  },
-  {
-    id: 8,
-    value: 1,
-    measure: 'piece',
-    text: 'Apple',
-  },
-  {
-    id: 9,
-    value: 100,
-    measure: 'g',
-    text: 'Rasins',
-  },
-];
-
-const prepSteps = [
-  {
-    id: 1,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ',
-  },
-  {
-    id: 2,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-  },
-  {
-    id: 3,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ',
-  },
-  {
-    id: 4,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,',
-  },
-  {
-    id: 5,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam',
-  },
-  {
-    id: 6,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata',
-  },
-  {
-    id: 7,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
-  },
-  {
-    id: 8,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-  },
-  {
-    id: 9,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At',
-  },
-  {
-    id: 10,
-    text: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam',
-  },
-  {
-    id: 11,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
-  },
-  {
-    id: 12,
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna ',
-  },
-];
-
-const RecipeDetail = ({ selectedRecipe, switchView }) => {
+const RecipeDetail = ({
+  selectedIngredients,
+  selectedPrepSteps,
+  selectedRecipe,
+  switchView,
+}) => {
   return (
     <div className="recipe-detail">
       <SiteHeader
@@ -179,7 +65,7 @@ const RecipeDetail = ({ selectedRecipe, switchView }) => {
                     <th className="left">Ingredient</th>
                   </tr>
                 </tbody>
-                {ingredients.map((ingredient) => {
+                {selectedIngredients.map((ingredient) => {
                   return (
                     <tbody key={ingredient.id}>
                       <tr>
@@ -196,7 +82,7 @@ const RecipeDetail = ({ selectedRecipe, switchView }) => {
           <div className="section">
             <h3>Preparation steps</h3>
             <table className="prep-steps" cellSpacing="0">
-              {prepSteps.map((prepStep, index) => {
+              {selectedPrepSteps.map((prepStep, index) => {
                 return (
                   <tbody key={prepStep.id}>
                     <tr>
@@ -216,6 +102,8 @@ const RecipeDetail = ({ selectedRecipe, switchView }) => {
 
 const mapStateToProps = (state) => {
   return {
+    selectedIngredients: state.selectedIngredients,
+    selectedPrepSteps: state.selectedPrepSteps,
     selectedRecipe: state.selectedRecipe,
   };
 };

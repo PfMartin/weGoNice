@@ -7,6 +7,8 @@ import recipesReducer from 'src/reducers/recipesReducer.js';
 import referencesReducer from 'src/reducers/referencesReducer.js';
 import salutationsReducer from 'src/reducers/salutationsReducer.js';
 import selectedAppReducer from 'src/reducers/selectedAppReducer.js';
+import selectedIngredientsReducer from 'src/reducers/selectedIngredientsReducer';
+import selectedPrepStepsReducer from 'src/reducers/selectedPrepStepsReducer';
 import selectedRecipeReducer from 'src/reducers/selectedRecipeReducer.js';
 import selectedReferenceReducer from 'src/reducers/selectedReferenceReducer';
 import selectedViewReducer from 'src/reducers/selectedViewReducer.js';
@@ -20,6 +22,8 @@ export default combineReducers({
   references: referencesReducer,
   salutations: salutationsReducer,
   selectedApp: selectedAppReducer,
+  selectedIngredients: selectedIngredientsReducer,
+  selectedPrepSteps: selectedPrepStepsReducer,
   selectedView: selectedViewReducer,
   selectedRecipe: selectedRecipeReducer,
   selectedReference: selectedReferenceReducer,
