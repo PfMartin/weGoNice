@@ -1,7 +1,7 @@
 import './RecipesOverview.css';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { switchView } from 'src/actions';
+import { switchView, selectRecipe } from 'src/actions';
 
 import { BiAlarm, BiUser } from 'react-icons/bi';
 
@@ -11,7 +11,7 @@ import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import Card from 'src/components/Structure/Card/Card.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
-const RecipesOverview = ({ switchView, onSetCurrentRecipe, recipes }) => {
+const RecipesOverview = ({ switchView, recipes, selectRecipe }) => {
   const [filterTags, setFilterTags] = useState({
     basics: true,
     breakfast: true,
@@ -72,9 +72,9 @@ const RecipesOverview = ({ switchView, onSetCurrentRecipe, recipes }) => {
 
   const onGetDetail = (e) => {
     const id = parseInt(e.currentTarget.getAttribute('id'));
-    const recipe = recipes.filter((r) => r.id === id)[0];
+    const recipe = recipes.find((obj) => obj.id === id);
 
-    onSetCurrentRecipe(recipe);
+    selectRecipe(recipe);
     switchView('detail');
   };
 
@@ -159,4 +159,12 @@ const RecipesOverview = ({ switchView, onSetCurrentRecipe, recipes }) => {
   );
 };
 
-export default connect(null, { switchView })(RecipesOverview);
+const mapStateToProps = (state) => {
+  return {
+    recipes: state.recipes,
+  };
+};
+
+export default connect(mapStateToProps, { switchView, selectRecipe })(
+  RecipesOverview
+);

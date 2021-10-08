@@ -1,7 +1,7 @@
 /**
  * Action creator to switch to the desired app
- * @param  {string} targetApp         Specifies the desired app
- * @return {action}                   Action
+ * @param  {String} targetApp         App to set as selectedApp
+ * @return {Object}                   Action
  */
 const switchApp = (targetApp) => {
   return {
@@ -12,8 +12,8 @@ const switchApp = (targetApp) => {
 
 /**
  * Action creator to switch to the desired view
- * @param  {string} targetView        Specifies the desired view
- * @return {action}                   Action
+ * @param  {String} targetView        View to set as selectedView
+ * @return {Object}                   Action
  */
 const switchView = (targetView) => {
   return {
@@ -22,7 +22,20 @@ const switchView = (targetView) => {
   };
 };
 
+/**
+ * Action create to select the desired recipe
+ * @param  {Object} recipe            Recipe to set as selectedRecipe
+ * @return {Object}                   Action
+ */
+const selectRecipe = (recipe) => {
+  return {
+    type: 'RECIPE_SELECTED',
+    payload: recipe,
+  };
+};
+
 module.exports = {
   switchApp,
   switchView,
+  selectRecipe,
 };

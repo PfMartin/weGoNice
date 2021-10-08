@@ -129,11 +129,11 @@ const prepSteps = [
   },
 ];
 
-const RecipeDetail = ({ currentRecipe, switchView }) => {
+const RecipeDetail = ({ selectedRecipe, switchView }) => {
   return (
     <div className="recipe-detail">
       <SiteHeader
-        headline={currentRecipe.title}
+        headline={selectedRecipe.title}
         onClickBack={() => switchView('overview')}
       />
       <div className="content-frame">
@@ -145,32 +145,32 @@ const RecipeDetail = ({ currentRecipe, switchView }) => {
                   <BiAlarm />
                 </IconFrame>
                 <h4>
-                  {currentRecipe.generalValueId.value}{' '}
-                  {currentRecipe.generalValueId.generalMeasureId.abbreviation}
+                  {selectedRecipe.generalValueId.value}{' '}
+                  {selectedRecipe.generalValueId.generalMeasureId.abbreviation}
                 </h4>
               </div>
               <div className="category-container">
                 <h4 className="category">
-                  {currentRecipe.recipesCategoryId.title}
+                  {selectedRecipe.recipesCategoryId.title}
                 </h4>
               </div>
             </div>
             <h2>
               <a
                 className="title-link"
-                href={currentRecipe.url}
+                href={selectedRecipe.url}
                 target="_blank"
                 rel="noreferrer"
               >
-                {currentRecipe.title} by{' '}
-                {currentRecipe.referenceReferenceId.nickname}
+                {selectedRecipe.title} by{' '}
+                {selectedRecipe.referenceReferenceId.nickname}
               </a>
             </h2>
           </div>
           <div className="section">
             <h3>Ingredients</h3>
             <div className="ingredients-table">
-              <table className="ingredients" cellspacing="0">
+              <table className="ingredients" cellSpacing="0">
                 <tr>
                   <th className="right">Value</th>
                   <th className="left">Measure</th>
@@ -190,7 +190,7 @@ const RecipeDetail = ({ currentRecipe, switchView }) => {
           </div>
           <div className="section">
             <h3>Preparation steps</h3>
-            <table className="prep-steps" cellspacing="0">
+            <table className="prep-steps" cellSpacing="0">
               {prepSteps.map((prepStep, index) => {
                 return (
                   <tr>
@@ -207,4 +207,10 @@ const RecipeDetail = ({ currentRecipe, switchView }) => {
   );
 };
 
-export default connect(null, { switchView })(RecipeDetail);
+const mapStateToProps = (state) => {
+  return {
+    selectedRecipe: state.selectedRecipe,
+  };
+};
+
+export default connect(mapStateToProps, { switchView })(RecipeDetail);
