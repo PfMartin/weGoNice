@@ -8,7 +8,7 @@ import Recipes from 'src/components/Recipes/Recipes/Recipes.js';
 import References from 'src/components/References/References/References.js';
 import Footer from 'src/components/Structure/Footer/Footer.js';
 
-const App = ({ selectedApp, selectedView }) => {
+const App = ({ selectedApp }) => {
   return (
     <div className="app">
       <Navbar />
