@@ -164,7 +164,7 @@ const RecipeDetail = ({ selectedRecipe, switchView }) => {
                 rel="noreferrer"
               >
                 {selectedRecipe.title} by{' '}
-                {selectedRecipe.referenceReferenceId.nickname}
+                {selectedRecipe.referenceReferenceId.title}
               </a>
             </h2>
           </div>

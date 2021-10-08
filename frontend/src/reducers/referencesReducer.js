@@ -9,7 +9,7 @@ const staticReferences = [
       title: 'Mr.',
       description: '',
     },
-    nickname: '',
+    title: 'Niko Rittenau',
     firstName: 'Niko',
     lastName: 'Rittenau',
     academicTitle: {
@@ -27,7 +27,7 @@ const staticReferences = [
       title: 'Mrs.',
       description: '',
     },
-    nickname: '',
+    title: 'Bianca Zapatka',
     firstName: 'Bianca',
     lastName: 'Zapatka',
     academicTitle: {
@@ -45,7 +45,7 @@ const staticReferences = [
       title: 'Mrs.',
       description: '',
     },
-    nickname: 'Schnabularasa',
+    title: 'Schnabularasa',
     firstName: 'Jelena',
     lastName: '',
     academicTitle: {
@@ -63,7 +63,7 @@ const staticReferences = [
       title: 'Mr.',
       description: '',
     },
-    nickname: 'maxlamanna',
+    title: 'maxlamanna',
     firstName: 'Max',
     lastName: 'La Manna',
     academicTitle: {

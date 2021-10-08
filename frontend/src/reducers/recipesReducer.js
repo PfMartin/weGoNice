@@ -12,7 +12,7 @@ const staticRecipes = [
         title: 'Mr.',
         description: '',
       },
-      nickname: 'Niko Rittenau',
+      title: 'Niko Rittenau',
       firstName: 'Niko',
       lastName: 'Rittenau',
       academicTitle: {
@@ -46,7 +46,7 @@ const staticRecipes = [
         title: 'Mrs.',
         description: '',
       },
-      nickname: 'Bianca Zapatka',
+      title: 'Bianca Zapatka',
       firstName: 'Bianca',
       lastName: 'Zapatka',
       academicTitle: {
@@ -80,7 +80,7 @@ const staticRecipes = [
         title: 'Mrs.',
         description: '',
       },
-      nickname: 'Schnabularasa',
+      title: 'Schnabularasa',
       firstName: 'Jelena',
       lastName: '',
       academicTitle: {
@@ -114,7 +114,7 @@ const staticRecipes = [
         title: 'Mr.',
         description: '',
       },
-      nickname: 'maxlamanna',
+      title: 'maxlamanna',
       firstName: 'Max',
       lastName: 'La Manna',
       academicTitle: {

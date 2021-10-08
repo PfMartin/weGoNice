@@ -146,7 +146,7 @@ const RecipesOverview = ({ switchView, recipes, selectRecipe }) => {
                 <IconFrame className="info-icon">
                   <BiUser />
                 </IconFrame>
-                <p>{recipe.referenceReferenceId.nickname}</p>
+                <p>{recipe.referenceReferenceId.title}</p>
               </div>
               <p className="category-tag">{recipe.recipesCategoryId.title}</p>
             </Card>

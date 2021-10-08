@@ -120,7 +120,7 @@ const ReferencesOverview = ({ selectReference, switchView, references }) => {
                 {`${reference.academicTitle.title} ${reference.firstName} ${reference.lastName}`}
               </h3>
               <p>
-                {reference.nickname} {reference.id}
+                {reference.title} {reference.id}
               </p>
               <div className="modify-box">
                 <IconFrame onClick={onModify}>

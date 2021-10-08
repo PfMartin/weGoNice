@@ -3,6 +3,8 @@ import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { switchView } from 'src/actions';
 
+import { BiPlus } from 'react-icons/bi';
+
 import { arrayMoveImmutable } from 'array-move';
 import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
@@ -14,42 +16,6 @@ import ValueInput from 'src/components/Forms/ValueInput/ValueInput.js';
 import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInput.js';
 import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
-
-import { BiPlus } from 'react-icons/bi';
-
-const categories = [
-  {
-    id: 1,
-    title: 'breakfast',
-  },
-  {
-    id: 2,
-    title: 'main',
-  },
-  {
-    id: 3,
-    title: 'basics',
-  },
-  {
-    id: 4,
-    title: 'dessert',
-  },
-  {
-    id: 5,
-    title: 'drinks',
-  },
-];
-
-const references = [
-  {
-    id: 1,
-    title: 'Nico Rittenau',
-  },
-  {
-    id: 2,
-    title: 'Schnabularasa',
-  },
-];
 
 const measures = [
   {
@@ -66,7 +32,12 @@ const measures = [
   },
 ];
 
-const RecipeForm = ({ switchView, selectedView }) => {
+const RecipeForm = ({
+  recipeCategories,
+  references,
+  switchView,
+  selectedView,
+}) => {
   const [recipe, setRecipe] = useState({
     title: '',
     category: '',
@@ -262,7 +233,7 @@ const RecipeForm = ({ switchView, selectedView }) => {
           labelText="Category"
           value={recipe.category}
           onSelect={(e) => onChange(e, recipe, setRecipe)}
-          selectOptions={categories}
+          selectOptions={recipeCategories}
         />
         <SelectElement
           title="reference"
@@ -336,14 +307,9 @@ const RecipeForm = ({ switchView, selectedView }) => {
 const mapStateToProps = (state) => {
   return {
     selectedView: state.selectedView,
+    recipeCategories: state.recipeCategories,
+    references: state.references,
   };
 };
-
-// RecipeForm.propTypes = {
-//   /** Callback for changing the global view */
-//   onChangeView: PropTypes.func,
-//   /** Gloabal view that defines what components are displayed */
-//   view: PropTypes.string,
-// };
 
 export default connect(mapStateToProps, { switchView })(RecipeForm);
