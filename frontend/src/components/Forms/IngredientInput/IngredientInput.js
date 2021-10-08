@@ -2,35 +2,12 @@ import './IngredientInput.css';
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { BiTrash, BiDownArrowAlt, BiUpArrowAlt } from 'react-icons/bi';
 
 import InputElement from 'src/components/Forms/InputElement/InputElement';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
-
-import { BiTrash, BiDownArrowAlt, BiUpArrowAlt } from 'react-icons/bi';
-
-const measures = [
-  {
-    id: 1,
-    title: 'g',
-  },
-  {
-    id: 2,
-    title: 'kg',
-  },
-  {
-    id: 3,
-    title: 'ml',
-  },
-  {
-    id: 4,
-    title: 'l',
-  },
-  {
-    id: 5,
-    title: 'pc',
-  },
-];
 
 const IngredientInput = ({
   index,
@@ -39,6 +16,7 @@ const IngredientInput = ({
   moveUp,
   onChange,
   onDelete,
+  quantityMeasures,
 }) => {
   return (
     <div className="ingredient-input">
@@ -53,7 +31,7 @@ const IngredientInput = ({
         <SelectElement
           index={index}
           onSelect={onChange}
-          selectOptions={measures}
+          selectOptions={quantityMeasures}
           title="measure"
           value={ingredient.measure}
         />
@@ -93,6 +71,14 @@ IngredientInput.propTypes = {
   onChange: PropTypes.func,
   /** Callback for the delete event */
   onDelete: PropTypes.func,
+  /** Possible quantity measures for the select field - Provided by redux store */
+  quantityMeasures: PropTypes.array,
 };
 
-export default IngredientInput;
+const mapStateToProps = (state) => {
+  return {
+    quantityMeasures: state.quantityMeasures,
+  };
+};
+
+export default connect(mapStateToProps)(IngredientInput);

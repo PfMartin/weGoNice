@@ -21,6 +21,11 @@ const staticPossibleCategories = [
   },
 ];
 
+/**
+ * Updates the state property recipeCategories with the payload of the action it receives
+ * @param  {Array}    [state=staticReferences]            Current list of recipeCategories
+ * @return {Array}                                        Updated list of recipeCategories
+ */
 const recipeCategoriesReducer = (state = staticPossibleCategories) => {
   return state;
 };

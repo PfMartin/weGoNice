@@ -17,22 +17,8 @@ import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInpu
 import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const measures = [
-  {
-    id: 1,
-    title: 'hr',
-  },
-  {
-    id: 2,
-    title: 'min',
-  },
-  {
-    id: 3,
-    title: 's',
-  },
-];
-
 const RecipeForm = ({
+  timeMeasures,
   recipeCategories,
   references,
   switchView,
@@ -139,7 +125,6 @@ const RecipeForm = ({
 
   const deleteIngredient = (e) => {
     const index = e.currentTarget.parentNode.getAttribute('index');
-    console.log(e.currentTarget.parentNode);
     let stateCopy = [...ingredients];
     stateCopy.splice(index, 1);
     setIngredients(stateCopy);
@@ -226,7 +211,7 @@ const RecipeForm = ({
           value={prepTime.value}
           measure={prepTime.measure}
           onChange={(e) => onChange(e, prepTime, setPrepTime)}
-          selectOptions={measures}
+          selectOptions={timeMeasures}
         />
         <SelectElement
           title="category"
@@ -306,9 +291,10 @@ const RecipeForm = ({
 
 const mapStateToProps = (state) => {
   return {
-    selectedView: state.selectedView,
     recipeCategories: state.recipeCategories,
     references: state.references,
+    selectedView: state.selectedView,
+    timeMeasures: state.timeMeasures,
   };
 };
 
