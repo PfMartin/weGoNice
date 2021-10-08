@@ -80,12 +80,12 @@ table.ingredients {
   padding: 0.5rem;
 }
 
-table.ingredients > tr:nth-child(odd) {
+table.ingredients > tbody:nth-child(odd) {
   background: var(--light-grey);
   color: var(--light-accent);
 }
 
-table.ingredients > tr:nth-child(1) {
+table.ingredients > tbody:nth-child(1) {
   background: none;
   color: var(--dark-grey);
 }
@@ -101,4 +101,9 @@ table.prep-steps td:nth-child(1) {
 
 .accent {
   color: var(--light-accent);
+}
+
+a {
+  text-decoration: none;
+  color: var(--dark-grey);
 }

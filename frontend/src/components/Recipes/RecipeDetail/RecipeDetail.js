@@ -172,18 +172,22 @@ const RecipeDetail = ({ selectedRecipe, switchView }) => {
             <h3>Ingredients</h3>
             <div className="ingredients-table">
               <table className="ingredients" cellSpacing="0">
-                <tr>
-                  <th className="right">Value</th>
-                  <th className="left">Measure</th>
-                  <th className="left">Ingredient</th>
-                </tr>
+                <tbody>
+                  <tr>
+                    <th className="right">Value</th>
+                    <th className="left">Measure</th>
+                    <th className="left">Ingredient</th>
+                  </tr>
+                </tbody>
                 {ingredients.map((ingredient) => {
                   return (
-                    <tr>
-                      <td className="right">{ingredient.value}</td>
-                      <td className="left">{ingredient.measure}</td>
-                      <td className="left">{ingredient.text}</td>
-                    </tr>
+                    <tbody key={ingredient.id}>
+                      <tr>
+                        <td className="right">{ingredient.value}</td>
+                        <td className="left">{ingredient.measure}</td>
+                        <td className="left">{ingredient.text}</td>
+                      </tr>
+                    </tbody>
                   );
                 })}
               </table>
@@ -194,10 +198,12 @@ const RecipeDetail = ({ selectedRecipe, switchView }) => {
             <table className="prep-steps" cellSpacing="0">
               {prepSteps.map((prepStep, index) => {
                 return (
-                  <tr>
-                    <td className="right accent">{index + 1}.</td>
-                    <td>{prepStep.text}</td>
-                  </tr>
+                  <tbody key={prepStep.id}>
+                    <tr>
+                      <td className="right accent">{index + 1}.</td>
+                      <td>{prepStep.text}</td>
+                    </tr>
+                  </tbody>
                 );
               })}
             </table>
