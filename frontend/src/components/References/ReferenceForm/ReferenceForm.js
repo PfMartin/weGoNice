@@ -11,49 +11,13 @@ import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const salutations = [
-  {
-    id: 1,
-    title: '---',
-  },
-  {
-    id: 2,
-    title: 'Mrs.',
-  },
-  {
-    id: 3,
-    title: 'Ms.',
-  },
-  {
-    id: 4,
-    title: 'Mr.',
-  },
-  {
-    id: 5,
-    title: 'Div.',
-  },
-];
-
-const academicTitles = [
-  {
-    id: 1,
-    title: '---',
-  },
-  {
-    id: 2,
-    title: 'B.Sc.',
-  },
-  {
-    id: 3,
-    title: 'M.Sc.',
-  },
-  {
-    id: 4,
-    title: 'Dr.',
-  },
-];
-
-const ReferenceForm = ({ selectedReference, selectedView, switchView }) => {
+const ReferenceForm = ({
+  academicTitles,
+  salutations,
+  selectedReference,
+  selectedView,
+  switchView,
+}) => {
   const [reference, setReference] = useState({
     id: '',
     salutation: '',
@@ -196,6 +160,8 @@ const ReferenceForm = ({ selectedReference, selectedView, switchView }) => {
 
 const mapStateToProps = (state) => {
   return {
+    academicTitles: state.academicTitles,
+    salutations: state.salutations,
     selectedView: state.selectedView,
     selectedReference: state.selectedReference,
   };
