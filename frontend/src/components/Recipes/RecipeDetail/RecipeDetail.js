@@ -135,6 +135,7 @@ const RecipeDetail = ({ selectedRecipe, switchView }) => {
       <SiteHeader
         headline={selectedRecipe.title}
         onClickBack={() => switchView('overview')}
+        onClickPen={() => switchView('modify')}
       />
       <div className="content-frame">
         <div className="detail-content">

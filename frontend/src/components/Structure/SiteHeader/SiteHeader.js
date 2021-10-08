@@ -1,19 +1,26 @@
 import './SiteHeader.css';
 import React from 'react';
-import { BiPlus, BiArrowBack } from 'react-icons/bi';
+import { BiPlus, BiArrowBack, BiPencil } from 'react-icons/bi';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
-const SiteHeader = (props) => {
+const SiteHeader = ({ headline, onClickBack, onClickPen, onClickPlus }) => {
   return (
     <div className="site-header">
-      <h1>{props.headline}</h1>
+      <h1>{headline}</h1>
       <div className="icon-container">
-        {props.onClickBack ? (
-          <IconFrame size="25px" onClick={props.onClickBack}>
+        {onClickPen ? (
+          <IconFrame size="25px" onClick={onClickPen}>
+            <BiPencil />
+          </IconFrame>
+        ) : (
+          ''
+        )}
+        {onClickBack ? (
+          <IconFrame size="25px" onClick={onClickBack}>
             <BiArrowBack />
           </IconFrame>
-        ) : props.onClickPlus ? (
-          <IconFrame size="25px" onClick={props.onClickPlus}>
+        ) : onClickPlus ? (
+          <IconFrame size="25px" onClick={onClickPlus}>
             <BiPlus />
           </IconFrame>
         ) : (

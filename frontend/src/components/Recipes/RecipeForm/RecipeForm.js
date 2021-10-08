@@ -236,7 +236,11 @@ const RecipeForm = ({ switchView, selectedView }) => {
     <div className="recipe-form">
       <SiteHeader
         headline={selectedView === 'create' ? 'Create Recipe' : 'Modify Recipe'}
-        onClickBack={() => switchView('overview')}
+        onClickBack={
+          selectedView === 'create'
+            ? () => switchView('overview')
+            : () => switchView('detail')
+        }
       />
       <FormFrame>
         <InputElement
