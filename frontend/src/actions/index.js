@@ -23,7 +23,7 @@ const switchView = (targetView) => {
 };
 
 /**
- * Action create to select the desired recipe
+ * Action creator to select the desired recipe
  * @param  {Object} recipe            Recipe to set as selectedRecipe
  * @return {Object}                   Action
  */
@@ -34,8 +34,21 @@ const selectRecipe = (recipe) => {
   };
 };
 
+/**
+ * Action creator to select the desired reference
+ * @param  {Object} reference         Recipe to set as selectedReference
+ * @return {Object}                   Action
+ */
+const selectReference = (reference) => {
+  return {
+    type: 'REFERENCE_SELECTED',
+    payload: reference,
+  };
+};
+
 module.exports = {
   switchApp,
   switchView,
   selectRecipe,
+  selectReference,
 };

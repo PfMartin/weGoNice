@@ -53,7 +53,7 @@ const academicTitles = [
   },
 ];
 
-const ReferenceForm = ({ selectedView, switchView, currentReference }) => {
+const ReferenceForm = ({ selectedReference, selectedView, switchView }) => {
   const [reference, setReference] = useState({
     id: '',
     salutation: '',
@@ -99,16 +99,16 @@ const ReferenceForm = ({ selectedView, switchView, currentReference }) => {
 
   const onInitial = () => {
     setReference({
-      id: currentReference.id,
-      salutation: currentReference.salutation.title,
-      academicTitle: currentReference.academicTitle.title,
-      firstName: currentReference.firstName,
-      lastName: currentReference.lastName,
-      nickname: currentReference.nickname,
-      homepage: currentReference.homepage,
-      instagram: currentReference.instagram,
-      youtube: currentReference.youtube,
-      facebook: currentReference.facebook,
+      id: selectedReference.id,
+      salutation: selectedReference.salutation.title,
+      academicTitle: selectedReference.academicTitle.title,
+      firstName: selectedReference.firstName,
+      lastName: selectedReference.lastName,
+      nickname: selectedReference.nickname,
+      homepage: selectedReference.homepage,
+      instagram: selectedReference.instagram,
+      youtube: selectedReference.youtube,
+      facebook: selectedReference.facebook,
     });
   };
 
@@ -197,6 +197,7 @@ const ReferenceForm = ({ selectedView, switchView, currentReference }) => {
 const mapStateToProps = (state) => {
   return {
     selectedView: state.selectedView,
+    selectedReference: state.selectedReference,
   };
 };
 

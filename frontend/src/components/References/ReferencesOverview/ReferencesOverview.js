@@ -3,7 +3,7 @@ import './ReferencesOverview.css';
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { switchView } from 'src/actions';
+import { switchView, selectReference } from 'src/actions';
 
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
@@ -14,11 +14,7 @@ import { FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi';
 import LinkIcon from 'src/components/Structure/LinkIcon/LinkIcon.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 
-const ReferencesOverview = ({
-  switchView,
-  onSetCurrentReference,
-  references,
-}) => {
+const ReferencesOverview = ({ selectReference, switchView, references }) => {
   const [filterTags, setFilterTags] = useState({
     homepage: true,
     instagram: true,
@@ -68,9 +64,9 @@ const ReferencesOverview = ({
     const id = parseInt(
       e.currentTarget.parentNode.parentNode.getAttribute('id')
     );
-    const filteredReference = references.filter((r) => r.id === id)[0];
+    const filteredReference = references.find((obj) => obj.id === id);
 
-    onSetCurrentReference(filteredReference);
+    selectReference(filteredReference);
     switchView('modify');
   };
 
@@ -171,11 +167,13 @@ const ReferencesOverview = ({
   );
 };
 
-// ReferencesOverview.propTypes = {
-//   /** Function for changing the view inside references */
-//   switchView: PropTypes.func,
-//   /** View inside references */
-//   view: PropTypes.string,
-// };
+const mapStateToProps = (state) => {
+  return {
+    references: state.references,
+    selectedReference: state.selectedReference,
+  };
+};
 
-export default connect(null, { switchView })(ReferencesOverview);
+export default connect(mapStateToProps, { switchView, selectReference })(
+  ReferencesOverview
+);
