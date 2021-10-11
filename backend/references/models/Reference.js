@@ -1,38 +1,35 @@
 import { Sequelize } from 'sequelize';
 import db from '../../config/database.js';
-import Author from './Author.js';
-import ReferenceType from './ReferenceType.js';
+import Salutation from './Salutation.js';
+import AcademicTitle from './AcademicTitle.js';
 
 const { DataTypes } = Sequelize;
 
-const Reference = db.define(
-  'referencesReference',
-  {
-    title: {
-      type: DataTypes.STRING,
-    },
-    // Publisher and website
-    publisher: {
-      type: DataTypes.STRING,
-    },
-    // Optional and only for books
-    edition: {
-      type: DataTypes.INTEGER,
-    },
-    date: {
-      type: DataTypes.DATEONLY,
-    },
-    url: {
-      type: DataTypes.STRING,
-    },
+const Reference = db.define('referencesReference', {
+  homepage: {
+    type: DataTypes.STRING,
   },
-  {
-    tableName: 'referencesReference',
-  }
-);
+  facebook: {
+    type: DataTypes.STRING,
+  },
+  instagram: {
+    type: DataTypes.STRING,
+  },
+  youtube: {
+    type: DataTypes.STRING,
+  },
+  title: {
+    type: DataTypes.STRING,
+  },
+  firstName: {
+    type: DataTypes.STRING,
+  },
+  lastName: {
+    type: DataTypes.STRING,
+  },
+});
 
-// M:N relationship with Author: Automatically creates the through table "References_Author"
-Reference.belongsToMany(Author, { through: 'referencesReferenceAuthor' }); // Multiple Select field to a reference
-Reference.belongsTo(ReferenceType); // Select field for a reference type
+Reference.belongsTo(Salutation); // Create column referencesSalutationId
+Reference.belongsTo(AcademicTitle); // Create column referencesAcademicTitleId
 
 export default Reference;
