@@ -1,18 +1,18 @@
 import './ReferencesOverview.css';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { switchView, selectReference } from 'src/actions';
+
+import { BiPencil } from 'react-icons/bi';
 
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import OptionsBar from 'src/components/Structure/OptionsBar/OptionsBar.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import Card from 'src/components/Structure/Card/Card.js';
-import { BiWorld, BiPencil } from 'react-icons/bi';
-import { FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi';
-import LinkIcon from 'src/components/Structure/LinkIcon/LinkIcon.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
+import SocialMediaFooter from 'src/components/References/SocialMediaFooter/SocialMediaFooter';
 
 const ReferencesOverview = ({ selectReference, switchView, references }) => {
   const [filterTags, setFilterTags] = useState({
@@ -20,6 +20,12 @@ const ReferencesOverview = ({ selectReference, switchView, references }) => {
     instagram: true,
     youtube: true,
     facebook: true,
+  });
+
+  useEffect(() => {
+    const fetchReferences = async () => {
+      const response = fetch('http://localhost:8000/references/references');
+    };
   });
 
   const onToggleAllFilter = (e) => {
@@ -127,36 +133,7 @@ const ReferencesOverview = ({ selectReference, switchView, references }) => {
                   <BiPencil />
                 </IconFrame>
               </div>
-              <div className="icon-box">
-                {reference.homepage ? (
-                  <LinkIcon href={reference.homepage}>
-                    <BiWorld />
-                  </LinkIcon>
-                ) : (
-                  ''
-                )}
-                {reference.instagram ? (
-                  <LinkIcon href={reference.instagram}>
-                    <FiInstagram />
-                  </LinkIcon>
-                ) : (
-                  ''
-                )}
-                {reference.facebook ? (
-                  <LinkIcon href={reference.facebook}>
-                    <FiFacebook />
-                  </LinkIcon>
-                ) : (
-                  ''
-                )}
-                {reference.youtube ? (
-                  <LinkIcon href={reference.youtube}>
-                    <FiYoutube />
-                  </LinkIcon>
-                ) : (
-                  ''
-                )}
-              </div>
+              <SocialMediaFooter reference={reference} />
             </Card>
           ) : (
             ''

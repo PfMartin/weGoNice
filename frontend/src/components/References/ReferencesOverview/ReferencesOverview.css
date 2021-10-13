@@ -5,13 +5,6 @@
   grid-gap: 0.5rem;
 }
 
-.icon-box {
-  position: absolute;
-  bottom: 0px;
-  display: flex;
-  align-items: left;
-}
-
 .modify-box {
   position: absolute;
   right: 0;
