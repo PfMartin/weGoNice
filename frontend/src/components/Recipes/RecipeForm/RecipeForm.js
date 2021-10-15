@@ -18,13 +18,14 @@ import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const RecipeForm = ({
-  recipeCategories,
+  selectData,
   references,
   switchView,
   selectedRecipe,
   selectedView,
-  timeMeasures,
 }) => {
+  console.log(selectData.recipeCategories);
+
   const [recipe, setRecipe] = useState({
     title: '',
     category: '',
@@ -198,14 +199,14 @@ const RecipeForm = ({
           value={prepTime.value}
           measure={prepTime.measure}
           onChange={(e) => onChange(e, prepTime, setPrepTime)}
-          selectOptions={timeMeasures}
+          selectOptions={selectData.timeMeasures}
         />
         <SelectElement
           title="category"
           labelText="Category"
           value={recipe.category}
           onSelect={(e) => onChange(e, recipe, setRecipe)}
-          selectOptions={recipeCategories}
+          selectOptions={selectData.recipeCategories}
         />
         <SelectElement
           title="reference"
@@ -282,11 +283,12 @@ const RecipeForm = ({
 
 const mapStateToProps = (state) => {
   return {
-    recipeCategories: state.recipeCategories,
+    selectData: state.selectData,
+    // recipeCategories: state.recipeCategories,
     references: state.references,
     selectedRecipe: state.selectedRecipe,
     selectedView: state.selectedView,
-    timeMeasures: state.timeMeasures,
+    // timeMeasures: state.timeMeasures,
   };
 };
 

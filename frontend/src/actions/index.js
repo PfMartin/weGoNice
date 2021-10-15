@@ -70,9 +70,33 @@ const fetchAcademicTitles = () => async (dispatch) => {
   dispatch({ type: 'FETCH_ACADEMIC_TITLES', payload: data });
 };
 
+/**
+ * Action creator for fetching all measures
+ * @param  {Func}   dispatch          Function for dispatching an action
+ * @return {Object}                   Action
+ */
+const fetchMeasures = () => async (dispatch) => {
+  const response = await fetch('http://localhost:8000/general/measures');
+  const data = await response.json();
+  dispatch({ type: 'FETCH_MEASURES', payload: data });
+};
+
+/**
+ * Action creator for fetching all recipes categories
+ * @param  {Func}   dispatch          Function for dispatching an action
+ * @return {Object}                   Action
+ */
+const fetchRecipeCategories = () => async (dispatch) => {
+  const response = await fetch('http://localhost:8000/recipes/categories');
+  const data = await response.json();
+  dispatch({ type: 'FETCH_RECIPE_CATEGORIES', payload: data });
+};
+
 module.exports = {
   fetchAcademicTitles,
+  fetchRecipeCategories,
   fetchSalutations,
+  fetchMeasures,
   switchApp,
   switchView,
   selectRecipe,

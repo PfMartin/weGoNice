@@ -12,8 +12,7 @@ import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const ReferenceForm = ({
-  academicTitles,
-  salutations,
+  selectData,
   selectedReference,
   selectedView,
   switchView,
@@ -90,14 +89,14 @@ const ReferenceForm = ({
           labelText="Salutation"
           value={reference.salutation}
           onSelect={updateReference}
-          selectOptions={salutations}
+          selectOptions={selectData.salutations}
         />
         <SelectElement
           title="academicTitle"
           labelText="Academic Title"
           value={reference.academicTitle}
           onSelect={updateReference}
-          selectOptions={academicTitles}
+          selectOptions={selectData.academicTitles}
         />
         <InputElement
           title="firstName"
@@ -160,8 +159,7 @@ const ReferenceForm = ({
 
 const mapStateToProps = (state) => {
   return {
-    academicTitles: state.academicTitles,
-    salutations: state.salutations,
+    selectData: state.selectData,
     selectedView: state.selectedView,
     selectedReference: state.selectedReference,
   };

@@ -1,31 +1,23 @@
 import { combineReducers } from 'redux';
 
-import academicTitlesReducer from 'src/reducers/academicTitlesReducer.js';
-import quantityMeasuresReducer from 'src/reducers/quantityMeasuresReducer.js';
-import recipeCategoriesReducer from 'src/reducers/recipeCategoriesReducer.js';
-import recipesReducer from 'src/reducers/recipesReducer.js';
-import referencesReducer from 'src/reducers/referencesReducer.js';
-import salutationsReducer from 'src/reducers/salutationsReducer.js';
-import selectedAppReducer from 'src/reducers/selectedAppReducer.js';
+import recipesReducer from 'src/reducers/recipesReducer';
+import referencesReducer from 'src/reducers/referencesReducer';
+import selectDataReducer from 'src/reducers/selectDataReducer';
+import selectedAppReducer from 'src/reducers/selectedAppReducer';
 import selectedIngredientsReducer from 'src/reducers/selectedIngredientsReducer';
 import selectedPrepStepsReducer from 'src/reducers/selectedPrepStepsReducer';
-import selectedRecipeReducer from 'src/reducers/selectedRecipeReducer.js';
+import selectedRecipeReducer from 'src/reducers/selectedRecipeReducer';
 import selectedReferenceReducer from 'src/reducers/selectedReferenceReducer';
-import selectedViewReducer from 'src/reducers/selectedViewReducer.js';
-import timeMeasuresReducer from 'src/reducers/timeMeasuresReducer.js';
+import selectedViewReducer from 'src/reducers/selectedViewReducer';
 
 export default combineReducers({
-  academicTitles: academicTitlesReducer,
-  quantityMeasures: quantityMeasuresReducer,
-  recipeCategories: recipeCategoriesReducer,
   recipes: recipesReducer,
   references: referencesReducer,
-  salutations: salutationsReducer,
+  selectData: selectDataReducer,
   selectedApp: selectedAppReducer,
   selectedIngredients: selectedIngredientsReducer,
   selectedPrepSteps: selectedPrepStepsReducer,
   selectedView: selectedViewReducer,
   selectedRecipe: selectedRecipeReducer,
   selectedReference: selectedReferenceReducer,
-  timeMeasures: timeMeasuresReducer,
 });
