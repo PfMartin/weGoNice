@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { switchView } from 'src/actions';
+import { fetchAcademicTitles, fetchSalutations, switchView } from 'src/actions';
 
 import ReferencesOverview from 'src/components/References/ReferencesOverview/ReferencesOverview.js';
 import ReferenceForm from 'src/components/References/ReferenceForm/ReferenceForm.js';
 
-const References = ({ selectedView }) => {
+const References = ({
+  fetchAcademicTitles,
+  fetchSalutations,
+  selectedView,
+}) => {
+  useEffect(() => {
+    fetchSalutations();
+    fetchAcademicTitles();
+  }, []);
+
   return (
     <div className="references">
       {selectedView === 'overview' ? <ReferencesOverview /> : <ReferenceForm />}
@@ -19,4 +28,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { switchView })(References);
+export default connect(mapStateToProps, {
+  switchView,
+  fetchAcademicTitles,
+  fetchSalutations,
+})(References);

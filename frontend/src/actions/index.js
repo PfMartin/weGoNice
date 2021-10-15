@@ -46,7 +46,33 @@ const selectReference = (reference) => {
   };
 };
 
+/**
+ * Action creator for fetching all salutations
+ * @param  {Func}   dispatch          Function for dispatching an action
+ * @return {Object}                   Action
+ */
+const fetchSalutations = () => async (dispatch) => {
+  const response = await fetch('http://localhost:8000/references/salutations');
+  const data = await response.json();
+  dispatch({ type: 'FETCH_SALUTATIONS', payload: data });
+};
+
+/**
+ * Action creator for fetching all academic titles
+ * @param  {Func}   dispatch          Function for dispatching an action
+ * @return {Object}                   Action
+ */
+const fetchAcademicTitles = () => async (dispatch) => {
+  const response = await fetch(
+    'http://localhost:8000/references/academic_titles'
+  );
+  const data = await response.json();
+  dispatch({ type: 'FETCH_ACADEMIC_TITLES', payload: data });
+};
+
 module.exports = {
+  fetchAcademicTitles,
+  fetchSalutations,
   switchApp,
   switchView,
   selectRecipe,
