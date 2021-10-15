@@ -14,8 +14,6 @@ export const createUsers = async () => {
     firstName: 'Lea',
     lastName: 'Haberl',
   });
-
-  console.log('Done.');
 };
 
 /**
@@ -40,8 +38,6 @@ export const createMeasures = async () => {
     abbreviation: 'h',
     category: 'time',
   });
-
-  console.log('Done.');
 };
 
 export const createTestValues = async () => {

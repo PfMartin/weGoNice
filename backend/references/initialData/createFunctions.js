@@ -25,8 +25,6 @@ export const createAcademicTitles = async () => {
     title: 'PhD.',
     description: 'Doctor of Philosophy',
   });
-
-  console.log('Done.');
 };
 
 /**
@@ -53,6 +51,4 @@ export const createSalutations = async () => {
     title: 'Div.',
     description: 'Divers',
   });
-
-  console.log('Done.');
 };

@@ -24,6 +24,4 @@ export const createRecipeCategories = async () => {
   await Category.create({
     title: 'Main',
   });
-
-  console.log('Done.');
 };
