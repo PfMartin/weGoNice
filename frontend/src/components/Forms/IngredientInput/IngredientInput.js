@@ -16,7 +16,7 @@ const IngredientInput = ({
   moveUp,
   onChange,
   onDelete,
-  quantityMeasures,
+  selectData,
 }) => {
   return (
     <div className="ingredient-input">
@@ -31,7 +31,9 @@ const IngredientInput = ({
         <SelectElement
           index={index}
           onSelect={onChange}
-          selectOptions={quantityMeasures}
+          selectOptions={selectData.measures.filter(
+            (measure) => measure.category === 'quantity'
+          )}
           title="measure"
           value={ingredient.measure}
         />
@@ -77,7 +79,7 @@ IngredientInput.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    quantityMeasures: state.quantityMeasures,
+    selectData: state.selectData,
   };
 };
 

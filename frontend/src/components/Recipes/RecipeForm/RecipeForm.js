@@ -24,8 +24,6 @@ const RecipeForm = ({
   selectedRecipe,
   selectedView,
 }) => {
-  console.log(selectData.recipeCategories);
-
   const [recipe, setRecipe] = useState({
     title: '',
     category: '',
@@ -80,8 +78,6 @@ const RecipeForm = ({
       ...state,
       ...{ [name]: input },
     });
-
-    console.log(state);
   };
 
   const updateIngredients = (e) => {
@@ -199,7 +195,9 @@ const RecipeForm = ({
           value={prepTime.value}
           measure={prepTime.measure}
           onChange={(e) => onChange(e, prepTime, setPrepTime)}
-          selectOptions={selectData.timeMeasures}
+          selectOptions={selectData.measures.filter(
+            (measure) => measure.category === 'time'
+          )}
         />
         <SelectElement
           title="category"

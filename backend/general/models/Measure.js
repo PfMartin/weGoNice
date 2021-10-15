@@ -10,7 +10,7 @@ const Measure = db.define(
       type: DataTypes.STRING, // The verbose name of the measure: Minute, Gramm, ...
       unique: true,
     },
-    abbreviation: {
+    description: {
       type: DataTypes.STRING, // The abbreviation of the measure: min for minutes, g for gramm, ...
       unique: true,
     },

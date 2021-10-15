@@ -22,21 +22,39 @@ export const createUsers = async () => {
  */
 export const createMeasures = async () => {
   await Measure.create({
-    title: 'Seconds',
-    abbreviation: 'sec',
+    title: 'sec',
+    description: 'Seconds',
     category: 'time',
   });
 
   await Measure.create({
-    title: 'Minutes',
-    abbreviation: 'min',
+    title: 'min',
+    description: 'Minutes',
     category: 'time',
   });
 
   await Measure.create({
-    title: 'Hours',
-    abbreviation: 'h',
+    title: 'h',
+    description: 'Hours',
     category: 'time',
+  });
+
+  await Measure.create({
+    title: 'g',
+    description: 'Grams',
+    category: 'quantity',
+  });
+
+  await Measure.create({
+    title: 'ml',
+    description: 'Millilitres',
+    category: 'quantity',
+  });
+
+  await Measure.create({
+    title: 'pc',
+    description: 'Pieces',
+    category: 'quantity',
   });
 };
 
