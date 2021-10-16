@@ -52,26 +52,67 @@ const ReferenceForm = ({
     console.log(reference);
   };
 
-  const onSave = () => {
-    console.log('Save');
+  const onSave = async () => {
+    let genderId = 1;
+    let academicTitleId = 1;
+
+    if (reference.gender !== '') {
+      genderId = selectData.genders.find(
+        (gender) => gender.title === reference.gender
+      ).id;
+    }
+
+    if (reference.academicTitle !== '') {
+      academicTitleId = selectData.academicTitles.find(
+        (academicTitle) => academicTitle.title === reference.academicTitle
+      ).id;
+    }
+
+    const body = {
+      firstName: reference.firstName,
+      lastName: reference.lastName,
+      title: reference.title,
+      homepage: reference.homepage,
+      instagram: reference.instagram,
+      youtube: reference.youtube,
+      facebook: reference.facebook,
+      referencesGenderId: genderId,
+      referencesAcademicTitleId: academicTitleId,
+    };
+
+    const response = await fetch(
+      'http://localhost:8000/references/references',
+      {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    console.log(response);
   };
 
-  const onDelete = () => {
-    console.log('Delete');
+  const onDelete = async () => {
+    const response = await fetch(
+      `http://localhost:8000/references/references/${selectedReference.id}`,
+      {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   };
 
   const onInitial = () => {
     setReference({
-      id: selectedReference.id,
+      ...selectedReference,
       gender: selectedReference.gender.title,
       academicTitle: selectedReference.academicTitle.title,
-      firstName: selectedReference.firstName,
-      lastName: selectedReference.lastName,
-      title: selectedReference.title,
-      homepage: selectedReference.homepage,
-      instagram: selectedReference.instagram,
-      youtube: selectedReference.youtube,
-      facebook: selectedReference.facebook,
     });
   };
 

@@ -25,7 +25,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  switchView,
   fetchAcademicTitles,
   fetchGenders,
+  switchView,
 })(References);

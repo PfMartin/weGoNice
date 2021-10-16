@@ -1,4 +1,6 @@
 import Reference from '../models/Reference.js';
+import AcademicTitle from '../models/AcademicTitle.js';
+import Gender from '../models/Gender.js';
 
 /**
  * Finds all references in the database and returns them in json format
@@ -8,7 +10,16 @@ import Reference from '../models/Reference.js';
  */
 export const getReferences = async (req, res) => {
   try {
-    const measures = await Reference.findAll();
+    const measures = await Reference.findAll({
+      include: [
+        {
+          model: AcademicTitle,
+        },
+        {
+          model: Gender,
+        },
+      ],
+    });
     res.send(measures);
   } catch (err) {
     console.error(err);

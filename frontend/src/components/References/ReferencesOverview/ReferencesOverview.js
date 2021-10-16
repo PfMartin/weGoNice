@@ -3,7 +3,7 @@ import './ReferencesOverview.css';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { switchView, selectReference } from 'src/actions';
+import { fetchReferences, switchView, selectReference } from 'src/actions';
 
 import { BiPencil } from 'react-icons/bi';
 
@@ -14,7 +14,12 @@ import Card from 'src/components/Structure/Card/Card.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import SocialMediaFooter from 'src/components/References/SocialMediaFooter/SocialMediaFooter';
 
-const ReferencesOverview = ({ selectReference, switchView, references }) => {
+const ReferencesOverview = ({
+  fetchReferences,
+  selectReference,
+  switchView,
+  references,
+}) => {
   const [filterTags, setFilterTags] = useState({
     homepage: true,
     instagram: true,
@@ -23,9 +28,7 @@ const ReferencesOverview = ({ selectReference, switchView, references }) => {
   });
 
   useEffect(() => {
-    const fetchReferences = async () => {
-      const response = fetch('http://localhost:8000/references/references');
-    };
+    fetchReferences();
   });
 
   const onToggleAllFilter = (e) => {
@@ -63,7 +66,7 @@ const ReferencesOverview = ({ selectReference, switchView, references }) => {
     const shouldBeDisplayed =
       reference[socialMedia] !== '' && filterTags[socialMedia];
 
-    return shouldBeDisplayed;
+    return true;
   };
 
   const onModify = (e) => {
@@ -123,7 +126,7 @@ const ReferencesOverview = ({ selectReference, switchView, references }) => {
             displayCheck(reference, 'youtube') ? (
             <Card id={reference.id} key={reference.id} hoverable={false}>
               <h3>
-                {`${reference.academicTitle.title} ${reference.firstName} ${reference.lastName}`}
+                {`${reference.referencesAcademicTitle.title} ${reference.firstName} ${reference.lastName}`}
               </h3>
               <p>
                 {reference.title} {reference.id}
@@ -151,6 +154,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { switchView, selectReference })(
-  ReferencesOverview
-);
+export default connect(mapStateToProps, {
+  fetchReferences,
+  switchView,
+  selectReference,
+})(ReferencesOverview);

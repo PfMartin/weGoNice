@@ -7,6 +7,11 @@ import Gender from '../models/Gender.js';
  */
 export const createAcademicTitles = async () => {
   await AcademicTitle.create({
+    title: 'None',
+    description: 'No academic title',
+  });
+
+  await AcademicTitle.create({
     title: 'B.Sc.',
     description: 'Bachelor of Science',
   });

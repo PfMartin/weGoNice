@@ -92,9 +92,21 @@ const fetchRecipeCategories = () => async (dispatch) => {
   dispatch({ type: 'FETCH_RECIPE_CATEGORIES', payload: data });
 };
 
+/**
+ * Action creator for fetching all references
+ * @param  {Func}   dispatch          Function for dispatching an action
+ * @return {Object}                   Action
+ */
+const fetchReferences = () => async (dispatch) => {
+  const response = await fetch('http://localhost:8000/references/references');
+  const data = await response.json();
+  dispatch({ type: 'FETCH_REFERENCES', payload: data });
+};
+
 module.exports = {
   fetchAcademicTitles,
   fetchRecipeCategories,
+  fetchReferences,
   fetchGenders,
   fetchMeasures,
   switchApp,
