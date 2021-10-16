@@ -1,7 +1,7 @@
 import express from 'express';
 
 import * as referencesAcademicTitleCtrl from '../controllers/AcademicTitle.js';
-import * as referencesSalutationCtrl from '../controllers/Salutation.js';
+import * as referencesGenderCtrl from '../controllers/Gender.js';
 import * as referencesReferenceCtrl from '../controllers/Reference.js';
 
 const referenceRouter = express.Router();
@@ -28,26 +28,26 @@ referenceRouter.delete(
   referencesAcademicTitleCtrl.deleteAcademicTitle
 );
 
-// Salutation
+// Gender
 referenceRouter.get(
-  '/references/salutations',
-  referencesSalutationCtrl.getSalutations
+  '/references/genders',
+  referencesGenderCtrl.getGenders
 );
 referenceRouter.get(
-  '/references/salutations/:id',
-  referencesSalutationCtrl.getSalutationById
+  '/references/genders/:id',
+  referencesGenderCtrl.getGenderById
 );
 referenceRouter.post(
-  '/references/salutations',
-  referencesSalutationCtrl.createSalutation
+  '/references/genders',
+  referencesGenderCtrl.createGender
 );
 referenceRouter.put(
-  '/references/salutations/:id',
-  referencesSalutationCtrl.updateSalutation
+  '/references/genders/:id',
+  referencesGenderCtrl.updateGender
 );
 referenceRouter.delete(
-  '/references/salutations/:id',
-  referencesSalutationCtrl.deleteSalutation
+  '/references/genders/:id',
+  referencesGenderCtrl.deleteGender
 );
 
 // Reference

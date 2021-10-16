@@ -5,7 +5,7 @@ const staticReferences = [
     facebook: '',
     instagram: 'https://www.instagram.com/niko_rittenau',
     youtube: '',
-    salutation: {
+    gender: {
       title: 'Mr.',
       description: '',
     },
@@ -23,7 +23,7 @@ const staticReferences = [
     facebook: '',
     instagram: 'https://www.instagram.com/biancazapatka/',
     youtube: '',
-    salutation: {
+    gender: {
       title: 'Mrs.',
       description: '',
     },
@@ -41,7 +41,7 @@ const staticReferences = [
     facebook: '',
     instagram: 'https://www.instagram.com/schnabula_rasa/',
     youtube: '',
-    salutation: {
+    gender: {
       title: 'Mrs.',
       description: '',
     },
@@ -59,7 +59,7 @@ const staticReferences = [
     facebook: 'https://www.facebook.com/maxlmanna74',
     instagram: 'https://www.instagram.com/maxlamanna/',
     youtube: 'https://www.youtube.com/channel/UCusvG_uAvkU_4qzx788Z3HQ',
-    salutation: {
+    gender: {
       title: 'Mr.',
       description: '',
     },

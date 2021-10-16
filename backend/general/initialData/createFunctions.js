@@ -57,10 +57,3 @@ export const createMeasures = async () => {
     category: 'quantity',
   });
 };
-
-export const createTestValues = async () => {
-  await Value.create({
-    value: 5,
-    generalMeasureId: 1,
-  });
-};

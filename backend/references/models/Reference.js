@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 import db from '../../config/database.js';
-import Salutation from './Salutation.js';
+import Gender from './Gender.js';
 import AcademicTitle from './AcademicTitle.js';
 
 const { DataTypes } = Sequelize;
@@ -29,7 +29,7 @@ const Reference = db.define('referencesReference', {
   },
 });
 
-Reference.belongsTo(Salutation); // Create column referencesSalutationId
+Reference.belongsTo(Gender); // Create column referencesGenderId
 Reference.belongsTo(AcademicTitle); // Create column referencesAcademicTitleId
 
 export default Reference;

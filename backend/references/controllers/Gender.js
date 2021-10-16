@@ -1,14 +1,14 @@
-import Salutation from '../models/Salutation.js';
+import Gender from '../models/Gender.js';
 
 /**
- * Finds all salutations in the database and returns them in json format
+ * Finds all genders in the database and returns them in json format
  * @param  {Object}  req    Request to the backend
  * @param  {Object}  res    Response from the backend
  * @return {Promise}
  */
-export const getSalutations = async (req, res) => {
+export const getGenders = async (req, res) => {
   try {
-    const measures = await Salutation.findAll();
+    const measures = await Gender.findAll();
     res.send(measures);
   } catch (err) {
     console.error(err);
@@ -16,14 +16,14 @@ export const getSalutations = async (req, res) => {
 };
 
 /**
- * Finds a salutation with a specific id in the database and returns it in json format
+ * Finds a gender with a specific id in the database and returns it in json format
  * @param  {Object}  req    Request to the backend
  * @param  {Object}  res    Response from the backend
  * @return {Promise}
  */
-export const getSalutationById = async (req, res) => {
+export const getGenderById = async (req, res) => {
   try {
-    const measures = await Salutation.findAll({
+    const measures = await Gender.findAll({
       where: {
         id: req.params.id,
       },
@@ -35,16 +35,16 @@ export const getSalutationById = async (req, res) => {
 };
 
 /**
- * Creates a new salutation
+ * Creates a new gender
  * @param  {Object}  req    Request to the backend
  * @param  {Object}  res    Response from the backend
  * @return {Promise}
  */
-export const createSalutation = async (req, res) => {
+export const createGender = async (req, res) => {
   try {
-    await Salutation.create(req.body);
+    await Gender.create(req.body);
     res.json({
-      message: 'Salutation created',
+      message: 'Gender created',
     });
   } catch (err) {
     console.error(err);
@@ -52,20 +52,20 @@ export const createSalutation = async (req, res) => {
 };
 
 /**
- * Updates a specific salutation with the sent data
+ * Updates a specific gender with the sent data
  * @param  {Object}  req    Request to the backend
  * @param  {Object}  res    Response from the backend
  * @return {Promise}
  */
-export const updateSalutation = async (req, res) => {
+export const updateGender = async (req, res) => {
   try {
-    await Salutation.update(req.body, {
+    await Gender.update(req.body, {
       where: {
         id: param.req.id,
       },
     });
     res.json({
-      message: 'Salutation Updated',
+      message: 'Gender Updated',
     });
   } catch (err) {
     console.error(err);
@@ -73,20 +73,20 @@ export const updateSalutation = async (req, res) => {
 };
 
 /**
- * Deletes a specific salutation
+ * Deletes a specific gender
  * @param  {Object}  req    Request to the backend
  * @param  {Object}  res    Response from the backend
  * @return {Promise}
  */
-export const deleteSalutation = async (req, res) => {
+export const deleteGender = async (req, res) => {
   try {
-    await Salutation.destroy({
+    await Gender.destroy({
       where: {
         id: req.params.id,
       },
     });
     res.json({
-      message: 'Salutation Deleted',
+      message: 'Gender Deleted',
     });
   } catch (err) {
     console.error(err);

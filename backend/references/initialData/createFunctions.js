@@ -1,5 +1,5 @@
 import AcademicTitle from '../models/AcademicTitle.js';
-import Salutation from '../models/Salutation.js';
+import Gender from '../models/Gender.js';
 
 /**
  * Creates academic titles for select fields
@@ -28,27 +28,19 @@ export const createAcademicTitles = async () => {
 };
 
 /**
- * Creates salutations for select fields
+ * Creates genders for select fields
  * @return {Promise}
  */
-export const createSalutations = async () => {
-  await Salutation.create({
-    title: 'Ms.',
-    description: 'Miss',
-  });
-
-  await Salutation.create({
-    title: 'Mrs.',
-    description: 'Mistress',
-  });
-
-  await Salutation.create({
-    title: 'Mr.',
-    description: 'Mister',
-  });
-
-  await Salutation.create({
+export const createGenders = async () => {
+  await Gender.create({
     title: 'Div.',
-    description: 'Divers',
+  });
+
+  await Gender.create({
+    title: 'Female',
+  });
+
+  await Gender.create({
+    title: 'Male',
   });
 };

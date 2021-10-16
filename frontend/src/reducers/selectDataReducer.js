@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
   academicTitles: [],
   recipeCategories: [],
-  salutations: [],
+  genders: [],
   measures: [],
 };
 
@@ -12,7 +12,7 @@ const selectDataReducer = (state = INITIAL_STATE, action) => {
     case 'FETCH_RECIPE_CATEGORIES':
       return { ...state, recipeCategories: action.payload };
     case 'FETCH_SALUTATIONS':
-      return { ...state, salutations: action.payload };
+      return { ...state, genders: action.payload };
     case 'FETCH_MEASURES':
       return { ...state, measures: action.payload };
     default:

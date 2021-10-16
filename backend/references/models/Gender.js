@@ -3,19 +3,16 @@ import db from '../../config/database.js';
 
 const { DataTypes } = Sequelize;
 
-const Salutation = db.define(
-  'referencesSalutation',
+const Gender = db.define(
+  'referencesGender',
   {
     title: {
       type: DataTypes.STRING,
     },
-    description: {
-      type: DataTypes.STRING,
-    },
   },
   {
-    tableName: 'referencesSalutation',
+    tableName: 'referencesGender',
   }
 );
 
-export default Salutation;
+export default Gender;

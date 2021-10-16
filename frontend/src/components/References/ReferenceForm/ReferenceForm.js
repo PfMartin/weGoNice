@@ -19,7 +19,7 @@ const ReferenceForm = ({
 }) => {
   const [reference, setReference] = useState({
     id: '',
-    salutation: '',
+    gender: '',
     academicTitle: '',
     firstName: '',
     lastName: '',
@@ -40,7 +40,7 @@ const ReferenceForm = ({
     const title = e.target.getAttribute('id');
     let value = e.target.value;
 
-    if (title === 'salutation' || title === 'academicTitle') {
+    if (title === 'gender' || title === 'academicTitle') {
       value = e.target.getAttribute('value');
     }
 
@@ -63,7 +63,7 @@ const ReferenceForm = ({
   const onInitial = () => {
     setReference({
       id: selectedReference.id,
-      salutation: selectedReference.salutation.title,
+      gender: selectedReference.gender.title,
       academicTitle: selectedReference.academicTitle.title,
       firstName: selectedReference.firstName,
       lastName: selectedReference.lastName,
@@ -85,11 +85,11 @@ const ReferenceForm = ({
       />
       <FormFrame>
         <SelectElement
-          title="salutation"
-          labelText="Salutation"
-          value={reference.salutation}
+          title="gender"
+          labelText="Gender"
+          value={reference.gender}
           onSelect={updateReference}
-          selectOptions={selectData.salutations}
+          selectOptions={selectData.genders}
         />
         <SelectElement
           title="academicTitle"

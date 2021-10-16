@@ -47,12 +47,12 @@ const selectReference = (reference) => {
 };
 
 /**
- * Action creator for fetching all salutations
+ * Action creator for fetching all genders
  * @param  {Func}   dispatch          Function for dispatching an action
  * @return {Object}                   Action
  */
-const fetchSalutations = () => async (dispatch) => {
-  const response = await fetch('http://localhost:8000/references/salutations');
+const fetchGenders = () => async (dispatch) => {
+  const response = await fetch('http://localhost:8000/references/genders');
   const data = await response.json();
   dispatch({ type: 'FETCH_SALUTATIONS', payload: data });
 };
@@ -95,7 +95,7 @@ const fetchRecipeCategories = () => async (dispatch) => {
 module.exports = {
   fetchAcademicTitles,
   fetchRecipeCategories,
-  fetchSalutations,
+  fetchGenders,
   fetchMeasures,
   switchApp,
   switchView,
