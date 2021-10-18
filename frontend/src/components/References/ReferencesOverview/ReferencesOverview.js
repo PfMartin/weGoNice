@@ -25,6 +25,7 @@ const ReferencesOverview = ({
     instagram: true,
     youtube: true,
     facebook: true,
+    none: true,
   });
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const ReferencesOverview = ({
     const shouldBeDisplayed =
       reference[socialMedia] !== '' && filterTags[socialMedia];
 
-    return true;
+    return shouldBeDisplayed;
   };
 
   const onModify = (e) => {
@@ -77,6 +78,19 @@ const ReferencesOverview = ({
 
     selectReference(filteredReference);
     switchView('modify');
+  };
+
+  const displayName = (ref) => {
+    const academicTitle =
+      ref.referencesAcademicTitle.title !== 'None'
+        ? `${ref.referencesAcademicTitle.title} `
+        : '';
+
+    return `${academicTitle}${ref.firstName} ${ref.lastName}`;
+  };
+
+  const displayNickname = (ref) => {
+    return ref.title === '' ? `${ref.firstName} ${ref.lastName}` : ref.title;
   };
 
   return (
@@ -125,12 +139,8 @@ const ReferencesOverview = ({
             displayCheck(reference, 'facebook') ||
             displayCheck(reference, 'youtube') ? (
             <Card id={reference.id} key={reference.id} hoverable={false}>
-              <h3>
-                {`${reference.referencesAcademicTitle.title} ${reference.firstName} ${reference.lastName}`}
-              </h3>
-              <p>
-                {reference.title} {reference.id}
-              </p>
+              <h3>{displayNickname(reference)}</h3>
+              <p>{displayName(reference)}</p>
               <div className="modify-box">
                 <IconFrame onClick={onModify}>
                   <BiPencil />
