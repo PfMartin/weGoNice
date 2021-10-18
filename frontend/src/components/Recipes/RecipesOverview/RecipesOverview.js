@@ -124,7 +124,7 @@ const RecipesOverview = ({ switchView, recipes, selectRecipe }) => {
           drinks
         </FilterTag>
       </OptionsBar>
-      <div className="content-section">
+      <div className="recipes-content-section">
         {recipes.map((recipe) => {
           return displayCheck(recipe, 'basics') ||
             displayCheck(recipe, 'breakfast') ||

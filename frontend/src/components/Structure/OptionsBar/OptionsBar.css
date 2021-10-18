@@ -28,3 +28,28 @@
   display: flex;
   align-items: center;
 }
+
+@media only screen and (max-width: 530px) {
+  .options-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .filter-section {
+    grid-row: 2 / 3;
+    justify-content: left;
+  }
+
+  .search-section {
+    grid-row: 1 / 2;
+  }
+
+  .search-section input {
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .search-section input {
+    width: 130px;
+  }
+}

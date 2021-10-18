@@ -122,10 +122,15 @@ const ReferenceForm = ({
   };
 
   const onInitial = () => {
+    const academicTitle =
+      selectedReference.referencesAcademicTitle.id === 1
+        ? ''
+        : selectedReference.referencesAcademicTitle.title;
+
     setReference({
       ...selectedReference,
       gender: selectedReference.referencesGender.title,
-      academicTitle: selectedReference.referencesAcademicTitle.title,
+      academicTitle: academicTitle,
     });
   };
 

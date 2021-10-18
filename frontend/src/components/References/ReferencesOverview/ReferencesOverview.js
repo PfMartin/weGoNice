@@ -64,6 +64,16 @@ const ReferencesOverview = ({
   };
 
   const displayCheck = (reference, socialMedia) => {
+    // In case the reference doesn't have any social media, always display it disregarding the set filters
+    if (
+      reference.homepage === '' &&
+      reference.instagram === '' &&
+      reference.youtube === '' &&
+      reference.facebook === ''
+    ) {
+      return true;
+    }
+
     const shouldBeDisplayed =
       reference[socialMedia] !== '' && filterTags[socialMedia];
 
@@ -132,7 +142,7 @@ const ReferencesOverview = ({
           youtube
         </FilterTag>
       </OptionsBar>
-      <div className="content-section">
+      <div className="references-content-section">
         {references.map((reference) => {
           return displayCheck(reference, 'homepage') ||
             displayCheck(reference, 'instagram') ||
