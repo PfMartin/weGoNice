@@ -72,7 +72,7 @@ export const updateReference = async (req, res) => {
   try {
     await Reference.update(req.body, {
       where: {
-        id: param.req.id,
+        id: req.params.id,
       },
     });
     res.json({

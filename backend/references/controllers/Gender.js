@@ -61,7 +61,7 @@ export const updateGender = async (req, res) => {
   try {
     await Gender.update(req.body, {
       where: {
-        id: param.req.id,
+        id: req.params.id,
       },
     });
     res.json({

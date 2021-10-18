@@ -80,17 +80,29 @@ const ReferenceForm = ({
       referencesAcademicTitleId: academicTitleId,
     };
 
-    const response = await fetch(
-      'http://localhost:8000/references/references',
-      {
+    let response;
+    if (selectedView === 'modify') {
+      response = await fetch(
+        `http://localhost:8000/references/references/${selectedReference.id}`,
+        {
+          method: 'PUT',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        }
+      );
+    } else {
+      response = await fetch('http://localhost:8000/references/references', {
         method: 'POST',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
-      }
-    );
+      });
+    }
 
     console.log(response);
   };
@@ -111,8 +123,8 @@ const ReferenceForm = ({
   const onInitial = () => {
     setReference({
       ...selectedReference,
-      gender: selectedReference.gender.title,
-      academicTitle: selectedReference.academicTitle.title,
+      gender: selectedReference.referencesGender.title,
+      academicTitle: selectedReference.referencesAcademicTitle.title,
     });
   };
 

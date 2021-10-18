@@ -61,7 +61,7 @@ export const updateCategory = async (req, res) => {
   try {
     await Category.update(req.body, {
       where: {
-        id: param.req.id,
+        id: req.params.id,
       },
     });
     res.json({

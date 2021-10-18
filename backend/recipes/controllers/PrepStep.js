@@ -61,7 +61,7 @@ export const updatePrepStep = async (req, res) => {
   try {
     await PrepStep.update(req.body, {
       where: {
-        id: param.req.id,
+        id: req.params.id,
       },
     });
     res.json({

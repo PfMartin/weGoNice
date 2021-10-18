@@ -61,7 +61,7 @@ export const updateRecipe = async (req, res) => {
   try {
     await Recipe.update(req.body, {
       where: {
-        id: param.req.id,
+        id: req.params.id,
       },
     });
     res.json({

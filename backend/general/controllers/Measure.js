@@ -61,7 +61,7 @@ export const updateMeasure = async (req, res) => {
   try {
     await Measure.update(req.body, {
       where: {
-        id: param.req.id,
+        id: req.params.id,
       },
     });
     res.json({

@@ -61,7 +61,7 @@ export const updateUser = async (req, res) => {
   try {
     await User.update(req.body, {
       where: {
-        id: param.req.id,
+        id: req.params.id,
       },
     });
     res.json({
