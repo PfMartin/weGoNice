@@ -1,5 +1,10 @@
 import * as createFunctions from './createFunctions.js';
 
-createFunctions.createUsers();
-createFunctions.createMeasures();
-// createFunctions.createTestValues();
+const createData = async () => {
+  await createFunctions.createUsers();
+  await createFunctions.createMeasures();
+  // await createFunctions.createTestValues();
+  process.exit(0);
+};
+
+createData();

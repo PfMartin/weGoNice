@@ -1,3 +1,8 @@
 import * as createFunctions from './createFunctions.js';
 
-createFunctions.createRecipeCategories();
+const createData = async () => {
+  await createFunctions.createRecipeCategories();
+  process.exit(0);
+};
+
+createData();
