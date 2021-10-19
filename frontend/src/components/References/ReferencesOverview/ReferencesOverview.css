@@ -10,3 +10,33 @@
   right: 0;
   top: 0;
 }
+
+@media only screen and (min-width: 630px) {
+  .references-content-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (min-width: 930px) {
+  .references-content-section {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media only screen and (min-width: 1230px) {
+  .references-content-section {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media only screen and (min-width: 1530px) {
+  .references-content-section {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media only screen and (min-width: 1830px) {
+  .references-content-section {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
