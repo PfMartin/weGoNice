@@ -1,4 +1,3 @@
-// Ich hoffe du hast gutes Schuhwerk eingepackt, denn vielleicht schicken wir dich aber auch auf einen gefährlichen Klettersteig, bei dem du gegen den Abgrund kämpfst.
 import './OptionsBar.css';
 
 import React from 'react';
@@ -17,10 +16,14 @@ const OptionsBar = ({ children, onClickFilter, searchPlaceholder }) => {
         <div className="filter-tags">{children}</div>
       </div>
       <form onSubmit={(e) => e.preventDefault()} className="search-section">
-        <input placeholder={searchPlaceholder}></input>
-        <IconFrame>
-          <BiSearch />
-        </IconFrame>
+        <div className="search-input">
+          <input placeholder={searchPlaceholder}></input>
+        </div>
+        <div>
+          <IconFrame>
+            <BiSearch />
+          </IconFrame>
+        </div>
       </form>
     </div>
   );
