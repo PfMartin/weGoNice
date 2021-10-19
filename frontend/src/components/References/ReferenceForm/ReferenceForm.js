@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { switchView } from 'src/actions';
 
+import { fetchPost, fetchPut, fetchDelete } from 'src/utils/fetchApi';
+
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
 import InputElement from 'src/components/Forms/InputElement/InputElement.js';
@@ -82,43 +84,32 @@ const ReferenceForm = ({
 
     let response;
     if (selectedView === 'modify') {
-      response = await fetch(
-        `http://localhost:8000/references/references/${selectedReference.id}`,
-        {
-          method: 'PUT',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
-        }
+      response = await fetchPut(
+        'references',
+        'references',
+        selectedReference.id,
+        JSON.stringify(body)
       );
     } else {
-      response = await fetch('http://localhost:8000/references/references', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
+      response = await fetchPost(
+        'references',
+        'references',
+        JSON.stringify(body)
+      );
     }
 
     console.log(response);
+    switchView('overview');
   };
 
   const onDelete = async () => {
-    const response = await fetch(
-      `http://localhost:8000/references/references/${selectedReference.id}`,
-      {
-        method: 'DELETE',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+    const response = await fetchDelete(
+      'references',
+      'references',
+      selectedReference.id
     );
     console.log(response);
+    switchView('overview');
   };
 
   const onInitial = () => {

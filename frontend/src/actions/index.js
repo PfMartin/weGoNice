@@ -1,9 +1,11 @@
+import { fetchGetAll, fetchGetOne } from 'src/utils/fetchApi';
+
 /**
  * Action creator to switch to the desired app
  * @param  {String} targetApp         App to set as selectedApp
  * @return {Object}                   Action
  */
-const switchApp = (targetApp) => {
+export const switchApp = (targetApp) => {
   return {
     type: 'APP_SELECTED',
     payload: targetApp,
@@ -15,7 +17,7 @@ const switchApp = (targetApp) => {
  * @param  {String} targetView        View to set as selectedView
  * @return {Object}                   Action
  */
-const switchView = (targetView) => {
+export const switchView = (targetView) => {
   return {
     type: 'VIEW_SELECTED',
     payload: targetView,
@@ -27,7 +29,7 @@ const switchView = (targetView) => {
  * @param  {Object} recipe            Recipe to set as selectedRecipe
  * @return {Object}                   Action
  */
-const selectRecipe = (recipe) => {
+export const selectRecipe = (recipe) => {
   return {
     type: 'RECIPE_SELECTED',
     payload: recipe,
@@ -39,7 +41,7 @@ const selectRecipe = (recipe) => {
  * @param  {Object} reference         Recipe to set as selectedReference
  * @return {Object}                   Action
  */
-const selectReference = (reference) => {
+export const selectReference = (reference) => {
   return {
     type: 'REFERENCE_SELECTED',
     payload: reference,
@@ -51,9 +53,8 @@ const selectReference = (reference) => {
  * @param  {Func}   dispatch          Function for dispatching an action
  * @return {Object}                   Action
  */
-const fetchGenders = () => async (dispatch) => {
-  const response = await fetch('http://localhost:8000/references/genders');
-  const data = await response.json();
+export const fetchGenders = () => async (dispatch) => {
+  const data = await fetchGetAll('references', 'genders');
   dispatch({ type: 'FETCH_SALUTATIONS', payload: data });
 };
 
@@ -62,11 +63,8 @@ const fetchGenders = () => async (dispatch) => {
  * @param  {Func}   dispatch          Function for dispatching an action
  * @return {Object}                   Action
  */
-const fetchAcademicTitles = () => async (dispatch) => {
-  const response = await fetch(
-    'http://localhost:8000/references/academic_titles'
-  );
-  const data = await response.json();
+export const fetchAcademicTitles = () => async (dispatch) => {
+  const data = await fetchGetAll('references', 'academic_titles');
   dispatch({ type: 'FETCH_ACADEMIC_TITLES', payload: data });
 };
 
@@ -75,9 +73,8 @@ const fetchAcademicTitles = () => async (dispatch) => {
  * @param  {Func}   dispatch          Function for dispatching an action
  * @return {Object}                   Action
  */
-const fetchMeasures = () => async (dispatch) => {
-  const response = await fetch('http://localhost:8000/general/measures');
-  const data = await response.json();
+export const fetchMeasures = () => async (dispatch) => {
+  const data = await fetchGetAll('general', 'measures');
   dispatch({ type: 'FETCH_MEASURES', payload: data });
 };
 
@@ -86,9 +83,8 @@ const fetchMeasures = () => async (dispatch) => {
  * @param  {Func}   dispatch          Function for dispatching an action
  * @return {Object}                   Action
  */
-const fetchRecipeCategories = () => async (dispatch) => {
-  const response = await fetch('http://localhost:8000/recipes/categories');
-  const data = await response.json();
+export const fetchRecipeCategories = () => async (dispatch) => {
+  const data = await fetchGetAll('recipes', 'categories');
   dispatch({ type: 'FETCH_RECIPE_CATEGORIES', payload: data });
 };
 
@@ -97,20 +93,7 @@ const fetchRecipeCategories = () => async (dispatch) => {
  * @param  {Func}   dispatch          Function for dispatching an action
  * @return {Object}                   Action
  */
-const fetchReferences = () => async (dispatch) => {
-  const response = await fetch('http://localhost:8000/references/references');
-  const data = await response.json();
+export const fetchReferences = () => async (dispatch) => {
+  const data = await fetchGetAll('references', 'references');
   dispatch({ type: 'FETCH_REFERENCES', payload: data });
-};
-
-module.exports = {
-  fetchAcademicTitles,
-  fetchRecipeCategories,
-  fetchReferences,
-  fetchGenders,
-  fetchMeasures,
-  switchApp,
-  switchView,
-  selectRecipe,
-  selectReference,
 };
