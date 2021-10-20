@@ -9,16 +9,18 @@ import {
   fetchRecipeCategories,
 } from 'src/actions';
 import { connect } from 'react-redux';
-import { selectApp } from 'src/actions';
 
 import Navbar from 'src/components/Structure/Navbar/Navbar';
-import Recipes from 'src/components/Recipes/Recipes/Recipes';
+import RecipesOverview from 'src/components/Recipes/RecipesOverview/RecipesOverview';
+import RecipeForm from 'src/components/Recipes/RecipeForm/RecipeForm';
+import RecipeDetail from 'src/components/Recipes/RecipeDetail/RecipeDetail';
 import References from 'src/components/References/References/References';
+import ReferencesOverview from 'src/components/References/ReferencesOverview/ReferencesOverview';
+import ReferenceForm from 'src/components/References/ReferenceForm/ReferenceForm';
 import Footer from 'src/components/Structure/Footer/Footer';
 import history from 'src/history';
 
 const App = ({
-  selectedApp,
   fetchAcademicTitles,
   fetchGenders,
   fetchMeasures,
@@ -36,9 +38,16 @@ const App = ({
       <Router history={history}>
         <div>
           <Navbar />
-          <Route path="/" exact component={Recipes} />
-          <Route path="/recipes" exact component={Recipes} />
-          <Route path="/references" exact component={References} />
+          <Route path="/" exact component={RecipesOverview} />
+          <Route path="/recipes/overview" exact component={RecipesOverview} />
+          <Route path="/recipes/detail/:id" exact component={RecipeDetail} />
+          <Route path="/recipes/create" exact component={RecipeForm} />
+          <Route
+            path="/references/overview"
+            exact
+            component={ReferencesOverview}
+          />
+          <Route path="/references/create" exact component={ReferenceForm} />
           <Footer />
         </div>
       </Router>
@@ -46,13 +55,7 @@ const App = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    selectedApp: state.selectedApp,
-  };
-};
-
-export default connect(mapStateToProps, {
+export default connect(null, {
   fetchAcademicTitles,
   fetchGenders,
   fetchMeasures,

@@ -21,7 +21,7 @@ const Navbar = (props) => {
         />
       </div>
       <div className="apps-container">
-        <Link to="/recipes">
+        <Link to="/recipes/overview">
           <IconFrame
             className={currentApp === 'recipes' ? 'icon selected' : 'icon'}
             size="35px"
@@ -34,7 +34,7 @@ const Navbar = (props) => {
             <BiFoodMenu />
           </IconFrame>
         </Link>
-        <Link to="/references">
+        <Link to="/references/overview">
           <IconFrame
             className={currentApp === 'references' ? 'icon selected' : 'icon'}
             size="35px"
