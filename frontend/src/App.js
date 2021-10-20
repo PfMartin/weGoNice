@@ -14,7 +14,6 @@ import Navbar from 'src/components/Structure/Navbar/Navbar';
 import RecipesOverview from 'src/components/Recipes/RecipesOverview/RecipesOverview';
 import RecipeForm from 'src/components/Recipes/RecipeForm/RecipeForm';
 import RecipeDetail from 'src/components/Recipes/RecipeDetail/RecipeDetail';
-import References from 'src/components/References/References/References';
 import ReferencesOverview from 'src/components/References/ReferencesOverview/ReferencesOverview';
 import ReferenceForm from 'src/components/References/ReferenceForm/ReferenceForm';
 import Footer from 'src/components/Structure/Footer/Footer';
