@@ -1,18 +1,6 @@
 import { fetchGetAll, fetchGetOne } from 'src/utils/fetchApi';
 
 /**
- * Action creator to switch to the desired app
- * @param  {String} targetApp         App to set as selectedApp
- * @return {Object}                   Action
- */
-export const switchApp = (targetApp) => {
-  return {
-    type: 'APP_SELECTED',
-    payload: targetApp,
-  };
-};
-
-/**
  * Action creator to switch to the desired view
  * @param  {String} targetView        View to set as selectedView
  * @return {Object}                   Action

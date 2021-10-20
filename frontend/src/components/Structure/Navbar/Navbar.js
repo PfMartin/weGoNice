@@ -1,11 +1,15 @@
 import './Navbar.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { switchApp, switchView } from 'src/actions';
+import { switchView } from 'src/actions';
 import { BiFoodMenu, BiUser } from 'react-icons/bi';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
+import { Link } from 'react-router-dom';
+import history from 'src/history';
 
-const Navbar = ({ selectedApp, switchApp, switchView }) => {
+const Navbar = (props) => {
+  const [currentApp, changeCurrentApp] = useState('recipes');
+
   return (
     <nav className="navbar">
       <div className="logo">
@@ -17,28 +21,32 @@ const Navbar = ({ selectedApp, switchApp, switchView }) => {
         />
       </div>
       <div className="apps-container">
-        <IconFrame
-          className={selectedApp === 'recipes' ? 'icon selected' : 'icon'}
-          size="35px"
-          onClick={(e) => {
-            switchApp('recipes');
-            switchView('overview');
-          }}
-          targetApp="recipes"
-        >
-          <BiFoodMenu />
-        </IconFrame>
-        <IconFrame
-          className={selectedApp === 'references' ? 'icon selected' : 'icon'}
-          size="35px"
-          onClick={(e) => {
-            switchApp('references');
-            switchView('overview');
-          }}
-          targetApp="references"
-        >
-          <BiUser />
-        </IconFrame>
+        <Link to="/recipes">
+          <IconFrame
+            className={currentApp === 'recipes' ? 'icon selected' : 'icon'}
+            size="35px"
+            onClick={(e) => {
+              changeCurrentApp('recipes');
+              props.switchView('overview');
+            }}
+            targetApp="recipes"
+          >
+            <BiFoodMenu />
+          </IconFrame>
+        </Link>
+        <Link to="/references">
+          <IconFrame
+            className={currentApp === 'references' ? 'icon selected' : 'icon'}
+            size="35px"
+            onClick={(e) => {
+              changeCurrentApp('references');
+              props.switchView('overview');
+            }}
+            targetApp="references"
+          >
+            <BiUser />
+          </IconFrame>
+        </Link>
       </div>
     </nav>
   );
@@ -46,12 +54,11 @@ const Navbar = ({ selectedApp, switchApp, switchView }) => {
 
 const mapStateToProps = (state) => {
   return {
-    selectedApp: state.selectedApp,
     selectedView: state.selectedView,
   };
 };
 
 export default connect(mapStateToProps, {
-  switchApp,
   switchView,
+  history,
 })(Navbar);
