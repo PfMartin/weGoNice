@@ -34,6 +34,11 @@ export const getValueById = async (req, res) => {
       where: {
         id: req.params.id,
       },
+      include: [
+        {
+          model: Measure,
+        },
+      ],
     });
     res.send(values[0]);
   } catch (err) {

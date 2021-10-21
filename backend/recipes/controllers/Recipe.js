@@ -1,4 +1,8 @@
 import Recipe from '../models/Recipe.js';
+import Category from '../models/Category.js';
+import Value from '../../general/models/Value.js';
+import Measure from '../../general/models/Measure.js';
+import Reference from '../../references/models/Reference.js';
 
 /**
  * Finds all recipes in the database and returns them in json format
@@ -8,7 +12,24 @@ import Recipe from '../models/Recipe.js';
  */
 export const getRecipes = async (req, res) => {
   try {
-    const recipes = await Recipe.findAll();
+    const recipes = await Recipe.findAll({
+      include: [
+        {
+          model: Category,
+        },
+        {
+          model: Value,
+          include: [
+            {
+              model: Measure,
+            },
+          ],
+        },
+        {
+          model: Reference,
+        },
+      ],
+    });
     res.send(recipes);
   } catch (err) {
     console.error(err);
@@ -27,6 +48,17 @@ export const getRecipeById = async (req, res) => {
       where: {
         id: req.params.id,
       },
+      include: [
+        {
+          model: Category,
+        },
+        {
+          model: Value,
+        },
+        {
+          model: Reference,
+        },
+      ],
     });
     res.send(recipes[0]);
   } catch (err) {
