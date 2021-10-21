@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchReferences, selectReference } from 'src/actions';
+import { fetchReferences } from 'src/actions';
 
 import { BiPencil } from 'react-icons/bi';
 
@@ -15,11 +15,7 @@ import Card from 'src/components/Structure/Card/Card.js';
 import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import SocialMediaFooter from 'src/components/References/SocialMediaFooter/SocialMediaFooter';
 
-const ReferencesOverview = ({
-  fetchReferences,
-  selectReference,
-  references,
-}) => {
+const ReferencesOverview = ({ fetchReferences, references }) => {
   const [filterTags, setFilterTags] = useState({
     homepage: true,
     instagram: true,
@@ -80,13 +76,13 @@ const ReferencesOverview = ({
     return shouldBeDisplayed;
   };
 
-  const onModify = (e) => {
-    const id = parseInt(
-      e.currentTarget.parentNode.parentNode.getAttribute('id')
+  const filterCheck = (reference) => {
+    return (
+      displayCheck(reference, 'homepage') ||
+      displayCheck(reference, 'instagram') ||
+      displayCheck(reference, 'facebook') ||
+      displayCheck(reference, 'youtube')
     );
-    const filteredReference = references.find((obj) => obj.id === id);
-
-    selectReference(filteredReference);
   };
 
   const displayName = (ref) => {
@@ -140,10 +136,7 @@ const ReferencesOverview = ({
       </OptionsBar>
       <div className="references-content-section">
         {references.map((reference) => {
-          return displayCheck(reference, 'homepage') ||
-            displayCheck(reference, 'instagram') ||
-            displayCheck(reference, 'facebook') ||
-            displayCheck(reference, 'youtube') ? (
+          return filterCheck(reference) ? (
             <Card id={reference.id} key={reference.id} hoverable={false}>
               <h3>{displayNickname(reference)}</h3>
               <p>{displayName(reference)}</p>
@@ -168,11 +161,9 @@ const ReferencesOverview = ({
 const mapStateToProps = (state) => {
   return {
     references: state.references,
-    selectedReference: state.selectedReference,
   };
 };
 
 export default connect(mapStateToProps, {
   fetchReferences,
-  selectReference,
 })(ReferencesOverview);

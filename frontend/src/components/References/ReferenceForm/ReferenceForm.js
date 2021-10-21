@@ -18,6 +18,11 @@ import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const ReferenceForm = ({ history, location, selectData }) => {
+  const currentView =
+    location.pathname.split('/').reverse()[0] !== 'create'
+      ? 'modify'
+      : 'create';
+
   const [reference, setReference] = useState({
     id: '',
     gender: '',
@@ -32,15 +37,29 @@ const ReferenceForm = ({ history, location, selectData }) => {
   });
 
   useEffect(() => {
-    if (location.pathname.split('/').reverse()[0] !== 'create') {
+    if (currentView === 'modify') {
       onInitial();
     }
   }, []);
 
-  const currentView =
-    location.pathname.split('/').reverse()[0] !== 'create'
-      ? 'modify'
-      : 'create';
+  const onInitial = async () => {
+    const currentReferenceId = parseInt(
+      location.pathname.split('/').reverse()[0]
+    );
+
+    const currentReference = await fetchGetOne(
+      'references',
+      'references',
+      currentReferenceId
+    );
+
+    setReference({
+      ...currentReference,
+      id: currentReferenceId,
+      gender: currentReference.referencesGender.title,
+      academicTitle: currentReference.referencesAcademicTitle.title,
+    });
+  };
 
   const updateReference = (e) => {
     const title = e.target.getAttribute('id');
@@ -59,7 +78,7 @@ const ReferenceForm = ({ history, location, selectData }) => {
   };
 
   const onSave = async () => {
-    let genderId = 1;
+    let genderId = 1; // For Validation
     let academicTitleId = 1;
 
     if (reference.gender !== '') {
@@ -118,25 +137,6 @@ const ReferenceForm = ({ history, location, selectData }) => {
     if (response.message === 'Reference Deleted') {
       history.push('/references/overview');
     }
-  };
-
-  const onInitial = async () => {
-    const currentReferenceId = parseInt(
-      location.pathname.split('/').reverse()[0]
-    );
-
-    const currentReference = await fetchGetOne(
-      'references',
-      'references',
-      currentReferenceId
-    );
-
-    setReference({
-      ...currentReference,
-      id: currentReferenceId,
-      gender: currentReference.referencesGender.title,
-      academicTitle: currentReference.referencesAcademicTitle.title,
-    });
   };
 
   const headlineText =

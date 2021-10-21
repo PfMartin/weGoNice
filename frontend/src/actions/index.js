@@ -13,18 +13,6 @@ export const selectRecipe = (recipe) => {
 };
 
 /**
- * Action creator to select the desired reference
- * @param  {Object} reference         Recipe to set as selectedReference
- * @return {Object}                   Action
- */
-export const selectReference = (reference) => {
-  return {
-    type: 'REFERENCE_SELECTED',
-    payload: reference,
-  };
-};
-
-/**
  * Action creator for fetching all genders
  * @param  {Func}   dispatch          Function for dispatching an action
  * @return {Object}                   Action
