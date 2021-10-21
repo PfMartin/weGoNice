@@ -12,7 +12,13 @@ import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const ReferenceForm = ({ selectData, selectedReference, selectedView }) => {
+const ReferenceForm = ({
+  history,
+  location,
+  selectData,
+  selectedReference,
+  selectedView,
+}) => {
   const [reference, setReference] = useState({
     id: '',
     gender: '',
@@ -91,17 +97,20 @@ const ReferenceForm = ({ selectData, selectedReference, selectedView }) => {
         JSON.stringify(body)
       );
     }
-
     console.log(response);
+    if (response.message === 'Reference Created') {
+      history.push('/references/overview');
+    }
   };
 
   const onDelete = async () => {
-    const response = await fetchDelete(
-      'references',
-      'references',
-      selectedReference.id
-    );
+    const referenceId = parseInt(location.pathname.split('/').reverse()[0]);
+
+    const response = await fetchDelete('references', 'references', referenceId);
     console.log(response);
+    if (response.message === 'Reference Deleted') {
+      history.push('/references/overview');
+    }
   };
 
   const onInitial = () => {

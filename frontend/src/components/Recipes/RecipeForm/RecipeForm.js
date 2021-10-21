@@ -17,6 +17,7 @@ import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const RecipeForm = ({
+  history,
   selectData,
   references,
   selectedRecipe,
@@ -164,10 +165,14 @@ const RecipeForm = ({
 
   const onSave = () => {
     console.log('onSave');
+    // if response.message === 'Recipe Created'
+    history.push('/recipes/overview');
   };
 
   const onDelete = () => {
     console.log('onDelete');
+    // if response.message === 'Recipe Deleted'
+    history.push('/recipes/overview');
   };
 
   return (
