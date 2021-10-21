@@ -44,7 +44,7 @@ export const createCategory = async (req, res) => {
   try {
     await Category.create(req.body);
     res.json({
-      message: 'Category created',
+      message: 'Category Created',
     });
   } catch (err) {
     console.error(err);

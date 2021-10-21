@@ -44,7 +44,7 @@ export const createGender = async (req, res) => {
   try {
     await Gender.create(req.body);
     res.json({
-      message: 'Gender created',
+      message: 'Gender Created',
     });
   } catch (err) {
     console.error(err);

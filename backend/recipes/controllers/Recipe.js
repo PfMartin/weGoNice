@@ -44,7 +44,7 @@ export const createRecipe = async (req, res) => {
   try {
     await Recipe.create(req.body);
     res.json({
-      message: 'Recipe created',
+      message: 'Recipe Created',
     });
   } catch (err) {
     console.error(err);

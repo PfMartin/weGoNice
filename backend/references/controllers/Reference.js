@@ -55,7 +55,7 @@ export const createReference = async (req, res) => {
   try {
     await Reference.create(req.body);
     res.json({
-      message: 'Reference created',
+      message: 'Reference Created',
     });
   } catch (err) {
     console.error(err);

@@ -44,7 +44,7 @@ export const createPrepStep = async (req, res) => {
   try {
     await PrepStep.create(req.body);
     res.json({
-      message: 'PrepStep created',
+      message: 'PrepStep Created',
     });
   } catch (err) {
     console.error(err);

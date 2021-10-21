@@ -44,7 +44,7 @@ export const createIngredient = async (req, res) => {
   try {
     await Ingredient.create(req.body);
     res.json({
-      message: 'Ingredient created',
+      message: 'Ingredient Created',
     });
   } catch (err) {
     console.error(err);

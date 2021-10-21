@@ -44,7 +44,7 @@ export const createAcademicTitle = async (req, res) => {
   try {
     await AcademicTitle.create(req.body);
     res.json({
-      message: 'AcademicTitle created',
+      message: 'AcademicTitle Created',
     });
   } catch (err) {
     console.error(err);
