@@ -1,14 +1,12 @@
 import './Navbar.css';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { switchView } from 'src/actions';
 import { BiFoodMenu, BiUser } from 'react-icons/bi';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
-import { Link } from 'react-router-dom';
-import history from 'src/history';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = (props) => {
-  const [currentApp, changeCurrentApp] = useState('recipes');
+  const location = useLocation();
+  const currentApp = location.pathname.split('/')[1];
 
   return (
     <nav className="navbar">
@@ -25,10 +23,6 @@ const Navbar = (props) => {
           <IconFrame
             className={currentApp === 'recipes' ? 'icon selected' : 'icon'}
             size="35px"
-            onClick={(e) => {
-              changeCurrentApp('recipes');
-              props.switchView('overview');
-            }}
             targetApp="recipes"
           >
             <BiFoodMenu />
@@ -38,10 +32,6 @@ const Navbar = (props) => {
           <IconFrame
             className={currentApp === 'references' ? 'icon selected' : 'icon'}
             size="35px"
-            onClick={(e) => {
-              changeCurrentApp('references');
-              props.switchView('overview');
-            }}
             targetApp="references"
           >
             <BiUser />
@@ -52,13 +42,4 @@ const Navbar = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    selectedView: state.selectedView,
-  };
-};
-
-export default connect(mapStateToProps, {
-  switchView,
-  history,
-})(Navbar);
+export default Navbar;

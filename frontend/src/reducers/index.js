@@ -7,7 +7,6 @@ import selectedIngredientsReducer from 'src/reducers/selectedIngredientsReducer'
 import selectedPrepStepsReducer from 'src/reducers/selectedPrepStepsReducer';
 import selectedRecipeReducer from 'src/reducers/selectedRecipeReducer';
 import selectedReferenceReducer from 'src/reducers/selectedReferenceReducer';
-import selectedViewReducer from 'src/reducers/selectedViewReducer';
 
 export default combineReducers({
   recipes: recipesReducer,
@@ -15,7 +14,6 @@ export default combineReducers({
   selectData: selectDataReducer,
   selectedIngredients: selectedIngredientsReducer,
   selectedPrepSteps: selectedPrepStepsReducer,
-  selectedView: selectedViewReducer,
   selectedRecipe: selectedRecipeReducer,
   selectedReference: selectedReferenceReducer,
 });

@@ -1,18 +1,6 @@
 import { fetchGetAll, fetchGetOne } from 'src/utils/fetchApi';
 
 /**
- * Action creator to switch to the desired view
- * @param  {String} targetView        View to set as selectedView
- * @return {Object}                   Action
- */
-export const switchView = (targetView) => {
-  return {
-    type: 'VIEW_SELECTED',
-    payload: targetView,
-  };
-};
-
-/**
  * Action creator to select the desired recipe
  * @param  {Object} recipe            Recipe to set as selectedRecipe
  * @return {Object}                   Action

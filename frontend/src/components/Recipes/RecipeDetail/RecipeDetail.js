@@ -3,7 +3,6 @@ import './RecipeDetail.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { switchView } from 'src/actions';
 
 import { BiAlarm } from 'react-icons/bi';
 
@@ -14,7 +13,6 @@ const RecipeDetail = ({
   selectedIngredients,
   selectedPrepSteps,
   selectedRecipe,
-  switchView,
 }) => {
   return (
     <div className="recipe-detail">
@@ -108,4 +106,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { switchView })(RecipeDetail);
+export default connect(mapStateToProps)(RecipeDetail);

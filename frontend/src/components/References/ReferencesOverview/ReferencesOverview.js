@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchReferences, switchView, selectReference } from 'src/actions';
+import { fetchReferences, selectReference } from 'src/actions';
 
 import { BiPencil } from 'react-icons/bi';
 
@@ -18,7 +18,6 @@ import SocialMediaFooter from 'src/components/References/SocialMediaFooter/Socia
 const ReferencesOverview = ({
   fetchReferences,
   selectReference,
-  switchView,
   references,
 }) => {
   const [filterTags, setFilterTags] = useState({
@@ -88,7 +87,6 @@ const ReferencesOverview = ({
     const filteredReference = references.find((obj) => obj.id === id);
 
     selectReference(filteredReference);
-    switchView('modify');
   };
 
   const displayName = (ref) => {
@@ -176,6 +174,5 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   fetchReferences,
-  switchView,
   selectReference,
 })(ReferencesOverview);

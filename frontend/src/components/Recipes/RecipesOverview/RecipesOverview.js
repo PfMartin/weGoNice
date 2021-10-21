@@ -2,7 +2,7 @@ import './RecipesOverview.css';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { switchView, selectRecipe } from 'src/actions';
+import { selectRecipe } from 'src/actions';
 
 import { BiAlarm, BiUser } from 'react-icons/bi';
 
@@ -12,7 +12,7 @@ import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import Card from 'src/components/Structure/Card/Card.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
-const RecipesOverview = ({ switchView, recipes, selectRecipe, location }) => {
+const RecipesOverview = ({ recipes, selectRecipe, location }) => {
   const [filterTags, setFilterTags] = useState({
     basics: true,
     breakfast: true,
@@ -76,7 +76,6 @@ const RecipesOverview = ({ switchView, recipes, selectRecipe, location }) => {
     const recipe = recipes.find((obj) => obj.id === id);
 
     selectRecipe(recipe);
-    switchView('detail');
   };
 
   // The recipes overview page is displayed with the path host:port and host:port/recipes/overview
@@ -170,6 +169,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { switchView, selectRecipe })(
-  RecipesOverview
-);
+export default connect(mapStateToProps, { selectRecipe })(RecipesOverview);

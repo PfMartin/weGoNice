@@ -1,7 +1,6 @@
 import './RecipeForm.css';
 import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { switchView } from 'src/actions';
 
 import { BiPlus } from 'react-icons/bi';
 
@@ -20,7 +19,6 @@ import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 const RecipeForm = ({
   selectData,
   references,
-  switchView,
   selectedRecipe,
   selectedView,
 }) => {
@@ -177,11 +175,6 @@ const RecipeForm = ({
       <SiteHeader
         headline={selectedView === 'create' ? 'Create Recipe' : 'Modify Recipe'}
         hasBackButton={true}
-        onClickBack={
-          selectedView === 'create'
-            ? () => switchView('overview')
-            : () => switchView('detail')
-        }
       />
       <FormFrame>
         <InputElement
@@ -291,4 +284,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { switchView })(RecipeForm);
+export default connect(mapStateToProps)(RecipeForm);

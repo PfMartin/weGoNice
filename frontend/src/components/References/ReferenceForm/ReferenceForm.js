@@ -3,7 +3,6 @@ import './ReferenceForm.css';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { switchView } from 'src/actions';
 
 import { fetchPost, fetchPut, fetchDelete } from 'src/utils/fetchApi';
 
@@ -13,12 +12,7 @@ import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const ReferenceForm = ({
-  selectData,
-  selectedReference,
-  selectedView,
-  switchView,
-}) => {
+const ReferenceForm = ({ selectData, selectedReference, selectedView }) => {
   const [reference, setReference] = useState({
     id: '',
     gender: '',
@@ -99,7 +93,6 @@ const ReferenceForm = ({
     }
 
     console.log(response);
-    switchView('overview');
   };
 
   const onDelete = async () => {
@@ -109,7 +102,6 @@ const ReferenceForm = ({
       selectedReference.id
     );
     console.log(response);
-    switchView('overview');
   };
 
   const onInitial = () => {
@@ -215,4 +207,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { switchView })(ReferenceForm);
+export default connect(mapStateToProps)(ReferenceForm);
