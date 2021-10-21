@@ -1,7 +1,6 @@
 import './SiteHeader.css';
 import React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import { BiPlus, BiArrowBack, BiPencil } from 'react-icons/bi';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
@@ -11,7 +10,7 @@ const SiteHeader = ({
   hasModifyButton,
   hasBackButton,
   hasAddButton,
-  selectedRecipe,
+  currentRecipeId,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -26,7 +25,7 @@ const SiteHeader = ({
       <h1>{headline}</h1>
       <div className="icon-container">
         {hasModifyButton ? (
-          <Link to={`/recipes/modify/${selectedRecipe.id}`}>
+          <Link to={`/recipes/modify/${currentRecipeId}`}>
             <IconFrame size="25px">
               <BiPencil />
             </IconFrame>
@@ -52,10 +51,4 @@ const SiteHeader = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    selectedRecipe: state.selectedRecipe,
-  };
-};
-
-export default connect(mapStateToProps)(SiteHeader);
+export default SiteHeader;

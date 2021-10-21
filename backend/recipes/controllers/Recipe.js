@@ -54,6 +54,11 @@ export const getRecipeById = async (req, res) => {
         },
         {
           model: Value,
+          include: [
+            {
+              model: Measure,
+            },
+          ],
         },
         {
           model: Reference,

@@ -24,7 +24,6 @@ const RecipesOverview = ({ fetchRecipes, location, recipes }) => {
 
   useEffect(() => {
     fetchRecipes();
-    console.log(recipes);
   }, []);
 
   const onToggleAllFilter = (e) => {
