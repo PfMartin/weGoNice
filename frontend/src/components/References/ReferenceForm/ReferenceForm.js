@@ -4,7 +4,12 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { fetchPost, fetchPut, fetchDelete } from 'src/utils/fetchApi';
+import {
+  fetchGetOne,
+  fetchPost,
+  fetchPut,
+  fetchDelete,
+} from 'src/utils/fetchApi';
 
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
@@ -12,13 +17,7 @@ import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const ReferenceForm = ({
-  history,
-  location,
-  selectData,
-  selectedReference,
-  selectedView,
-}) => {
+const ReferenceForm = ({ history, location, selectData }) => {
   const [reference, setReference] = useState({
     id: '',
     gender: '',
@@ -33,10 +32,15 @@ const ReferenceForm = ({
   });
 
   useEffect(() => {
-    if (selectedView === 'modify') {
+    if (location.pathname.split('/').reverse()[0] !== 'create') {
       onInitial();
     }
   }, []);
+
+  const currentView =
+    location.pathname.split('/').reverse()[0] !== 'create'
+      ? 'modify'
+      : 'create';
 
   const updateReference = (e) => {
     const title = e.target.getAttribute('id');
@@ -83,11 +87,11 @@ const ReferenceForm = ({
     };
 
     let response;
-    if (selectedView === 'modify') {
+    if (currentView === 'modify') {
       response = await fetchPut(
         'references',
         'references',
-        selectedReference.id,
+        reference.id,
         JSON.stringify(body)
       );
     } else {
@@ -98,7 +102,10 @@ const ReferenceForm = ({
       );
     }
     console.log(response);
-    if (response.message === 'Reference Created') {
+    if (
+      response.message === 'Reference Created' ||
+      response.message === 'Reference Updated'
+    ) {
       history.push('/references/overview');
     }
   };
@@ -113,27 +120,31 @@ const ReferenceForm = ({
     }
   };
 
-  const onInitial = () => {
-    const academicTitle =
-      selectedReference.referencesAcademicTitle.id === 1
-        ? ''
-        : selectedReference.referencesAcademicTitle.title;
+  const onInitial = async () => {
+    const currentReferenceId = parseInt(
+      location.pathname.split('/').reverse()[0]
+    );
+
+    const currentReference = await fetchGetOne(
+      'references',
+      'references',
+      currentReferenceId
+    );
 
     setReference({
-      ...selectedReference,
-      gender: selectedReference.referencesGender.title,
-      academicTitle: academicTitle,
+      ...currentReference,
+      id: currentReferenceId,
+      gender: currentReference.referencesGender.title,
+      academicTitle: currentReference.referencesAcademicTitle.title,
     });
   };
 
+  const headlineText =
+    currentView === 'create' ? 'Create Reference' : 'Modify Reference';
+
   return (
     <div className="recipe-form">
-      <SiteHeader
-        headline={
-          selectedView === 'create' ? 'Create Reference' : 'Modify References'
-        }
-        hasBackButton={true}
-      />
+      <SiteHeader headline={headlineText} hasBackButton={true} />
       <FormFrame>
         <SelectElement
           title="gender"
@@ -198,7 +209,7 @@ const ReferenceForm = ({
           value={reference.facebook}
           onChange={updateReference}
         />
-        {selectedView === 'create' ? (
+        {currentView === 'create' ? (
           <ButtonBar onSave={onSave} />
         ) : (
           <ButtonBar onSave={onSave} onDelete={onDelete} />
@@ -211,8 +222,6 @@ const ReferenceForm = ({
 const mapStateToProps = (state) => {
   return {
     selectData: state.selectData,
-    selectedView: state.selectedView,
-    selectedReference: state.selectedReference,
   };
 };
 

@@ -11,7 +11,7 @@ const selectDataReducer = (state = INITIAL_STATE, action) => {
       return { ...state, academicTitles: action.payload };
     case 'FETCH_RECIPE_CATEGORIES':
       return { ...state, recipeCategories: action.payload };
-    case 'FETCH_SALUTATIONS':
+    case 'FETCH_GENDERS':
       return { ...state, genders: action.payload };
     case 'FETCH_MEASURES':
       return { ...state, measures: action.payload };

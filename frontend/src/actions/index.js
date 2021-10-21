@@ -31,7 +31,7 @@ export const selectReference = (reference) => {
  */
 export const fetchGenders = () => async (dispatch) => {
   const data = await fetchGetAll('references', 'genders');
-  dispatch({ type: 'FETCH_SALUTATIONS', payload: data });
+  dispatch({ type: 'FETCH_GENDERS', payload: data });
 };
 
 /**

@@ -38,6 +38,14 @@ export const getReferenceById = async (req, res) => {
       where: {
         id: req.params.id,
       },
+      include: [
+        {
+          model: AcademicTitle,
+        },
+        {
+          model: Gender,
+        },
+      ],
     });
     res.send(measures[0]);
   } catch (err) {

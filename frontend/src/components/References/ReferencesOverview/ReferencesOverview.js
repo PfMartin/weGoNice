@@ -30,7 +30,7 @@ const ReferencesOverview = ({
 
   useEffect(() => {
     fetchReferences();
-  });
+  }, []);
 
   const onToggleAllFilter = (e) => {
     if (
