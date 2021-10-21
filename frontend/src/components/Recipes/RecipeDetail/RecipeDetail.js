@@ -20,8 +20,8 @@ const RecipeDetail = ({
     <div className="recipe-detail">
       <SiteHeader
         headline={selectedRecipe.title}
-        onClickBack={() => switchView('overview')}
-        onClickPen={() => switchView('modify')}
+        hasBackButton={true}
+        hasModifyButton={true}
       />
       <div className="content-frame">
         <div className="detail-content">

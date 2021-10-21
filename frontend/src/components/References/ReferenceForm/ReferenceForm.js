@@ -131,7 +131,7 @@ const ReferenceForm = ({
         headline={
           selectedView === 'create' ? 'Create Reference' : 'Modify References'
         }
-        onClickBack={() => switchView('overview')}
+        hasBackButton={true}
       />
       <FormFrame>
         <SelectElement

@@ -176,6 +176,7 @@ const RecipeForm = ({
     <div className="recipe-form">
       <SiteHeader
         headline={selectedView === 'create' ? 'Create Recipe' : 'Modify Recipe'}
+        hasBackButton={true}
         onClickBack={
           selectedView === 'create'
             ? () => switchView('overview')

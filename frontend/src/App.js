@@ -40,6 +40,7 @@ const App = ({
           <Route path="/" exact component={RecipesOverview} />
           <Route path="/recipes/overview" exact component={RecipesOverview} />
           <Route path="/recipes/detail/:id" exact component={RecipeDetail} />
+          <Route path="/recipes/modify/:id" exact component={RecipeForm} />
           <Route path="/recipes/create" exact component={RecipeForm} />
           <Route
             path="/references/overview"
@@ -47,6 +48,11 @@ const App = ({
             component={ReferencesOverview}
           />
           <Route path="/references/create" exact component={ReferenceForm} />
+          <Route
+            path="/references/modify/:id"
+            exact
+            component={ReferenceForm}
+          />
           <Footer />
         </div>
       </Router>

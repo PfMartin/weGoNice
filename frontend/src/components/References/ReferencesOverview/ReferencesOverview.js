@@ -2,6 +2,7 @@ import './ReferencesOverview.css';
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchReferences, switchView, selectReference } from 'src/actions';
 
@@ -105,10 +106,7 @@ const ReferencesOverview = ({
 
   return (
     <div className="references-overview">
-      <SiteHeader
-        headline="References"
-        onClickPlus={(e) => switchView('create')}
-      />
+      <SiteHeader hasAddButton={true} headline="References" />
       <OptionsBar
         searchPlaceholder="Search References"
         onClickFilter={onToggleAllFilter}
@@ -152,9 +150,11 @@ const ReferencesOverview = ({
               <h3>{displayNickname(reference)}</h3>
               <p>{displayName(reference)}</p>
               <div className="modify-box">
-                <IconFrame onClick={onModify}>
-                  <BiPencil />
-                </IconFrame>
+                <Link to={`modify/${reference.id}`}>
+                  <IconFrame>
+                    <BiPencil />
+                  </IconFrame>
+                </Link>
               </div>
               <SocialMediaFooter reference={reference} />
             </Card>

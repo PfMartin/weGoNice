@@ -1,5 +1,6 @@
 import './RecipesOverview.css';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { switchView, selectRecipe } from 'src/actions';
 
@@ -11,7 +12,7 @@ import FilterTag from 'src/components/Structure/FilterTag/FilterTag.js';
 import Card from 'src/components/Structure/Card/Card.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
-const RecipesOverview = ({ switchView, recipes, selectRecipe }) => {
+const RecipesOverview = ({ switchView, recipes, selectRecipe, location }) => {
   const [filterTags, setFilterTags] = useState({
     basics: true,
     breakfast: true,
@@ -78,12 +79,14 @@ const RecipesOverview = ({ switchView, recipes, selectRecipe }) => {
     switchView('detail');
   };
 
+  // The recipes overview page is displayed with the path host:port and host:port/recipes/overview
+  // To forward to the create page from both paths both cases need to be considered
+  const detailPath =
+    location.pathname.split('/')[1] === '' ? 'recipes/detail' : 'detail';
+
   return (
     <div className="recipes-overview">
-      <SiteHeader
-        headline="Recipes"
-        onClickPlus={(e) => switchView('create')}
-      />
+      <SiteHeader headline="Recipes" hasAddButton={true} />
       <OptionsBar
         searchPlaceholder="Search Recipes"
         onClickFilter={onToggleAllFilter}
@@ -131,25 +134,27 @@ const RecipesOverview = ({ switchView, recipes, selectRecipe }) => {
             displayCheck(recipe, 'main') ||
             displayCheck(recipe, 'dessert') ||
             displayCheck(recipe, 'drinks') ? (
-            <Card id={recipe.id} key={recipe.id} onClick={onGetDetail}>
-              <h3>{recipe.title}</h3>
-              <div className="info-line">
-                <IconFrame className="info-icon">
-                  <BiAlarm />
-                </IconFrame>
-                <p>
-                  {recipe.generalValueId.value}{' '}
-                  {recipe.generalValueId.generalMeasureId.abbreviation}
-                </p>
-              </div>
-              <div className="info-line">
-                <IconFrame className="info-icon">
-                  <BiUser />
-                </IconFrame>
-                <p>{recipe.referenceReferenceId.title}</p>
-              </div>
-              <p className="category-tag">{recipe.recipesCategoryId.title}</p>
-            </Card>
+            <Link to={`${detailPath}/${recipe.id}`} key={recipe.id}>
+              <Card id={recipe.id} onClick={onGetDetail}>
+                <h3>{recipe.title}</h3>
+                <div className="info-line">
+                  <IconFrame className="info-icon">
+                    <BiAlarm />
+                  </IconFrame>
+                  <p>
+                    {recipe.generalValueId.value}{' '}
+                    {recipe.generalValueId.generalMeasureId.abbreviation}
+                  </p>
+                </div>
+                <div className="info-line">
+                  <IconFrame className="info-icon">
+                    <BiUser />
+                  </IconFrame>
+                  <p>{recipe.referenceReferenceId.title}</p>
+                </div>
+                <p className="category-tag">{recipe.recipesCategoryId.title}</p>
+              </Card>
+            </Link>
           ) : (
             ''
           );
