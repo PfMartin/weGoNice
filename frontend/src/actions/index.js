@@ -61,3 +61,13 @@ export const fetchReferences = () => async (dispatch) => {
   const data = await fetchGetAll('references', 'references');
   dispatch({ type: 'FETCH_REFERENCES', payload: data });
 };
+
+/**
+ * Action creator for fetching all recipes
+ * @param  {Func}   dispatch          Function for dispatching an action
+ * @return {Object}                   Action
+ */
+export const fetchRecipes = () => async (dispatch) => {
+  const data = await fetchGetAll('recipes', 'recipes');
+  dispatch({ type: 'FETCH_RECIPES', payload: data });
+};

@@ -1,6 +1,6 @@
 import './RecipeDetail.css';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -10,10 +10,15 @@ import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
 const RecipeDetail = ({
+  location,
   selectedIngredients,
   selectedPrepSteps,
   selectedRecipe,
 }) => {
+  useEffect(() => {
+    // Load recipes with recipe id from the url
+  }, []);
+
   return (
     <div className="recipe-detail">
       <SiteHeader
