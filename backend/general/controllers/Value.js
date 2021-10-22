@@ -13,6 +13,7 @@ export const getValues = async (req, res) => {
       include: [
         {
           model: Measure,
+          as: 'generalMeasure',
         },
       ],
     });
@@ -37,6 +38,7 @@ export const getValueById = async (req, res) => {
       include: [
         {
           model: Measure,
+          as: 'generalMeasure',
         },
       ],
     });

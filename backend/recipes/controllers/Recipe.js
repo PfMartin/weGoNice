@@ -16,17 +16,21 @@ export const getRecipes = async (req, res) => {
       include: [
         {
           model: Category,
+          as: 'recipesCategory',
         },
         {
           model: Value,
+          as: 'generalValue',
           include: [
             {
               model: Measure,
+              as: 'generalMeasure',
             },
           ],
         },
         {
           model: Reference,
+          as: 'referencesReference',
         },
       ],
     });
@@ -51,17 +55,21 @@ export const getRecipeById = async (req, res) => {
       include: [
         {
           model: Category,
+          as: 'recipesCategory',
         },
         {
           model: Value,
+          as: 'generalValue',
           include: [
             {
               model: Measure,
+              as: 'generalMeasure',
             },
           ],
         },
         {
           model: Reference,
+          as: 'referencesReference',
         },
       ],
     });
