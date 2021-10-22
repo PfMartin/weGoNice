@@ -1,5 +1,6 @@
 import Category from '../models/Category.js';
 import Recipe from '../models/Recipe.js';
+import PrepStep from '../models/PrepStep.js';
 
 /**
  * Creates recipe categories for select fields
@@ -34,5 +35,28 @@ export const createRecipes = async () => {
     referencesReferenceId: 1,
     recipesCategoryId: 1,
     generalValueId: 1,
+  });
+};
+
+export const createPrepSteps = async () => {
+  await PrepStep.create({
+    title:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et',
+    recipesRecipeId: 2,
+  });
+  await PrepStep.create({
+    title:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.',
+    recipesRecipeId: 2,
+  });
+  await PrepStep.create({
+    title:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam',
+    recipesRecipeId: 2,
+  });
+  await PrepStep.create({
+    title:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,',
+    recipesRecipeId: 2,
   });
 };

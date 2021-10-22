@@ -1,8 +1,9 @@
-import * as createFunctions from './createFunctions.js';
+import { createPrepSteps } from './createFunctions.js';
 
 const createData = async () => {
   // await createFunctions.createRecipeCategories();
-  await createFunctions.createRecipes();
+  // await createFunctions.createRecipes();
+  await createPrepSteps();
   process.exit(0);
 };
 
