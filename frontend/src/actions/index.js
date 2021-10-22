@@ -1,4 +1,5 @@
-import { fetchGetAll, fetchGetOne } from 'src/utils/fetchApi';
+// import { fetchGetAll, fetchGetOne } from 'src/utils/fetchApi';
+import weGoNice from 'src/apis/weGoNice';
 
 /**
  * Action creator for fetching all genders
@@ -6,7 +7,8 @@ import { fetchGetAll, fetchGetOne } from 'src/utils/fetchApi';
  * @return {Object}                   Action
  */
 export const fetchGenders = () => async (dispatch) => {
-  const data = await fetchGetAll('references', 'genders');
+  const response = await weGoNice.get('/references/genders');
+  const data = response.data;
   dispatch({ type: 'FETCH_GENDERS', payload: data });
 };
 
@@ -16,7 +18,8 @@ export const fetchGenders = () => async (dispatch) => {
  * @return {Object}                   Action
  */
 export const fetchAcademicTitles = () => async (dispatch) => {
-  const data = await fetchGetAll('references', 'academic_titles');
+  const response = await weGoNice.get('/references/academic_titles');
+  const data = response.data;
   dispatch({ type: 'FETCH_ACADEMIC_TITLES', payload: data });
 };
 
@@ -26,7 +29,8 @@ export const fetchAcademicTitles = () => async (dispatch) => {
  * @return {Object}                   Action
  */
 export const fetchMeasures = () => async (dispatch) => {
-  const data = await fetchGetAll('general', 'measures');
+  const response = await weGoNice.get('/general/measures');
+  const data = response.data;
   dispatch({ type: 'FETCH_MEASURES', payload: data });
 };
 
@@ -36,7 +40,8 @@ export const fetchMeasures = () => async (dispatch) => {
  * @return {Object}                   Action
  */
 export const fetchRecipeCategories = () => async (dispatch) => {
-  const data = await fetchGetAll('recipes', 'categories');
+  const response = await weGoNice.get('/recipes/categories');
+  const data = response.data;
   dispatch({ type: 'FETCH_RECIPE_CATEGORIES', payload: data });
 };
 
@@ -46,7 +51,8 @@ export const fetchRecipeCategories = () => async (dispatch) => {
  * @return {Object}                   Action
  */
 export const fetchReferences = () => async (dispatch) => {
-  const data = await fetchGetAll('references', 'references');
+  const response = await weGoNice.get('/references/references');
+  const data = response.data;
   dispatch({ type: 'FETCH_REFERENCES', payload: data });
 };
 
@@ -56,6 +62,18 @@ export const fetchReferences = () => async (dispatch) => {
  * @return {Object}                   Action
  */
 export const fetchRecipes = () => async (dispatch) => {
-  const data = await fetchGetAll('recipes', 'recipes');
+  const response = await weGoNice.get('/recipes/recipes');
+  const data = response.data;
   dispatch({ type: 'FETCH_RECIPES', payload: data });
+};
+
+/**
+ * Action creator for fetching a specific recipe
+ * @param  {Func}   dispatch          Function for dispatching an action
+ * @return {Object}                   Action
+ */
+export const fetchRecipe = (id) => async (dispatch) => {
+  const response = await weGoNice.get(`/recipes/recipes/${id}`);
+  const data = response.data;
+  dispatch({ type: 'FETCH_RECIPE', payload: data });
 };
