@@ -28,7 +28,7 @@ const RecipeDetail = ({
     const response = await weGoNice.get(
       `/recipes/recipes/${parseInt(match.params.id)}`
     );
-    const recipe = response.data;
+    const recipe = await response.data;
 
     setCurrentRecipe(recipe);
   };

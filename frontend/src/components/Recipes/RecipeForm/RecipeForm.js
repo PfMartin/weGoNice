@@ -65,15 +65,9 @@ const RecipeForm = ({
   }, []);
 
   const onInitial = async () => {
-    const response = await weGoNice.get(
-      `/recipes/recipes/${parseInt(match.params.id)}`
-    );
-
-    const currentRecipe = response.data;
-
-    console.log(currentRecipe);
-
-    // const currentIngredients
+    const recipeId = parseInt(match.params.id);
+    const resRecipe = await weGoNice.get(`/recipes/recipes/${recipeId}`);
+    const currentRecipe = await resRecipe.data;
 
     setRecipe({
       id: currentRecipe.id,
@@ -82,6 +76,21 @@ const RecipeForm = ({
       reference: currentRecipe.referencesReference.title,
       url: currentRecipe.title,
     });
+
+    const resIngredients = await weGoNice.get(
+      `/recipes/ingredients_by_recipe/${recipeId}`
+    );
+    const currentIngredients = resIngredients.data.map((ingredient) => {
+      return {
+        id: ingredient.id,
+        value: ingredient.value,
+        measure: ingredient.generalMeasure.title,
+        text: ingredient.title,
+        modified: false,
+      };
+    });
+
+    setIngredients(currentIngredients);
   };
 
   const onChange = (e, state, setterFunction) => {
@@ -258,12 +267,14 @@ const RecipeForm = ({
   };
 
   const onDelete = async () => {
-    const response = await weGoNice.delete(
-      `/recipes/recipes/${match.params.id}`
-    );
+    try {
+      const response = await weGoNice.delete(
+        `/recipes/recipes/${match.params.id}`
+      );
 
-    if (response.data.message === 'Recipe Deleted') {
       history.push('/recipes/overview');
+    } catch (err) {
+      console.error(err);
     }
   };
 

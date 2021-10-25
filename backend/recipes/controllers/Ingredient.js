@@ -1,4 +1,5 @@
 import Ingredient from '../models/Ingredient.js';
+import Measure from '../../general/models/Measure.js';
 
 /**
  * Finds all ingredients in the database and returns them in json format
@@ -105,6 +106,12 @@ export const getIngredientsByRecipe = async (req, res) => {
       where: {
         recipesRecipeId: req.params.id,
       },
+      include: [
+        {
+          model: Measure,
+          as: 'generalMeasure',
+        },
+      ],
     });
     res.send(ingredients);
   } catch (err) {
