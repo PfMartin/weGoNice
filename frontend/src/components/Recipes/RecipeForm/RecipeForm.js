@@ -1,6 +1,8 @@
 import './RecipeForm.css';
 import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { fetchReferences } from 'src/actions';
+
 import weGoNice from 'src/apis/weGoNice';
 
 import { BiPlus } from 'react-icons/bi';
@@ -17,7 +19,14 @@ import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInpu
 import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const RecipeForm = ({ history, location, match, selectData, references }) => {
+const RecipeForm = ({
+  fetchReferences,
+  history,
+  location,
+  match,
+  selectData,
+  references,
+}) => {
   const currentView =
     location.pathname.split('/').reverse()[0] === 'create'
       ? 'create'
@@ -49,6 +58,7 @@ const RecipeForm = ({ history, location, match, selectData, references }) => {
     if (currentView === 'modify') {
       onInitial();
     }
+    fetchReferences();
   }, []);
 
   const onInitial = async () => {
@@ -174,10 +184,43 @@ const RecipeForm = ({ history, location, match, selectData, references }) => {
     setPrepSteps(stateCopy);
   };
 
-  const onSave = () => {
-    console.log('onSave');
-    // if response.message === 'Recipe Created'
-    history.push('/recipes/overview');
+  const saveRecipe = async () => {
+    const category = selectData.recipeCategories.find(
+      (category) => category.title === recipe.category
+    );
+    const reference = references.find(
+      (reference) => reference.title === recipe.reference
+    );
+    // prepTimeValue
+    // prepTimeMeasure
+
+    const body = {
+      title: recipe.title,
+      url: recipe.url,
+      referencesReferenceId: reference.id,
+      recipesCategoryId: category.id,
+    };
+
+    const response = await weGoNice.post('/recipes/recipes/', body);
+
+    console.log(response);
+  };
+
+  const saveIngredients = async (recipeId) => {
+    console.log('Recipe id', recipeId);
+  };
+
+  const savePrepSteps = async (recipeId) => {
+    console.log('Recipe id', recipeId);
+  };
+
+  const onSave = async () => {
+    const recipeId = await saveRecipe();
+    // await saveIngredients(recipeId);
+    // await savePrepSteps(recipeId);
+
+    // if response.data.message === 'Recipe Created'
+    // history.push('/recipes/overview');
   };
 
   const onDelete = () => {
@@ -296,4 +339,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(RecipeForm);
+export default connect(mapStateToProps, { fetchReferences })(RecipeForm);

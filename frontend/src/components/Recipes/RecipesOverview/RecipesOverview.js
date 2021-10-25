@@ -137,8 +137,9 @@ const RecipesOverview = ({ fetchRecipes, location, recipes }) => {
                     <BiAlarm />
                   </IconFrame>
                   <p>
-                    {recipe.generalValue.value}{' '}
-                    {recipe.generalValue.generalMeasure.title}
+                    {recipe.generalValue !== null
+                      ? `${recipe.generalValue.value} ${recipe.generalValue.generalMeasure.title}`
+                      : ''}
                   </p>
                 </div>
                 <div className="info-line">
