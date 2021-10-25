@@ -92,3 +92,22 @@ export const deleteIngredient = async (req, res) => {
     console.error(err);
   }
 };
+
+/**
+ * Finds all ingredients associated a specific recipes in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
+export const getIngredientsByRecipe = async (req, res) => {
+  try {
+    const ingredients = await Ingredient.findAll({
+      where: {
+        recipesRecipeId: req.params.id,
+      },
+    });
+    res.send(ingredients);
+  } catch (err) {
+    console.error(err);
+  }
+};

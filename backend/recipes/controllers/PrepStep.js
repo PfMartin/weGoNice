@@ -92,3 +92,22 @@ export const deletePrepStep = async (req, res) => {
     console.error(err);
   }
 };
+
+/**
+ * Finds all prepSteps associated a specific recipes in the database and returns it in json format
+ * @param  {Object}  req    Request to the backend
+ * @param  {Object}  res    Response from the backend
+ * @return {Promise}
+ */
+export const getPrepStepsByRecipe = async (req, res) => {
+  try {
+    const prepSteps = await PrepStep.findAll({
+      where: {
+        recipesRecipeId: req.params.id,
+      },
+    });
+    res.send(prepSteps);
+  } catch (err) {
+    console.error(err);
+  }
+};

@@ -21,12 +21,20 @@ recipeRouter.delete(
   '/recipes/ingredients/:id',
   ingredientCtrl.deleteIngredient
 );
+recipeRouter.get(
+  '/recipes/ingredients_by_recipe/:id',
+  ingredientCtrl.getIngredientsByRecipe
+);
 
 recipeRouter.get('/recipes/prep_steps', prepStepCtrl.getPrepSteps);
 recipeRouter.get('/recipes/prep_steps/:id', prepStepCtrl.getPrepStepById);
 recipeRouter.post('/recipes/prep_steps', prepStepCtrl.createPrepStep);
 recipeRouter.put('/recipes/prep_steps/:id', prepStepCtrl.updatePrepStep);
 recipeRouter.delete('/recipes/prep_steps/:id', prepStepCtrl.deletePrepStep);
+recipeRouter.get(
+  '/recipes/prep_steps_by_recipe/:id',
+  prepStepCtrl.getPrepStepsByRecipe
+);
 
 recipeRouter.get('/recipes/recipes', recipeCtrl.getRecipes);
 recipeRouter.get('/recipes/recipes/:id', recipeCtrl.getRecipeById);
