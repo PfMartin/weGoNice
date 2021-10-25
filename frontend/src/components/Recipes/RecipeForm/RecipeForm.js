@@ -191,11 +191,15 @@ const RecipeForm = ({
     const reference = references.find(
       (reference) => reference.title === recipe.reference
     );
-    // prepTimeValue
-    // prepTimeMeasure
+
+    const prepTimeMeasure = selectData.measures.find(
+      (measure) => measure.title === prepTime.measure
+    );
 
     const body = {
       title: recipe.title,
+      prepTimeValue: prepTime.value,
+      generalMeasureId: prepTimeMeasure.id,
       url: recipe.url,
       referencesReferenceId: reference.id,
       recipesCategoryId: category.id,
