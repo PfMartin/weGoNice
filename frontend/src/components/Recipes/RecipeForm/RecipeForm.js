@@ -1,6 +1,7 @@
 import './RecipeForm.css';
 import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
+import weGoNice from 'src/apis/weGoNice';
 
 import { BiPlus } from 'react-icons/bi';
 
@@ -16,13 +17,12 @@ import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInpu
 import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const RecipeForm = ({
-  history,
-  selectData,
-  references,
-  selectedRecipe,
-  selectedView,
-}) => {
+const RecipeForm = ({ history, location, match, selectData, references }) => {
+  const currentView =
+    location.pathname.split('/').reverse()[0] === 'create'
+      ? 'create'
+      : 'modify';
+
   const [recipe, setRecipe] = useState({
     title: '',
     category: '',
@@ -46,19 +46,30 @@ const RecipeForm = ({
   ]);
 
   useEffect(() => {
-    if (selectedView === 'modify') {
-      setRecipe({
-        title: selectedRecipe.title,
-        category: selectedRecipe.recipesCategoryId.title,
-        reference: selectedRecipe.referenceReferenceId.title,
-        url: selectedRecipe.url,
-      });
-      setPrepTime({
-        value: selectedRecipe.generalValueId.value,
-        measure: selectedRecipe.generalValueId.generalMeasureId.abbreviation,
-      });
+    if (currentView === 'modify') {
+      onInitial();
     }
   }, []);
+
+  const onInitial = async () => {
+    const response = await weGoNice.get(
+      `/recipes/recipes/${parseInt(match.params.id)}`
+    );
+
+    const currentRecipe = response.data;
+
+    console.log(currentRecipe);
+
+    // const currentIngredients
+
+    setRecipe({
+      id: currentRecipe.id,
+      title: currentRecipe.title,
+      category: currentRecipe.recipesCategory.title,
+      reference: currentRecipe.referencesReference.title,
+      url: currentRecipe.title,
+    });
+  };
 
   const onChange = (e, state, setterFunction) => {
     const selectFieldNames = ['measure', 'reference', 'category'];
@@ -178,7 +189,7 @@ const RecipeForm = ({
   return (
     <div className="recipe-form">
       <SiteHeader
-        headline={selectedView === 'create' ? 'Create Recipe' : 'Modify Recipe'}
+        headline={currentView === 'create' ? 'Create Recipe' : 'Modify Recipe'}
         hasBackButton={true}
       />
       <FormFrame>
@@ -268,7 +279,7 @@ const RecipeForm = ({
             <BiPlus onClick={addPrepStep} />
           </IconFrame>
         </div>
-        {selectedView === 'create' ? (
+        {currentView === 'create' ? (
           <ButtonBar onSave={onSave} />
         ) : (
           <ButtonBar onSave={onSave} onDelete={onDelete} />
@@ -280,12 +291,8 @@ const RecipeForm = ({
 
 const mapStateToProps = (state) => {
   return {
-    selectData: state.selectData,
-    // recipeCategories: state.recipeCategories,
     references: state.references,
-    selectedRecipe: state.selectedRecipe,
-    selectedView: state.selectedView,
-    // timeMeasures: state.timeMeasures,
+    selectData: state.selectData,
   };
 };
 

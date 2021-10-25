@@ -3,13 +3,7 @@ import './ReferenceForm.css';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import {
-  fetchGetOne,
-  fetchPost,
-  fetchPut,
-  fetchDelete,
-} from 'src/utils/fetchApi';
+import weGoNice from 'src/apis/weGoNice.js';
 
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
@@ -17,11 +11,11 @@ import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const ReferenceForm = ({ history, location, selectData }) => {
+const ReferenceForm = ({ history, location, match, selectData }) => {
   const currentView =
-    location.pathname.split('/').reverse()[0] !== 'create'
-      ? 'modify'
-      : 'create';
+    location.pathname.split('/').reverse()[0] === 'create'
+      ? 'create'
+      : 'modify';
 
   const [reference, setReference] = useState({
     id: '',
@@ -43,19 +37,14 @@ const ReferenceForm = ({ history, location, selectData }) => {
   }, []);
 
   const onInitial = async () => {
-    const currentReferenceId = parseInt(
-      location.pathname.split('/').reverse()[0]
+    const response = await weGoNice.get(
+      `/references/references/${parseInt(match.params.id)}`
     );
-
-    const currentReference = await fetchGetOne(
-      'references',
-      'references',
-      currentReferenceId
-    );
+    const currentReference = response.data;
 
     setReference({
       ...currentReference,
-      id: currentReferenceId,
+      id: currentReference.id,
       gender: currentReference.referencesGender.title,
       academicTitle: currentReference.referencesAcademicTitle.title,
     });
@@ -107,23 +96,16 @@ const ReferenceForm = ({ history, location, selectData }) => {
 
     let response;
     if (currentView === 'modify') {
-      response = await fetchPut(
-        'references',
-        'references',
-        reference.id,
-        JSON.stringify(body)
+      response = await weGoNice.put(
+        `/references/references/${match.params.id}`,
+        body
       );
     } else {
-      response = await fetchPost(
-        'references',
-        'references',
-        JSON.stringify(body)
-      );
+      response = await weGoNice.post('/references/references', body);
     }
-    console.log(response);
     if (
-      response.message === 'Reference Created' ||
-      response.message === 'Reference Updated'
+      response.data.message === 'Reference Created' ||
+      response.data.message === 'Reference Updated'
     ) {
       history.push('/references/overview');
     }
@@ -132,9 +114,11 @@ const ReferenceForm = ({ history, location, selectData }) => {
   const onDelete = async () => {
     const referenceId = parseInt(location.pathname.split('/').reverse()[0]);
 
-    const response = await fetchDelete('references', 'references', referenceId);
-    console.log(response);
-    if (response.message === 'Reference Deleted') {
+    const response = await weGoNice.delete(
+      `/references/references/${match.params.id}`
+    );
+    console.log(response.data.message);
+    if (response.data.message === 'Reference Deleted') {
       history.push('/references/overview');
     }
   };

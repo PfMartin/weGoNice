@@ -66,14 +66,3 @@ export const fetchRecipes = () => async (dispatch) => {
   const data = response.data;
   dispatch({ type: 'FETCH_RECIPES', payload: data });
 };
-
-/**
- * Action creator for fetching a specific recipe
- * @param  {Func}   dispatch          Function for dispatching an action
- * @return {Object}                   Action
- */
-export const fetchRecipe = (id) => async (dispatch) => {
-  const response = await weGoNice.get(`/recipes/recipes/${id}`);
-  const data = response.data;
-  dispatch({ type: 'FETCH_RECIPE', payload: data });
-};

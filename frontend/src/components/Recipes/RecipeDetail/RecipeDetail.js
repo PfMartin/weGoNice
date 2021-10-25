@@ -3,7 +3,7 @@ import './RecipeDetail.css';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchRecipe } from 'src/actions';
+import weGoNice from 'src/apis/weGoNice.js';
 
 import { BiAlarm } from 'react-icons/bi';
 
@@ -11,13 +11,12 @@ import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
 const RecipeDetail = ({
-  currentRecipe,
-  fetchRecipe,
   match,
   location,
   selectedIngredients,
   selectedPrepSteps,
 }) => {
+  const [currentRecipe, setCurrentRecipe] = useState({});
   const [currentIngredients, setCurrentIngredients] = useState([]);
   const [currentPrepSteps, setCurrentPrepSteps] = useState([]);
 
@@ -26,8 +25,12 @@ const RecipeDetail = ({
   }, []);
 
   const getRecipe = async () => {
-    await fetchRecipe(parseInt(match.params.id));
-    console.log(currentRecipe);
+    const response = await weGoNice.get(
+      `/recipes/recipes/${parseInt(match.params.id)}`
+    );
+    const recipe = response.data;
+
+    setCurrentRecipe(recipe);
   };
 
   return !currentRecipe ||
@@ -122,11 +125,10 @@ const RecipeDetail = ({
 
 const mapStateToProps = (state) => {
   return {
-    currentRecipe: state.currentRecipe,
     recipes: state.recipes,
     selectedIngredients: state.selectedIngredients,
     selectedPrepSteps: state.selectedPrepSteps,
   };
 };
 
-export default connect(mapStateToProps, { fetchRecipe })(RecipeDetail);
+export default connect(mapStateToProps)(RecipeDetail);
