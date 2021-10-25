@@ -21,6 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "start-localhost": "HOST=0.0.0.0 PORT=3000 react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -46,12 +46,14 @@ const RecipeForm = ({
       value: 0,
       measure: 'g',
       text: '',
+      modified: false,
     },
   ]);
   const [prepSteps, setPrepSteps] = useState([
     {
       id: '',
       text: '',
+      modified: false,
     },
   ]);
 
@@ -118,6 +120,7 @@ const RecipeForm = ({
     stateCopy[index] = {
       ...stateCopy[index],
       ...{ [name]: input },
+      modified: true,
     };
 
     setIngredients(stateCopy);
@@ -163,9 +166,11 @@ const RecipeForm = ({
     stateCopy[index] = {
       ...stateCopy[index],
       ...{ [name]: input },
+      modified: true,
     };
 
     setPrepSteps(stateCopy);
+    console.log(prepSteps);
   };
 
   const addPrepStep = () => {
@@ -213,29 +218,31 @@ const RecipeForm = ({
 
   const saveIngredients = async (recipeId) => {
     for (const ingredient of ingredients) {
-      const generalMeasure = selectData.measures.find(
-        (measure) => measure.title === ingredient.measure
-      );
+      if (ingredient.modified) {
+        const generalMeasure = selectData.measures.find(
+          (measure) => measure.title === ingredient.measure
+        );
 
-      const body = {
-        value: ingredient.measure,
-        generalMeasureId: generalMeasure.id,
-        title: ingredient.text,
-        recipesRecipeId: recipeId,
-      };
-
-      const response = await weGoNice.post('/recipes/ingredients', body);
+        const body = {
+          value: ingredient.value,
+          generalMeasureId: generalMeasure.id,
+          title: ingredient.text,
+          recipesRecipeId: recipeId,
+        };
+        const response = await weGoNice.post('/recipes/ingredients', body);
+      }
     }
   };
 
   const savePrepSteps = async (recipeId) => {
     for (const prepStep of prepSteps) {
-      const body = {
-        title: prepStep.text,
-        recipesRecipeId: recipeId,
-      };
-
-      const response = await weGoNice.post('/recipes/prep_steps', body);
+      if (prepStep.modified) {
+        const body = {
+          title: prepStep.text,
+          recipesRecipeId: recipeId,
+        };
+        const response = await weGoNice.post('/recipes/prep_steps', body);
+      }
     }
   };
 
