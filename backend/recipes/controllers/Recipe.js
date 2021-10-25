@@ -18,7 +18,6 @@ export const getRecipes = async (req, res) => {
           model: Category,
           as: 'recipesCategory',
         },
-
         {
           model: Measure,
           as: 'generalMeasure',
@@ -53,15 +52,10 @@ export const getRecipeById = async (req, res) => {
           as: 'recipesCategory',
         },
         {
-          model: Value,
-          as: 'generalValue',
-          include: [
-            {
-              model: Measure,
-              as: 'generalMeasure',
-            },
-          ],
+          model: Measure,
+          as: 'generalMeasure',
         },
+
         {
           model: Reference,
           as: 'referencesReference',

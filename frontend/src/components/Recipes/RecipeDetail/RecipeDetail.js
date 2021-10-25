@@ -33,8 +33,15 @@ const RecipeDetail = ({
     setCurrentRecipe(recipe);
   };
 
+  const displayPrepTime = () => {
+    return (
+      <h4>
+        {currentRecipe.prepTimeValue} {currentRecipe.generalMeasure.title}
+      </h4>
+    );
+  };
+
   return !currentRecipe ||
-    !currentRecipe.generalValue ||
     !currentRecipe.recipesCategory ||
     !currentRecipe.referencesReference ? (
     <h1>Loading...</h1>
@@ -54,10 +61,7 @@ const RecipeDetail = ({
                 <IconFrame>
                   <BiAlarm />
                 </IconFrame>
-                <h4>
-                  {currentRecipe.generalValue.value}{' '}
-                  {currentRecipe.generalValue.generalMeasure.title}
-                </h4>
+                {displayPrepTime()}
               </div>
               <div className="category-container">
                 <h4 className="category">
