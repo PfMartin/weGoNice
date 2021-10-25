@@ -76,9 +76,10 @@ export const getRecipeById = async (req, res) => {
  */
 export const createRecipe = async (req, res) => {
   try {
-    await Recipe.create(req.body);
+    const recipe = await Recipe.create(req.body);
     res.json({
       message: 'Recipe Created',
+      id: recipe.id,
     });
   } catch (err) {
     console.error(err);
@@ -93,13 +94,14 @@ export const createRecipe = async (req, res) => {
  */
 export const updateRecipe = async (req, res) => {
   try {
-    await Recipe.update(req.body, {
+    const recipe = await Recipe.update(req.body, {
       where: {
         id: req.params.id,
       },
     });
     res.json({
       message: 'Recipe Updated',
+      id: recipe.id,
     });
   } catch (err) {
     console.error(err);

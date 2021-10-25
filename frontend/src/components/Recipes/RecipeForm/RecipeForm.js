@@ -207,7 +207,7 @@ const RecipeForm = ({
 
     const response = await weGoNice.post('/recipes/recipes/', body);
 
-    console.log(response);
+    return response.data.id;
   };
 
   const saveIngredients = async (recipeId) => {
@@ -220,17 +220,22 @@ const RecipeForm = ({
 
   const onSave = async () => {
     const recipeId = await saveRecipe();
-    // await saveIngredients(recipeId);
-    // await savePrepSteps(recipeId);
+    await saveIngredients(recipeId);
+    await savePrepSteps(recipeId);
 
-    // if response.data.message === 'Recipe Created'
-    // history.push('/recipes/overview');
+    // if (response.data.message === 'Recipe Created') {
+    //   history.push('/recipes/overview');
+    // }
   };
 
-  const onDelete = () => {
-    console.log('onDelete');
-    // if response.message === 'Recipe Deleted'
-    history.push('/recipes/overview');
+  const onDelete = async () => {
+    const response = await weGoNice.delete(
+      `/recipes/recipes/${match.params.id}`
+    );
+
+    if (response.data.message === 'Recipe Deleted') {
+      history.push('/recipes/overview');
+    }
   };
 
   return (

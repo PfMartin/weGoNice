@@ -34,7 +34,8 @@ export const createRecipes = async () => {
     url: 'Test Url',
     referencesReferenceId: 1,
     recipesCategoryId: 1,
-    generalValueId: 1,
+    generalMeasureId: 1,
+    prepTimeValue: 15,
   });
 };
 
