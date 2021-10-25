@@ -33,6 +33,7 @@ const RecipeForm = ({
       : 'modify';
 
   const [recipe, setRecipe] = useState({
+    id: '',
     title: '',
     category: '',
     reference: '',
@@ -211,21 +212,42 @@ const RecipeForm = ({
   };
 
   const saveIngredients = async (recipeId) => {
-    console.log('Recipe id', recipeId);
+    for (const ingredient of ingredients) {
+      const generalMeasure = selectData.measures.find(
+        (measure) => measure.title === ingredient.measure
+      );
+
+      const body = {
+        value: ingredient.measure,
+        generalMeasureId: generalMeasure.id,
+        title: ingredient.text,
+        recipesRecipeId: recipeId,
+      };
+
+      const response = await weGoNice.post('/recipes/ingredients', body);
+    }
   };
 
   const savePrepSteps = async (recipeId) => {
-    console.log('Recipe id', recipeId);
+    for (const prepStep of prepSteps) {
+      const body = {
+        title: prepStep.text,
+        recipesRecipeId: recipeId,
+      };
+
+      const response = await weGoNice.post('/recipes/prep_steps', body);
+    }
   };
 
   const onSave = async () => {
-    const recipeId = await saveRecipe();
-    await saveIngredients(recipeId);
-    await savePrepSteps(recipeId);
-
-    // if (response.data.message === 'Recipe Created') {
-    //   history.push('/recipes/overview');
-    // }
+    try {
+      const recipeId = await saveRecipe();
+      await saveIngredients(recipeId);
+      await savePrepSteps(recipeId);
+      history.push('/recipes/overview');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const onDelete = async () => {
