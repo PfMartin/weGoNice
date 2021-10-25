@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import db from '../../config/database.js';
 
-import Value from '../../general/models/Value.js';
+import Measure from '../../general/models/Measure.js';
 import Recipe from './Recipe.js';
 
 const { DataTypes } = Sequelize;
@@ -12,13 +12,16 @@ const Ingredient = db.define(
     title: {
       type: DataTypes.STRING,
     },
+    value: {
+      type: DataTypes.FLOAT,
+    },
   },
   {
     tableName: 'recipesIngredient',
   }
 );
 
-Ingredient.belongsTo(Value); // Select field for a value
+Ingredient.belongsTo(Measure); // Select field for a value
 Ingredient.belongsTo(Recipe); // Foreign key to a recipe
 
 export default Ingredient;

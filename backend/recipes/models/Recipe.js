@@ -17,7 +17,7 @@ const Recipe = db.define(
       type: DataTypes.STRING,
     },
     prepTimeValue: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.INTEGER,
     },
   },
   {
