@@ -91,6 +91,19 @@ const RecipeForm = ({
     });
 
     setIngredients(currentIngredients);
+
+    const resPrepSteps = await weGoNice.get(
+      `/recipes/prep_steps_by_recipe/${recipeId}`
+    );
+    const currentPrepSteps = resPrepSteps.data.map((prepStep) => {
+      return {
+        id: prepStep.id,
+        text: prepStep.title,
+        modified: false,
+      };
+    });
+
+    setPrepSteps(currentPrepSteps);
   };
 
   const onChange = (e, state, setterFunction) => {
