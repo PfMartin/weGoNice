@@ -171,11 +171,20 @@ const RecipeForm = ({
     setterFunction(stateCopy);
   };
 
-  const deleteIngredient = (e) => {
-    const index = e.currentTarget.parentNode.getAttribute('index');
-    let stateCopy = [...ingredients];
-    stateCopy.splice(index, 1);
-    setIngredients(stateCopy);
+  const deleteIngredient = async (e) => {
+    try {
+      const index = e.currentTarget.parentNode.getAttribute('index');
+
+      // Delete from database
+      await weGoNice.delete(`/recipes/ingredients/${ingredients[index].id}`);
+
+      // Delete from UI
+      let stateCopy = [...ingredients];
+      stateCopy.splice(index, 1);
+      setIngredients(stateCopy);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const updatePrepSteps = (e) => {
@@ -205,11 +214,20 @@ const RecipeForm = ({
     setPrepSteps(stateCopy);
   };
 
-  const deletePrepStep = (e) => {
-    const index = e.currentTarget.parentNode.getAttribute('index');
-    let stateCopy = [...prepSteps];
-    stateCopy.splice(index, 1);
-    setPrepSteps(stateCopy);
+  const deletePrepStep = async (e) => {
+    try {
+      const index = e.currentTarget.parentNode.getAttribute('index');
+
+      // Delete from database
+      await weGoNice.delete(`/recipes/prep_steps/${prepSteps[index].id}`);
+
+      // Delete from UI
+      let stateCopy = [...prepSteps];
+      stateCopy.splice(index, 1);
+      setPrepSteps(stateCopy);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const saveRecipe = async () => {
@@ -281,9 +299,15 @@ const RecipeForm = ({
 
   const onDelete = async () => {
     try {
-      const response = await weGoNice.delete(
-        `/recipes/recipes/${match.params.id}`
-      );
+      await weGoNice.delete(`/recipes/recipes/${match.params.id}`);
+
+      for (const ingredient of ingredients) {
+        await weGoNice.delete(`/recipes/ingredients/${ingredient.id}`);
+      }
+
+      for (const prepStep of prepSteps) {
+        await weGoNice.delete(`/recipes/prep_steps/${prepStep.id}`);
+      }
 
       history.push('/recipes/overview');
     } catch (err) {
