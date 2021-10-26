@@ -46,14 +46,12 @@ const RecipeForm = ({
       value: 0,
       measure: 'g',
       text: '',
-      modified: false,
     },
   ]);
   const [prepSteps, setPrepSteps] = useState([
     {
       id: '',
       text: '',
-      modified: false,
     },
   ]);
 
@@ -74,7 +72,12 @@ const RecipeForm = ({
       title: currentRecipe.title,
       category: currentRecipe.recipesCategory.title,
       reference: currentRecipe.referencesReference.title,
-      url: currentRecipe.title,
+      url: currentRecipe.url,
+    });
+
+    setPrepTime({
+      value: currentRecipe.prepTimeValue,
+      measure: currentRecipe.generalMeasure.title,
     });
 
     const resIngredients = await weGoNice.get(
@@ -86,7 +89,6 @@ const RecipeForm = ({
         value: ingredient.value,
         measure: ingredient.generalMeasure.title,
         text: ingredient.title,
-        modified: false,
       };
     });
 
@@ -99,7 +101,6 @@ const RecipeForm = ({
       return {
         id: prepStep.id,
         text: prepStep.title,
-        modified: false,
       };
     });
 
@@ -142,7 +143,6 @@ const RecipeForm = ({
     stateCopy[index] = {
       ...stateCopy[index],
       ...{ [name]: input },
-      modified: true,
     };
 
     setIngredients(stateCopy);
@@ -197,7 +197,6 @@ const RecipeForm = ({
     stateCopy[index] = {
       ...stateCopy[index],
       ...{ [name]: input },
-      modified: true,
     };
 
     setPrepSteps(stateCopy);
@@ -251,38 +250,47 @@ const RecipeForm = ({
       recipesCategoryId: category.id,
     };
 
-    const response = await weGoNice.post('/recipes/recipes/', body);
-
-    return response.data.id;
+    if (currentView === 'create') {
+      console.log(currentView);
+      try {
+        const response = await weGoNice.post('/recipes/recipes/', body);
+        return response.data.id;
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      try {
+        await weGoNice.put(`/recipes/recipes/${match.params.id}`, body);
+        return null;
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
   const saveIngredients = async (recipeId) => {
     for (const ingredient of ingredients) {
-      if (ingredient.modified) {
-        const generalMeasure = selectData.measures.find(
-          (measure) => measure.title === ingredient.measure
-        );
+      const generalMeasure = selectData.measures.find(
+        (measure) => measure.title === ingredient.measure
+      );
 
-        const body = {
-          value: ingredient.value,
-          generalMeasureId: generalMeasure.id,
-          title: ingredient.text,
-          recipesRecipeId: recipeId,
-        };
-        const response = await weGoNice.post('/recipes/ingredients', body);
-      }
+      const body = {
+        value: ingredient.value,
+        generalMeasureId: generalMeasure.id,
+        title: ingredient.text,
+        recipesRecipeId: recipeId,
+      };
+      const response = await weGoNice.post('/recipes/ingredients', body);
     }
   };
 
   const savePrepSteps = async (recipeId) => {
     for (const prepStep of prepSteps) {
-      if (prepStep.modified) {
-        const body = {
-          title: prepStep.text,
-          recipesRecipeId: recipeId,
-        };
-        const response = await weGoNice.post('/recipes/prep_steps', body);
-      }
+      const body = {
+        title: prepStep.text,
+        recipesRecipeId: recipeId,
+      };
+      const response = await weGoNice.post('/recipes/prep_steps', body);
     }
   };
 
