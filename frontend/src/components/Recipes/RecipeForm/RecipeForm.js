@@ -83,6 +83,7 @@ const RecipeForm = ({
     const resIngredients = await weGoNice.get(
       `/recipes/ingredients_by_recipe/${recipeId}`
     );
+
     const currentIngredients = resIngredients.data.map((ingredient) => {
       return {
         id: ingredient.id,
@@ -269,7 +270,7 @@ const RecipeForm = ({
   };
 
   const saveIngredients = async (recipeId) => {
-    for (const ingredient of ingredients) {
+    for (const [index, ingredient] of ingredients.entries()) {
       const generalMeasure = selectData.measures.find(
         (measure) => measure.title === ingredient.measure
       );
@@ -278,19 +279,36 @@ const RecipeForm = ({
         value: ingredient.value,
         generalMeasureId: generalMeasure.id,
         title: ingredient.text,
-        recipesRecipeId: recipeId,
+        rank: index + 1,
       };
-      const response = await weGoNice.post('/recipes/ingredients', body);
+
+      // If the recipe already exists it won't return its id on save
+      // Therefore, we need to check if recipeId is defined before assigning an recipeId to the body
+      body.recipesRecipeId = recipeId ? recipeId : parseInt(match.params.id);
+
+      // If the ingredient doesn't have an id yet, it needs to be created
+      if (!ingredient.id) {
+        await weGoNice.post('/recipes/ingredients', body);
+      } else {
+        await weGoNice.put(`/recipes/ingredients/${ingredient.id}`, body);
+      }
     }
   };
 
   const savePrepSteps = async (recipeId) => {
-    for (const prepStep of prepSteps) {
+    for (const [index, prepStep] of prepSteps.entries()) {
       const body = {
         title: prepStep.text,
-        recipesRecipeId: recipeId,
+        rank: index + 1,
       };
-      const response = await weGoNice.post('/recipes/prep_steps', body);
+
+      body.recipesRecipeId = recipeId ? recipeId : parseInt(match.params.id);
+
+      if (!prepStep.id) {
+        await weGoNice.post('/recipes/prep_steps', body);
+      } else {
+        await weGoNice.put(`/recipes/prep_steps/${prepStep.id}`, body);
+      }
     }
   };
 
