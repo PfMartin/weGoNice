@@ -11,6 +11,9 @@ const PrepStep = db.define(
     title: {
       type: DataTypes.STRING,
     },
+    rank: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     tableName: 'recipesPrepStep',

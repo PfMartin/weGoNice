@@ -15,6 +15,9 @@ const Ingredient = db.define(
     value: {
       type: DataTypes.FLOAT,
     },
+    rank: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     tableName: 'recipesIngredient',
