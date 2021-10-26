@@ -106,7 +106,7 @@ export const getPrepStepsByRecipe = async (req, res) => {
         recipesRecipeId: req.params.id,
       },
     });
-    res.send(prepSteps);
+    res.send(prepSteps.sort((a, b) => a.rank > b.rank));
   } catch (err) {
     console.error(err);
   }

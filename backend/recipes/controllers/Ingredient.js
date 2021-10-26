@@ -113,7 +113,7 @@ export const getIngredientsByRecipe = async (req, res) => {
         },
       ],
     });
-    res.send(ingredients);
+    res.send(ingredients.sort((a, b) => a.rank > b.rank));
   } catch (err) {
     console.error(err);
   }
