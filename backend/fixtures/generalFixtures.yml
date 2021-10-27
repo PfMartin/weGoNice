@@ -1,0 +1,51 @@
+fixtures:
+  - model: User
+    data:
+      firstName: 'Martin'
+      lastName: 'Pfatrisch'
+      userName: 'martin'
+  - model: User
+    data:
+      firstName: 'Lea'
+      lastName: 'Haberl'
+      userName: 'lea'
+  - model: Measure
+    data:
+      title: 'sec'
+      description: 'Seconds'
+      category: 'time'
+  - model: Measure
+    data:
+      title: 'min'
+      description: 'Minutes'
+      category: 'time'
+  - model: Measure
+    data:
+      title: 'h'
+      description: 'Hours'
+      category: 'time'
+  - model: Measure
+    data:
+      title: 'g'
+      description: 'Grams'
+      category: 'quantity'
+  - model: Measure
+    data:
+      title: 'ml'
+      description: 'Millilitres'
+      category: 'quantity'
+  - model: Measure
+    data:
+      title: 'pc'
+      description: 'Pieces'
+      category: 'quantity'
+  - model: Measure
+    data:
+      title: 'tbs'
+      description: 'Table Spoons'
+      category: 'quantity'
+  - model: Measure
+    data:
+      title: 'tsp'
+      description: 'Tea Spoons'
+      category: 'quantity'

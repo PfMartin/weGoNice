@@ -1,0 +1,16 @@
+fixtures:
+  - model: Category
+    data:
+      title: 'Basics'
+  - model: Category
+    data:
+      title: 'Breakfast'
+  - model: Category
+    data:
+      title: 'Dessert'
+  - model: Category
+    data:
+      title: 'Drinks'
+  - model: Category
+    data:
+      title: 'Main'
