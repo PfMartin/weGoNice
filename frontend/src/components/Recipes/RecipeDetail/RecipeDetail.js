@@ -22,6 +22,8 @@ const RecipeDetail = ({
 
   useEffect(() => {
     getRecipe();
+    getIngredients();
+    getPrepSteps();
   }, []);
 
   const getRecipe = async () => {
@@ -31,6 +33,22 @@ const RecipeDetail = ({
     const recipe = await response.data;
 
     setCurrentRecipe(recipe);
+  };
+
+  const getIngredients = async () => {
+    const response = await weGoNice.get(
+      `/recipes/ingredients_by_recipe/${match.params.id}`
+    );
+    const ingredients = await response.data;
+    setCurrentIngredients(ingredients);
+  };
+
+  const getPrepSteps = async () => {
+    const response = await weGoNice.get(
+      `/recipes/prep_steps_by_recipe/${match.params.id}`
+    );
+    const prepSteps = await response.data;
+    setCurrentPrepSteps(prepSteps);
   };
 
   const displayPrepTime = () => {
@@ -43,7 +61,9 @@ const RecipeDetail = ({
 
   return !currentRecipe ||
     !currentRecipe.recipesCategory ||
-    !currentRecipe.referencesReference ? (
+    !currentRecipe.referencesReference ||
+    !currentIngredients ||
+    !currentPrepSteps ? (
     <h1>Loading...</h1>
   ) : (
     <div className="recipe-detail">
@@ -92,13 +112,15 @@ const RecipeDetail = ({
                     <th className="left">Ingredient</th>
                   </tr>
                 </tbody>
-                {selectedIngredients.map((ingredient) => {
+                {currentIngredients.map((ingredient) => {
                   return (
                     <tbody key={ingredient.id}>
                       <tr>
                         <td className="right">{ingredient.value}</td>
-                        <td className="left">{ingredient.measure}</td>
-                        <td className="left">{ingredient.text}</td>
+                        <td className="left">
+                          {ingredient.generalMeasure.title}
+                        </td>
+                        <td className="left">{ingredient.title}</td>
                       </tr>
                     </tbody>
                   );
@@ -109,12 +131,12 @@ const RecipeDetail = ({
           <div className="section">
             <h3>Preparation steps</h3>
             <table className="prep-steps" cellSpacing="0">
-              {selectedPrepSteps.map((prepStep, index) => {
+              {currentPrepSteps.map((prepStep, index) => {
                 return (
                   <tbody key={prepStep.id}>
                     <tr>
                       <td className="right accent">{index + 1}.</td>
-                      <td>{prepStep.text}</td>
+                      <td>{prepStep.title}</td>
                     </tr>
                   </tbody>
                 );
@@ -129,7 +151,6 @@ const RecipeDetail = ({
 
 const mapStateToProps = (state) => {
   return {
-    recipes: state.recipes,
     selectedIngredients: state.selectedIngredients,
     selectedPrepSteps: state.selectedPrepSteps,
   };

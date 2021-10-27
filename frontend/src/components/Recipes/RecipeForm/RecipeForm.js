@@ -317,7 +317,9 @@ const RecipeForm = ({
       const recipeId = await saveRecipe();
       await saveIngredients(recipeId);
       await savePrepSteps(recipeId);
-      history.push('/recipes/overview');
+      currentView === 'create'
+        ? history.push('/recipes/overview')
+        : history.push(`/recipes/detail/${match.params.id}`);
     } catch (err) {
       console.error(err);
     }
