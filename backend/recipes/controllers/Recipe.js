@@ -1,6 +1,5 @@
 import Recipe from '../models/Recipe.js';
 import Category from '../models/Category.js';
-import Value from '../../general/models/Value.js';
 import Measure from '../../general/models/Measure.js';
 import Reference from '../../references/models/Reference.js';
 
