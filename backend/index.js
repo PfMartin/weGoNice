@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-db.sync();
+db.sync({ alter: true });
 
 try {
   await db.authenticate();
