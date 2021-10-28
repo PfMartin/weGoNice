@@ -20,25 +20,33 @@ const referencesModels = {
 };
 
 const createGeneralFixtures = async () => {
-  await sequelize_fixtures.loadFile('generalFixtures.yml', generalModels);
+  await sequelize_fixtures.loadFile(
+    './fixtures/generalFixtures.yml',
+    generalModels
+  );
   console.log('---> General Fixtures done');
 };
 
 const createRecipesFixtures = async () => {
-  await sequelize_fixtures.loadFile('recipesFixtures.yml', recipesModels);
+  await sequelize_fixtures.loadFile(
+    './fixtures/recipesFixtures.yml',
+    recipesModels
+  );
   console.log('---> Recipes Fixtures done');
 };
 
 const createReferencesFixtures = async () => {
-  await sequelize_fixtures.loadFile('referencesFixtures.yml', referencesModels);
+  await sequelize_fixtures.loadFile(
+    './fixtures/referencesFixtures.yml',
+    referencesModels
+  );
   console.log('---> Recipes Fixtures done');
 };
 
-const main = async () => {
+const createFixtures = async () => {
   await createGeneralFixtures();
   await createRecipesFixtures();
   await createReferencesFixtures();
-  process.exit(0);
 };
 
-main();
+export default createFixtures;
