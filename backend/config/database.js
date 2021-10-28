@@ -1,10 +1,26 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
-/**
- * Configuration for the database
- * @type {Sequelize}
- */
-const db = new Sequelize('wegonice', 'postgres', 'postgres', {
+dotenv.config();
+
+const getConfig = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return {
+      database: process.env.POSTGRES_DB,
+      user: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+    };
+  }
+  return {
+    database: 'wegonice',
+    user: 'postgres',
+    password: 'postgres',
+  };
+};
+
+const config = await getConfig();
+
+const db = new Sequelize(config.database, config.user, config.password, {
   host: 'localhost',
   dialect: 'postgres',
   pool: {
