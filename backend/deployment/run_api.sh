@@ -5,4 +5,4 @@ podman run \
   --detach \
   --rm \
   --pod weGoNice-api-pod \
-  
+  wegonice-backend-image
