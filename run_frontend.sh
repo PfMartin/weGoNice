@@ -2,7 +2,7 @@
 
 podman run \
   --name weGoNice-frontend \
-  -it \
+  --detach \
   --restart=always \
   -p 5000:5000 \
   wegonice-frontend-image
