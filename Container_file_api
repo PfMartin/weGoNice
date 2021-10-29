@@ -1,0 +1,17 @@
+FROM docker.io/node:14.17.5
+
+RUN apt-get update && apt-get install -y netcat gettext
+
+WORKDIR /app
+
+COPY ./backend/package.json ./
+COPY ./backend/package-lock.json ./
+
+RUN npm ci --silent
+
+COPY ./backend ./
+COPY ./Container_entrypoint_api.sh ./
+
+EXPOSE 8000
+
+ENTRYPOINT ["/app/Container_entrypoint_api.sh"]
