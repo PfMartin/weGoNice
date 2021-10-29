@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Which version of the app do you want to run?"
+read version
+
 podman ps | grep weGoNice-frontend
 if [[ $? == 0 ]]
 then
@@ -12,4 +15,4 @@ podman run \
   --detach \
   --restart=always \
   -p 5000:5000 \
-  wegonice-frontend-image
+  wegonice-frontend-image:${version}
