@@ -2,7 +2,7 @@
 
 podman run \
   --name weGoNice-api \
-  --detach \
+  -it \
   --rm \
   --env-file /home/martin/Projects/weGoNice/backend/deployment/Database.env \
   --pod weGoNice-api-pod \

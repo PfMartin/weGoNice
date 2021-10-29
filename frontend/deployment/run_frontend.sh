@@ -1,6 +1,8 @@
+#!/bin/bash
+
 podman run \
   --name weGoNice-frontend \
-  --detach \
+  -it \
   --restart=always \
-  -p 3000:3000 \
+  -p 3000:5000 \
   wegonice-frontend-image
