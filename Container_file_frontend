@@ -1,11 +1,14 @@
 FROM node:14.17.5 as build
 
 WORKDIR /app
-COPY ./package.json ./
-COPY ./package-lock.json ./
+COPY ./frontend/package.json ./
+COPY ./frontend/package-lock.json ./
+
 RUN npm ci --silent
 RUN npm install -g serve
-COPY . ./
+
+COPY ./frontend/ ./
+
 RUN npm run build
 
 CMD ["serve", "-s", "build"]

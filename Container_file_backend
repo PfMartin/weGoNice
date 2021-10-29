@@ -1,12 +1,12 @@
 FROM node:14.17.5
 
 WORKDIR /app
-COPY ./package.json ./
-COPY ./package-lock.json ./
+COPY ./frontend/package.json ./
+COPY ./frontend/package-lock.json ./
 
 RUN npm ci --silent
 
-COPY . .
+COPY ./backend ./
 
 EXPOSE 8000
 
