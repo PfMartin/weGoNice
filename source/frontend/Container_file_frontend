@@ -1,13 +1,14 @@
-FROM docker.io/node:14.17.5 as build
+FROM node:14.17.5 as build
 
 WORKDIR /app
 COPY ./package.json ./
 COPY ./package-lock.json ./
+
 RUN npm ci --silent
-COPY . ./
+RUN npm install -g serve
+
+COPY ./ ./
+
 RUN npm run build
 
-
-FROM docker.io/nginx:1.21.3
-COPY --from=build /app/build /usr/share/nginx/html
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["serve", "-s", "build"]

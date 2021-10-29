@@ -1,6 +1,7 @@
 #!/bin/bash
 
 podport="8000"
+database_env="/home/martin/Projects/weGoNice/source/backend/Database.env"
 
 podman pod ps | grep weGoNice-api-pod
 
@@ -17,7 +18,7 @@ podman run \
   --name weGoNice-database \
   --detach \
   --rm \
-  --env-file /home/martin/Projects/weGoNice/backend/Database.env \
+  --env-file ${database_env} \
   --volume /home/martin/weGoNice/database:/var/lib/postgresql/data \
   --pod weGoNice-api-pod \
   docker.io/library/postgres:13.4
@@ -26,7 +27,7 @@ podman run \
   --name weGoNice-api \
   --detach \
   --rm \
-  --env-file /home/martin/Projects/weGoNice/backend/Database.env \
+  --env-file ${database_env} \
   --pod weGoNice-api-pod \
   wegonice-backend-image
 
