@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Which version of the app do you want to transfer?"
+echo "What's the target version of the images?"
 read version
 
 echo -e "\nTagging images with version ${version}"
