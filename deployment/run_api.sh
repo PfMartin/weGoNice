@@ -1,7 +1,7 @@
 #!/bin/bash
 
 podport="8000"
-database_env="/home/martin/Projects/weGoNice/source/backend/Database.env"
+database_env="/home/ubuntu/weGoNice/source/backend/Database.env"
 
 echo "Which version of the app do you want to run?"
 read version
@@ -22,7 +22,7 @@ podman run \
   --detach \
   --rm \
   --env-file ${database_env} \
-  --volume /home/martin/database-volume:/var/lib/postgresql/data \
+  --volume /home/ubuntu/weGoNice-database:/var/lib/postgresql/data \
   --pod weGoNice-api-pod \
   docker.io/library/postgres:13.4
 
