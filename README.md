@@ -36,5 +36,15 @@ WeGoNice is an App taylored for Vegans and especially wannabe Vegans. The App sh
 
 ## To-Dos
 
-- [ ] Create and delete functions for initial data for the recipe section
-- [ ] Model for recipes
+#### Recipes
+
+- [ ] Adding prep steps with ingredients in separate form
+  - Prep steps need a headline, which serves as category
+    - Preparation
+    - Sauce
+  - Ingredients are related to prep steps instead of recipes
+- [ ] Display prep steps with their ingredients instead of all ingredients and then all prep steps
+
+#### References
+
+- [ ] Display references as a list instead of cards
