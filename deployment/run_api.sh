@@ -1,7 +1,7 @@
 #!/bin/bash
 
 podport="8000"
-database_env="/home/ubuntu/weGoNice/source/backend/Database.env"
+database_env="/home/server/weGoNice/source/backend/Database.env"
 
 echo "Which version of the app do you want to run?"
 read version
