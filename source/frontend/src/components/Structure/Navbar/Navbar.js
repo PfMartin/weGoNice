@@ -1,5 +1,5 @@
 import './Navbar.css';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { BiFoodMenu, BiUser } from 'react-icons/bi';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import { Link, useLocation } from 'react-router-dom';
@@ -21,7 +21,7 @@ const Navbar = (props) => {
       <div className="apps-container">
         <Link to="/recipes/overview">
           <IconFrame
-            className={currentApp === 'recipes' ? 'icon selected' : 'icon'}
+            className={currentApp === 'references' ? 'icon ' : 'icon selected'}
             size="35px"
             targetApp="recipes"
           >
