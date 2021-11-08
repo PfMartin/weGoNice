@@ -18,6 +18,9 @@ const Ingredient = db.define(
     rank: {
       type: DataTypes.INTEGER,
     },
+    recipeSection: {
+      type: DataTypes.STRING,
+    },
   },
   {
     tableName: 'recipesIngredient',
