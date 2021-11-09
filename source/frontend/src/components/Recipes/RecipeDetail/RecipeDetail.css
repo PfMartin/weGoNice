@@ -64,6 +64,13 @@
   border-radius: 3px;
 }
 
+.instructions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 th,
 td {
   padding: 0.3rem;
@@ -78,9 +85,10 @@ table.ingredients {
   border: 1px solid var(--light-accent);
   border-radius: 3px;
   padding: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-table.ingredients > tbody:nth-child(odd) {
+table.ingredients tbody tr:nth-child(even) {
   background: var(--light-grey);
   color: var(--light-accent);
 }

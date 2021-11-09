@@ -105,30 +105,108 @@ const RecipeDetail = ({
             <h3>Ingredients</h3>
             <div className="ingredients-table">
               <table className="ingredients" cellSpacing="0">
-                <tbody>
+                <thead>
                   <tr>
                     <th className="right">Value</th>
                     <th className="left">Measure</th>
                     <th className="left">Ingredient</th>
                   </tr>
-                </tbody>
-                {currentIngredients.map((ingredient) => {
-                  return (
-                    <tbody key={ingredient.id}>
-                      <tr>
+                </thead>
+                <tbody>
+                  {currentIngredients.map((ingredient) => {
+                    return (
+                      <tr key={ingredient.id}>
                         <td className="right">{ingredient.value}</td>
                         <td className="left">
                           {ingredient.generalMeasure.title}
                         </td>
                         <td className="left">{ingredient.title}</td>
                       </tr>
-                    </tbody>
-                  );
-                })}
+                    );
+                  })}
+                </tbody>
               </table>
             </div>
           </div>
+
           <div className="section">
+            <h2>Instructions</h2>
+            <h3>Sauce</h3>
+            <div className="ingredients-table">
+              <table className="ingredients" cellSpacing="0">
+                <thead>
+                  <tr>
+                    <th className="right">Value</th>
+                    <th className="left">Measure</th>
+                    <th className="left">Ingredient</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="right">50 (mock)</td>
+                    <td className="left">g (mock)</td>
+                    <td className="left">Flour (mock)</td>
+                  </tr>
+                  <tr>
+                    <td className="right">100 (mock)</td>
+                    <td className="left">ml (mock)</td>
+                    <td className="left">Milk (mock)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <table className="prep-steps" cellSpacing="0">
+              <tbody>
+                <tr>
+                  <td className="right accent">1.</td>
+                  <td>First Step (mock)</td>
+                </tr>
+                <tr>
+                  <td className="right accent">2.</td>
+                  <td>Second Step (mock)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Batter</h3>
+            <div className="ingredients-table">
+              <table className="ingredients" cellSpacing="0">
+                <thead>
+                  <tr>
+                    <th className="right">Value</th>
+                    <th className="left">Measure</th>
+                    <th className="left">Ingredient</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="right">50 (mock)</td>
+                    <td className="left">g (mock)</td>
+                    <td className="left">Flour (mock)</td>
+                  </tr>
+                  <tr>
+                    <td className="right">100 (mock)</td>
+                    <td className="left">ml (mock)</td>
+                    <td className="left">Milk (mock)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <table className="prep-steps" cellSpacing="0">
+              <tbody>
+                <tr>
+                  <td className="right accent">1.</td>
+                  <td>First Step (mock)</td>
+                </tr>
+                <tr>
+                  <td className="right accent">2.</td>
+                  <td>Second Step (mock)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <button>Add Instruction</button>
+
             <h3>Preparation steps</h3>
             <table className="prep-steps" cellSpacing="0">
               {currentPrepSteps.map((prepStep, index) => {
