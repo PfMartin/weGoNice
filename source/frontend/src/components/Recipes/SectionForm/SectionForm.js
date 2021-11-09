@@ -9,11 +9,13 @@ import { BiPlus } from 'react-icons/bi';
 
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame';
+import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInput.js';
 import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
 const SectionForm = () => {
+  const [sectionTitle, setSectionTitle] = useState('');
   const [ingredients, setIngredients] = useState([
     {
       id: null,
@@ -38,6 +40,10 @@ const SectionForm = () => {
       : arrayMoveImmutable(stateCopy, index, index + 1);
 
     setterFunction(stateCopy);
+  };
+
+  const updateSectionTitle = (e) => {
+    setSectionTitle(e.target.value);
   };
 
   const addIngredient = (e) => {
@@ -141,6 +147,13 @@ const SectionForm = () => {
       <SiteHeader headline="Create Section" hasBackButton={true} />
 
       <FormFrame>
+        <InputElement
+          title="title"
+          labelText="Title"
+          type="text"
+          value={sectionTitle}
+          onChange={updateSectionTitle}
+        />
         <div className="multiple-section form-element">
           <div className="section-title">
             <p>Ingredients</p>
