@@ -60,6 +60,18 @@ const RecipeDetail = ({
     );
   };
 
+  const displayAllIngredients = () => {
+    return currentIngredients.map((ingredient) => {
+      return (
+        <tr key={ingredient.id}>
+          <td className="right">{ingredient.value}</td>
+          <td className="left">{ingredient.generalMeasure.title}</td>
+          <td className="left">{ingredient.title}</td>
+        </tr>
+      );
+    });
+  };
+
   return !currentRecipe ||
     !currentRecipe.recipesCategory ||
     !currentRecipe.referencesReference ||
@@ -113,19 +125,7 @@ const RecipeDetail = ({
                     <th className="left">Ingredient</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {currentIngredients.map((ingredient) => {
-                    return (
-                      <tr key={ingredient.id}>
-                        <td className="right">{ingredient.value}</td>
-                        <td className="left">
-                          {ingredient.generalMeasure.title}
-                        </td>
-                        <td className="left">{ingredient.title}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
+                <tbody>{displayAllIngredients()}</tbody>
               </table>
             </div>
           </div>

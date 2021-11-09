@@ -1,6 +1,8 @@
 import './SectionForm.css';
 
 import React, { useEffect, useState, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { fetchMeasures } from 'src/actions';
 
 import weGoNice from 'src/apis/weGoNice';
 import { arrayMoveImmutable } from 'array-move';
@@ -15,7 +17,7 @@ import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const SectionForm = ({ match }) => {
+const SectionForm = ({ history, match, measures }) => {
   const [sectionTitle, setSectionTitle] = useState('');
   const [ingredients, setIngredients] = useState([
     {
@@ -32,9 +34,7 @@ const SectionForm = ({ match }) => {
     },
   ]);
 
-  useEffect(() => {
-    console.log(parseInt(match.params.id));
-  }, []);
+  useEffect(() => {}, []);
 
   const currentView =
     match.url.split('/').reverse()[0] === 'create' ? 'create' : 'modify';
@@ -111,7 +111,6 @@ const SectionForm = ({ match }) => {
     };
 
     setPrepSteps(stateCopy);
-    console.log(prepSteps);
   };
 
   const deleteIngredient = async (e) => {
@@ -150,8 +149,80 @@ const SectionForm = ({ match }) => {
     }
   };
 
+  const saveIngredients = async () => {
+    const recipeId = parseInt(match.params.id);
+    for (const [index, ingredient] of ingredients.entries()) {
+      const generalMeasure = measures.find(
+        (measure) => measure.title === ingredient.measure
+      );
+
+      const body = {
+        value: ingredient.value,
+        generalMeasureId: generalMeasure.id,
+        title: ingredient.text,
+        rank: index + 1,
+        recipesRecipeId: recipeId,
+        recipeSection: sectionTitle,
+      };
+
+      // If the ingredient doesn't have an id yet, it needs to be created
+      if (!ingredient.id) {
+        try {
+          const { error } = await weGoNice.post('/recipes/ingredients', body);
+          if (error) throw error;
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        try {
+          const { error } = await weGoNice.put(
+            `/recipes/ingredients/${ingredient.id}`,
+            body
+          );
+          if (error) throw error;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+  };
+
+  const savePrepSteps = async () => {
+    const recipeId = parseInt(match.params.id);
+    for (const [index, prepStep] of prepSteps.entries()) {
+      const body = {
+        title: prepStep.text,
+        rank: index + 1,
+        recipesRecipeId: recipeId,
+        recipeSection: sectionTitle,
+      };
+
+      if (!prepStep.id) {
+        try {
+          const { error } = await weGoNice.post('/recipes/prep_steps', body);
+          if (error) throw error;
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        try {
+          const { error } = await weGoNice.put(
+            `/recipes/prep_steps/${prepStep.id}`,
+            body
+          );
+          if (error) throw error;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  };
+
   const onSave = () => {
-    console.log('Save Section');
+    saveIngredients();
+    savePrepSteps();
+
+    history.push(`/recipes/detail/${match.params.id}`);
   };
 
   const onDelete = () => {
@@ -229,4 +300,10 @@ const SectionForm = ({ match }) => {
   );
 };
 
-export default SectionForm;
+const mapStateToProps = (state) => {
+  return {
+    measures: state.selectData.measures,
+  };
+};
+
+export default connect(mapStateToProps)(SectionForm);

@@ -49,6 +49,11 @@ const App = ({
             component={SectionForm}
           />
           <Route
+            path="/recipes/detail/:id/section/modify/:sectionId"
+            exact
+            component={SectionForm}
+          />
+          <Route
             path="/references/overview"
             exact
             component={ReferencesOverview}
