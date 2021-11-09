@@ -2,7 +2,6 @@ import './SectionForm.css';
 
 import React, { useEffect, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { fetchMeasures } from 'src/actions';
 
 import weGoNice from 'src/apis/weGoNice';
 import { arrayMoveImmutable } from 'array-move';
@@ -33,8 +32,6 @@ const SectionForm = ({ history, match, measures }) => {
       text: '',
     },
   ]);
-
-  useEffect(() => {}, []);
 
   const currentView =
     match.url.split('/').reverse()[0] === 'create' ? 'create' : 'modify';
@@ -219,10 +216,13 @@ const SectionForm = ({ history, match, measures }) => {
   };
 
   const onSave = () => {
-    saveIngredients();
-    savePrepSteps();
-
-    history.push(`/recipes/detail/${match.params.id}`);
+    try {
+      saveIngredients();
+      savePrepSteps();
+      history.push(`/recipes/detail/${match.params.id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const onDelete = () => {
