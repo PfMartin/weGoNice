@@ -25,12 +25,6 @@ const RecipeDetail = ({
   useEffect(() => {
     getRecipe();
     getSectionData();
-
-    console.log(
-      currentIngredients
-        .filter((ingredient) => ingredient.recipeSection === 'New Test')
-        .map((element) => element)
-    );
   }, []);
 
   const getRecipe = async () => {
@@ -82,6 +76,33 @@ const RecipeDetail = ({
         </tr>
       );
     });
+  };
+
+  const displaySectionIngredients = (sectionTitle) => {
+    return currentIngredients
+      .filter((ingredient) => ingredient.recipeSection === sectionTitle)
+      .map((element) => {
+        return (
+          <tr key={element.title}>
+            <td className="right">{element.value}</td>
+            <td className="left">{element.generalMeasure.title}</td>
+            <td className="left">{element.title}</td>
+          </tr>
+        );
+      });
+  };
+
+  const displaySectionPrepSteps = (sectionTitle) => {
+    return currentPrepSteps
+      .filter((prepStep) => prepStep.recipeSection === sectionTitle)
+      .map((prepStep, index) => {
+        return (
+          <tr key={index}>
+            <td className="right accent">{`${index + 1}.`}</td>
+            <td>{prepStep.title}</td>
+          </tr>
+        );
+      });
   };
 
   return !currentRecipe ||
@@ -157,43 +178,11 @@ const RecipeDetail = ({
                           <th className="left">Ingredient</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {currentIngredients
-                          .filter(
-                            (ingredient) =>
-                              ingredient.recipeSection === sectionTitle
-                          )
-                          .map((element) => {
-                            return (
-                              <tr>
-                                <td className="right">{element.value}</td>
-                                <td className="left">
-                                  {element.generalMeasure.title}
-                                </td>
-                                <td className="left">{element.title}</td>
-                              </tr>
-                            );
-                          })}
-                      </tbody>
+                      <tbody>{displaySectionIngredients(sectionTitle)}</tbody>
                     </table>
                   </div>
                   <table className="prep-steps" cellSpacing="0">
-                    <tbody>
-                      {currentPrepSteps
-                        .filter(
-                          (prepStep) => prepStep.recipeSection === sectionTitle
-                        )
-                        .map((prepStep, index) => {
-                          return (
-                            <tr key={index}>
-                              <td className="right accent">{`${
-                                index + 1
-                              }.`}</td>
-                              <td>{prepStep.title}</td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
+                    <tbody>{displaySectionPrepSteps(sectionTitle)}</tbody>
                   </table>
                 </Fragment>
               );
