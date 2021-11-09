@@ -206,7 +206,7 @@ const RecipeDetail = ({
               </tbody>
             </table>
 
-            <Link to={'/recipes/section/create'}>
+            <Link to={`/recipes/detail/${match.params.id}/section/create`}>
               <IconFrame size="25px">
                 <BiPlus />
               </IconFrame>

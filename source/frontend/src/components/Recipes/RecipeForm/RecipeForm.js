@@ -22,15 +22,12 @@ import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 const RecipeForm = ({
   fetchReferences,
   history,
-  location,
   match,
   selectData,
   references,
 }) => {
   const currentView =
-    location.pathname.split('/').reverse()[0] === 'create'
-      ? 'create'
-      : 'modify';
+    match.url.split('/').reverse()[0] === 'create' ? 'create' : 'modify';
 
   const [recipe, setRecipe] = useState({
     id: '',

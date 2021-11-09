@@ -43,7 +43,11 @@ const App = ({
           <Route path="/recipes/detail/:id" exact component={RecipeDetail} />
           <Route path="/recipes/modify/:id" exact component={RecipeForm} />
           <Route path="/recipes/create" exact component={RecipeForm} />
-          <Route path="/recipes/section/create" exact component={SectionForm} />
+          <Route
+            path="/recipes/detail/:id/section/create"
+            exact
+            component={SectionForm}
+          />
           <Route
             path="/references/overview"
             exact

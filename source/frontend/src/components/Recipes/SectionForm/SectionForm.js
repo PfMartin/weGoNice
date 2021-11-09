@@ -1,6 +1,6 @@
 import './SectionForm.css';
 
-import React, { useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 
 import weGoNice from 'src/apis/weGoNice';
 import { arrayMoveImmutable } from 'array-move';
@@ -15,8 +15,7 @@ import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
-const SectionForm = () => {
-  const [currentView, setCurrentView] = useState('create');
+const SectionForm = ({ match }) => {
   const [sectionTitle, setSectionTitle] = useState('');
   const [ingredients, setIngredients] = useState([
     {
@@ -32,6 +31,13 @@ const SectionForm = () => {
       text: '',
     },
   ]);
+
+  useEffect(() => {
+    console.log(parseInt(match.params.id));
+  }, []);
+
+  const currentView =
+    match.url.split('/').reverse()[0] === 'create' ? 'create' : 'modify';
 
   const moveInput = (e, isUp, state, setterFunction) => {
     const index = e.currentTarget.parentNode.getAttribute('index');
