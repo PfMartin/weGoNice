@@ -14,6 +14,7 @@ import Navbar from 'src/components/Structure/Navbar/Navbar';
 import RecipesOverview from 'src/components/Recipes/RecipesOverview/RecipesOverview';
 import RecipeForm from 'src/components/Recipes/RecipeForm/RecipeForm';
 import RecipeDetail from 'src/components/Recipes/RecipeDetail/RecipeDetail';
+import SectionForm from 'src/components/Recipes/SectionForm/SectionForm';
 import ReferencesOverview from 'src/components/References/ReferencesOverview/ReferencesOverview';
 import ReferenceForm from 'src/components/References/ReferenceForm/ReferenceForm';
 import Footer from 'src/components/Structure/Footer/Footer';
@@ -42,6 +43,7 @@ const App = ({
           <Route path="/recipes/detail/:id" exact component={RecipeDetail} />
           <Route path="/recipes/modify/:id" exact component={RecipeForm} />
           <Route path="/recipes/create" exact component={RecipeForm} />
+          <Route path="/recipes/section/create" exact component={SectionForm} />
           <Route
             path="/references/overview"
             exact

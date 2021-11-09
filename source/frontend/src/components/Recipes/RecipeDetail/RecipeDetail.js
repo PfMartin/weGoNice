@@ -2,10 +2,11 @@ import './RecipeDetail.css';
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import weGoNice from 'src/apis/weGoNice.js';
 
-import { BiAlarm } from 'react-icons/bi';
+import { BiAlarm, BiPlus } from 'react-icons/bi';
 
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
@@ -89,7 +90,7 @@ const RecipeDetail = ({
                 </h4>
               </div>
             </div>
-            <h2>
+            <h1>
               <a
                 className="title-link"
                 href={currentRecipe.url}
@@ -99,10 +100,10 @@ const RecipeDetail = ({
                 {currentRecipe.title} by{' '}
                 {currentRecipe.referencesReference.title}
               </a>
-            </h2>
+            </h1>
           </div>
           <div className="section">
-            <h3>Ingredients</h3>
+            <h2>Ingredients</h2>
             <div className="ingredients-table">
               <table className="ingredients" cellSpacing="0">
                 <thead>
@@ -205,21 +206,11 @@ const RecipeDetail = ({
               </tbody>
             </table>
 
-            <button>Add Instruction</button>
-
-            <h3>Preparation steps</h3>
-            <table className="prep-steps" cellSpacing="0">
-              {currentPrepSteps.map((prepStep, index) => {
-                return (
-                  <tbody key={prepStep.id}>
-                    <tr>
-                      <td className="right accent">{index + 1}.</td>
-                      <td>{prepStep.title}</td>
-                    </tr>
-                  </tbody>
-                );
-              })}
-            </table>
+            <Link to={'/recipes/section/create'}>
+              <IconFrame size="25px">
+                <BiPlus />
+              </IconFrame>
+            </Link>
           </div>
         </div>
       </div>
@@ -235,3 +226,17 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(RecipeDetail);
+
+// <h3>Preparation steps</h3>
+// <table className="prep-steps" cellSpacing="0">
+// {currentPrepSteps.map((prepStep, index) => {
+//   return (
+//     <tbody key={prepStep.id}>
+//     <tr>
+//     <td className="right accent">{index + 1}.</td>
+//     <td>{prepStep.title}</td>
+//     </tr>
+//     </tbody>
+//   );
+// })}
+// </table>
