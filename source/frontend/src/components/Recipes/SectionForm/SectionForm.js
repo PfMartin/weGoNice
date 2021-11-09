@@ -13,8 +13,10 @@ import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInput.js';
 import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
+import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const SectionForm = () => {
+  const [currentView, setCurrentView] = useState('create');
   const [sectionTitle, setSectionTitle] = useState('');
   const [ingredients, setIngredients] = useState([
     {
@@ -142,6 +144,14 @@ const SectionForm = () => {
     }
   };
 
+  const onSave = () => {
+    console.log('Save Section');
+  };
+
+  const onDelete = () => {
+    console.log('Delete Section');
+  };
+
   return (
     <div className="section-form">
       <SiteHeader headline="Create Section" hasBackButton={true} />
@@ -203,6 +213,11 @@ const SectionForm = () => {
             <BiPlus onClick={addPrepStep} />
           </IconFrame>
         </div>
+        {currentView === 'create' ? (
+          <ButtonBar onSave={onSave} />
+        ) : (
+          <ButtonBar onSave={onSave} onDelete={onDelete} />
+        )}
       </FormFrame>
     </div>
   );
