@@ -1,14 +1,196 @@
 import './SectionForm.css';
 
-import React from 'react';
+import React, { useState, Fragment } from 'react';
 
-import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
+import weGoNice from 'src/apis/weGoNice';
+import { arrayMoveImmutable } from 'array-move';
+
+import { BiPlus } from 'react-icons/bi';
+
+import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader';
+import FormFrame from 'src/components/Forms/FormFrame/FormFrame';
+import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInput.js';
+import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput';
+import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 
 const SectionForm = () => {
+  const [ingredients, setIngredients] = useState([
+    {
+      id: null,
+      value: 0,
+      measure: 'g',
+      text: '',
+    },
+  ]);
+  const [prepSteps, setPrepSteps] = useState([
+    {
+      id: null,
+      text: '',
+    },
+  ]);
+
+  const moveInput = (e, isUp, state, setterFunction) => {
+    const index = e.currentTarget.parentNode.getAttribute('index');
+
+    let stateCopy = [...state];
+    stateCopy = isUp
+      ? arrayMoveImmutable(stateCopy, index, index - 1)
+      : arrayMoveImmutable(stateCopy, index, index + 1);
+
+    setterFunction(stateCopy);
+  };
+
+  const addIngredient = (e) => {
+    let stateCopy = [...ingredients];
+    stateCopy.push({
+      id: '',
+      value: 0,
+      measure: 'g',
+      text: '',
+    });
+
+    setIngredients(stateCopy);
+  };
+
+  const addPrepStep = () => {
+    let stateCopy = [...prepSteps];
+    stateCopy.push({
+      id: '',
+      text: '',
+    });
+
+    setPrepSteps(stateCopy);
+  };
+
+  const updateIngredients = (e) => {
+    const name = e.target.id;
+
+    let index;
+    let input;
+    if (name === 'value' || name === 'text') {
+      index = e.target.getAttribute('index');
+      input = e.target.value;
+    } else if (name === 'measure') {
+      index = e.target.parentNode.getAttribute('index');
+      input = e.target.getAttribute('value');
+    }
+
+    let stateCopy = [...ingredients];
+    stateCopy[index] = {
+      ...stateCopy[index],
+      ...{ [name]: input },
+    };
+
+    setIngredients(stateCopy);
+  };
+
+  const updatePrepSteps = (e) => {
+    const name = e.target.id;
+
+    const index = e.target.getAttribute('index');
+    const input = e.target.value;
+
+    let stateCopy = [...prepSteps];
+    stateCopy[index] = {
+      ...stateCopy[index],
+      ...{ [name]: input },
+    };
+
+    setPrepSteps(stateCopy);
+    console.log(prepSteps);
+  };
+
+  const deleteIngredient = async (e) => {
+    try {
+      const index = e.currentTarget.parentNode.getAttribute('index');
+
+      // Delete from database
+      if (ingredients[index].id) {
+        await weGoNice.delete(`/recipes/ingredients/${ingredients[index].id}`);
+      }
+
+      // Delete from UI
+      let stateCopy = [...ingredients];
+      stateCopy.splice(index, 1);
+      setIngredients(stateCopy);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deletePrepStep = async (e) => {
+    try {
+      const index = e.currentTarget.parentNode.getAttribute('index');
+
+      // Delete from database
+      if (prepSteps[index].id) {
+        await weGoNice.delete(`/recipes/prep_steps/${prepSteps[index].id}`);
+      }
+
+      // Delete from UI
+      let stateCopy = [...prepSteps];
+      stateCopy.splice(index, 1);
+      setPrepSteps(stateCopy);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="section-form">
       <SiteHeader headline="Create Section" hasBackButton={true} />
-      <h1>SectionForm</h1>
+
+      <FormFrame>
+        <div className="multiple-section form-element">
+          <div className="section-title">
+            <p>Ingredients</p>
+          </div>
+          {ingredients.map((ingredient, index) => {
+            return (
+              <Fragment key={index}>
+                <IngredientInput
+                  index={index}
+                  ingredient={ingredient}
+                  moveDown={(e) =>
+                    moveInput(e, false, ingredients, setIngredients)
+                  }
+                  moveUp={(e) =>
+                    moveInput(e, true, ingredients, setIngredients)
+                  }
+                  onChange={updateIngredients}
+                  onDelete={deleteIngredient}
+                />
+              </Fragment>
+            );
+          })}
+          <IconFrame>
+            <BiPlus onClick={addIngredient} />
+          </IconFrame>
+        </div>
+        <div className="multiple-section form-element">
+          <div className="section-title">
+            <p>Preparation Steps</p>
+          </div>
+          {prepSteps.map((prepStep, index) => {
+            return (
+              <Fragment key={index}>
+                <PrepStepInput
+                  index={index}
+                  moveDown={(e) => moveInput(e, false, prepSteps, setPrepSteps)}
+                  moveUp={(e) => moveInput(e, true, prepSteps, setPrepSteps)}
+                  onChange={updatePrepSteps}
+                  onDelete={deletePrepStep}
+                  prepStep={prepStep}
+                  placeholder="hey"
+                />
+              </Fragment>
+            );
+          })}
+          <IconFrame>
+            <BiPlus onClick={addPrepStep} />
+          </IconFrame>
+        </div>
+      </FormFrame>
     </div>
   );
 };
