@@ -36,6 +36,51 @@ const SectionForm = ({ history, match, measures }) => {
   const currentView =
     match.url.split('/').reverse()[0] === 'create' ? 'create' : 'modify';
 
+  useEffect(() => {
+    if (currentView === 'modify') {
+      onInitial();
+    }
+  }, []);
+
+  const onInitial = async () => {
+    setSectionTitle(match.params.sectionTitle);
+
+    const resIngredients = await weGoNice.get(
+      `/recipes/ingredients_by_recipe/${match.params.id}`
+    );
+
+    const resPrepSteps = await weGoNice.get(
+      `/recipes/prep_steps_by_recipe/${match.params.id}`
+    );
+
+    const sectionIngredients = await resIngredients.data
+      .filter(
+        (ingredient) => ingredient.recipeSection === match.params.sectionTitle
+      )
+      .map((ingredient) => {
+        const generalMeasure = ingredient.generalMeasure.title;
+        return {
+          id: ingredient.id,
+          value: ingredient.value,
+          measure: generalMeasure,
+          text: ingredient.title,
+        };
+      });
+    setIngredients(sectionIngredients);
+
+    const sectionPrepSteps = await resPrepSteps.data
+      .filter(
+        (prepStep) => prepStep.recipeSection === match.params.sectionTitle
+      )
+      .map((prepStep) => {
+        return {
+          id: prepStep.id,
+          text: prepStep.title,
+        };
+      });
+    setPrepSteps(sectionPrepSteps);
+  };
+
   const moveInput = (e, isUp, state, setterFunction) => {
     const index = e.currentTarget.parentNode.getAttribute('index');
 
@@ -231,7 +276,14 @@ const SectionForm = ({ history, match, measures }) => {
 
   return (
     <div className="section-form">
-      <SiteHeader headline="Create Section" hasBackButton={true} />
+      <SiteHeader
+        headline={
+          currentView === 'modify'
+            ? `Modify ${match.params.sectionTitle}`
+            : 'Create Section'
+        }
+        hasBackButton={true}
+      />
 
       <FormFrame>
         <InputElement
