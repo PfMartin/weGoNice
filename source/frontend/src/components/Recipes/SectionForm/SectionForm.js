@@ -198,7 +198,7 @@ const SectionForm = ({ history, match, measures }) => {
         (measure) => measure.title === ingredient.measure
       );
 
-      const body = {
+      let body = {
         value: ingredient.value,
         generalMeasureId: generalMeasure.id,
         title: ingredient.text,
@@ -217,6 +217,7 @@ const SectionForm = ({ history, match, measures }) => {
         }
       } else {
         try {
+          body.id = ingredient.id;
           const { error } = await weGoNice.put(
             `/recipes/ingredients/${ingredient.id}`,
             body
@@ -232,7 +233,7 @@ const SectionForm = ({ history, match, measures }) => {
   const savePrepSteps = async () => {
     const recipeId = parseInt(match.params.id);
     for (const [index, prepStep] of prepSteps.entries()) {
-      const body = {
+      let body = {
         title: prepStep.text,
         rank: index + 1,
         recipesRecipeId: recipeId,
@@ -248,6 +249,7 @@ const SectionForm = ({ history, match, measures }) => {
         }
       } else {
         try {
+          body.id = prepStep.id;
           const { error } = await weGoNice.put(
             `/recipes/prep_steps/${prepStep.id}`,
             body
@@ -260,10 +262,10 @@ const SectionForm = ({ history, match, measures }) => {
     }
   };
 
-  const onSave = () => {
+  const onSave = async () => {
     try {
-      saveIngredients();
-      savePrepSteps();
+      await saveIngredients();
+      await savePrepSteps();
       history.push(`/recipes/detail/${match.params.id}`);
     } catch (error) {
       console.error(error);
