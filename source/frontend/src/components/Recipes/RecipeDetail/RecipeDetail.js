@@ -1,7 +1,6 @@
 import './RecipeDetail.css';
 
 import React, { Fragment, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import weGoNice from 'src/apis/weGoNice.js';

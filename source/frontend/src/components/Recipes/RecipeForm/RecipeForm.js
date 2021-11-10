@@ -1,22 +1,15 @@
 import './RecipeForm.css';
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchReferences } from 'src/actions';
 
 import weGoNice from 'src/apis/weGoNice';
 
-import { BiPlus } from 'react-icons/bi';
-
-import { arrayMoveImmutable } from 'array-move';
-import PropTypes from 'prop-types';
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import FormFrame from 'src/components/Forms/FormFrame/FormFrame.js';
-import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import InputElement from 'src/components/Forms/InputElement/InputElement.js';
 import SelectElement from 'src/components/Forms/SelectElement/SelectElement.js';
 import ValueInput from 'src/components/Forms/ValueInput/ValueInput.js';
-import IngredientInput from 'src/components/Forms/IngredientInput/IngredientInput.js';
-import PrepStepInput from 'src/components/Forms/PrepStepInput/PrepStepInput.js';
 import ButtonBar from 'src/components/Forms/ButtonBar/ButtonBar.js';
 
 const RecipeForm = ({

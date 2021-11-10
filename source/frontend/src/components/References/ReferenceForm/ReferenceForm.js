@@ -1,7 +1,6 @@
 import './ReferenceForm.css';
 
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import weGoNice from 'src/apis/weGoNice.js';
 
@@ -112,8 +111,6 @@ const ReferenceForm = ({ history, location, match, selectData }) => {
   };
 
   const onDelete = async () => {
-    const referenceId = parseInt(location.pathname.split('/').reverse()[0]);
-
     const response = await weGoNice.delete(
       `/references/references/${match.params.id}`
     );

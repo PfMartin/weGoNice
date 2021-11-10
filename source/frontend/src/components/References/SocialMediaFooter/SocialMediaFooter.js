@@ -1,7 +1,7 @@
 import './SocialMediaFooter.css';
 
 import React from 'react';
-import { BiWorld, BiPencil } from 'react-icons/bi';
+import { BiWorld } from 'react-icons/bi';
 import { FiInstagram, FiFacebook, FiYoutube } from 'react-icons/fi';
 import LinkIcon from 'src/components/Structure/LinkIcon/LinkIcon.js';
 

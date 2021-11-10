@@ -1,5 +1,5 @@
 import './Navbar.css';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BiFoodMenu, BiUser } from 'react-icons/bi';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
 import { Link, useLocation } from 'react-router-dom';
