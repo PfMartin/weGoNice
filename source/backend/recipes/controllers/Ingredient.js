@@ -112,6 +112,7 @@ export const getIngredientsByRecipe = async (req, res) => {
           as: 'generalMeasure',
         },
       ],
+      order: [['rank', 'ASC']],
     });
     res.send(ingredients.sort((a, b) => a.rank > b.rank));
   } catch (err) {
