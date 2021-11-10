@@ -37,20 +37,6 @@ const RecipeForm = ({
     url: '',
   });
   const [prepTime, setPrepTime] = useState({ value: 0, measure: 'min' });
-  const [ingredients, setIngredients] = useState([
-    {
-      id: '',
-      value: 0,
-      measure: 'g',
-      text: '',
-    },
-  ]);
-  const [prepSteps, setPrepSteps] = useState([
-    {
-      id: '',
-      text: '',
-    },
-  ]);
 
   useEffect(() => {
     if (currentView === 'modify') {
@@ -76,33 +62,6 @@ const RecipeForm = ({
       value: currentRecipe.prepTimeValue,
       measure: currentRecipe.generalMeasure.title,
     });
-
-    const resIngredients = await weGoNice.get(
-      `/recipes/ingredients_by_recipe/${recipeId}`
-    );
-
-    const currentIngredients = resIngredients.data.map((ingredient) => {
-      return {
-        id: ingredient.id,
-        value: ingredient.value,
-        measure: ingredient.generalMeasure.title,
-        text: ingredient.title,
-      };
-    });
-
-    setIngredients(currentIngredients);
-
-    const resPrepSteps = await weGoNice.get(
-      `/recipes/prep_steps_by_recipe/${recipeId}`
-    );
-    const currentPrepSteps = resPrepSteps.data.map((prepStep) => {
-      return {
-        id: prepStep.id,
-        text: prepStep.title,
-      };
-    });
-
-    setPrepSteps(currentPrepSteps);
   };
 
   const onChange = (e, state, setterFunction) => {
@@ -122,109 +81,6 @@ const RecipeForm = ({
       ...state,
       ...{ [name]: input },
     });
-  };
-
-  const updateIngredients = (e) => {
-    const name = e.target.id;
-
-    let index;
-    let input;
-    if (name === 'value' || name === 'text') {
-      index = e.target.getAttribute('index');
-      input = e.target.value;
-    } else if (name === 'measure') {
-      index = e.target.parentNode.getAttribute('index');
-      input = e.target.getAttribute('value');
-    }
-
-    let stateCopy = [...ingredients];
-    stateCopy[index] = {
-      ...stateCopy[index],
-      ...{ [name]: input },
-    };
-
-    setIngredients(stateCopy);
-  };
-
-  const addIngredient = (e) => {
-    let stateCopy = [...ingredients];
-    stateCopy.push({
-      id: '',
-      value: 0,
-      measure: 'g',
-      text: '',
-    });
-
-    setIngredients(stateCopy);
-  };
-
-  const moveInput = (e, isUp, state, setterFunction) => {
-    const index = e.currentTarget.parentNode.getAttribute('index');
-
-    let stateCopy = [...state];
-    stateCopy = isUp
-      ? arrayMoveImmutable(stateCopy, index, index - 1)
-      : arrayMoveImmutable(stateCopy, index, index + 1);
-
-    setterFunction(stateCopy);
-  };
-
-  const deleteIngredient = async (e) => {
-    try {
-      const index = e.currentTarget.parentNode.getAttribute('index');
-
-      // Delete from database
-      await weGoNice.delete(`/recipes/ingredients/${ingredients[index].id}`);
-
-      // Delete from UI
-      let stateCopy = [...ingredients];
-      stateCopy.splice(index, 1);
-      setIngredients(stateCopy);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const updatePrepSteps = (e) => {
-    const name = e.target.id;
-
-    const index = e.target.getAttribute('index');
-    const input = e.target.value;
-
-    let stateCopy = [...prepSteps];
-    stateCopy[index] = {
-      ...stateCopy[index],
-      ...{ [name]: input },
-    };
-
-    setPrepSteps(stateCopy);
-    console.log(prepSteps);
-  };
-
-  const addPrepStep = () => {
-    let stateCopy = [...prepSteps];
-    stateCopy.push({
-      id: '',
-      text: '',
-    });
-
-    setPrepSteps(stateCopy);
-  };
-
-  const deletePrepStep = async (e) => {
-    try {
-      const index = e.currentTarget.parentNode.getAttribute('index');
-
-      // Delete from database
-      await weGoNice.delete(`/recipes/prep_steps/${prepSteps[index].id}`);
-
-      // Delete from UI
-      let stateCopy = [...prepSteps];
-      stateCopy.splice(index, 1);
-      setPrepSteps(stateCopy);
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   const saveRecipe = async () => {
@@ -251,69 +107,27 @@ const RecipeForm = ({
     if (currentView === 'create') {
       console.log(currentView);
       try {
-        const response = await weGoNice.post('/recipes/recipes/', body);
-        return response.data.id;
-      } catch (err) {
-        console.error(err);
+        const { error } = await weGoNice.post('/recipes/recipes/', body);
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
       }
     } else {
       try {
-        await weGoNice.put(`/recipes/recipes/${match.params.id}`, body);
-        return null;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  };
-
-  const saveIngredients = async (recipeId) => {
-    for (const [index, ingredient] of ingredients.entries()) {
-      const generalMeasure = selectData.measures.find(
-        (measure) => measure.title === ingredient.measure
-      );
-
-      const body = {
-        value: ingredient.value,
-        generalMeasureId: generalMeasure.id,
-        title: ingredient.text,
-        rank: index + 1,
-      };
-
-      // If the recipe already exists it won't return its id on save
-      // Therefore, we need to check if recipeId is defined before assigning an recipeId to the body
-      body.recipesRecipeId = recipeId ? recipeId : parseInt(match.params.id);
-
-      // If the ingredient doesn't have an id yet, it needs to be created
-      if (!ingredient.id) {
-        await weGoNice.post('/recipes/ingredients', body);
-      } else {
-        await weGoNice.put(`/recipes/ingredients/${ingredient.id}`, body);
-      }
-    }
-  };
-
-  const savePrepSteps = async (recipeId) => {
-    for (const [index, prepStep] of prepSteps.entries()) {
-      const body = {
-        title: prepStep.text,
-        rank: index + 1,
-      };
-
-      body.recipesRecipeId = recipeId ? recipeId : parseInt(match.params.id);
-
-      if (!prepStep.id) {
-        await weGoNice.post('/recipes/prep_steps', body);
-      } else {
-        await weGoNice.put(`/recipes/prep_steps/${prepStep.id}`, body);
+        const { error } = await weGoNice.put(
+          `/recipes/recipes/${match.params.id}`,
+          body
+        );
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
       }
     }
   };
 
   const onSave = async () => {
     try {
-      const recipeId = await saveRecipe();
-      await saveIngredients(recipeId);
-      await savePrepSteps(recipeId);
+      await saveRecipe();
       currentView === 'create'
         ? history.push('/recipes/overview')
         : history.push(`/recipes/detail/${match.params.id}`);
@@ -324,16 +138,11 @@ const RecipeForm = ({
 
   const onDelete = async () => {
     try {
-      await weGoNice.delete(`/recipes/recipes/${match.params.id}`);
+      const { error } = await weGoNice.delete(
+        `/recipes/recipes/${match.params.id}`
+      );
 
-      for (const ingredient of ingredients) {
-        await weGoNice.delete(`/recipes/ingredients/${ingredient.id}`);
-      }
-
-      for (const prepStep of prepSteps) {
-        await weGoNice.delete(`/recipes/prep_steps/${prepStep.id}`);
-      }
-
+      if (error) throw error;
       history.push('/recipes/overview');
     } catch (err) {
       console.error(err);
@@ -384,55 +193,6 @@ const RecipeForm = ({
           value={recipe.url}
           onChange={(e) => onChange(e, recipe, setRecipe)}
         />
-        <div className="multiple-section form-element">
-          <div className="section-title">
-            <p>Ingredients</p>
-          </div>
-          {ingredients.map((ingredient, index) => {
-            return (
-              <Fragment key={index}>
-                <IngredientInput
-                  index={index}
-                  ingredient={ingredient}
-                  moveDown={(e) =>
-                    moveInput(e, false, ingredients, setIngredients)
-                  }
-                  moveUp={(e) =>
-                    moveInput(e, true, ingredients, setIngredients)
-                  }
-                  onChange={updateIngredients}
-                  onDelete={deleteIngredient}
-                />
-              </Fragment>
-            );
-          })}
-          <IconFrame>
-            <BiPlus onClick={addIngredient} />
-          </IconFrame>
-        </div>
-        <div className="multiple-section form-element">
-          <div className="section-title">
-            <p>Preparation Steps</p>
-          </div>
-          {prepSteps.map((prepStep, index) => {
-            return (
-              <Fragment key={index}>
-                <PrepStepInput
-                  index={index}
-                  moveDown={(e) => moveInput(e, false, prepSteps, setPrepSteps)}
-                  moveUp={(e) => moveInput(e, true, prepSteps, setPrepSteps)}
-                  onChange={updatePrepSteps}
-                  onDelete={deletePrepStep}
-                  prepStep={prepStep}
-                  placeholder="hey"
-                />
-              </Fragment>
-            );
-          })}
-          <IconFrame>
-            <BiPlus onClick={addPrepStep} />
-          </IconFrame>
-        </div>
         {currentView === 'create' ? (
           <ButtonBar onSave={onSave} />
         ) : (
