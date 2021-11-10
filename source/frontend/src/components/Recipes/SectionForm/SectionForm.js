@@ -272,8 +272,30 @@ const SectionForm = ({ history, match, measures }) => {
     }
   };
 
-  const onDelete = () => {
-    console.log('Delete Section');
+  const onDelete = async () => {
+    for (const ingredient of ingredients) {
+      try {
+        const { error } = await weGoNice.delete(
+          `/recipes/ingredients/${ingredient.id}`
+        );
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    for (const prepStep of prepSteps) {
+      try {
+        const { error } = await weGoNice.delete(
+          `/recipes/prep_steps/${prepStep.id}`
+        );
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    history.push(`/recipes/detail/${match.params.id}`);
   };
 
   return (
