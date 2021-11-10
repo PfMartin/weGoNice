@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import weGoNice from 'src/apis/weGoNice.js';
 
-import { BiAlarm, BiPlus } from 'react-icons/bi';
+import { BiAlarm, BiPlus, BiPencil } from 'react-icons/bi';
 
 import SiteHeader from 'src/components/Structure/SiteHeader/SiteHeader.js';
 import IconFrame from 'src/components/Structure/IconFrame/IconFrame.js';
@@ -168,7 +168,17 @@ const RecipeDetail = ({
             {currentSections.map((sectionTitle) => {
               return (
                 <Fragment key={sectionTitle}>
-                  <h3>{sectionTitle}</h3>
+                  <div className="section-header">
+                    <h3>{sectionTitle}</h3>
+                    <Link
+                      to={`/recipes/detail/${match.params.id}/section/modify/${sectionTitle}`}
+                      className="modify-link"
+                    >
+                      <IconFrame>
+                        <BiPencil />
+                      </IconFrame>
+                    </Link>
+                  </div>
                   <div className="ingredients-table">
                     <table className="ingredients" cellSpacing="0">
                       <thead>

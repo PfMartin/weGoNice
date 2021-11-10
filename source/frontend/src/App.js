@@ -49,7 +49,7 @@ const App = ({
             component={SectionForm}
           />
           <Route
-            path="/recipes/detail/:id/section/modify/:sectionId"
+            path="/recipes/detail/:id/section/modify/:sectionTitle"
             exact
             component={SectionForm}
           />
