@@ -14,5 +14,5 @@ podman run \
   --name weGoNice-frontend \
   --detach \
   --restart=always \
-  -p 5000:5000 \
+  -p 5000:3000 \
   wegonice-frontend-image:${version}
