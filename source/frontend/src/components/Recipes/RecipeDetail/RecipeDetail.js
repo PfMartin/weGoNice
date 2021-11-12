@@ -69,8 +69,12 @@ const RecipeDetail = ({
     return currentIngredients.map((ingredient) => {
       return (
         <tr key={ingredient.id}>
-          <td className="right">{ingredient.value}</td>
-          <td className="left">{ingredient.generalMeasure.title}</td>
+          <td className="right">
+            {ingredient.value !== 0 ? ingredient.value : ''}
+          </td>
+          <td className="left">
+            {ingredient.value !== 0 ? ingredient.generalMeasure.title : ''}
+          </td>
           <td className="left">{ingredient.title}</td>
         </tr>
       );
@@ -83,8 +87,12 @@ const RecipeDetail = ({
       .map((element) => {
         return (
           <tr key={element.title}>
-            <td className="right">{element.value}</td>
-            <td className="left">{element.generalMeasure.title}</td>
+            <td className="right">
+              {element.value !== 0 ? element.value : ''}
+            </td>
+            <td className="left">
+              {element.value !== 0 ? element.generalMeasure.title : ''}
+            </td>
             <td className="left">{element.title}</td>
           </tr>
         );
