@@ -27,7 +27,7 @@ const Ingredient = db.define(
   }
 );
 
-Ingredient.belongsTo(Measure); // Select field for a value
-Ingredient.belongsTo(Recipe); // Foreign key to a recipe
+Ingredient.belongsTo(Measure); // Create column generalMeasureId
+Ingredient.belongsTo(Recipe); // Create column recipesRecipeId
 
 export default Ingredient;

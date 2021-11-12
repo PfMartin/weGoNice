@@ -9,7 +9,7 @@ const PrepStep = db.define(
   'recipesPrepStep',
   {
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
     },
     rank: {
       type: DataTypes.INTEGER,
@@ -23,6 +23,6 @@ const PrepStep = db.define(
   }
 );
 
-PrepStep.belongsTo(Recipe); // ForeignKey to a recipe
+PrepStep.belongsTo(Recipe); // Create column recipesRecipeId
 
 export default PrepStep;
