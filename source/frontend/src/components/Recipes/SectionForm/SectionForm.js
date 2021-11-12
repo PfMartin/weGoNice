@@ -82,12 +82,12 @@ const SectionForm = ({ history, match, measures }) => {
   };
 
   const moveInput = (e, isUp, state, setterFunction) => {
-    const index = e.currentTarget.parentNode.getAttribute('index');
+    const index = parseInt(e.currentTarget.parentNode.getAttribute('index'));
 
     let stateCopy = [...state];
-    stateCopy = isUp
-      ? arrayMoveImmutable(stateCopy, index, index - 1)
-      : arrayMoveImmutable(stateCopy, index, index + 1);
+
+    const newIndex = isUp ? index - 1 : index + 1;
+    stateCopy = arrayMoveImmutable(stateCopy, index, newIndex);
 
     setterFunction(stateCopy);
   };
