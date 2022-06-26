@@ -70,6 +70,7 @@ func getUserById(w http.ResponseWriter, r *http.Request) {
 
 func updateUser(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
+	fmt.Println(id)
 	index := indexById(users, id)
 	if index < 0 {
 		http.Error(w, "User not found", http.StatusNotFound)
