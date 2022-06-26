@@ -3,104 +3,164 @@ package users
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
 
-var users = []User{}
-
-func getAllUsers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
-
-	if err := json.NewEncoder(w).Encode(users); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Error encoding response object", http.StatusInternalServerError)
-	}
+type handler struct {
+	DB *gorm.DB
 }
 
-func createUser(w http.ResponseWriter, r *http.Request) {
-	u := User{}
+func NewHandler(db *gorm.DB) handler {
+	return handler{db}
+}
 
-	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Error decoding response object", http.StatusBadRequest)
-		return
+func (h handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	var users []User
+
+	if result := h.DB.Find(&users); result.Error != nil {
+		fmt.Println(result.Error)
 	}
 
-	users = append(users, u)
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(users)
+}
+func (h handler) GetUser(w http.ResponseWriter, r *http.Request) {}
+func (h handler) AddUser(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	body, err := ioutil.ReadAll(r.Body)
 
-	response, err := json.Marshal(&u)
 	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Error encoding response object", http.StatusInternalServerError)
-		return
+		log.Fatalln(err)
+	}
+
+	var user User
+	json.Unmarshal(body, &user)
+
+	if result := h.DB.Create(&user); result.Error != nil {
+		fmt.Println(result.Error)
 	}
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	w.Write(response)
+	json.NewEncoder(w).Encode("Created")
 }
+func (h handler) UpdateUser(w http.ResponseWriter, r *http.Request) {}
+func (h handler) DeleteUser(w http.ResponseWriter, r *http.Request) {}
 
-func indexById(users []User, id string) int {
-	for i := 0; i < len(users); i++ {
-		if users[i].Id == id {
-			return i
-		}
-	}
+// var Users = []User{
+// 	{
+// 		Id:        1,
+// 		Lastname:  "Pfatrisch",
+// 		Firstname: "Martin",
+// 		Age:       30,
+// 		Email:     "martinpfatrisch@gmail.com",
+// 	},
+// }
 
-	return -1
-}
+// func getAllUsers(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Add("Content-Type", "application/json")
 
-func getUserById(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-	index := indexById(users, id)
+// 	var user User
 
-	if index < 0 {
-		http.Error(w, "User not found", http.StatusNotFound)
-		return
-	}
+// 	db.First(&user)
+// 	json.NewEncoder(w).Encode(&user)
+// }
 
-	w.Header().Add("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(users[index]); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Error encoding response object", http.StatusInternalServerError)
-	}
-}
+// func getUserById(w http.ResponseWriter, r *http.Request) {
+// 	id := mux.Vars(r)["id"]
 
-func updateUser(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-	fmt.Println(id)
-	index := indexById(users, id)
-	if index < 0 {
-		http.Error(w, "User not found", http.StatusNotFound)
-		return
-	}
+// 	var user User
+// 	db.First(&user, id)
+// 	json.NewEncoder(w).Encode(&user)
+// }
 
-	u := User{}
-	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Error decoding response object", http.StatusBadRequest)
-		return
-	}
+// func createUser(w http.ResponseWriter, r *http.Request) {
+// 	u := User{}
 
-	users[index] = u
+// 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+// 		fmt.Println(err)
+// 		http.Error(w, "Error decoding response object", http.StatusBadRequest)
+// 		return
+// 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(&u); err != nil {
-		fmt.Println(err)
-		http.Error(w, "Error encoding response object", http.StatusInternalServerError)
-	}
-}
+// 	users = append(users, u)
 
-func deleteUser(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-	index := indexById(users, id)
-	if index < 0 {
-		http.Error(w, "User not found", http.StatusNotFound)
-		return
-	}
+// 	response, err := json.Marshal(&u)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		http.Error(w, "Error encoding response object", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	users = append(users[:index], users[index+1:]...)
-	w.WriteHeader(http.StatusOK)
-}
+// 	w.Header().Add("Content-Type", "application/json")
+// 	w.WriteHeader(http.StatusCreated)
+// 	w.Write(response)
+// }
+
+// func indexById(users []User, id string) int {
+// 	for i := 0; i < len(users); i++ {
+// 		if users[i].Id == id {
+// 			return i
+// 		}
+// 	}
+
+// 	return -1
+// }
+
+// func getUserById(w http.ResponseWriter, r *http.Request) {
+// 	id := mux.Vars(r)["id"]
+// 	index := indexById(users, id)
+
+// 	if index < 0 {
+// 		http.Error(w, "User not found", http.StatusNotFound)
+// 		return
+// 	}
+
+// 	w.Header().Add("Content-Type", "application/json")
+// 	if err := json.NewEncoder(w).Encode(users[index]); err != nil {
+// 		fmt.Println(err)
+// 		http.Error(w, "Error encoding response object", http.StatusInternalServerError)
+// 	}
+// }
+
+// func updateUser(w http.ResponseWriter, r *http.Request) {
+// 	id := mux.Vars(r)["id"]
+// 	fmt.Println(id)
+// 	index := indexById(users, id)
+// 	if index < 0 {
+// 		http.Error(w, "User not found", http.StatusNotFound)
+// 		return
+// 	}
+
+// 	u := User{}
+// 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+// 		fmt.Println(err)
+// 		http.Error(w, "Error decoding response object", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	users[index] = u
+
+// 	w.Header().Add("Content-Type", "application/json")
+// 	if err := json.NewEncoder(w).Encode(&u); err != nil {
+// 		fmt.Println(err)
+// 		http.Error(w, "Error encoding response object", http.StatusInternalServerError)
+// 	}
+// }
+
+// func deleteUser(w http.ResponseWriter, r *http.Request) {
+// 	id := mux.Vars(r)["id"]
+// 	index := indexById(users, id)
+// 	if index < 0 {
+// 		http.Error(w, "User not found", http.StatusNotFound)
+// 		return
+// 	}
+
+// 	users = append(users[:index], users[index+1:]...)
+// 	w.WriteHeader(http.StatusOK)
+// }

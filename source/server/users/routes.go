@@ -8,13 +8,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func RegisterUserRoutes(r *mux.Router) {
+func RegisterUserRoutes(r *mux.Router, h handler) {
 	usersR := r.PathPrefix("/users").Subrouter()
-	usersR.Path("").Methods(http.MethodGet).HandlerFunc(getAllUsers)
-	usersR.Path("").Methods(http.MethodPost).HandlerFunc(createUser)
-	usersR.Path("/{id}").Methods(http.MethodGet).HandlerFunc(getUserById)
-	usersR.Path("/{id}").Methods(http.MethodPut).HandlerFunc(updateUser)
-	usersR.Path("/{id}").Methods(http.MethodDelete).HandlerFunc(deleteUser)
+
+	usersR.HandleFunc("", h.GetAllUsers).Methods(http.MethodGet)
+	usersR.HandleFunc("/{id}", h.GetUser).Methods(http.MethodGet)
+	usersR.HandleFunc("", h.AddUser).Methods(http.MethodPost)
+	usersR.HandleFunc("/{id}", h.UpdateUser).Methods(http.MethodPut)
+	usersR.HandleFunc("/{id}", h.DeleteUser).Methods(http.MethodDelete)
 
 	fmt.Println("Start listening")
 	fmt.Println(http.ListenAndServe(":8080", r))
