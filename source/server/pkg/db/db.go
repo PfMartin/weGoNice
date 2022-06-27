@@ -3,7 +3,7 @@ package db
 import (
 	"log"
 
-	"github.com/PfMartin/weGoNice/server/users"
+	"github.com/PfMartin/weGoNice/server/pkg/users"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

@@ -1,7 +1,5 @@
 package users
 
-// https://dev.to/karanpratapsingh/connecting-to-postgresql-using-gorm-24fj
-
 import (
 	"encoding/json"
 	"io/ioutil"

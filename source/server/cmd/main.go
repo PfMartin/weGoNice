@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/PfMartin/weGoNice/server/db"
-	"github.com/PfMartin/weGoNice/server/users"
+	"github.com/PfMartin/weGoNice/server/pkg/db"
+	"github.com/PfMartin/weGoNice/server/pkg/users"
 	"github.com/gorilla/mux"
 )
 
