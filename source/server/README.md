@@ -54,4 +54,5 @@ curl -X PUT \
 
 ## Resources
 
-- API Handler and connection to Postgres Database: (dev.to - connecting-to-postgresql-using-gorm)[https://dev.to/karanpratapsingh/connecting-to-postgresql-using-gorm-24fj]
+- API Handler and connection to Postgres Database: [dev.to - connecting-to-postgresql-using-gorm](https://dev.to/karanpratapsingh/connecting-to-postgresql-using-gorm-24fj)
+- Godotenv: [golangbyexample.com - load-env-file-golang](https://golangbyexample.com/load-env-fiie-golang/)
