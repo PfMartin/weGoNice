@@ -3,7 +3,7 @@ services:
   database:
     image: 'postgres:latest'
     env_file:
-      - '../database.env'
+      - './database.env'
     ports:
       - '5433:5432'
     container_name: 'wegonice_db'
