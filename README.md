@@ -1,5 +1,7 @@
 # weGoNice
 
+# Change for another push
+
 ## General
 
 WeGoNice is an App taylored for Vegans and especially wannabe Vegans. The App should help Non-Vegans become vegan by providing information about nutrition. There are 2 categories:
