@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func RegisterUserRoutes(r *mux.Router, h handler) {
+func RegisterUserRoutes(r *mux.Router, h Handler) {
 	usersR := r.PathPrefix("/users").Subrouter()
 
 	usersR.HandleFunc("", h.GetAllUsers).Methods(http.MethodGet)

@@ -7,3 +7,10 @@ services:
     ports:
       - '5433:5432'
     container_name: 'wegonice_db'
+  test-database:
+    image: 'postgres:latest'
+    env_file:
+      - './test_database.env'
+    ports:
+      - '5434:5432'
+    container_name: 'wegonice_db_test'

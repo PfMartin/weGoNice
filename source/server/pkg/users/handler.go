@@ -11,15 +11,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type handler struct {
+type Handler struct {
 	DB *gorm.DB
 }
 
-func NewHandler(db *gorm.DB) handler {
-	return handler{db}
+func NewHandler(db *gorm.DB) Handler {
+	return Handler{db}
 }
 
-func (h handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	var users []User
 
 	if result := h.DB.Find(&users); result.Error != nil {
@@ -31,7 +31,7 @@ func (h handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
-func (h handler) GetUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 
@@ -46,7 +46,7 @@ func (h handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-func (h handler) AddUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
 
@@ -68,7 +68,7 @@ func (h handler) AddUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("Created")
 }
 
-func (h handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 
@@ -100,7 +100,7 @@ func (h handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("Updated")
 }
 
-func (h handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 

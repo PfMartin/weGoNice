@@ -29,7 +29,12 @@ func Init() *gorm.DB {
 		log.Fatalln(err)
 	}
 
-	db.AutoMigrate(&users.User{})
+	migrate(db)
 
 	return db
+}
+
+func migrate(db *gorm.DB) {
+	db.AutoMigrate(&users.User{})
+	log.Println("Database Migration Completed.")
 }
