@@ -3,12 +3,11 @@ package users
 import "golang.org/x/crypto/bcrypt"
 
 type User struct {
-	Id        int    `json:"id" gorm:"primaryKey"`
-	Lastname  string `json:"lastname"`
-	Firstname string `json:"firstname"`
-	Age       int    `json:"age"`
-	Email     string `json:"email" gorm:"unique"`
-	Password  string `json:"password"`
+	Id        string `bson:"_id"`
+	Lastname  string `bson:"lastname"`
+	Firstname string `bson:"firstname"`
+	Email     string `bson:"email"`
+	Password  string `bson:"password"`
 }
 
 func (user *User) HashPassword(password string) error {

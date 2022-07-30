@@ -1,40 +1,27 @@
 package db
 
 import (
+	"context"
 	"log"
-	"os"
 
-	"github.com/PfMartin/weGoNice/server/pkg/users"
-	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Init() *gorm.DB {
-	err := godotenv.Load("../pkg/db/database.env")
-	if err != nil {
-		log.Fatalf("Couldn't load environment file 'database.env': %s", err)
+func Init() *mongo.Client {
+	credentials := options.Credential{
+		AuthSource: "weGoNice",
+		Username:   "NiceUser",
+		Password:   "nicePassword",
 	}
 
-	host := "localhost"
-	port := "5433"
-	postgresUser := os.Getenv("POSTGRES_USER")
-	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
-	postgresDB := os.Getenv("POSTGRES_DB")
+	clientOpts := options.Client().ApplyURI("mongodb://localhost:27017").SetAuth(credentials)
 
-	dsn := "host=" + host + " port=" + port + " user=" + postgresUser + " password=" + postgresPassword + " dbname=" + postgresDB + " sslmode=disable"
+	dbClient, err := mongo.Connect(context.TODO(), clientOpts)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("An error occurred while connecting to the database: %v", err)
 	}
 
-	migrate(db)
-
-	return db
-}
-
-func migrate(db *gorm.DB) {
-	db.AutoMigrate(&users.User{})
-	log.Println("Database Migration Completed.")
+	return dbClient
 }
