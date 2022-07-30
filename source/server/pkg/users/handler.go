@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -71,13 +70,19 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 // }
 
 func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
+	var user User
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&user)
+
+	if err != nil {
+		log.Fatalf("Could not decode body: %v", err)
+	}
+
+	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: user.Password}}
+
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
-
-	params := mux.Vars(r)
-	fmt.Println(params["firstname"])
-
-	data := bson.D{{Key: "lastname", Value: "Pfatrisch"}, {Key: "firstname", Value: "Martin"}, {Key: "email", Value: "martinpfatrisch@gmail.com"}, {Key: "password", Value: "Jahnel01"}}
-
 	result, err := coll.InsertOne(context.TODO(), data)
 
 	if err != nil {
