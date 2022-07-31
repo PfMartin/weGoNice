@@ -40,8 +40,29 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(users)
-	fmt.Println(users)
+}
 
+func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
+id := mux.Vars(r)["id"]
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Fatalf("Error: Could not parse id to objectId: %v", err)
+	}
+
+	filter := bson.M{"_id": objectId}
+
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	var user User
+	err = coll.FindOne(context.TODO(), filter).Decode(&user)
+	if err != nil {
+		log.Printf("Error: Couldn't find a user")
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(user)
 }
 
 // func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {

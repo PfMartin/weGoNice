@@ -1,6 +1,7 @@
 package users
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -45,14 +46,18 @@ func TestDeleteUser(t *testing.T) {
 	DB := db.Init()
 	h := NewHandler(DB)
 
-	
-
-	req := httptest.NewRequest(http.MethodDelete, url + "/bla", nil)
+	req := httptest.NewRequest(http.MethodGet, url + "/first", nil)
 	w := httptest.NewRecorder()
+
+	h.GetAllUsers(w, req)
+	fmt.Println(w.Body.String())
+
+	req = httptest.NewRequest(http.MethodDelete, url + "/bla", nil)
+	w = httptest.NewRecorder()
 
 	h.DeleteUserById(w, req)
 
 	if w.Code != http.StatusOK {
-		t.Errorf("User could not be added")
+		t.Errorf("User could not be deleted")
 	}
 }
