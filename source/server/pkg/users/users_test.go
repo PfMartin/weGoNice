@@ -9,11 +9,13 @@ import (
 	"github.com/PfMartin/weGoNice/server/pkg/db"
 )
 
+const url = "http://localhost:8080/users"
+
 func TestGetUsers(t *testing.T) {
 	DB := db.Init()
 	h := NewHandler(DB)
 
-	req := httptest.NewRequest(http.MethodGet, "http://localhost:8080/users", nil)
+	req := httptest.NewRequest(http.MethodGet, url, nil)
 	w := httptest.NewRecorder()
 
 	h.GetAllUsers(w, req)
@@ -29,12 +31,28 @@ func TestPostUser(t *testing.T) {
 
 	data := `{"lastname": "Pfatrisch", "firstname": "Verena", "email": "verenapfatrisch@gmail.com", "password": "test"}`
 
-	req := httptest.NewRequest(http.MethodPost, "http://localhost:8080/users", strings.NewReader(data))
+	req := httptest.NewRequest(http.MethodPost, url, strings.NewReader(data))
 	w := httptest.NewRecorder()
 
 	h.AddUser(w, req)
 
 	if w.Code != http.StatusCreated {
+		t.Errorf("User could not be added")
+	}
+}
+
+func TestDeleteUser(t *testing.T) {
+	DB := db.Init()
+	h := NewHandler(DB)
+
+	
+
+	req := httptest.NewRequest(http.MethodDelete, url + "/bla", nil)
+	w := httptest.NewRecorder()
+
+	h.DeleteUserById(w, req)
+
+	if w.Code != http.StatusOK {
 		t.Errorf("User could not be added")
 	}
 }

@@ -15,7 +15,7 @@ func RegisterUserRoutes(r *mux.Router, h Handler) {
 	// usersR.HandleFunc("/{id}", h.GetUser).Methods(http.MethodGet)
 	usersR.HandleFunc("", h.AddUser).Methods(http.MethodPost)
 	// usersR.HandleFunc("/{id}", h.UpdateUser).Methods(http.MethodPut)
-	// usersR.HandleFunc("/{id}", h.DeleteUser).Methods(http.MethodDelete)
+	usersR.HandleFunc("/{id}", h.DeleteUserById).Methods(http.MethodDelete)
 
 	fmt.Println("Start listening")
 	fmt.Println(http.ListenAndServe(":8080", r))

@@ -7,7 +7,9 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -128,19 +130,21 @@ func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
 // 	json.NewEncoder(w).Encode("Updated")
 // }
 
-// func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	id, _ := strconv.Atoi(vars["id"])
+func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
 
-// 	var user User
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Fatalf("Error: Could not parse id to objectId: %v", err)
+	}
 
-// 	if result := h.DB.First(&user, id); result.Error != nil {
-// 		log.Fatalln(result.Error)
-// 	}
+	filter := bson.M{"_id": objectId}
 
-// 	h.DB.Delete(&user)
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
-// 	w.Header().Add("Content-Type", "application/json")
-// 	w.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(w).Encode("Deleted")
-// }
+	coll.DeleteOne(context.TODO(), filter)
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("Deleted")
+}
