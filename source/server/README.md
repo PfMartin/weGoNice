@@ -40,16 +40,21 @@ curl -X POST \
   -d '{"lastname": "Haberl", "firstname": "Lea", "age": 27, "email": "haberllea1911@gmail.com"}' \
   "http://localhost:8080/users"
 
-# Delete one
+# Update one
+curl -X PUT \
+  -H "Content-type: application/json" \
+  -d '{"lastname": "Pfatrisch"} ...' \
+  "http://localhost:8080/users/2"
+
+# Delete by id
 curl -X DELETE \
   -H "Content-type: application/json" \
   "http://localhost:8080/users/2"
 
-# Update one
-curl -X PUT \
+# Delete all
+curl -X DELETE \
   -H "Content-type: application/json" \
-  -d '{"lastname": "Pfatrisch"}' \
-  "http://localhost:8080/users/2"
+  "http://localhost:8080/users"  
 ```
 
 ## Resources

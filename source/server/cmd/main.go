@@ -10,12 +10,11 @@ import (
 )
 
 func main() {
-
 	DB := db.Init()
-	h := users.NewHandler(DB)
+	userHandler := users.NewHandler(DB)
 
 	r := mux.NewRouter()
-	users.RegisterUserRoutes(r, h)
+	users.RegisterUserRoutes(r, userHandler)
 
 	fmt.Println("Start listening")
 	fmt.Println(http.ListenAndServe(":8080", r))

@@ -3,7 +3,6 @@ package users
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -40,14 +39,16 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(users)
+
+	logSuccess("getAll", "none")
 }
 
 func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
-id := mux.Vars(r)["id"]
+	id := mux.Vars(r)["id"]
 
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Fatalf("Error: Could not parse id to objectId: %v", err)
+		log.Printf("Error: Could not parse id to objectId: %v", err)
 	}
 
 	filter := bson.M{"_id": objectId}
@@ -63,34 +64,9 @@ id := mux.Vars(r)["id"]
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
+
+	logSuccess("getById", objectId.String())
 }
-
-// func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
-// 	var users []User
-
-// 	if result := h.DB.Find(&users); result.Error != nil {
-// 		log.Fatalln(result.Error)
-// 	}
-
-// 	w.Header().Add("Content-Type", "application/json")
-// 	w.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(w).Encode(users)
-// }
-
-// func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	id, _ := strconv.Atoi(vars["id"])
-
-// 	var user User
-
-// 	if result := h.DB.First(&user, id); result.Error != nil {
-// 		log.Fatalln(result.Error)
-// 	}
-
-// 	w.Header().Add("Content-Type", "application/json")
-// 	w.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(w).Encode(user)
-// }
 
 func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
 	var user User
@@ -100,7 +76,7 @@ func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&user)
 
 	if err != nil {
-		log.Fatalf("Could not decode body: %v", err)
+		log.Printf("Could not decode body: %v", err)
 	}
 
 	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: user.Password}}
@@ -109,54 +85,61 @@ func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
 	result, err := coll.InsertOne(context.TODO(), data)
 
 	if err != nil {
-		log.Fatalf("Error: Couldn't insert data: %v", err)
+		log.Printf("Error: Couldn't insert data: %v", err)
 	}
-
-	fmt.Println(result)
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode("Created")
+	json.NewEncoder(w).Encode(result)
+
+	logSuccess("add", "none")
 }
 
-// func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	id, _ := strconv.Atoi(vars["id"])
+/**
+UPDATE USER BY ID
+Replaces all fields of the current user with the new data
+*/
+func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
 
-// 	defer r.Body.Close()
-// 	body, err := ioutil.ReadAll(r.Body)
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error: Could not parse id to objectId: %v", err)
+	}
 
-// 	if err != nil {
-// 		log.Fatalln(err)
-// 	}
+	var user User
 
-// 	var updatedUser User
-// 	json.Unmarshal(body, &updatedUser)
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&user)
 
-// 	var user User
+	if err != nil {
+		log.Printf("Could not decode body: %v", err)
+	}
 
-// 	if result := h.DB.First(&user, id); result.Error != nil {
-// 		log.Fatalln(result.Error)
-// 	}
+	filter := bson.M{"_id": objectId}
+	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: user.Password}}
 
-// 	user.Lastname = updatedUser.Lastname
-// 	user.Firstname = updatedUser.Firstname
-// 	user.Age = updatedUser.Age
-// 	user.Email = updatedUser.Email
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+	result, err := coll.ReplaceOne(context.TODO(), filter, data)
+	if err != nil {
+		log.Printf("Error: Couldn't update user: %v", err)
+		return
+	}
 
-// 	h.DB.Save(&user)
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
 
-// 	w.Header().Add("Content-Type", "application/json")
-// 	w.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(w).Encode("Updated")
-// }
+	logSuccess("updateById", objectId.String())
+}
 
 func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Fatalf("Error: Could not parse id to objectId: %v", err)
+		log.Printf("Error: Could not parse id to objectId: %v", err)
 	}
 
 	filter := bson.M{"_id": objectId}
@@ -167,5 +150,43 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode("Deleted")
+	json.NewEncoder(w).Encode("Deleted user")
+
+	logSuccess("deleteById", objectId.String())
+}
+
+func (h *Handler) DeleteAllUsers(w http.ResponseWriter, r *http.Request) {
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	result, err := coll.DeleteMany(context.TODO(), bson.D{})
+	if err != nil {
+		log.Printf("Error: Couldn't find a user")
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result.DeletedCount)
+
+	logSuccess("deleteAll", "none")
+}
+
+func logSuccess(operation string, objectId string) {
+	var operationText string
+
+	switch operation {
+	case "getAll":
+		operationText = "returned all users"
+	case "getById":
+		operationText = "returned user with id: " + objectId
+	case "add":
+		operationText = "added user"
+	case "deleteAll":
+		operationText = "deleted all users"
+	case "deleteById":
+		operationText = "deleted user with id: " + objectId
+	case "updateById":
+		operationText = "updated user with id: " + objectId
+	}
+
+	log.Printf("Successfully %s\n", operationText)
 }
