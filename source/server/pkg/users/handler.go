@@ -3,7 +3,6 @@ package users
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -146,8 +145,6 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-
-	fmt.Printf("ID: %s", mux.Vars(r))
 
 	objectId, err := primitive.ObjectIDFromHex(id)
 
