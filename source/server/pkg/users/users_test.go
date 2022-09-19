@@ -14,7 +14,7 @@ import (
 const url = "http://localhost:8080/users"
 
 func TestGetUsers(t *testing.T) {
-	DB := db.Init()
+	DB := db.TestInit()
 	h := NewHandler(DB)
 
 	req := httptest.NewRequest(http.MethodGet, url, nil)
@@ -28,7 +28,7 @@ func TestGetUsers(t *testing.T) {
 }
 
 func TestPostUser(t *testing.T) {
-	DB := db.Init()
+	DB := db.TestInit()
 	h := NewHandler(DB)
 
 	data := `{"lastname": "Pfatrisch", "firstname": "Verena", "email": "verenapfatrisch@gmail.com", "password": "test"}`
@@ -44,7 +44,7 @@ func TestPostUser(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	DB := db.Init()
+	DB := db.TestInit()
 	h := NewHandler(DB)
 
 	newUserString := `{"lastname": "Zarella", "firstname": "Moe", "email": "moezarella@gmail.com", "password": "test"}`

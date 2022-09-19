@@ -25,3 +25,21 @@ func Init() *mongo.Client {
 
 	return dbClient
 }
+
+func TestInit() *mongo.Client {
+	credentials := options.Credential{
+		AuthSource: "weGoNiceTest",
+		Username:   "TestUser",
+		Password:   "testPassword",
+	}
+
+	clientOpts := options.Client().ApplyURI("mongodb://localhost:27020").SetAuth(credentials)
+
+	dbClient, err := mongo.Connect(context.TODO(), clientOpts)
+
+	if err != nil {
+		log.Fatalf("An error occurred while connecting to the database: %v", err)
+	}
+
+	return dbClient
+}
