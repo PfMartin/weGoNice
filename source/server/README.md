@@ -37,7 +37,7 @@ curl -X GET \
 # Add one
 curl -X POST \
   -H "Content-type: application/json" \
-  -d '{"lastname": "Haberl", "firstname": "Lea", "age": 27, "email": "haberllea1911@gmail.com"}' \
+  -d '{"lastname": "Haberl", "firstname": "Lea", "email": "haberllea1911@gmail.com"}' \
   "http://localhost:8080/users"
 
 # Update one

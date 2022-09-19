@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -10,6 +11,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/PfMartin/weGoNice/server/pkg/auth"
 )
 
 type Handler struct {
@@ -69,17 +72,24 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var payload User
 
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
-	err := decoder.Decode(&user)
+	err := decoder.Decode(&payload)
 
 	if err != nil {
 		log.Printf("Could not decode body: %v", err)
 	}
 
-	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: user.Password}}
+	hashedPassword, err := auth.HashPassword(payload.Password)
+
+	if err != nil {
+		log.Printf("Failed to hash password: %s", err)
+		return
+	}
+
+	data := bson.D{{Key: "lastname", Value: payload.Lastname}, {Key: "firstname", Value: payload.Firstname}, {Key: "email", Value: payload.Email}, {Key: "password", Value: hashedPassword}}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	result, err := coll.InsertOne(context.TODO(), data)
@@ -137,9 +147,14 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
+	fmt.Printf("ID: %s", mux.Vars(r))
+
 	objectId, err := primitive.ObjectIDFromHex(id)
+
 	if err != nil {
 		log.Printf("Error: Could not parse id to objectId: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	filter := bson.M{"_id": objectId}
