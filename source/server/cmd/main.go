@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	DB := db.Init()
+	DB := db.Init(true)
 	userHandler := users.NewHandler(DB)
 
 	r := mux.NewRouter()
