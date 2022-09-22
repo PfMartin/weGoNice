@@ -1,8 +1,6 @@
 package users
 
 import (
-	"fmt"
-
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -17,7 +15,4 @@ func RegisterUserRoutes(r *mux.Router, h Handler) {
 	usersR.HandleFunc("/{id}", h.UpdateUserById).Methods(http.MethodPut)
 	usersR.HandleFunc("/{id}", h.DeleteUserById).Methods(http.MethodDelete)
 	usersR.HandleFunc("", h.DeleteAllUsers).Methods(http.MethodDelete)
-
-	fmt.Println("Start listening")
-	fmt.Println(http.ListenAndServe(":8080", r))
 }

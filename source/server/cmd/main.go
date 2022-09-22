@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/PfMartin/weGoNice/server/pkg/db"
@@ -16,6 +16,8 @@ func main() {
 	r := mux.NewRouter()
 	users.RegisterUserRoutes(r, userHandler)
 
-	fmt.Println("Start listening")
-	fmt.Println(http.ListenAndServe(":8080", r))
+	url := "localhost:8080"
+
+	log.Printf("Starting api at http://%s\n", url)
+	log.Println(http.ListenAndServe(url, r))
 }
