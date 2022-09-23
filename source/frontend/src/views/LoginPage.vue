@@ -1,15 +1,12 @@
 <template>
-  <div class="component">Component</div>
+  <div class="login-page">Login Page</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Component',
-  props: {
-    msg: String,
-  },
+  name: 'LoginPage',
 });
 </script>
 
