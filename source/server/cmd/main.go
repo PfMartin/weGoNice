@@ -16,7 +16,7 @@ func main() {
 	r := mux.NewRouter()
 	users.RegisterUserRoutes(r, userHandler)
 
-	url := "localhost:8080"
+	url := "localhost:8000"
 
 	log.Printf("Starting api at http://%s\n", url)
 	log.Println(http.ListenAndServe(url, r))
