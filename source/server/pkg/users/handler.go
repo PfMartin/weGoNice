@@ -104,10 +104,6 @@ func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
 	logSuccess("add", "none")
 }
 
-/**
-UPDATE USER BY ID
-Replaces all fields of the current user with the new data
-*/
 func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
@@ -127,10 +123,14 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filter := bson.M{"_id": objectId}
-	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: user.Password}}
+	// Email and Password should be updated by hitting dedicated endpoints because these are the login credentials
+	update := bson.M{"$set": bson.M{
+		"lastname": user.Lastname,
+		"firstname": user.Firstname,
+	}}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
-	result, err := coll.ReplaceOne(context.TODO(), filter, data)
+	result, err := coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		log.Printf("Error: Couldn't update user: %v", err)
 		return
