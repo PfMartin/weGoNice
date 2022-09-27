@@ -1,6 +1,5 @@
 <template>
-  <LoginPage />
-  <nav>
+  <nav v-if="isAuthenticated">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav>
@@ -8,13 +7,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import LoginPage from '@/views/LoginPage.vue';
+import { defineComponent, computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   name: 'App',
-  components: {
-    LoginPage,
+  setup() {
+    const store = useStore();
+
+    const isAuthenticated = computed(() => store.getters.isAuthenticated);
+
+    return {
+      isAuthenticated,
+    };
   },
 });
 </script>
