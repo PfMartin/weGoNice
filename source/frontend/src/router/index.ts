@@ -22,6 +22,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: LoginView,
+    props: { isRegister: false },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: LoginView,
+    props: { isRegister: true },
   },
 ];
 
@@ -30,8 +37,14 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to) => {
-  if (!store.getters.isAuthenticated && to.name !== 'Login') {
+router.beforeEach((to, from) => {
+  if (
+    !store.getters.isAuthenticated &&
+    !(to.name === 'Login' || to.name === 'Register')
+  ) {
+    if (from.name === 'Login') {
+      return { name: 'Register' };
+    }
     return { name: 'Login' };
   } else if (store.getters.isAuthenticated && to.name === 'Login') {
     return { name: 'Home' };

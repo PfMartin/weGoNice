@@ -1,22 +1,30 @@
 <template>
   <div class="login-view">
     <main class="main-content">
-      <h2>Login</h2>
+      <h2>{{ headline }}</h2>
       <section class="card">
         <form action="apply">
-          <div class="input">
-            <label for="email">Email</label>
-            <input id="email" v-model="email" />
-          </div>
-          <div class="input">
-            <label for="password">Password</label>
-            <input id="password" type="password" v-model="password" />
+          <TextInput label="Email" :inputError="emailError" />
+          <TextInput label="Password" isPassword :inputError="passwordError" />
+          <TextInput
+            v-if="isRegister"
+            label="Confirm Password"
+            isPassword
+            :inputError="confirmPasswordError"
+          />
+          <div class="control">
+            <button @click.prevent="">
+              {{ headline }}
+            </button>
           </div>
         </form>
       </section>
       <footer>
         <small>
-          Not registered yet? <router-link to="/about">Register</router-link>
+          Not registered yet?
+          <router-link :to="{ name: nextRouteName }"
+            >{{ nextRouteName }} here</router-link
+          >
         </small>
       </footer>
     </main>
@@ -24,21 +32,51 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'vuex';
+import TextInput from '@/components/TextInput.vue';
 
 export default defineComponent({
   name: 'LoginView',
-  setup() {
+  components: {
+    TextInput,
+  },
+  props: {
+    isRegister: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup(props) {
     const store = useStore();
-    console.log('LoginView: ' + store.getters.isAuthenticated);
+    console.log('Authenticated: ' + store.getters.isAuthenticated);
+    console.log('isRegister: ' + props.isRegister);
 
+    const headline = computed(() => (props.isRegister ? 'Register' : 'Login'));
     const email = ref<string>('');
-    const password = ref<string>('password');
+    const password = ref<string>('');
+    const confirmPassword = ref<string>('');
+
+    // Routing
+    const nextRouteName = computed(() =>
+      props.isRegister ? 'Login' : 'Register'
+    );
+
+    // Error Handling
+    const emailError = ref<string>('error');
+    const passwordError = ref<string>('error');
+    const confirmPasswordError = ref<string>('error');
 
     return {
+      headline,
       email,
       password,
+      confirmPassword,
+      nextRouteName,
+
+      emailError,
+      passwordError,
+      confirmPasswordError,
     };
   },
 });
@@ -53,32 +91,32 @@ export default defineComponent({
   .main-content {
     padding: 1rem;
     background: #000;
-    border-radius: 5px;
+    border-radius: 10px;
     width: 500px;
 
     .card {
       background: $card-bg-color;
       padding: 1rem;
-      border-radius: 5px;
+      border-radius: 7px;
 
       form {
         display: flex;
         flex-direction: column;
 
-        .input {
+        .control {
           display: flex;
-          flex-direction: column;
+          justify-content: flex-end;
 
-          input {
-            border-radius: 3px;
-            box-shadow: none;
+          button {
+            background: $accent-color;
             border: none;
-            outline: 2px solid #333;
-            margin: 0.5rem 0;
-            padding: 0.5rem;
+            outline: none;
+            border-radius: 3px;
+            padding: 0.5rem 1rem;
 
-            &:focus {
-              outline: 2px solid $accent-color;
+            &:hover {
+              cursor: pointer;
+              opacity: 0.8;
             }
           }
         }
@@ -93,6 +131,9 @@ export default defineComponent({
       a {
         text-decoration: none;
         color: $accent-color;
+        &:hover {
+          opacity: 0.8;
+        }
       }
     }
   }
