@@ -14,51 +14,38 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed, watch } from 'vue';
+<script setup lang="ts">
+import { defineExpose, defineProps, ref, computed, watch } from 'vue';
 
-export default defineComponent({
-  name: 'LoginView',
-  props: {
-    label: {
-      type: String,
-      required: true,
-    },
-    isPassword: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    inputError: {
-      type: String,
-      required: false,
-      default: '',
-    },
-  },
-  setup(prop, { emit }: { emit: any }) {
-    const inputValue = ref<string>('');
-    watch(inputValue, (currentValue) => {
-      emit('on-input', currentValue);
-    });
+const props = defineProps<{
+  label: string;
+  isPassword?: boolean;
+  inputError?: string;
+}>();
 
-    // Styling
-    const isActive = ref<boolean>(false);
-    const toggleActive = () => {
-      isActive.value = !isActive.value;
-    };
-    const inputClass = computed(() => ({
-      input: true,
-      active: isActive.value,
-    }));
+const inputValue = ref<string>('');
+watch(inputValue, (currentValue) => {
+  console.log('ye');
+});
 
-    return {
-      inputValue,
+// Styling
+const isActive = ref<boolean>(false);
+const toggleActive = () => {
+  isActive.value = !isActive.value;
+};
+const inputClass = computed(() => ({
+  input: true,
+  active: isActive.value,
+}));
 
-      isActive,
-      toggleActive,
-      inputClass,
-    };
-  },
+defineExpose({
+  inputValue,
+
+  isActive,
+  toggleActive,
+  inputClass,
+
+  props,
 });
 </script>
 
