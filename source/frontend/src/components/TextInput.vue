@@ -1,15 +1,21 @@
 <template>
-  <div class="input">
+  <div :class="inputClass">
     <label :for="label"
       ><div>{{ label }}</div>
-      <small v-if="inputError">Error</small></label
+      <small v-if="inputError">{{ inputError }}</small></label
     >
-    <input :id="label" :type="isPassword ? 'password' : 'text'" />
+    <input
+      @focus="toggleActive"
+      @blur="toggleActive"
+      :id="label"
+      :type="isPassword ? 'password' : 'text'"
+      v-model="inputValue"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, computed, watch } from 'vue';
 
 export default defineComponent({
   name: 'LoginView',
@@ -29,6 +35,30 @@ export default defineComponent({
       default: '',
     },
   },
+  setup(prop, { emit }: { emit: any }) {
+    const inputValue = ref<string>('');
+    watch(inputValue, (currentValue) => {
+      emit('on-input', currentValue);
+    });
+
+    // Styling
+    const isActive = ref<boolean>(false);
+    const toggleActive = () => {
+      isActive.value = !isActive.value;
+    };
+    const inputClass = computed(() => ({
+      input: true,
+      active: isActive.value,
+    }));
+
+    return {
+      inputValue,
+
+      isActive,
+      toggleActive,
+      inputClass,
+    };
+  },
 });
 </script>
 
@@ -39,6 +69,11 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   margin: 0.5rem 0;
+  transition: 0.3s all;
+
+  &.active {
+    color: $accent-color;
+  }
 
   input {
     // border-radius: 3px;
@@ -50,16 +85,12 @@ export default defineComponent({
     // outline: 2px solid #333;
     margin: 0.5rem 0;
     padding: 0.5rem;
-    transition: outline 0.2s;
-    color: white;
+    transition: border 0.3s;
+    color: #fff;
 
     &:focus {
       border-bottom: 1px solid $accent-color;
     }
-  }
-
-  &.active {
-    color: red;
   }
 
   label {

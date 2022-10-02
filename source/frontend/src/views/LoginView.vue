@@ -4,16 +4,30 @@
       <h2>{{ headline }}</h2>
       <section class="card">
         <form action="apply">
-          <TextInput label="Email" :inputError="emailError" />
-          <TextInput label="Password" isPassword :inputError="passwordError" />
+          <TextInput
+            label="Email"
+            :inputError="emailError"
+            @on-input="updateEmail"
+          />
+          <TextInput
+            label="Password"
+            isPassword
+            :inputError="passwordError"
+            @on-input="updatePassword"
+          />
           <TextInput
             v-if="isRegister"
             label="Confirm Password"
             isPassword
             :inputError="confirmPasswordError"
+            @on-input="updateConfirmPassword"
           />
           <div class="control">
-            <button @click.prevent="">
+            <button
+              @click.prevent="apply"
+              :class="buttonClass"
+              :disabled="!isValid"
+            >
               {{ headline }}
             </button>
           </div>
@@ -35,6 +49,7 @@
 import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import TextInput from '@/components/TextInput.vue';
+import ValidationService from '@/services/validation.service';
 
 export default defineComponent({
   name: 'LoginView',
@@ -62,10 +77,39 @@ export default defineComponent({
       props.isRegister ? 'Login' : 'Register'
     );
 
+    // Login/Register
+    const apply = () => {
+      const body = {
+        email: email.value,
+        password: password.value,
+      };
+
+      console.log(body);
+    };
+
+    // Input
+    const updateEmail = (newValue: string) => {
+      email.value = newValue;
+    };
+    const updatePassword = (newValue: string) => {
+      password.value = newValue;
+    };
+    const updateConfirmPassword = (newValue: string) => {
+      confirmPassword.value = newValue;
+    };
+
     // Error Handling
-    const emailError = ref<string>('error');
-    const passwordError = ref<string>('error');
-    const confirmPasswordError = ref<string>('error');
+    const emailError = ref<string>('');
+    const passwordError = ref<string>('');
+    const confirmPasswordError = ref<string>('');
+    const isValid = computed(
+      () =>
+        !emailError.value && !passwordError.value && !confirmPasswordError.value
+    );
+    const validationService = new ValidationService();
+
+    // Styling
+    const buttonClass = computed(() => ({ disabled: !isValid.value }));
 
     return {
       headline,
@@ -74,9 +118,18 @@ export default defineComponent({
       confirmPassword,
       nextRouteName,
 
+      updateEmail,
+      updatePassword,
+      updateConfirmPassword,
+
+      apply,
+
       emailError,
       passwordError,
       confirmPasswordError,
+      isValid,
+
+      buttonClass,
     };
   },
 });
@@ -113,8 +166,18 @@ export default defineComponent({
             outline: none;
             border-radius: 3px;
             padding: 0.5rem 1rem;
+            font-size: inherit;
 
-            &:hover {
+            &.disabled {
+              opacity: 0.5;
+              color: #000;
+            }
+
+            &.disabled:hover {
+              cursor: not-allowed;
+            }
+
+            &:hover:not(.disabled) {
               cursor: pointer;
               opacity: 0.8;
             }
