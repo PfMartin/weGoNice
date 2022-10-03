@@ -14,7 +14,7 @@ export default class ValidationService {
     this.password = password;
     return password.length >= 5 || password === ''
       ? ''
-      : 'The password must be at lease 5 characters long';
+      : 'The password must be at least 5 characters long';
   };
 
   public validateConfirmPassword = (confirmPassword: string): string =>

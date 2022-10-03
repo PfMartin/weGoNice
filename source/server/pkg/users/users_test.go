@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/PfMartin/weGoNice/server/pkg/db"
+
 	"github.com/gorilla/mux"
 )
 

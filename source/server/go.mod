@@ -3,17 +3,15 @@ module github.com/PfMartin/weGoNice/server
 go 1.18
 
 require (
+	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	go.mongodb.org/mongo-driver v1.10.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
-	gorm.io/gorm v1.23.6
 )
 
 require (
+	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
-	github.com/gorilla/context v1.1.1 // indirect
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/pkg/errors v0.9.1 // indirect

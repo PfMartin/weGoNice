@@ -53,6 +53,7 @@ import { defineProps, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import TextInput from '@/components/TextInput.vue';
 import ValidationService from '@/services/validation.service';
+import { createUser } from '@/apis/weGoNice';
 
 const props = defineProps<{
   isRegister: boolean;
@@ -108,7 +109,9 @@ const isValid = computed(() => {
   const isConfirmPasswordValid =
     !confirmPasswordError.value && confirmPassword.value !== '';
 
-  return isEmailValid && isPasswordValid && isConfirmPasswordValid;
+  return props.isRegister
+    ? isEmailValid && isPasswordValid && isConfirmPasswordValid
+    : isEmailValid && isPasswordValid;
 });
 
 // Styling
@@ -127,7 +130,11 @@ const apply = () => {
       password: password.value,
     };
 
-    console.log(body);
+    if (props.isRegister) {
+      createUser(body);
+    } else {
+      console.log(`Logging in user: ${email.value}`);
+    }
   }
 };
 </script>
