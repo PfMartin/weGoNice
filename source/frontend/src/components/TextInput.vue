@@ -2,8 +2,10 @@
   <div :class="inputClass">
     <label :for="label"
       ><div>{{ label }}</div>
-      <small v-if="inputError">{{ inputError }}</small></label
-    >
+      <Transition name="fade">
+        <small v-if="inputError">{{ inputError }}</small>
+      </Transition>
+    </label>
     <input
       @focus="toggleActive"
       @blur="toggleActive"
@@ -91,6 +93,16 @@ const inputClass = computed(() => ({
       display: block;
       margin-right: 0.5rem;
     }
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.4s ease-in;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
   }
 }
 </style>
