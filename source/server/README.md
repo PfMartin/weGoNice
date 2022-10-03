@@ -11,13 +11,13 @@ docker-compose up -d
 ### Connect to the Container
 
 ```bash
-docker exec -it wegonice_db /bin/bash
+docker exec -it weGoNice-db
 ```
 
 ### Connect to the database
 
 ```bash
-psql --host=database --username=$POSTGRES_USER --dbname=$POSTGRES_DB
+mongo -u NiceUser -p nicePassword --authenticationDatabase weGoNice
 # Type in the password from the env file
 ```
 
@@ -54,7 +54,7 @@ curl -X DELETE \
 # Delete all
 curl -X DELETE \
   -H "Content-type: application/json" \
-  "http://localhost:8080/users"  
+  "http://localhost:8080/users"
 ```
 
 ## Resources
