@@ -15,17 +15,21 @@
 </template>
 
 <script setup lang="ts">
-import { defineExpose, defineProps, ref, computed, watch } from 'vue';
+import { defineEmits, defineProps, ref, computed, watch } from 'vue';
 
-const props = defineProps<{
+defineProps<{
   label: string;
   isPassword?: boolean;
   inputError?: string;
 }>();
 
+const emit = defineEmits<{
+  (e: 'on-input', value: string): void;
+}>();
+
 const inputValue = ref<string>('');
 watch(inputValue, (currentValue) => {
-  console.log('ye');
+  emit('on-input', currentValue);
 });
 
 // Styling
@@ -37,16 +41,6 @@ const inputClass = computed(() => ({
   input: true,
   active: isActive.value,
 }));
-
-defineExpose({
-  inputValue,
-
-  isActive,
-  toggleActive,
-  inputClass,
-
-  props,
-});
 </script>
 
 <style scoped lang="scss">

@@ -35,7 +35,7 @@
       </section>
       <footer>
         <small>
-          Not registered yet?
+          {{ forwardText }}
           <router-link :to="{ name: nextRouteName }"
             >{{ nextRouteName }} here</router-link
           >
@@ -90,6 +90,7 @@ export default defineComponent({
     // Input
     const updateEmail = (newValue: string) => {
       email.value = newValue;
+      console.log(newValue);
     };
     const updatePassword = (newValue: string) => {
       password.value = newValue;
@@ -111,6 +112,11 @@ export default defineComponent({
     // Styling
     const buttonClass = computed(() => ({ disabled: !isValid.value }));
 
+    // Content
+    const forwardText = computed(() =>
+      props.isRegister ? 'Already have an account?' : 'Not registered yet?'
+    );
+
     return {
       headline,
       email,
@@ -130,6 +136,8 @@ export default defineComponent({
       isValid,
 
       buttonClass,
+
+      forwardText,
     };
   },
 });
