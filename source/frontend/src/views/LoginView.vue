@@ -6,12 +6,14 @@
         <form action="apply">
           <TextInput
             label="Email"
+            :initialValue="email"
             :inputError="emailError"
             @on-input="updateEmail"
           />
           <TextInput
             label="Password"
             isPassword
+            :initialValue="password"
             :inputError="passwordError"
             @on-input="updatePassword"
           />
@@ -19,6 +21,7 @@
             v-if="isRegister"
             label="Confirm Password"
             isPassword
+            :initialValue="confirmPassword"
             :inputError="confirmPasswordError"
             @on-input="updateConfirmPassword"
           />
@@ -36,7 +39,7 @@
       <footer>
         <small>
           {{ forwardText }}
-          <router-link :to="{ name: nextRouteName }"
+          <router-link @click="clearInputs" :to="{ name: nextRouteName }"
             >{{ nextRouteName }} here</router-link
           >
         </small>
@@ -67,33 +70,34 @@ const confirmPassword = ref<string>('');
 // Routing
 const nextRouteName = computed(() => (props.isRegister ? 'Login' : 'Register'));
 
-// Login/Register
-const apply = () => {
-  const body = {
-    email: email.value,
-    password: password.value,
-  };
-
-  console.log(body);
-};
-
 // Input handling
 const validationService = new ValidationService();
+const emailError = ref<string>('');
 const updateEmail = (newValue: string) => {
   email.value = newValue;
-  console.log(newValue);
+  emailError.value = validationService.validateEmail(email.value);
 };
-const emailError = ref<string>('');
 
+const passwordError = ref<string>('');
 const updatePassword = (newValue: string) => {
   password.value = newValue;
+  passwordError.value = validationService.validatePassword(password.value);
 };
-const passwordError = ref<string>('');
 
+const confirmPasswordError = ref<string>('');
 const updateConfirmPassword = (newValue: string) => {
   confirmPassword.value = newValue;
+  confirmPasswordError.value = validationService.validateConfirmPassword(
+    confirmPassword.value
+  );
 };
-const confirmPasswordError = ref<string>('');
+
+const clearInputs = () => {
+  console.log('clear');
+  email.value = '';
+  password.value = '';
+  confirmPassword.value = '';
+};
 
 // Error Handling
 const isValid = computed(
@@ -107,6 +111,18 @@ const buttonClass = computed(() => ({ disabled: !isValid.value }));
 const forwardText = computed(() =>
   props.isRegister ? 'Already have an account?' : 'Not registered yet?'
 );
+
+// Login/Register
+const apply = () => {
+  if (isValid.value) {
+    const body = {
+      email: email.value,
+      password: password.value,
+    };
+
+    console.log(body);
+  }
+};
 </script>
 
 <style scoped lang="scss">

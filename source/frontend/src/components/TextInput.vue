@@ -17,20 +17,28 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref, computed, watch } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   label: string;
   isPassword?: boolean;
   inputError?: string;
+  initialValue: string;
 }>();
 
 const emit = defineEmits<{
   (e: 'on-input', value: string): void;
 }>();
 
-const inputValue = ref<string>('');
+const inputValue = ref<string>(props.initialValue);
 watch(inputValue, (currentValue) => {
   emit('on-input', currentValue);
 });
+
+watch(
+  () => props.initialValue,
+  (currentValue) => {
+    inputValue.value = currentValue;
+  }
+);
 
 // Styling
 const isActive = ref<boolean>(false);
