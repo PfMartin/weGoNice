@@ -1,5 +1,5 @@
 export default class ValidationService {
-  private password!: string;
+  private password: string;
 
   constructor() {
     this.password = '';
@@ -11,9 +11,8 @@ export default class ValidationService {
       : 'Please enter a valid email address';
 
   public validatePassword = (password: string): string => {
-    console.log(password);
     this.password = password;
-    return this.password.length >= 5 || password === ''
+    return password.length >= 5 || password === ''
       ? ''
       : 'The password must be at lease 5 characters long';
   };

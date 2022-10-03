@@ -82,6 +82,9 @@ const passwordError = ref<string>('');
 const updatePassword = (newValue: string) => {
   password.value = newValue;
   passwordError.value = validationService.validatePassword(password.value);
+  confirmPasswordError.value =
+    confirmPassword.value &&
+    validationService.validateConfirmPassword(confirmPassword.value);
 };
 
 const confirmPasswordError = ref<string>('');
@@ -93,16 +96,20 @@ const updateConfirmPassword = (newValue: string) => {
 };
 
 const clearInputs = () => {
-  console.log('clear');
   email.value = '';
   password.value = '';
   confirmPassword.value = '';
 };
 
 // Error Handling
-const isValid = computed(
-  () => !emailError.value && !passwordError.value && !confirmPasswordError.value
-);
+const isValid = computed(() => {
+  const isEmailValid = !emailError.value && email.value !== '';
+  const isPasswordValid = !passwordError.value && password.value !== '';
+  const isConfirmPasswordValid =
+    !confirmPasswordError.value && confirmPassword.value !== '';
+
+  return isEmailValid && isPasswordValid && isConfirmPasswordValid;
+});
 
 // Styling
 const buttonClass = computed(() => ({ disabled: !isValid.value }));
