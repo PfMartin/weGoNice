@@ -6,24 +6,15 @@
   <router-view />
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 import authenticate from './auth';
 
-export default defineComponent({
-  name: 'App',
-  setup() {
-    authenticate();
-    const store = useStore();
+authenticate();
+const store = useStore();
 
-    const isAuthenticated = computed(() => store.getters.isAuthenticated);
-
-    return {
-      isAuthenticated,
-    };
-  },
-});
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
 </script>
 
 <style lang="scss">
