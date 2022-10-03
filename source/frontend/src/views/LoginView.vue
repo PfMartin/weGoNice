@@ -45,102 +45,68 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+<script setup lang="ts">
+import { defineProps, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import TextInput from '@/components/TextInput.vue';
 import ValidationService from '@/services/validation.service';
 
-export default defineComponent({
-  name: 'LoginView',
-  components: {
-    TextInput,
-  },
-  props: {
-    isRegister: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props) {
-    const store = useStore();
-    console.log('Authenticated: ' + store.getters.isAuthenticated);
-    console.log('isRegister: ' + props.isRegister);
+const props = defineProps<{
+  isRegister: boolean;
+}>();
 
-    const headline = computed(() => (props.isRegister ? 'Register' : 'Login'));
-    const email = ref<string>('');
-    const password = ref<string>('');
-    const confirmPassword = ref<string>('');
+const store = useStore();
+console.log('Authenticated: ' + store.getters.isAuthenticated);
+console.log('isRegister: ' + props.isRegister);
 
-    // Routing
-    const nextRouteName = computed(() =>
-      props.isRegister ? 'Login' : 'Register'
-    );
+const headline = computed(() => (props.isRegister ? 'Register' : 'Login'));
+const email = ref<string>('');
+const password = ref<string>('');
+const confirmPassword = ref<string>('');
 
-    // Login/Register
-    const apply = () => {
-      const body = {
-        email: email.value,
-        password: password.value,
-      };
+// Routing
+const nextRouteName = computed(() => (props.isRegister ? 'Login' : 'Register'));
 
-      console.log(body);
-    };
+// Login/Register
+const apply = () => {
+  const body = {
+    email: email.value,
+    password: password.value,
+  };
 
-    // Input
-    const updateEmail = (newValue: string) => {
-      email.value = newValue;
-      console.log(newValue);
-    };
-    const updatePassword = (newValue: string) => {
-      password.value = newValue;
-    };
-    const updateConfirmPassword = (newValue: string) => {
-      confirmPassword.value = newValue;
-    };
+  console.log(body);
+};
 
-    // Error Handling
-    const emailError = ref<string>('');
-    const passwordError = ref<string>('');
-    const confirmPasswordError = ref<string>('');
-    const isValid = computed(
-      () =>
-        !emailError.value && !passwordError.value && !confirmPasswordError.value
-    );
-    const validationService = new ValidationService();
+// Input handling
+const validationService = new ValidationService();
+const updateEmail = (newValue: string) => {
+  email.value = newValue;
+  console.log(newValue);
+};
+const emailError = ref<string>('');
 
-    // Styling
-    const buttonClass = computed(() => ({ disabled: !isValid.value }));
+const updatePassword = (newValue: string) => {
+  password.value = newValue;
+};
+const passwordError = ref<string>('');
 
-    // Content
-    const forwardText = computed(() =>
-      props.isRegister ? 'Already have an account?' : 'Not registered yet?'
-    );
+const updateConfirmPassword = (newValue: string) => {
+  confirmPassword.value = newValue;
+};
+const confirmPasswordError = ref<string>('');
 
-    return {
-      headline,
-      email,
-      password,
-      confirmPassword,
-      nextRouteName,
+// Error Handling
+const isValid = computed(
+  () => !emailError.value && !passwordError.value && !confirmPasswordError.value
+);
 
-      updateEmail,
-      updatePassword,
-      updateConfirmPassword,
+// Styling
+const buttonClass = computed(() => ({ disabled: !isValid.value }));
 
-      apply,
-
-      emailError,
-      passwordError,
-      confirmPasswordError,
-      isValid,
-
-      buttonClass,
-
-      forwardText,
-    };
-  },
-});
+// Content
+const forwardText = computed(() =>
+  props.isRegister ? 'Already have an account?' : 'Not registered yet?'
+);
 </script>
 
 <style scoped lang="scss">
