@@ -11,6 +11,7 @@ export const createUser = async (body: { email: string; password: string }) => {
     const { data } = await axios.post(`${url}/users`, body, {
       headers,
     });
+
     return data;
   } catch (err) {
     if (axios.isAxiosError(err)) {

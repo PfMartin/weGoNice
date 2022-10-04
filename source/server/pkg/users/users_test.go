@@ -34,7 +34,7 @@ func createTestUser(t *testing.T, h Handler) (string, error) {
 	req := httptest.NewRequest(http.MethodPost, url, strings.NewReader(newUserString))
 	w := httptest.NewRecorder()
 
-	h.AddUser(w, req)
+	h.CreateUser(w, req)
 	if w.Code != http.StatusCreated {
 		t.Errorf("Failed to create user")
 	}

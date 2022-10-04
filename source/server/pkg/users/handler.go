@@ -70,7 +70,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	logSuccess("getById", objectId.String())
 }
 
-func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var payload User
 
 	decoder := json.NewDecoder(r.Body)
