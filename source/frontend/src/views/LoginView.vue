@@ -123,7 +123,21 @@ const forwardText = computed(() =>
 );
 
 // Login/Register
-const apply = () => {
+const registerUser = async (body: { email: string; password: string }) => {
+  const res = await createUser(body);
+  if (res.response?.status === 406) {
+    // SET ERROR
+    console.log('User already exists');
+  } else {
+    console.log(`User created with ID: ${res.InsertedID}`);
+  }
+};
+
+const loginUser = async (body: { email: string; password: string }) => {
+  console.log(`Logging in user: ${body.email}`);
+};
+
+const apply = async () => {
   if (isValid.value) {
     const body = {
       email: email.value,
@@ -131,9 +145,9 @@ const apply = () => {
     };
 
     if (props.isRegister) {
-      createUser(body);
+      await registerUser(body);
     } else {
-      console.log(`Logging in user: ${email.value}`);
+      await loginUser(body);
     }
   }
 };

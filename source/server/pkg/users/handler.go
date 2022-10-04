@@ -72,27 +72,39 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var payload User
-
+	
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&payload)
-
+	
 	if err != nil {
 		log.Printf("Could not decode body: %v", err)
 	}
+	
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+	
+	// Check if user already exists
+	var existingUser User	
+	filter := bson.D{{Key: "email", Value: payload.Email}}
+	err = coll.FindOne(context.TODO(), filter).Decode(&existingUser)
+	if err == nil {
+		log.Printf("%s\n", err)
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotAcceptable)
+		log.Printf("User with email '%s' already exists.\n", payload.Email)
+		return
+	}
 
+	// Hash password and create new user
 	hashedPassword, err := auth.HashPassword(payload.Password)
-
+	
 	if err != nil {
 		log.Printf("Failed to hash password: %s", err)
 		return
 	}
 
 	data := bson.D{{Key: "lastname", Value: payload.Lastname}, {Key: "firstname", Value: payload.Firstname}, {Key: "email", Value: payload.Email}, {Key: "password", Value: hashedPassword}}
-
-	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	result, err := coll.InsertOne(context.TODO(), data)
-
 	if err != nil {
 		log.Printf("Error: Couldn't insert data: %v", err)
 	}
@@ -101,7 +113,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(result)
 
-	logSuccess("add", "none")
+	logSuccess("add", payload.Email)
 }
 
 func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
@@ -182,22 +194,22 @@ func (h *Handler) DeleteAllUsers(w http.ResponseWriter, r *http.Request) {
 	logSuccess("deleteAll", "none")
 }
 
-func logSuccess(operation string, objectId string) {
+func logSuccess(operation string, objectInfo string) {
 	var operationText string
 
 	switch operation {
 	case "getAll":
 		operationText = "returned all users"
 	case "getById":
-		operationText = "returned user with id: " + objectId
+		operationText = "returned user with id: " + objectInfo
 	case "add":
-		operationText = "added user"
+		operationText = "added user: " + objectInfo 
 	case "deleteAll":
 		operationText = "deleted all users"
 	case "deleteById":
-		operationText = "deleted user with id: " + objectId
+		operationText = "deleted user with id: " + objectInfo
 	case "updateById":
-		operationText = "updated user with id: " + objectId
+		operationText = "updated user with id: " + objectInfo
 	}
 
 	log.Printf("Successfully %s\n", operationText)
