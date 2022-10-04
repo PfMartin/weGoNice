@@ -124,13 +124,16 @@ const forwardText = computed(() =>
 
 // Login/Register
 const registerUser = async (body: { email: string; password: string }) => {
-  const res = await createUser(body);
-  if (res.response?.status === 406) {
-    // SET ERROR
-    console.log('User already exists');
-  } else {
-    console.log(`User created with ID: ${res.InsertedID}`);
+  const { id, statusCode } = await createUser(body);
+  if (statusCode === 406) {
+    console.log(id);
+    return;
+  } else if (!statusCode) {
+    console.error(id);
+    return;
   }
+
+  console.log(id);
 };
 
 const loginUser = async (body: { email: string; password: string }) => {

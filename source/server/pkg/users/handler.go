@@ -28,7 +28,6 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	cursor, err := coll.Find(context.TODO(), bson.D{})
-
 	if err != nil {
 		log.Printf("Error: Couldn't read data: %v", err)
 	}
@@ -91,27 +90,35 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		log.Printf("%s\n", err)
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
-		log.Printf("User with email '%s' already exists.\n", payload.Email)
+		msg := "User with email "+ payload.Email + " already exists."
+
+		response := map[string]string{
+			"id": msg,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	// Hash password and create new user
 	hashedPassword, err := auth.HashPassword(payload.Password)
-	
 	if err != nil {
 		log.Printf("Failed to hash password: %s", err)
 		return
 	}
 
 	data := bson.D{{Key: "lastname", Value: payload.Lastname}, {Key: "firstname", Value: payload.Firstname}, {Key: "email", Value: payload.Email}, {Key: "password", Value: hashedPassword}}
-	result, err := coll.InsertOne(context.TODO(), data)
+	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Error: Couldn't insert data: %v", err)
 	}
 
+	response := map[string]string{
+		"id": cursor.InsertedID.(primitive.ObjectID).String(),
+	}
+
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(response)
 
 	logSuccess("add", payload.Email)
 }

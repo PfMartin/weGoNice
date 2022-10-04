@@ -6,20 +6,40 @@ const headers = {
   Accept: 'application/json',
 };
 
-export const createUser = async (body: { email: string; password: string }) => {
+interface UserCreateResponse {
+  id: string;
+  statusCode: number | null;
+}
+
+export const createUser = async (body: {
+  email: string;
+  password: string;
+}): Promise<UserCreateResponse> => {
   try {
-    const { data } = await axios.post(`${url}/users`, body, {
+    const res = await axios.post(`${url}/users`, body, {
       headers,
     });
 
-    return data;
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      console.log('Axios error: ', err.message);
-      return err;
-    } else {
-      console.log('Unexpected error: ', err);
-      return 'An unexpected error occured';
+    return {
+      id: res.data.id,
+      statusCode: res.status,
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 406) {
+        return {
+          id: `User with email ${body.email} already exists`,
+          statusCode: error.response?.status || null,
+        };
+      }
+      return {
+        id: error.message,
+        statusCode: error.response?.status || null,
+      };
     }
+    return {
+      id: 'unexpected error',
+      statusCode: null,
+    };
   }
 };
