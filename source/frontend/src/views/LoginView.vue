@@ -53,7 +53,7 @@ import { defineProps, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import TextInput from '@/components/TextInput.vue';
 import ValidationService from '@/services/validation.service';
-import { createUser } from '@/apis/weGoNice';
+import { registerUser, loginUser } from '@/apis/weGoNice';
 
 const props = defineProps<{
   isRegister: boolean;
@@ -123,8 +123,8 @@ const forwardText = computed(() =>
 );
 
 // Login/Register
-const registerUser = async (body: { email: string; password: string }) => {
-  const { id, statusCode } = await createUser(body);
+const register = async (body: { email: string; password: string }) => {
+  const { id, statusCode, sessionToken } = await registerUser(body);
   if (statusCode === 406) {
     console.log(id);
     return;
@@ -133,11 +133,13 @@ const registerUser = async (body: { email: string; password: string }) => {
     return;
   }
 
+  console.log(sessionToken);
   console.log(id);
 };
 
-const loginUser = async (body: { email: string; password: string }) => {
-  console.log(`Logging in user: ${body.email}`);
+const login = async (body: { email: string; password: string }) => {
+  const { id, statusCode, sessionToken } = await loginUser(body);
+  console.log(statusCode);
 };
 
 const apply = async () => {
@@ -148,9 +150,9 @@ const apply = async () => {
     };
 
     if (props.isRegister) {
-      await registerUser(body);
+      await register(body);
     } else {
-      await loginUser(body);
+      await login(body);
     }
   }
 };

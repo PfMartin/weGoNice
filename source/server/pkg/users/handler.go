@@ -6,12 +6,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/PfMartin/weGoNice/server/pkg/auth"
+	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-
-	"github.com/PfMartin/weGoNice/server/pkg/auth"
 )
 
 type Handler struct {
@@ -24,6 +24,7 @@ func NewHandler(db *mongo.Client) Handler {
 	return Handler{db, "weGoNice", "users"}
 }
 
+
 func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
@@ -32,7 +33,7 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error: Couldn't read data: %v", err)
 	}
 
-	var users []User
+	var users []models.User
 	if err = cursor.All(context.TODO(), &users); err != nil {
 		log.Printf("Error: Couldn't parse users, %v", err)
 	}
@@ -56,7 +57,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
-	var user User
+	var user models.User
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
 		log.Printf("Error: Couldn't find a user")
@@ -70,7 +71,8 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var payload User
+	var payload models.User
+
 	
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
@@ -83,7 +85,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	
 	// Check if user already exists
-	var existingUser User	
+	var existingUser models.User	
 	filter := bson.D{{Key: "email", Value: payload.Email}}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingUser)
 	if err == nil {
@@ -91,34 +93,32 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
 		msg := "User with email "+ payload.Email + " already exists."
-
+		
 		response := map[string]string{
 			"id": msg,
 		}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
+	
 	// Hash password and create new user
 	hashedPassword, err := auth.HashPassword(payload.Password)
 	if err != nil {
 		log.Printf("Failed to hash password: %s", err)
 		return
 	}
-
+	
 	data := bson.D{{Key: "lastname", Value: payload.Lastname}, {Key: "firstname", Value: payload.Firstname}, {Key: "email", Value: payload.Email}, {Key: "password", Value: hashedPassword}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Error: Couldn't insert data: %v", err)
 	}
-
-	response := map[string]string{
-		"id": cursor.InsertedID.(primitive.ObjectID).String(),
-	}
-
+	
+	userId := cursor.InsertedID.(primitive.ObjectID).String()
+	
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(userId)
 
 	logSuccess("add", payload.Email)
 }
@@ -131,7 +131,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error: Could not parse id to objectId: %v", err)
 	}
 
-	var user User
+	var user models.User
 
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()

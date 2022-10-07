@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/PfMartin/weGoNice/server/pkg/db"
+	"github.com/PfMartin/weGoNice/server/pkg/models"
 
 	"github.com/gorilla/mux"
 )
@@ -134,7 +135,7 @@ func TestDeleteAllUsers(t *testing.T) {
 		t.Errorf("Failed to get all users")
 	}
 
-	var users []User
+	var users []models.User
 	if err := json.Unmarshal(w.Body.Bytes(), &users); err != nil {
 		t.Errorf("Failed to unmarshal response, %v\n", err)
 	}

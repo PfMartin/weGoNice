@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/db"
 	"github.com/PfMartin/weGoNice/server/pkg/users"
 
@@ -14,9 +15,11 @@ import (
 func main() {
 	DB := db.Init(true)
 	userHandler := users.NewHandler(DB)
+	authHandler := auth.NewHandler(DB)
 
 	r := mux.NewRouter()
 	users.RegisterUserRoutes(r, userHandler)
+	auth.RegisterAuthRoutes(r, authHandler)
 
 	url := "localhost:8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type"})
