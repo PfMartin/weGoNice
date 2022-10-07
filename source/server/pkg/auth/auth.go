@@ -1,9 +1,13 @@
 package auth
 
 import (
+	"fmt"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/context"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -43,4 +47,57 @@ func createToken(email string) (string, error) {
 	}
 
 	return token, nil
+}
+
+func checkTokenHandler(next http.HandlerFunc) http.HandlerFunc{
+	return func(w http.ResponseWriter, r *http.Request) {
+		header := r.Header.Get("Authorization")
+		bearerToken := strings.Split(header, " ")
+		if len(bearerToken) != 2 {
+			http.Error(w, "Cannot read token", http.StatusBadRequest)
+			return
+		}
+		if bearerToken[0] != "Bearer" {
+			http.Error(w, "Error in authorization token. It needs to be in form of 'Bearer <token>'", http.StatusBadRequest)
+			return
+		}
+		token, ok := checkToken(bearerToken[1])		
+		if !ok {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if ok && token.Valid {
+			email, ok := claims["email"].(string)
+			if !ok {
+				http.Error(w, "Unautorized", http.StatusUnauthorized)
+				return
+			}
+
+			// check if user with email exists
+			// Set email in the request, so I will use it in check after
+			context.Set(r, "email", email)
+		}
+		next(w, r)
+
+	}
+}
+
+func checkToken(tokenString string) (*jwt.Token, bool) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token)(interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(secretKey),nil
+	})
+
+	if err != nil {
+		return nil, false
+	}
+
+	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
+		return nil, false
+	}
+
+	return token, true
 }

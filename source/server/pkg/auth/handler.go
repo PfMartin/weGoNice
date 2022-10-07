@@ -64,12 +64,10 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(response)
-
 }
 
 func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
-
 	
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
@@ -126,27 +124,4 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(response)
-	
-	logSuccess("add", user.Email)
-}
-
-func logSuccess(operation string, objectInfo string) {
-	var operationText string
-
-	switch operation {
-	case "getAll":
-		operationText = "returned all users"
-	case "getById":
-		operationText = "returned user with id: " + objectInfo
-	case "add":
-		operationText = "added user: " + objectInfo 
-	case "deleteAll":
-		operationText = "deleted all users"
-	case "deleteById":
-		operationText = "deleted user with id: " + objectInfo
-	case "updateById":
-		operationText = "updated user with id: " + objectInfo
-	}
-
-	log.Printf("Successfully %s\n", operationText)
 }
