@@ -37,21 +37,43 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
-		log.Printf("Error: Couldn't find a user with the provided email")
-		http.Error(w, "failed to find user with the provided email", http.StatusNotFound)
+		log.Printf("Error: Couldn't find a user with the provided email, %v", err)
+		http.Error(w, "Could not found user with the provided email", http.StatusNotFound)
+		return
 	}
 
-	log.Println("user logged in")
-	log.Println(user)
+	if err = checkPassword(login.Password, user.Password)
+	err != nil {
+		log.Printf("Error: Password is not correct, %v", err)
+		http.Error(w, "Incorrect password", http.StatusNotAcceptable)
+		return
+	}
+
+
+		sessionToken, err := createToken(user.Email)
+	if err != nil {
+		http.Error(w, "Failed to create token", http.StatusInternalServerError)
+		return
+	}
+
+	response := map[string]string{
+		"id": user.Id,
+		"sessionToken": sessionToken,
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusAccepted)
+	json.NewEncoder(w).Encode(response)
+
 }
 
 func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
-	var payload models.User
+	var user models.User
 
 	
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
-	err := decoder.Decode(&payload)
+	err := decoder.Decode(&user)
 	
 	if err != nil {
 		log.Printf("Could not decode body: %v", err)
@@ -61,13 +83,13 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	
 	// Check if user already exists
 	var existingUser models.User	
-	filter := bson.D{{Key: "email", Value: payload.Email}}
+	filter := bson.D{{Key: "email", Value: user.Email}}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingUser)
 	if err == nil {
 		log.Printf("%s\n", err)
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
-		msg := "User with email "+ payload.Email + " already exists."
+		msg := "User with email "+ user.Email + " already exists."
 		
 		response := map[string]string{
 			"id": msg,
@@ -77,32 +99,35 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	// Hash password and create new user
-	hashedPassword, err := HashPassword(payload.Password)
+	hashedPassword, err := HashPassword(user.Password)
 	if err != nil {
 		log.Printf("Failed to hash password: %s", err)
 		return
 	}
 	
-	data := bson.D{{Key: "lastname", Value: payload.Lastname}, {Key: "firstname", Value: payload.Firstname}, {Key: "email", Value: payload.Email}, {Key: "password", Value: hashedPassword}}
+	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: hashedPassword}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Error: Couldn't insert data: %v", err)
 	}
 	
 	userId := cursor.InsertedID.(primitive.ObjectID).String()
-	// sessionToken := auth.GetSessionToken(w, r, h.DB, userId)
-	sessionToken := "dummy"
-	
+	sessionToken, err := createToken(user.Email)
+	if err != nil {
+		http.Error(w, "Failed to create token", http.StatusInternalServerError)
+		return
+	}
+
 	response := map[string]string{
 		"id": userId,
 		"sessionToken": sessionToken,
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(response)
-
-	logSuccess("add", payload.Email)
+	
+	logSuccess("add", user.Email)
 }
 
 func logSuccess(operation string, objectInfo string) {

@@ -133,13 +133,12 @@ const register = async (body: { email: string; password: string }) => {
     return;
   }
 
-  console.log(sessionToken);
-  console.log(id);
+  console.log(id, statusCode, sessionToken);
 };
 
 const login = async (body: { email: string; password: string }) => {
   const { id, statusCode, sessionToken } = await loginUser(body);
-  console.log(statusCode);
+  console.log(id, statusCode, sessionToken);
 };
 
 const apply = async () => {
