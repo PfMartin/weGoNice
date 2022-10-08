@@ -17,7 +17,7 @@ func main() {
 	loadEnvFile()
 
 	DB := db.Init(true)
-	
+
 	userHandler := users.NewHandler(DB)
 	authHandler := auth.NewHandler(DB)
 
@@ -29,7 +29,6 @@ func main() {
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type"})
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://localhost", "localhost"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
-
 
 	log.Printf("Starting api at http://%s\n", url)
 	log.Println(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r)))

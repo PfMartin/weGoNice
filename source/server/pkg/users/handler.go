@@ -212,7 +212,6 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) DeleteAllUsers(w http.ResponseWriter, r *http.Request) {
 	if !auth.IsAdminContextOk(r) {
-		log.Printf("Error: Not authorized")
 		http.Error(w, "Not authorized to delete all users", http.StatusUnauthorized)
 		return
 	}
