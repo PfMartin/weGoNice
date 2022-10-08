@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type CheckTokenHandlerFunc =  func(http.HandlerFunc) http.HandlerFunc
+type CheckTokenHandlerFunc = func(http.HandlerFunc) http.HandlerFunc
 
 func HashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -35,8 +35,6 @@ func createToken(email string) (string, error) {
 	atClaims["email"] = email
 	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-
-	fmt.Println(os.Getenv("ACCESS_SECRET"))
 
 	secret := os.Getenv("ACCESS_SECRET")
 	if err != nil {
@@ -73,7 +71,7 @@ func IsAdminContextOk(r *http.Request) bool {
 	return true
 }
 
-func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc{
+func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")
 		bearerToken := strings.Split(header, " ")
@@ -85,7 +83,7 @@ func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc{
 			http.Error(w, "Error in authorization token. It needs to be in form of 'Bearer <token>'", http.StatusBadRequest)
 			return
 		}
-		token, ok := checkToken(bearerToken[1])		
+		token, ok := checkToken(bearerToken[1])
 		if !ok {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
@@ -98,7 +96,6 @@ func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc{
 				return
 			}
 
-			// check if user with email exists
 			// Set email in the request, so I will use it in check after
 			context.Set(r, "email", email)
 		}
@@ -108,19 +105,19 @@ func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc{
 }
 
 func checkToken(tokenString string) (*jwt.Token, bool) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token)(interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
-		return []byte(os.Getenv("ACCESS_SECRET")),nil
+		return []byte(os.Getenv("ACCESS_SECRET")), nil
 	})
 
 	if err != nil {
 		return nil, false
 	}
 
-	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
+	if _, ok := token.Claims.(jwt.MapClaims); !ok && !token.Valid {
 		return nil, false
 	}
 

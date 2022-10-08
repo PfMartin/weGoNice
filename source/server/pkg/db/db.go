@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"log"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -11,12 +12,12 @@ import (
 func Init(isProduction bool) *mongo.Client {
 	// TODO: Change credentials and move them to an .env file
 	creds := map[string]string{
-		"AuthSource": "weGoNice",
-		"Username":   "NiceUser",
-		"Password":   "nicePassword",
+		"AuthSource": os.Getenv("DATABASE_NAME"),
+		"Username":   os.Getenv("DATABASE_USERNAME"),
+		"Password":   os.Getenv("DATABASE_PASSWORD"),
 	}
 
-	dbURI := "mongodb://localhost:27017"
+	dbURI := os.Getenv("DATABASE_URI")
 
 	if !isProduction {
 		creds["AuthSource"] = "weGoNiceTest"
