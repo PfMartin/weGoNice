@@ -51,6 +51,28 @@ func createToken(email string) (string, error) {
 	return token, nil
 }
 
+func IsEmailContextOk(email string, r *http.Request) bool {
+	emailCtx, ok := context.Get(r, "email").(string)
+	if !ok {
+		return false
+	}
+	if emailCtx != email && emailCtx != "admin" {
+		return false
+	}
+	return true
+}
+
+func IsAdminContextOk(r *http.Request) bool {
+	emailCtx, ok := context.Get(r, "email").(string)
+	if !ok {
+		return false
+	}
+	if emailCtx != "admin" {
+		return false
+	}
+	return true
+}
+
 func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")

@@ -8,122 +8,190 @@ import (
 	"testing"
 
 	"github.com/PfMartin/weGoNice/server/pkg/db"
-	"github.com/PfMartin/weGoNice/server/pkg/models"
-
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
+	"github.com/stretchr/testify/assert"
 )
 
-const url = "http://localhost:8080/users"
+func TestGetAllUsers(t *testing.T) {
+		tests := []testArgs{
+		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
+		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
+	}
 
-func deleteAllUsers(t *testing.T, h Handler) {
-	req := httptest.NewRequest(http.MethodPost, url, nil)
-	w := httptest.NewRecorder()
-
-	h.DeleteAllUsers(w, req)
-	if w.Code != http.StatusOK {
-		t.Errorf("Failed to delete all users")
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+	
+		deleteAllUsers(t, h)
+		_, err := createTestUser(t, h)
+		if err != nil {
+			t.Fatalf("User could not be created, %v", err)
+		}
+	
+		req := httptest.NewRequest(http.MethodGet, url, nil)
+		w := httptest.NewRecorder()
+		context.Set(req, "email", tt.email)
+	
+		h.GetAllUsers(w, req)
+	
+		got := w.Code
+	
+		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
 	}
 }
 
-func createTestUser(t *testing.T, h Handler) (string, error) {
-	newUserString := `{"lastname": "Zarella", "firstname": "Moe", "email": "moezarella@gmail.com", "password": "test"}`
-
-	req := httptest.NewRequest(http.MethodPost, url, strings.NewReader(newUserString))
-	w := httptest.NewRecorder()
-
-	h.CreateUser(w, req)
-	if w.Code != http.StatusCreated {
-		t.Errorf("Failed to create user")
+func TestGetUserById(t *testing.T) {
+	tests := []testArgs{
+		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
+		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
+	
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
 
-	var res string
-
-	if err := json.Unmarshal(w.Body.Bytes(), &res); err != nil {
-		t.Errorf("Failed to unmarshal response, %v\n", err)
-		return "", err
-	}
-
-	return res, nil
-}
-
-func TestGetUsers(t *testing.T) {
-	DB := db.Init(false)
-	h := NewHandler(DB)
-
-	deleteAllUsers(t, h)
-	_, err := createTestUser(t, h)
-	if err != nil {
-		t.Errorf("User could not be created, %v", err)
-	}
-
-	req := httptest.NewRequest(http.MethodGet, url, nil)
-	w := httptest.NewRecorder()
-
-	h.GetAllUsers(w, req)
-
-	if w.Code != http.StatusOK {
-		t.Errorf("Failed to get users")
+		deleteAllUsers(t, h)
+		insertedUserId, err := createTestUser(t, h)
+		if err != nil {
+			t.Errorf("User could not be created, %v", err)
+		}
+	
+		req := httptest.NewRequest(http.MethodGet, url+"/"+insertedUserId, nil)
+		w := httptest.NewRecorder()
+	
+		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
+		context.Set(req, "email", tt.email)
+	
+		h.GetUserById(w, req)
+	
+		got := w.Code
+		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
 	}
 }
 
 func TestPostUser(t *testing.T) {
-	DB := db.Init(false)
-	h := NewHandler(DB)
-
-	deleteAllUsers(t, h)
-	insertedUserId, err := createTestUser(t, h)
-	if err != nil {
-		t.Errorf("Failed to insert User, %v", err)
+	tests := []testArgs{
+		{name: "as admin user", email: "admin", expected: http.StatusCreated},
+		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
+		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
 
-	if insertedUserId == "" {
-		t.Errorf("Didn't return the inserted user id")
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+	
+		deleteAllUsers(t, h)
+	
+		userLogin, err := json.Marshal(testLogin)
+		if err != nil {
+			t.Errorf("Failed to marshal testUser: %v", err)
+		}
+	
+		req := httptest.NewRequest(http.MethodPost, url, strings.NewReader(string(userLogin)))
+		w := httptest.NewRecorder()
+	
+		context.Set(req, "email", tt.email)
+	
+		h.CreateUser(w, req)
+		got := w.Code
+	
+		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
 	}
 }
 
-func TestDeleteUser(t *testing.T) {
-	DB := db.Init(false)
-	h := NewHandler(DB)
-
-	deleteAllUsers(t, h)
-	insertedUserId, err := createTestUser(t, h)
-	if err != nil {
-		t.Errorf("Failed to insert User, %v", err)
+func TestUpdateUserById(t *testing.T) {
+	tests := []testArgs{
+		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
+		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
 
-	req := httptest.NewRequest(http.MethodDelete, url+"/"+insertedUserId, nil)
-	w := httptest.NewRecorder()
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
 
-	req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
+		
+		deleteAllUsers(t, h)
+		
+		insertedUserId, err := createTestUser(t, h)
+		if err != nil {
+			t.Fatalf("Failed to insert User, %v", err)
+		}
 
-	h.DeleteUserById(w, req)
-	if w.Code != http.StatusOK {
-		t.Errorf("Failed to delete user")
+		updateUser, err := json.Marshal(testUser)
+		if err != nil {
+			t.Errorf("Failed to marshal testUser: %v", err)
+		}
+		
+		req := httptest.NewRequest(http.MethodPut, url+"/"+insertedUserId, strings.NewReader(string(updateUser)))
+		w := httptest.NewRecorder()
+
+		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
+		context.Set(req, "email", tt.email)
+
+		h.UpdateUserById(w, req)
+
+		got := w.Code
+		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
+	}
+}
+
+func TestDeleteUserById(t *testing.T) {
+	tests := []testArgs{
+		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
+		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
+	}
+
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+	
+		deleteAllUsers(t, h)
+		insertedUserId, err := createTestUser(t, h)
+		if err != nil {
+			t.Fatalf("Failed to insert User, %v", err)
+		}
+	
+		req := httptest.NewRequest(http.MethodDelete, url+"/"+insertedUserId, nil)
+		w := httptest.NewRecorder()
+	
+		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
+		context.Set(req, "email", tt.email)
+	
+		h.DeleteUserById(w, req)
+		got := w.Code
+	
+		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
 	}
 }
 
 func TestDeleteAllUsers(t *testing.T) {
-	DB := db.Init(false)
-	h := NewHandler(DB)
-
-	deleteAllUsers(t, h)
-	createTestUser(t, h)
-	deleteAllUsers(t, h)
-
-	req := httptest.NewRequest(http.MethodGet, url, nil)
-	w := httptest.NewRecorder()
-
-	h.GetAllUsers(w, req)
-	if w.Code != http.StatusOK {
-		t.Errorf("Failed to get all users")
+	tests := []testArgs{
+		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
+		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
+	
+	for _, tt := range tests {
+	
+		DB := db.Init(false)
+		h := NewHandler(DB)
+	
+		deleteAllUsers(t, h)
+		createTestUser(t, h)
+	
+		req := httptest.NewRequest(http.MethodGet, url, nil)
+		w := httptest.NewRecorder()
 
-	var users []models.User
-	if err := json.Unmarshal(w.Body.Bytes(), &users); err != nil {
-		t.Errorf("Failed to unmarshal response, %v\n", err)
-	}
+		context.Set(req, "email", tt.email)
+		h.DeleteAllUsers(w, req)
 
-	if len(users) != 0 {
-		t.Errorf("Failed to delete all users")
+		got := w.Code
+		
+		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
 	}
 }
