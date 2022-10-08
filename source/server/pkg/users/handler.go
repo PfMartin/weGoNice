@@ -27,18 +27,21 @@ func NewHandler(db *mongo.Client) Handler {
 
 func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	if !auth.IsAdminContextOk(r) {
+		log.Printf("Not authorized")
 		http.Error(w, "Not authorized to view all users", http.StatusUnauthorized)
 	}
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	cursor, err := coll.Find(context.TODO(), bson.D{})
 	if err != nil {
-		log.Printf("Error: Couldn't read data: %v", err)
+		log.Printf("Error: Failed to find users: %v", err)
+		http.Error(w, "Failed to find users", http.StatusNotFound)
 	}
 
 	var users []models.User
 	if err = cursor.All(context.TODO(), &users); err != nil {
-		log.Printf("Error: Couldn't parse users, %v", err)
+		log.Printf("Error: Failed to parse users, %v", err)
+		http.Error(w, "Failed to parse users", http.StatusInternalServerError)
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -51,7 +54,8 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Printf("Error: Could not parse id to objectId: %v", err)
+		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
+		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
 	}
 
 	filter := bson.M{"_id": objectId}
@@ -61,14 +65,16 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
-		log.Printf("Error: Couldn't find a user")
+		log.Printf("Error: Failed to find a user")
+		http.Error(w, "Failed to find user", http.StatusNotFound)
 	}
 
 	if !auth.IsEmailContextOk(user.Email, r) {
+		log.Printf("Not authorized")
 		http.Error(w, "Not authorized to see details about another user", http.StatusUnauthorized)
 		return
 	}
-
+	
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
@@ -76,30 +82,32 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if !auth.IsAdminContextOk(r) {
+		log.Printf("Not authorized")
 		http.Error(w, "Not authorized to create user", http.StatusUnauthorized)
 		return
 	}
 
-	var payload models.User
+	var user models.User
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
-	err := decoder.Decode(&payload)
+	err := decoder.Decode(&user)
 	
 	if err != nil {
-		log.Printf("Could not decode body: %v", err)
+		log.Printf("Error: Failed to decode body: %v", err)
+		http.Error(w, "Failed to decode body", http.StatusBadRequest)
 	}
 	
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	
 	// Check if user already exists
 	var existingUser models.User	
-	filter := bson.D{{Key: "email", Value: payload.Email}}
+	filter := bson.D{{Key: "email", Value: user.Email}}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingUser)
 	if err == nil {
-		log.Printf("%s\n", err)
+		log.Printf("Error: User with email %s already exists: %v", user.Email, err)
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
-		msg := "User with email "+ payload.Email + " already exists."
+		msg := "User with email "+ user.Email + " already exists."
 		
 		response := map[string]string{
 			"id": msg,
@@ -109,16 +117,18 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	// Hash password and create new user
-	hashedPassword, err := auth.HashPassword(payload.Password)
+	hashedPassword, err := auth.HashPassword(user.Password)
 	if err != nil {
-		log.Printf("Failed to hash password: %s", err)
+		log.Printf("Error: Failed to hash password: %s", err)
+		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 		return
 	}
 	
-	data := bson.D{{Key: "lastname", Value: payload.Lastname}, {Key: "firstname", Value: payload.Firstname}, {Key: "email", Value: payload.Email}, {Key: "password", Value: hashedPassword}}
+	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: hashedPassword}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Printf("Error: Couldn't insert data: %v", err)
+		log.Printf("Error: Failed insert data: %v", err)
+		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 	}
 	
 	userId := cursor.InsertedID.(primitive.ObjectID)
@@ -133,6 +143,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusInternalServerError)
 	}
 
@@ -142,8 +153,8 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	decoder.DisallowUnknownFields()
 	err = decoder.Decode(&user)
 	if err != nil {
-		log.Printf("Failed to decode user: %v", r.Body)
-		http.Error(w, "Failed to decode user", http.StatusInternalServerError)
+		log.Printf("Error: Failed to decode user: %v", r.Body)
+		http.Error(w, "Failed to decode user", http.StatusBadRequest)
 		return
 	}
 
@@ -159,6 +170,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	result, err := coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
+		log.Printf("Error: Failed to update user: %v", err)
 		http.Error(w, "Failed to update user", http.StatusInternalServerError)
 		return
 	}
@@ -173,8 +185,8 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Printf("Error: Could not parse id to objectId: %v", err)
-		w.WriteHeader(http.StatusBadRequest)
+		log.Printf("Error: Failed to parse id to objectId: %v", err)
+		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
 		return
 	}
 
@@ -185,10 +197,12 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
-		log.Printf("Error: Couldn't find a user")
+		log.Printf("Error: Failed to find user: %v", err)
+		http.Error(w, "Failed to find user", http.StatusNotFound)
 	}
 
 	if !auth.IsEmailContextOk(user.Email, r) {
+		log.Printf("Not authorized")
 		http.Error(w, "Not authorized to delete other user", http.StatusUnauthorized)
 	}
 
@@ -202,8 +216,8 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteAllUsers(w http.ResponseWriter, r *http.Request) {
-	// Admin check
 	if !auth.IsAdminContextOk(r) {
+		log.Printf("Error: Not authorized")
 		http.Error(w, "Not authorized to delete all users", http.StatusUnauthorized)
 		return
 	}
@@ -212,7 +226,8 @@ func (h *Handler) DeleteAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	result, err := coll.DeleteMany(context.TODO(), bson.D{})
 	if err != nil {
-		http.Error(w, "Failed to dele all users", http.StatusInternalServerError)
+		log.Printf("Error: Failed to delete all users: %v", err)
+		http.Error(w, "Failed to delete all users", http.StatusInternalServerError)
 	}
 
 	w.Header().Add("Content-Type", "application/json")

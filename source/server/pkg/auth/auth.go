@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -10,8 +11,6 @@ import (
 	"github.com/gorilla/context"
 	"golang.org/x/crypto/bcrypt"
 )
-
-var secretKey = []byte("secret-key")
 
 type CheckTokenHandlerFunc =  func(http.HandlerFunc) http.HandlerFunc
 
@@ -37,12 +36,13 @@ func createToken(email string) (string, error) {
 	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 
-	// secret, err := os.Getenv("ACCESS_SECRET")
-	// if err != nil {
-	// 	return "", err
-	// }
+	fmt.Println(os.Getenv("ACCESS_SECRET"))
 
-	secret := secretKey
+	secret := os.Getenv("ACCESS_SECRET")
+	if err != nil {
+		return "", err
+	}
+
 	token, err := at.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
@@ -112,7 +112,8 @@ func checkToken(tokenString string) (*jwt.Token, bool) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(secretKey),nil
+
+		return []byte(os.Getenv("ACCESS_SECRET")),nil
 	})
 
 	if err != nil {
