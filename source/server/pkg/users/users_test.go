@@ -15,7 +15,7 @@ import (
 
 func TestGetAllUsers(t *testing.T) {
 	tests := []testArgs{
-		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
 		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
 		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
@@ -44,7 +44,7 @@ func TestGetAllUsers(t *testing.T) {
 
 func TestGetUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
 		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
 		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
@@ -74,7 +74,7 @@ func TestGetUserById(t *testing.T) {
 
 func TestPostUser(t *testing.T) {
 	tests := []testArgs{
-		{name: "as admin user", email: "admin", expected: http.StatusCreated},
+		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusCreated},
 		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
 		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
@@ -104,7 +104,7 @@ func TestPostUser(t *testing.T) {
 
 func TestUpdateUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
 		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
 		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
@@ -140,7 +140,7 @@ func TestUpdateUserById(t *testing.T) {
 
 func TestDeleteUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
 		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
 		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}
@@ -170,7 +170,7 @@ func TestDeleteUserById(t *testing.T) {
 
 func TestDeleteAllUsers(t *testing.T) {
 	tests := []testArgs{
-		{name: "as admin user", email: "admin", expected: http.StatusOK},
+		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
 		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
 		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
 	}

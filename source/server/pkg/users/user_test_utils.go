@@ -12,38 +12,37 @@ import (
 )
 
 type testArgs struct {
-		name string
-		email string
-		expected int
+	name     string
+	email    string
+	expected int
 }
 
 const url = "http://localhost:8080/users"
 
 var testUser = models.User{
-	Lastname: "Zarella",
+	Lastname:  "Zarella",
 	Firstname: "Moe",
-	Password: "testing",
-	Email: "moezarella@gmail.com",
-} 
+	Password:  "testing",
+	Email:     "moezarella@gmail.com",
+}
 
 var updateUser = models.User{
-	Lastname: "Schluepper",
+	Lastname:  "Schluepper",
 	Firstname: "Rosa",
-	Password: "rosasSchluepper",
-	Email: "rosaschluepper@weg.de",
+	Password:  "rosasSchluepper",
+	Email:     "rosaschluepper@weg.de",
 }
 
 var testLogin = models.Login{
-	Email: testUser.Email,
+	Email:    testUser.Email,
 	Password: testUser.Password,
 }
 
-
-func deleteAllUsers(t *testing.T, h Handler,) {
+func deleteAllUsers(t *testing.T, h Handler) {
 	req := httptest.NewRequest(http.MethodPost, url, nil)
 	w := httptest.NewRecorder()
 
-	context.Set(req, "email", "admin")
+	context.Set(req, "email", "wego@nice.com")
 
 	h.DeleteAllUsers(w, req)
 	if w.Code != http.StatusOK {
@@ -60,7 +59,7 @@ func createTestUser(t *testing.T, h Handler) (string, error) {
 	req := httptest.NewRequest(http.MethodPost, url, strings.NewReader(string(userLogin)))
 	w := httptest.NewRecorder()
 
-	context.Set(req, "email", "admin")
+	context.Set(req, "email", "wego@nice.com")
 
 	h.CreateUser(w, req)
 	if w.Code != http.StatusCreated {

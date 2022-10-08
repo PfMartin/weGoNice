@@ -54,7 +54,7 @@ func IsEmailContextOk(email string, r *http.Request) bool {
 	if !ok {
 		return false
 	}
-	if emailCtx != email && emailCtx != "admin" {
+	if emailCtx != email && emailCtx != "wego@nice.com" {
 		return false
 	}
 	return true
@@ -65,7 +65,7 @@ func IsAdminContextOk(r *http.Request) bool {
 	if !ok {
 		return false
 	}
-	if emailCtx != "admin" {
+	if emailCtx != "wego@nice.com" {
 		return false
 	}
 	return true
