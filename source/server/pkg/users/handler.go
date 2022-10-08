@@ -114,7 +114,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error: Couldn't insert data: %v", err)
 	}
 	
-	userId := cursor.InsertedID.(primitive.ObjectID).String()
+	userId := cursor.InsertedID.(primitive.ObjectID)
 	
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

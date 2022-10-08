@@ -15,10 +15,6 @@ import (
 
 const url = "http://localhost:8080/users"
 
-type insertResponse struct {
-	InsertedId string `bson:"InsertedID"`
-}
-
 func deleteAllUsers(t *testing.T, h Handler) {
 	req := httptest.NewRequest(http.MethodPost, url, nil)
 	w := httptest.NewRecorder()
@@ -40,14 +36,14 @@ func createTestUser(t *testing.T, h Handler) (string, error) {
 		t.Errorf("Failed to create user")
 	}
 
-	var res insertResponse
+	var res string
 
 	if err := json.Unmarshal(w.Body.Bytes(), &res); err != nil {
 		t.Errorf("Failed to unmarshal response, %v\n", err)
 		return "", err
 	}
 
-	return res.InsertedId, nil
+	return res, nil
 }
 
 func TestGetUsers(t *testing.T) {
@@ -69,19 +65,6 @@ func TestGetUsers(t *testing.T) {
 		t.Errorf("Failed to get users")
 	}
 }
-
-// TODO: Create user and get user with the returned id, check if returned id equals inserted id
-
-// func TestGetUserById(t *testing.T) {
-// 	DB := db.Init(false)
-// 	h := NewHandler(DB)
-
-// 	deleteAllUsers(t, h)
-// 	insertedUserId, err := createTestUser(t, h)
-// 	if err != nil {
-// 		t.Errorf("Failed to insert user, %v")
-// 	}
-// }
 
 func TestPostUser(t *testing.T) {
 	DB := db.Init(false)

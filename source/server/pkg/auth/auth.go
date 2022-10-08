@@ -13,6 +13,8 @@ import (
 
 var secretKey = []byte("secret-key")
 
+type CheckTokenHandlerFunc =  func(http.HandlerFunc) http.HandlerFunc
+
 func HashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -49,7 +51,7 @@ func createToken(email string) (string, error) {
 	return token, nil
 }
 
-func checkTokenHandler(next http.HandlerFunc) http.HandlerFunc{
+func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")
 		bearerToken := strings.Split(header, " ")
