@@ -4,13 +4,14 @@ import (
 	"context"
 	"log"
 	"os"
+	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 func Init(isProduction bool) *mongo.Client {
-	// TODO: Change credentials and move them to an .env file
 	creds := map[string]string{
 		"AuthSource": os.Getenv("DATABASE_NAME"),
 		"Username":   os.Getenv("DATABASE_USERNAME"),
@@ -35,11 +36,16 @@ func Init(isProduction bool) *mongo.Client {
 
 	clientOpts := options.Client().ApplyURI(dbURI).SetAuth(credentials)
 
-	dbClient, err := mongo.Connect(context.TODO(), clientOpts)
-
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	dbClient, err := mongo.Connect(ctx, clientOpts)
 	if err != nil {
 		log.Fatalf("An error occurred while connecting to the database: %v", err)
 	}
 
+	if err = dbClient.Ping(ctx, readpref.Primary()); err != nil {
+		log.Fatalf("Failed to ping mongo db service: %v", err)
+	}
+
+	log.Println("Connected to database")
 	return dbClient
 }

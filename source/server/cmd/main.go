@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -15,6 +16,8 @@ import (
 
 func main() {
 	loadEnvFile()
+
+	printBanner()
 
 	DB := db.Init(true)
 
@@ -39,4 +42,14 @@ func loadEnvFile() {
 	if err != nil {
 		log.Printf(".env file not loaded. Using environment variables on machine.")
 	}
+}
+
+func printBanner() {
+	fmt.Print(`______________________________________________________________
+                     __             _     _                   
+                   /    )           /|   /     ,              
+------------__----/----------__----/-| -/-----------__-----__-
+ | /| /   /___)  /  --,    /   )  /  | /     /    /   '  /___)
+_|/_|/___(___ __(____/____(___/__/___|/_____/____(___ __(___ _
+______________________________________________________________` + "\n\n")
 }
