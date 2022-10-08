@@ -27,6 +27,7 @@ func NewHandler(db *mongo.Client) Handler {
 func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	if !auth.IsAdminContextOk(r) {
 		http.Error(w, "Not authorized to view all users", http.StatusUnauthorized)
+		return
 	}
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
@@ -34,12 +35,14 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to find users: %v", err)
 		http.Error(w, "Failed to find users", http.StatusNotFound)
+		return
 	}
 
 	var users []models.User
 	if err = cursor.All(context.TODO(), &users); err != nil {
 		log.Printf("Error: Failed to parse users, %v", err)
 		http.Error(w, "Failed to parse users", http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -54,6 +57,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
+		return
 	}
 
 	filter := bson.M{"_id": objectId}
@@ -65,6 +69,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to find a user")
 		http.Error(w, "Failed to find user", http.StatusNotFound)
+		return
 	}
 
 	if !auth.IsEmailContextOk(user.Email, r) {
@@ -91,6 +96,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to decode body: %v", err)
 		http.Error(w, "Failed to decode body", http.StatusBadRequest)
+		return
 	}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
@@ -125,6 +131,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed insert data: %v", err)
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
+		return
 	}
 
 	userId := cursor.InsertedID.(primitive.ObjectID)
@@ -141,6 +148,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusInternalServerError)
+		return
 	}
 
 	var user models.User
@@ -156,6 +164,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 
 	if !auth.IsEmailContextOk(user.Email, r) {
 		http.Error(w, "Not authorized to update other user", http.StatusUnauthorized)
+		return
 	}
 
 	filter := bson.M{"_id": objectId}
@@ -195,10 +204,12 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to find user: %v", err)
 		http.Error(w, "Failed to find user", http.StatusNotFound)
+		return
 	}
 
 	if !auth.IsEmailContextOk(user.Email, r) {
 		http.Error(w, "Not authorized to delete other user", http.StatusUnauthorized)
+		return
 	}
 
 	filter = bson.M{"_id": objectId}
@@ -222,6 +233,7 @@ func (h *Handler) DeleteAllUsers(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to delete all users: %v", err)
 		http.Error(w, "Failed to delete all users", http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")

@@ -33,7 +33,7 @@ func createToken(email string) (string, error) {
 	atClaims := jwt.MapClaims{}
 	atClaims["autorized"] = true
 	atClaims["email"] = email
-	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	atClaims["exp"] = time.Now().Add(time.Hour * 2).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 
 	secret := os.Getenv("ACCESS_SECRET")

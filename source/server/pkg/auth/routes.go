@@ -11,4 +11,5 @@ func RegisterAuthRoutes(r *mux.Router, h Handler) {
 
 	authR.HandleFunc("/login", h.loginUser).Methods(http.MethodPost)
 	authR.HandleFunc("/register", h.registerUser).Methods(http.MethodPost)
+	authR.HandleFunc("/token", CheckTokenHandler(h.getTokenByToken)).Methods(http.MethodGet)
 }
