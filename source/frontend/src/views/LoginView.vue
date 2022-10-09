@@ -54,14 +54,14 @@ import { useStore } from 'vuex';
 import TextInput from '@/components/TextInput.vue';
 import ValidationService from '@/services/validation.service';
 import { registerUser, loginUser } from '@/apis/weGoNice';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   isRegister: boolean;
 }>();
 
 const store = useStore();
-console.log('Authenticated: ' + store.getters.isAuthenticated);
-console.log('isRegister: ' + props.isRegister);
+const router = useRouter();
 
 const headline = computed(() => (props.isRegister ? 'Register' : 'Login'));
 const email = ref<string>('');
@@ -138,7 +138,12 @@ const register = async (body: { email: string; password: string }) => {
 
 const login = async (body: { email: string; password: string }) => {
   const { id, statusCode, sessionToken } = await loginUser(body);
-  console.log(id, statusCode, sessionToken);
+  if (statusCode === 202) {
+    store.dispatch('setUserId', id);
+    store.dispatch('setSessionToken', sessionToken);
+
+    router.push({ name: 'Home' });
+  }
 };
 
 const apply = async () => {

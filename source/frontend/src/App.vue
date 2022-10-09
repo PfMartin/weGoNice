@@ -1,7 +1,7 @@
 <template>
-  <nav v-if="isAuthenticated">
-    <router-link :to="{ name: 'Home' }"></router-link> |
-    <router-link :to="{ name: 'About' }">About</router-link>
+  <nav>
+    <router-link :to="{ name: 'Home' }">Home</router-link>
+    <router-link :to="{ name: 'Recipes' }">Recipes</router-link>
   </nav>
   <router-view />
 </template>
@@ -9,9 +9,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import authenticate from './auth';
 
-authenticate();
 const store = useStore();
 
 const isAuthenticated = computed(() => store.getters.isAuthenticated);

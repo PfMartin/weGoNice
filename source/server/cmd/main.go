@@ -29,7 +29,7 @@ func main() {
 	auth.RegisterAuthRoutes(r, authHandler)
 
 	url := "localhost:8000"
-	headersOk := handlers.AllowedHeaders([]string{"Content-Type"})
+	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://localhost", "localhost"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 

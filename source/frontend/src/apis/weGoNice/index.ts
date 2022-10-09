@@ -1,16 +1,18 @@
 import axios from 'axios';
+import { useStore } from 'vuex';
+
+interface AuthResponse {
+  id?: string;
+  statusCode: number | null;
+  sessionToken: string | null;
+}
 
 const url = 'http://localhost:8000';
 const headers = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
+  Authorization: '',
 };
-
-interface AuthResponse {
-  id: string;
-  statusCode: number | null;
-  sessionToken: string | null;
-}
 
 export const registerUser = async (body: {
   email: string;
@@ -84,5 +86,25 @@ export const loginUser = async (body: {
       statusCode: null,
       sessionToken: null,
     };
+  }
+};
+
+export const refreshToken = async (): Promise<void> => {
+  const store = useStore();
+  const token = store.getters.sessionToken;
+  headers.Authorization = `Bearer ${token}`;
+  try {
+    const { data } = await axios.get(`${url}/auth/token`, {
+      headers,
+    });
+
+    data.token && store.dispatch('setSessionToken', token);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(error);
+      return;
+    }
+
+    console.error(`An unexpected error occurred: %{error}`);
   }
 };
