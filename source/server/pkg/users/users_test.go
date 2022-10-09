@@ -15,9 +15,9 @@ import (
 
 func TestGetAllUsers(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
-		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
-		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", email: "wego@nice.com", role: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", role: "user", expected: http.StatusUnauthorized},
+		{name: "as any user", email: "test@test.de", role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -33,6 +33,7 @@ func TestGetAllUsers(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, url, nil)
 		w := httptest.NewRecorder()
 		context.Set(req, "email", tt.email)
+		context.Set(req, "role", tt.role)
 
 		h.GetAllUsers(w, req)
 
@@ -44,9 +45,9 @@ func TestGetAllUsers(t *testing.T) {
 
 func TestGetUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
-		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
-		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", email: "wego@nice.com", role: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", role: "user", expected: http.StatusOK},
+		{name: "as any user", email: "test@test.de", role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -64,6 +65,7 @@ func TestGetUserById(t *testing.T) {
 
 		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
 		context.Set(req, "email", tt.email)
+		context.Set(req, "role", tt.role)
 
 		h.GetUserById(w, req)
 
@@ -74,9 +76,9 @@ func TestGetUserById(t *testing.T) {
 
 func TestPostUser(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusCreated},
-		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
-		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", email: "wego@nice.com", role: "admin", expected: http.StatusCreated},
+		{name: "as test user", email: "moezarella@gmail.com", role: "user", expected: http.StatusUnauthorized},
+		{name: "as any user", email: "test@test.de", role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -94,6 +96,7 @@ func TestPostUser(t *testing.T) {
 		w := httptest.NewRecorder()
 
 		context.Set(req, "email", tt.email)
+		context.Set(req, "role", tt.role)
 
 		h.CreateUser(w, req)
 		got := w.Code
@@ -104,9 +107,9 @@ func TestPostUser(t *testing.T) {
 
 func TestUpdateUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
-		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
-		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", email: "wego@nice.com", role: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", role: "user", expected: http.StatusOK},
+		{name: "as any user", email: "test@test.de", role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -130,6 +133,7 @@ func TestUpdateUserById(t *testing.T) {
 
 		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
 		context.Set(req, "email", tt.email)
+		context.Set(req, "role", tt.role)
 
 		h.UpdateUserById(w, req)
 
@@ -140,9 +144,9 @@ func TestUpdateUserById(t *testing.T) {
 
 func TestDeleteUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
-		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusOK},
-		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", email: "wego@nice.com", role: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", role: "user", expected: http.StatusOK},
+		{name: "as any user", email: "test@test.de", role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -160,6 +164,7 @@ func TestDeleteUserById(t *testing.T) {
 
 		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
 		context.Set(req, "email", tt.email)
+		context.Set(req, "role", tt.role)
 
 		h.DeleteUserById(w, req)
 		got := w.Code
@@ -170,9 +175,9 @@ func TestDeleteUserById(t *testing.T) {
 
 func TestDeleteAllUsers(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", email: "wego@nice.com", expected: http.StatusOK},
-		{name: "as test user", email: "moezarella@gmail.com", expected: http.StatusUnauthorized},
-		{name: "as any user", email: "test@test.de", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", email: "wego@nice.com", role: "admin", expected: http.StatusOK},
+		{name: "as test user", email: "moezarella@gmail.com", role: "user", expected: http.StatusUnauthorized},
+		{name: "as any user", email: "test@test.de", role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -187,6 +192,8 @@ func TestDeleteAllUsers(t *testing.T) {
 		w := httptest.NewRecorder()
 
 		context.Set(req, "email", tt.email)
+		context.Set(req, "role", tt.role)
+
 		h.DeleteAllUsers(w, req)
 
 		got := w.Code

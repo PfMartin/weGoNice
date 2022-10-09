@@ -49,7 +49,7 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessionToken, err := createToken(user.Email)
+	sessionToken, err := createToken(user.Email, false)
 	if err != nil {
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return
@@ -104,7 +104,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: hashedPassword}}
+	data := bson.D{{Key: "email", Value: user.Email}, {Key: "password", Value: hashedPassword}, {Key: "role", Value: "user"}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Failed to insert data")
@@ -112,7 +112,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userId := cursor.InsertedID.(primitive.ObjectID).String()
-	sessionToken, err := createToken(user.Email)
+	sessionToken, err := createToken(user.Email, false)
 	if err != nil {
 		log.Printf("Failed to create token: %v", err)
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
@@ -136,7 +136,7 @@ func (h *Handler) getTokenByToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := createToken(email)
+	token, err := createToken(email, false)
 	if err != nil {
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return

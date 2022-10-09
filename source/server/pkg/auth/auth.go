@@ -27,12 +27,17 @@ func checkPassword(password string, hashedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func createToken(email string) (string, error) {
+func createToken(email string, isAdmin bool) (string, error) {
 	var err error
 
 	atClaims := jwt.MapClaims{}
 	atClaims["autorized"] = true
 	atClaims["email"] = email
+	if isAdmin {
+		atClaims["role"] = "admin"
+	} else {
+		atClaims["role"] = "user"
+	}
 	atClaims["exp"] = time.Now().Add(time.Hour * 2).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 
@@ -61,11 +66,11 @@ func IsEmailContextOk(email string, r *http.Request) bool {
 }
 
 func IsAdminContextOk(r *http.Request) bool {
-	emailCtx, ok := context.Get(r, "email").(string)
+	roleCtx, ok := context.Get(r, "role").(string)
 	if !ok {
 		return false
 	}
-	if emailCtx != "wego@nice.com" {
+	if roleCtx != "admin" {
 		return false
 	}
 	return true
@@ -96,8 +101,15 @@ func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc {
 				return
 			}
 
+			role, ok := claims["role"].(string)
+			if !ok {
+				http.Error(w, "Unautorized", http.StatusUnauthorized)
+				return
+			}
+
 			// Set email in the request, so I will use it in check after
 			context.Set(r, "email", email)
+			context.Set(r, "role", role)
 		}
 		next(w, r)
 

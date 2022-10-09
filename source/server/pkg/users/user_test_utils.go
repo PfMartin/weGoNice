@@ -14,6 +14,7 @@ import (
 type testArgs struct {
 	name     string
 	email    string
+	role     string
 	expected int
 }
 
@@ -43,6 +44,7 @@ func deleteAllUsers(t *testing.T, h Handler) {
 	w := httptest.NewRecorder()
 
 	context.Set(req, "email", "wego@nice.com")
+	context.Set(req, "role", "admin")
 
 	h.DeleteAllUsers(w, req)
 	if w.Code != http.StatusOK {
@@ -60,6 +62,7 @@ func createTestUser(t *testing.T, h Handler) (string, error) {
 	w := httptest.NewRecorder()
 
 	context.Set(req, "email", "wego@nice.com")
+	context.Set(req, "role", "admin")
 
 	h.CreateUser(w, req)
 	if w.Code != http.StatusCreated {
