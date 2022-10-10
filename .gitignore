@@ -4,6 +4,8 @@ logs
 **/*.backup.*
 **/*.back.*
 
+source/server/cmd/main
+
 node_modules
 **/*.env
 

@@ -25,7 +25,7 @@ func main() {
 	authHandler := auth.NewHandler(DB)
 
 	r := mux.NewRouter()
-	users.RegisterUserRoutes(r, userHandler, auth.CheckTokenHandler)
+	users.RegisterUserRoutes(r, userHandler)
 	auth.RegisterAuthRoutes(r, authHandler)
 
 	url := "localhost:8000"
