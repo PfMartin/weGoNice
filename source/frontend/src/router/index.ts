@@ -36,7 +36,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   if (
-    !store.getters.sessionToken &&
+    !store.getters['auth/sessionToken'] &&
     !(to.name === 'Login' || to.name === 'Register')
   ) {
     if (from.name === 'Login') {
@@ -44,7 +44,7 @@ router.beforeEach((to, from) => {
     }
     return { name: 'Login' };
   } else if (
-    store.getters.sessionToken &&
+    store.getters['auth/sessionToken'] &&
     (to.name === 'Login' || to.name === 'Register')
   ) {
     return { name: 'Home' };
