@@ -43,8 +43,10 @@ router.beforeEach((to, from) => {
       return { name: 'Register' };
     }
     return { name: 'Login' };
-  } else if (store.getters.sessionToken && to.name === 'Login') {
-    console.log('yes');
+  } else if (
+    store.getters.sessionToken &&
+    (to.name === 'Login' || to.name === 'Register')
+  ) {
     return { name: 'Home' };
   }
 

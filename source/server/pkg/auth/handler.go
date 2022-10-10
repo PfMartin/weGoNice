@@ -111,7 +111,8 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 	}
 
-	userId := cursor.InsertedID.(primitive.ObjectID).String()
+	userId := cursor.InsertedID.(primitive.ObjectID).Hex()
+
 	sessionToken, err := createToken(user.Email, false)
 	if err != nil {
 		log.Printf("Failed to create token: %v", err)

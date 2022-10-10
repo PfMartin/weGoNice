@@ -124,26 +124,24 @@ const forwardText = computed(() =>
 
 // Login/Register
 const register = async (body: { email: string; password: string }) => {
-  const { id, statusCode, sessionToken } = await registerUser(body);
-  if (statusCode === 406) {
-    console.log(id);
-    return;
-  } else if (!statusCode) {
-    console.error(id);
-    return;
+  const { status, data } = await registerUser(body);
+  if (status === 202 && data.sessionToken) {
+    loginSuccess(data.id, data.sessionToken);
   }
-
-  console.log(id, statusCode, sessionToken);
 };
 
 const login = async (body: { email: string; password: string }) => {
-  const { id, statusCode, sessionToken } = await loginUser(body);
-  if (statusCode === 202) {
-    store.dispatch('setUserId', id);
-    store.dispatch('setSessionToken', sessionToken);
-
-    router.push({ name: 'Home' });
+  const { status, data } = await loginUser(body);
+  if (status === 202 && data.sessionToken) {
+    loginSuccess(data.id, data.sessionToken);
   }
+};
+
+const loginSuccess = (id: string, sessionToken: string) => {
+  store.dispatch('setUserId', id);
+  store.dispatch('setSessionToken', sessionToken);
+
+  router.push({ name: 'Home' });
 };
 
 const apply = async () => {

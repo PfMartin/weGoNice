@@ -2,9 +2,8 @@ import axios from 'axios';
 import { useStore } from 'vuex';
 
 interface AuthResponse {
-  id?: string;
-  statusCode: number | null;
-  sessionToken: string | null;
+  status: number | null;
+  data: Record<string, any>;
 }
 
 const url = 'http://localhost:8000';
@@ -23,30 +22,29 @@ export const registerUser = async (body: {
       headers,
     });
 
-    return {
-      id: res.data.id,
-      statusCode: res.status,
-      sessionToken: res.data.sessionToken,
-    };
+    return res;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 406) {
         return {
-          id: `User with email ${body.email} already exists`,
-          statusCode: error.response?.status || null,
-          sessionToken: null,
+          status: error.response.status,
+          data: {
+            msg: `User with email ${body.email} already exists`,
+          },
         };
       }
       return {
-        id: error.message,
-        statusCode: error.response?.status || null,
-        sessionToken: null,
+        status: error.response?.status || null,
+        data: {
+          msg: error.message,
+        },
       };
     }
     return {
-      id: 'unexpected error',
-      statusCode: null,
-      sessionToken: null,
+      status: null,
+      data: {
+        msg: 'unexpected error',
+      },
     };
   }
 };
@@ -55,36 +53,34 @@ export const loginUser = async (body: {
   email: string;
   password: string;
 }): Promise<AuthResponse> => {
-  console.log(body);
   try {
     const res = await axios.post(`${url}/auth/login`, body, {
       headers,
     });
 
-    return {
-      id: res.data.id,
-      statusCode: res.status,
-      sessionToken: res.data.sessionToken,
-    };
+    return res;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 406) {
         return {
-          id: `USER ID`,
-          statusCode: error.response?.status || null,
-          sessionToken: null,
+          status: error.response?.status || null,
+          data: {
+            msg: error.message,
+          },
         };
       }
       return {
-        id: error.message,
-        statusCode: error.response?.status || null,
-        sessionToken: null,
+        status: error.response?.status || null,
+        data: {
+          msg: error.message,
+        },
       };
     }
     return {
-      id: 'unexpected error',
-      statusCode: null,
-      sessionToken: null,
+      status: null,
+      data: {
+        msg: 'unexpected error',
+      },
     };
   }
 };
