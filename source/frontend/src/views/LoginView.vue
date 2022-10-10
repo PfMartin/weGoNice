@@ -53,15 +53,15 @@ import { defineProps, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import TextInput from '@/components/TextInput.vue';
 import ValidationService from '@/services/validation.service';
-import { createUser } from '@/apis/weGoNice';
+import { registerUser, loginUser } from '@/apis/weGoNice';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   isRegister: boolean;
 }>();
 
 const store = useStore();
-console.log('Authenticated: ' + store.getters.isAuthenticated);
-console.log('isRegister: ' + props.isRegister);
+const router = useRouter();
 
 const headline = computed(() => (props.isRegister ? 'Register' : 'Login'));
 const email = ref<string>('');
@@ -123,7 +123,29 @@ const forwardText = computed(() =>
 );
 
 // Login/Register
-const apply = () => {
+const register = async (body: { email: string; password: string }) => {
+  const { status, data } = await registerUser(body);
+  if (status === 202 && data.sessionToken) {
+    loginSuccess(data.id, data.sessionToken);
+  }
+};
+
+const login = async (body: { email: string; password: string }) => {
+  const { status, data } = await loginUser(body);
+  if (status === 202 && data.sessionToken) {
+    loginSuccess(data.id, data.sessionToken);
+  }
+};
+
+const loginSuccess = (id: string, sessionToken: string) => {
+  console.log('ye');
+  store.dispatch('auth/setUserId', id);
+  store.dispatch('auth/setSessionToken', sessionToken);
+
+  router.push({ name: 'Home' });
+};
+
+const apply = async () => {
   if (isValid.value) {
     const body = {
       email: email.value,
@@ -131,9 +153,9 @@ const apply = () => {
     };
 
     if (props.isRegister) {
-      createUser(body);
+      await register(body);
     } else {
-      console.log(`Logging in user: ${email.value}`);
+      await login(body);
     }
   }
 };

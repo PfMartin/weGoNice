@@ -1,23 +1,14 @@
 import { createStore } from 'vuex';
+import createPersistedState from 'vuex-persistedstate';
+import auth from '@/store/auth';
 
 export default createStore({
-  state: {
-    isAuthenticated: false,
+  plugins: [
+    createPersistedState({
+      storage: window.sessionStorage,
+    }),
+  ],
+  modules: {
+    auth,
   },
-  getters: {
-    isAuthenticated: (state) => {
-      return state.isAuthenticated;
-    },
-  },
-  mutations: {
-    setIsAuthenticated: (state, value) => {
-      state.isAuthenticated = value;
-    },
-  },
-  actions: {
-    setIsAuthenticated: (context, value) => {
-      context.commit('setIsAuthenticated', value);
-    },
-  },
-  modules: {},
 });

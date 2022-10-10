@@ -4,7 +4,10 @@ logs
 **/*.backup.*
 **/*.back.*
 
+source/server/cmd/main
+
 node_modules
 **/*.env
 
-volumes
+volumes/production
+volumes/development
