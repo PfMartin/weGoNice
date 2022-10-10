@@ -13,7 +13,12 @@ export const isTokenExpired = (): boolean => {
   try {
     const { exp } = parseJwt(token);
 
-    return Date.now() >= exp * 1000 * 60 * 30;
+    const second = 1000;
+    const minute = second * 60;
+
+    const refreshLimit = exp * second - 10 * minute;
+
+    return Date.now() >= refreshLimit;
   } catch {
     return true;
   }
