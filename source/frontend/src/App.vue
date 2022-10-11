@@ -1,6 +1,8 @@
 <template>
   <NavBar />
-  <router-view />
+  <section>
+    <router-view />
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -24,16 +26,16 @@ body {
   // -webkit-font-smoothing: antialiased;
   // -moz-osx-font-smoothing: grayscale;
   color: $text-color;
+  display: relative;
 }
 
-nav {
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+section {
+  padding: 0;
+  margin-left: 50px;
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  h1 {
+    padding: 0;
+    margin: 0;
   }
 }
 </style>

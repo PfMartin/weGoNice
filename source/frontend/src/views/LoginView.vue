@@ -138,7 +138,6 @@ const login = async (body: { email: string; password: string }) => {
 };
 
 const loginSuccess = (id: string, sessionToken: string) => {
-  console.log('ye');
   store.dispatch('auth/setUserId', id);
   store.dispatch('auth/setSessionToken', sessionToken);
 
