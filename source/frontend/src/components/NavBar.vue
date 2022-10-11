@@ -1,24 +1,37 @@
 <template>
   <div class="navbar">
-    <body @click="toggleExpand">
+    <body @click.prevent="toggleExpand" :class="navBarClass">
       <div class="logout">
         <NavIcon name="log-out" @click="logout" />
+        <p>Logout</p>
       </div>
       <nav>
         <router-link :to="{ name: 'Home' }"
-          ><NavIcon name="home"
-        /></router-link>
+          ><NavIcon name="home" />
+          <p>Home</p></router-link
+        >
         <router-link :to="{ name: 'Recipes' }">
           <NavIcon name="book" />
+          <p>Recipes</p>
         </router-link>
-        <router-link :to="{ name: 'Authors' }"
-          ><NavIcon name="people"
-        /></router-link>
+        <router-link :to="{ name: 'Authors' }">
+          <NavIcon name="people" />
+          <p>Authors</p></router-link
+        >
       </nav>
       <div class="options">
-        <NavIcon name="person-circle" />
-        <NavIcon name="notifications" />
-        <NavIcon name="settings" />
+        <div>
+          <NavIcon name="person-circle" />
+          <p>Account</p>
+        </div>
+        <div>
+          <NavIcon name="notifications" />
+          <p>Notifications</p>
+        </div>
+        <div>
+          <NavIcon name="settings" />
+          <p>Settings</p>
+        </div>
       </div>
     </body>
   </div>
@@ -26,15 +39,25 @@
 
 <script setup lang="ts">
 import NavIcon from '@/components/NavIcon.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 // Expanding the navbar
 const isExpanded = ref(false);
-const toggleExpand = () => {
-  isExpanded.value = !isExpanded.value;
+const toggleExpand = (e: Event) => {
+  const target = e.target as HTMLElement;
+
+  if (target.classList.contains('bar')) {
+    isExpanded.value = !isExpanded.value;
+  }
 };
+const navBarClass = computed(() => {
+  return {
+    bar: true,
+    expanded: isExpanded.value,
+  };
+});
 
 // Routing
 const store = useStore();
@@ -57,20 +80,32 @@ const logout = () => {
     background: $content-color;
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 50px;
     height: 100vh;
     justify-content: space-between;
+    transition: 1s;
+    overflow: hidden;
 
     &:hover {
       cursor: pointer;
     }
 
+    &.expanded {
+      width: 165px;
+    }
+
     .logout {
       margin-top: 0.5rem;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      padding-left: 15px;
+      gap: 20px;
+      width: 200px;
+
+      &:hover {
+        color: $accent-color;
+        transition: color 0.5s;
+      }
     }
 
     nav {
@@ -83,6 +118,16 @@ const logout = () => {
         text-decoration: none;
         color: inherit;
         border-left: 3px solid $content-color;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding-left: 10px;
+        width: 200px;
+        transition: color 0.5s;
+
+        &:hover {
+          color: $accent-color;
+        }
 
         &:not(:last-child) {
           margin-bottom: 10px;
@@ -99,24 +144,27 @@ const logout = () => {
       display: flex;
       flex-direction: column;
       width: 100%;
-      align-items: center;
       margin-bottom: 2rem;
+      width: 200px;
 
       & * {
-        margin-bottom: 10px;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-left: 6px;
+        margin-bottom: 5px;
+        transition: color 0.2s;
+
+        &:hover {
+          color: $accent-color;
+        }
       }
     }
   }
 
-  .nav-bar-expanded {
-    position: absolute;
-    background: $content-color;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 200px;
-    height: 100vh;
-    justify-content: space-between;
+  p {
+    padding: 0;
+    margin: 0;
   }
 }
 </style>

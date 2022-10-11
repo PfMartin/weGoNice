@@ -15,11 +15,5 @@ defineProps<{
 .icon {
   width: 25px;
   height: 25px;
-  transition: color 0.5s;
-
-  &:hover {
-    color: $accent-color;
-    cursor: pointer;
-  }
 }
 </style>
