@@ -174,7 +174,7 @@ const apply = async () => {
     width: 500px;
 
     .card {
-      background: $card-bg-color;
+      background: $bg-color;
       padding: 1rem;
       border-radius: 7px;
 
@@ -205,7 +205,7 @@ const apply = async () => {
 
             &:hover:not(.disabled) {
               cursor: pointer;
-              opacity: 0.8;
+              color: $accent-hover-color;
             }
           }
         }

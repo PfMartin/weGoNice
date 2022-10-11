@@ -1,12 +1,11 @@
 <template>
-  <nav>
-    <router-link :to="{ name: 'Home' }">Home</router-link>
-    <router-link :to="{ name: 'Recipes' }">Recipes</router-link>
-  </nav>
+  <NavBar />
   <router-view />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import NavBar from '@/components/NavBar.vue';
+</script>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400&display=swap');
@@ -14,10 +13,13 @@
 
 body {
   background: $main-bg-color;
+  margin: 0;
+  padding: 0;
 }
 
 #app {
-  padding: 0.5rem;
+  margin: 0;
+  padding: 0;
   font-family: Monserrat, sans-serif;
   // -webkit-font-smoothing: antialiased;
   // -moz-osx-font-smoothing: grayscale;
