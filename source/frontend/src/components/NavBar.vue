@@ -1,9 +1,9 @@
 <template>
   <div class="navbar">
     <body @click.prevent="toggleExpand" :class="navBarClass">
-      <div class="logout">
-        <NavIcon name="log-out" @click="logout" />
-        <p>Logout</p>
+      <div class="account">
+        <NavIcon name="person-circle" />
+        <p>Account</p>
       </div>
       <nav>
         <router-link :to="{ name: 'Home' }"
@@ -21,16 +21,16 @@
       </nav>
       <div class="options">
         <div>
-          <NavIcon name="person-circle" />
-          <p>Account</p>
-        </div>
-        <div>
           <NavIcon name="notifications" />
           <p>Notifications</p>
         </div>
         <div>
           <NavIcon name="settings" />
           <p>Settings</p>
+        </div>
+        <div class="logout">
+          <NavIcon name="log-out" @click="logout" />
+          <p>Logout</p>
         </div>
       </div>
     </body>
@@ -98,11 +98,12 @@ const logout = () => {
       width: 165px;
     }
 
-    .logout {
+    .account {
       margin-top: $margin-out;
       display: flex;
       align-items: center;
-      padding-left: 15px;
+      margin-left: 13px;
+      margin-top: 10px;
       gap: 20px;
       width: 200px;
 
@@ -162,6 +163,10 @@ const logout = () => {
         &:hover {
           color: $accent-color;
         }
+      }
+
+      .logout {
+        margin-left: 8px;
       }
     }
   }
