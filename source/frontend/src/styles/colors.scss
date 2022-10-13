@@ -1,9 +1,13 @@
-$main-bg-color: #333;
-$text-color: #fff;
-
-$bg-color: #030f20;
-
-$content-color: #041c32;
+$main-bg-color: #ddd;
+$view-bg-color: #aaa;
+$bg-color: #041c32;
+$bg-color-dark: #030f20;
 
 $accent-color: #ecb365;
 $accent-hover-color: #b98032;
+
+$shadow-color: #fff;
+
+// Text
+$text-color: #fff;
+$text-color-dark: $bg-color-dark;

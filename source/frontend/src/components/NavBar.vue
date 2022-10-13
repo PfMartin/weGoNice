@@ -71,20 +71,24 @@ const logout = () => {
 
 <style scoped lang="scss">
 @import '../styles/colors.scss';
+@import '../styles/outline.scss';
 
 .navbar {
   position: relative;
+  margin: $margin-out;
 
   body {
     position: absolute;
-    background: $content-color;
+    background: $bg-color;
     display: flex;
     flex-direction: column;
     width: 50px;
-    height: 100vh;
+    height: calc(100vh - 1rem);
     justify-content: space-between;
-    transition: 1s;
+    transition: width 1s;
     overflow: hidden;
+    border-radius: 10px;
+    box-shadow: $box-shadow;
 
     &:hover {
       cursor: pointer;
@@ -95,7 +99,7 @@ const logout = () => {
     }
 
     .logout {
-      margin-top: 0.5rem;
+      margin-top: $margin-out;
       display: flex;
       align-items: center;
       padding-left: 15px;
@@ -117,7 +121,7 @@ const logout = () => {
       a {
         text-decoration: none;
         color: inherit;
-        border-left: 3px solid $content-color;
+        border-left: 3px solid $bg-color;
         display: flex;
         align-items: center;
         gap: 20px;

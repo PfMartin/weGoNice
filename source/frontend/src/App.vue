@@ -12,9 +12,10 @@ import NavBar from '@/components/NavBar.vue';
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400&display=swap');
 @import './styles/colors.scss';
+@import './styles/outline.scss';
 
 body {
-  background: $main-bg-color;
+  background: $view-bg-color;
   margin: 0;
   padding: 0;
 }
@@ -23,15 +24,18 @@ body {
   margin: 0;
   padding: 0;
   font-family: Monserrat, sans-serif;
-  // -webkit-font-smoothing: antialiased;
-  // -moz-osx-font-smoothing: grayscale;
   color: $text-color;
   display: relative;
 }
 
 section {
-  padding: 0;
-  margin-left: 50px;
+  margin: $margin-out $margin-out $margin-out
+    calc(50px + $margin-out + $margin-out);
+  background: $main-bg-color;
+  border-radius: 10px;
+  height: calc(100vh - 1rem - 2 * $section-padding);
+  padding: $section-padding;
+  box-shadow: $box-shadow;
 
   h1 {
     padding: 0;
