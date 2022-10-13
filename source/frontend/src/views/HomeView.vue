@@ -10,10 +10,4 @@ isTokenExpired() && refreshToken();
 console.log(isTokenExpired());
 </script>
 
-<style scoped lang="scss">
-@import '../styles/colors.scss';
-
-h1 {
-  color: $text-color-dark;
-}
-</style>
+<style scoped lang="scss"></style>

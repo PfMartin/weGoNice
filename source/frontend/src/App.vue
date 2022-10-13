@@ -36,6 +36,7 @@ section {
   height: calc(100vh - 1rem - 2 * $section-padding);
   padding: $section-padding;
   box-shadow: $box-shadow;
+  color: $text-color-dark;
 
   h1 {
     padding: 0;
