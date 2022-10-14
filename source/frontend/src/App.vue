@@ -26,16 +26,15 @@ body {
   font-family: Monserrat, sans-serif;
   color: $text-color;
   display: relative;
+
+  a {
+    text-decoration: none;
+  }
 }
 
 section {
-  margin: $margin-out $margin-out $margin-out
-    calc(50px + $margin-out + $margin-out);
-  background: $main-bg-color;
   border-radius: 10px;
   height: calc(100vh - 1rem - 2 * $section-padding);
-  padding: $section-padding;
-  box-shadow: $box-shadow;
   color: $text-color-dark;
 
   h1 {

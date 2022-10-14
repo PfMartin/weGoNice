@@ -1,35 +1,35 @@
 <template>
   <div class="navbar">
-    <body @click.prevent="toggleExpand" :class="navBarClass">
+    <body @click="toggleExpand" :class="navBarClass">
       <div class="account">
-        <NavIcon name="person-circle" />
+        <ion-icon name="person-circle" />
         <p>Account</p>
       </div>
       <nav>
         <router-link :to="{ name: 'Home' }"
-          ><NavIcon name="home" />
+          ><ion-icon name="home" />
           <p>Home</p></router-link
         >
         <router-link :to="{ name: 'Recipes' }">
-          <NavIcon name="book" />
+          <ion-icon name="book" />
           <p>Recipes</p>
         </router-link>
         <router-link :to="{ name: 'Authors' }">
-          <NavIcon name="people" />
+          <ion-icon name="people" />
           <p>Authors</p></router-link
         >
       </nav>
       <div class="options">
         <div>
-          <NavIcon name="notifications" />
+          <ion-icon name="notifications" />
           <p>Notifications</p>
         </div>
         <div>
-          <NavIcon name="settings" />
+          <ion-icon name="settings" />
           <p>Settings</p>
         </div>
         <div class="logout">
-          <NavIcon name="log-out" @click="logout" />
+          <ion-icon name="log-out" @click="logout" />
           <p>Logout</p>
         </div>
       </div>
@@ -38,7 +38,6 @@
 </template>
 
 <script setup lang="ts">
-import NavIcon from '@/components/NavIcon.vue';
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -58,7 +57,6 @@ const navBarClass = computed(() => {
     expanded: isExpanded.value,
   };
 });
-
 // Routing
 const store = useStore();
 const router = useRouter();
@@ -96,6 +94,11 @@ const logout = () => {
 
     &.expanded {
       width: 165px;
+    }
+
+    ion-icon {
+      width: 25px;
+      height: 25px;
     }
 
     .account {
@@ -161,7 +164,7 @@ const logout = () => {
         transition: color 0.2s;
 
         &:hover {
-          color: $accent-color;
+          color: $accent-hover-color;
         }
       }
 
