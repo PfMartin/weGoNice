@@ -9,7 +9,7 @@ const parseJwt = (token: string) => {
 };
 
 export const isTokenExpired = (): boolean => {
-  const token = useStore().getters.sessionToken;
+  const token = useStore().getters['auth/sessionToken'];
   try {
     const { exp } = parseJwt(token);
 

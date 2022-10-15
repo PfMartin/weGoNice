@@ -10,4 +10,4 @@ isTokenExpired() && refreshToken();
 console.log(isTokenExpired());
 </script>
 
-<style scoped lang="css"></style>
+<style scoped lang="scss"></style>
