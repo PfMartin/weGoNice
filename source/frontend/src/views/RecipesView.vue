@@ -13,10 +13,18 @@
 <script setup lang="ts">
 import SearchBox from '@/components/SearchBox.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
+import { getAllRecipes } from '@/apis/weGoNice';
 
 const onSearchInput = (inputValue: string) => {
   console.log(inputValue);
 };
+
+const getRecipes = async () => {
+  const res = await getAllRecipes();
+  console.log(res);
+};
+
+getRecipes();
 </script>
 
 <style scoped lang="scss">

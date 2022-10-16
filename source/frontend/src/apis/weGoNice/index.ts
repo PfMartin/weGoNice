@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useStore } from 'vuex';
 
-interface AuthResponse {
+interface RequestResponse {
   status: number | null;
   data: Record<string, any>;
 }
@@ -13,10 +13,27 @@ const headers = {
   Authorization: '',
 };
 
+const handleError = (error: unknown): RequestResponse => {
+  if (axios.isAxiosError(error)) {
+    return {
+      status: error.response?.status || null,
+      data: {
+        msg: error.message,
+      },
+    };
+  }
+  return {
+    status: null,
+    data: {
+      msg: 'unexpected error',
+    },
+  };
+};
+
 export const registerUser = async (body: {
   email: string;
   password: string;
-}): Promise<AuthResponse> => {
+}): Promise<RequestResponse> => {
   try {
     const res = await axios.post(`${url}/auth/register`, body, {
       headers,
@@ -24,35 +41,14 @@ export const registerUser = async (body: {
 
     return res;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 406) {
-        return {
-          status: error.response.status,
-          data: {
-            msg: `User with email ${body.email} already exists`,
-          },
-        };
-      }
-      return {
-        status: error.response?.status || null,
-        data: {
-          msg: error.message,
-        },
-      };
-    }
-    return {
-      status: null,
-      data: {
-        msg: 'unexpected error',
-      },
-    };
+    return handleError(error);
   }
 };
 
 export const loginUser = async (body: {
   email: string;
   password: string;
-}): Promise<AuthResponse> => {
+}): Promise<RequestResponse> => {
   try {
     const res = await axios.post(`${url}/auth/login`, body, {
       headers,
@@ -60,34 +56,13 @@ export const loginUser = async (body: {
 
     return res;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 406) {
-        return {
-          status: error.response?.status || null,
-          data: {
-            msg: error.message,
-          },
-        };
-      }
-      return {
-        status: error.response?.status || null,
-        data: {
-          msg: error.message,
-        },
-      };
-    }
-    return {
-      status: null,
-      data: {
-        msg: 'unexpected error',
-      },
-    };
+    return handleError(error);
   }
 };
 
 export const refreshToken = async (): Promise<void> => {
   const store = useStore();
-  const token = store.getters.sessionToken;
+  const token = store.getters['auth/sessionToken'];
   headers.Authorization = `Bearer ${token}`;
   try {
     const { data } = await axios.get(`${url}/auth/token`, {
@@ -102,5 +77,23 @@ export const refreshToken = async (): Promise<void> => {
     }
 
     console.error(`An unexpected error occurred: %{error}`);
+  }
+};
+
+export const getAllRecipes = async (): Promise<any> => {
+  const token = useStore().getters['auth/sessionToken'];
+  headers.Authorization = `Bearer ${token}`;
+
+  try {
+    const res = await axios.get(`${url}/recipes`, {
+      headers,
+    });
+
+    return {
+      status: res.status,
+      data: res.data,
+    };
+  } catch (error) {
+    return handleError(error);
   }
 };
