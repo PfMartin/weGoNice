@@ -20,7 +20,7 @@ type testArgs struct {
 
 const url = "http://localhost:8080/users"
 
-var testUser = models.User{
+var TestUser = models.User{
 	Lastname:  "Zarella",
 	Firstname: "Moe",
 	Password:  "testing",
@@ -35,8 +35,8 @@ var updateUser = models.User{
 }
 
 var testLogin = models.Login{
-	Email:    testUser.Email,
-	Password: testUser.Password,
+	Email:    TestUser.Email,
+	Password: TestUser.Password,
 }
 
 func deleteAllUsers(t *testing.T, h Handler) {
@@ -55,7 +55,7 @@ func deleteAllUsers(t *testing.T, h Handler) {
 func createTestUser(t *testing.T, h Handler) (string, error) {
 	userLogin, err := json.Marshal(testLogin)
 	if err != nil {
-		t.Errorf("Failed to marshal testUser")
+		t.Errorf("Failed to marshal TestUser")
 	}
 
 	req := httptest.NewRequest(http.MethodPost, url, strings.NewReader(string(userLogin)))
