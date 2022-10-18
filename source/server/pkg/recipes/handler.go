@@ -33,7 +33,7 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to find recipes", http.StatusNotFound)
 	}
 
-	var recipes []models.Recipe
+	var recipes []models.RecipeRequest
 	if err = cursor.All(context.TODO(), &recipes); err != nil {
 		log.Printf("Error: Failed to parse recipes, %v", err)
 		http.Error(w, "Failed to parse recipes", http.StatusInternalServerError)
@@ -45,7 +45,7 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
-	var recipe models.Recipe
+	var recipe models.RecipeRequest
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&recipe)
 	if err != nil {
@@ -63,7 +63,7 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
-	data := bson.D{{Key: "name", Value: recipe.Name}, {Key: "author", Value: recipe.Author}, {Key: "time", Value: recipe.Time}, {Key: "category", Value: recipe.Category}, {Key: "ingredients", Value: recipe.Ingredients}, {Key: "steps", Value: recipe.Steps}, {Key: "userAdded", Value: recipe.UserAdded}, {Key: "createdAt", Value: time.Now()}, {Key: "modifiedAt", Value: time.Now()}}
+	data := bson.D{{Key: "name", Value: recipe.Name}, {Key: "author", Value: recipe.AuthorId}, {Key: "time", Value: recipe.Time}, {Key: "category", Value: recipe.Category}, {Key: "ingredients", Value: recipe.Ingredients}, {Key: "steps", Value: recipe.Steps}, {Key: "userAdded", Value: recipe.UserId}, {Key: "createdAt", Value: time.Now()}, {Key: "modifiedAt", Value: time.Now()}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Recipes Error: Failed to insert data: %v", err)
