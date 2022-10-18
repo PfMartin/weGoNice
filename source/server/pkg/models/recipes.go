@@ -21,8 +21,8 @@ type RecipeResponse struct {
 	Ingredients []Ingredient `bson:"ingredients"`
 	Steps       []Step       `bson:"steps"`
 	User        User         `bson:"user"`
-	CreatedAt   time.Time    `bson:"created_at"`
-	ModifiedAt  time.Time    `bson:"modified_at"`
+	CreatedAt   time.Time    `bson:"createdAt"`
+	ModifiedAt  time.Time    `bson:"modifiedAt"`
 }
 
 type Ingredient struct {
