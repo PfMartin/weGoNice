@@ -74,7 +74,7 @@ func TestGetUserById(t *testing.T) {
 	}
 }
 
-func TestPostUser(t *testing.T) {
+func TestCreateUser(t *testing.T) {
 	tests := []testArgs{
 		{name: "as wego@nice.com user", email: "wego@nice.com", role: "admin", expected: http.StatusCreated},
 		{name: "as test user", email: "moezarella@gmail.com", role: "user", expected: http.StatusUnauthorized},
@@ -123,7 +123,7 @@ func TestUpdateUserById(t *testing.T) {
 			t.Fatalf("Failed to insert User, %v", err)
 		}
 
-		updateUser, err := json.Marshal(testUser)
+		updateUser, err := json.Marshal(TestUser)
 		if err != nil {
 			t.Errorf("Failed to marshal testUser: %v", err)
 		}
