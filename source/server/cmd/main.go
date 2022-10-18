@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
+	"github.com/PfMartin/weGoNice/server/pkg/authors"
 	"github.com/PfMartin/weGoNice/server/pkg/db"
 	"github.com/PfMartin/weGoNice/server/pkg/recipes"
 	"github.com/PfMartin/weGoNice/server/pkg/users"
@@ -25,11 +26,13 @@ func main() {
 	userHandler := users.NewHandler(DB)
 	authHandler := auth.NewHandler(DB)
 	recipeHandler := recipes.NewHandler(DB)
+	authorHandler := authors.NewHandler(DB)
 
 	r := mux.NewRouter()
 	users.RegisterUserRoutes(r, userHandler)
 	auth.RegisterAuthRoutes(r, authHandler)
 	recipes.RegisterRecipeRoutes(r, recipeHandler)
+	authors.RegisterAuthorRoutes(r, authorHandler)
 
 	url := "localhost:8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})

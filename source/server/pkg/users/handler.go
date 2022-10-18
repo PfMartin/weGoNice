@@ -53,14 +53,14 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	objectId, err := primitive.ObjectIDFromHex(id)
+	userId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
 		return
 	}
 
-	filter := bson.M{"_id": objectId}
+	filter := bson.M{"_id": userId}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
@@ -106,7 +106,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	filter := bson.D{{Key: "email", Value: user.Email}}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingUser)
 	if err == nil {
-		log.Printf("Error: User with email %s already exists: %v", user.Email, err)
+		log.Printf("Error: User with email %s already exists", user.Email)
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
 		msg := "User with email " + user.Email + " already exists."
