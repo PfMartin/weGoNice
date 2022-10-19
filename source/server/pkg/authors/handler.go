@@ -124,3 +124,24 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(authorId)
 }
+
+func (h *Handler) DeleteAuthorById(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+
+	authorID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error: Failed to parse id to authorID: %v", err)
+		http.Error(w, "Failed to parse id to authorID", http.StatusBadRequest)
+		return
+	}
+
+	// Compare author.User id with id of user who wants to delete the author
+
+	filter := bson.M{"_id": authorID}
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+	coll.DeleteOne(context.TODO(), filter)
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("Deleted author")
+}
