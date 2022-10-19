@@ -11,6 +11,6 @@ func RegisterAuthorRoutes(r *mux.Router, h Handler) {
 	authorsR := r.PathPrefix("/authors").Subrouter()
 
 	authorsR.HandleFunc("", auth.CheckTokenHandler(h.GetAllAuthors)).Methods(http.MethodGet)
-	authorsR.HandleFunc("/{id}", auth.CheckTokenHandler(h.GetAuthorById)).Methods(http.MethodPost)
+	authorsR.HandleFunc("/{id}", auth.CheckTokenHandler(h.GetAuthorById)).Methods(http.MethodGet)
 	authorsR.HandleFunc("", auth.CheckTokenHandler(h.CreateAuthor)).Methods(http.MethodPost)
 }
