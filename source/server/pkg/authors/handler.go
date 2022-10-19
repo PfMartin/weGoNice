@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -43,6 +44,55 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(authors)
+}
+
+func (h *Handler) GetAuthorById(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+
+	authorId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
+		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
+		return
+	}
+
+	filter := bson.M{"_id": authorId}
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	var authorDB models.AuthorDB
+	err = coll.FindOne(context.TODO(), filter).Decode(&authorDB)
+	if err != nil {
+		log.Printf("Error: Failed to find author")
+		http.Error(w, "Failed to find author", http.StatusNotFound)
+		return
+	}
+
+	// Get user from userId
+	filter = bson.M{"_id": authorDB.UserId}
+	coll = h.DB.Database(h.dbName).Collection("users")
+
+	var user models.UserDB
+	err = coll.FindOne(context.TODO(), filter).Decode(&user)
+	if err != nil {
+		log.Printf("Error: Failed to find user that created the author")
+		http.Error(w, "Failed to find user that created the author", http.StatusNotFound)
+		return
+	}
+
+	author := models.AuthorResponse{
+		Id:         authorDB.Id,
+		Name:       authorDB.Name,
+		WebsiteUrl: authorDB.Name,
+		Instagram:  authorDB.Instagram,
+		YouTube:    authorDB.YouTube,
+		User:       user,
+		CreatedAt:  authorDB.CreatedAt,
+		ModifiedAt: authorDB.ModifiedAt,
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(author)
 }
 
 func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
@@ -87,5 +137,4 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(authorId)
-
 }
