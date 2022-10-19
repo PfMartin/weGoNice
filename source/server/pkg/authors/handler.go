@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
+	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -27,11 +28,9 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	matchStage := bson.D{{Key: "$match", Value: bson.D{{}}}}
-	lookupStage := bson.D{{Key: "$lookup", Value: bson.D{{Key: "from", Value: "users"}, {Key: "localField", Value: "userId"}, {Key: "foreignField", Value: "_id"}, {Key: "as", Value: "user"}}}}
 	projectStage := bson.D{{Key: "$project", Value: bson.D{{Key: "name", Value: 1}, {Key: "websiteUrl", Value: 1}, {Key: "instagram", Value: 1}, {Key: "youTube", Value: 1}, {Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}}}}}
-	unsetStage := bson.D{{Key: "$unset", Value: bson.A{"user.password"}}} // bson array bson.A
 
-	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, lookupStage, projectStage, unsetStage})
+	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, projectStage, utils.UserUnset})
 	if err != nil {
 		log.Printf("Error: Failed to find authors: %v", err)
 		http.Error(w, "Failed to find authors", http.StatusNotFound)
