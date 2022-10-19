@@ -57,6 +57,24 @@ curl -X DELETE \
   "http://localhost:8080/users"
 ```
 
+## Aggregate referenced documents
+
+```mongo
+db.authors.aggregate([{
+    $match: {}
+  },
+  {
+    $lookup: {from: 'users', localField: 'userId', foreignField: '_id', as: 'user'}
+  },
+  {
+    $project: {user: {$first: "$user"}}
+  },
+  {
+    $unset: ["user.password"]
+  }
+  ])
+```
+
 ## Resources
 
 - API Handler and connection to Postgres Database: [dev.to - connecting-to-postgresql-using-gorm](https://dev.to/karanpratapsingh/connecting-to-postgresql-using-gorm-24fj)

@@ -6,4 +6,4 @@ type testArgs struct {
 	expected   int
 }
 
-const url = "http://localhost:8080/users"
+const url = "http://localhost:8080/authors"
