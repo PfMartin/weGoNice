@@ -29,11 +29,9 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	matchStage := bson.D{{Key: "$match", Value: bson.D{{}}}}
 	lookupStage := bson.D{{Key: "$lookup", Value: bson.D{{Key: "from", Value: "users"}, {Key: "localField", Value: "userId"}, {Key: "foreignField", Value: "_id"}, {Key: "as", Value: "user"}}}}
 	projectStage := bson.D{{Key: "$project", Value: bson.D{{Key: "name", Value: 1}, {Key: "websiteUrl", Value: 1}, {Key: "instagram", Value: 1}, {Key: "youTube", Value: 1}, {Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}}}}}
-	unsetStage := bson.D{{Key: "$unset", Value: "user.password"}}
+	unsetStage := bson.D{{Key: "$unset", Value: bson.A{"user.password"}}} // bson array bson.A
 
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, lookupStage, projectStage, unsetStage})
-
-	// cursor, err := coll.Find(context.TODO(), filter)
 	if err != nil {
 		log.Printf("Error: Failed to find authors: %v", err)
 		http.Error(w, "Failed to find authors", http.StatusNotFound)
@@ -46,8 +44,6 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to parse authors", http.StatusInternalServerError)
 		return
 	}
-
-	log.Println(authors[0].Name)
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -79,7 +75,7 @@ func (h *Handler) GetAuthorById(w http.ResponseWriter, r *http.Request) {
 	filter = bson.M{"_id": authorDB.UserId}
 	coll = h.DB.Database(h.dbName).Collection("users")
 
-	var user models.UserDB
+	var user models.UserResponse
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
 		log.Printf("Error: Failed to find user that created the author")
