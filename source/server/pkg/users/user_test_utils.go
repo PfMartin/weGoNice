@@ -11,10 +11,10 @@ import (
 )
 
 type testArgs struct {
-	name     string
-	userId   string
-	role     string
-	expected int
+	name              string
+	hasMatchingUserId bool
+	role              string
+	expected          int
 }
 
 const url = "http://localhost:8080/users"
