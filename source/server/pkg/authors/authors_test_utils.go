@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
+	"github.com/PfMartin/weGoNice/server/pkg/users"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -38,4 +39,24 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 
 	return userId, nil
 
+}
+
+func DropAuthorsCollection(db *mongo.Client) error {
+	coll := db.Database("weGoNice").Collection("authors")
+	if err := coll.Drop(context.TODO()); err != nil {
+		return err
+	}
+	return nil
+}
+
+func ClearDatabase(db *mongo.Client) error {
+	if err := users.DropUsersCollection(db); err != nil {
+		return err
+	}
+
+	if err := DropAuthorsCollection(db); err != nil {
+		return err
+	}
+
+	return nil
 }

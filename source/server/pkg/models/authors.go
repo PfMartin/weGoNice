@@ -2,16 +2,14 @@ package models
 
 import (
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type AuthorRequest struct {
-	Name       string             `bson:"name"`
-	WebsiteUrl string             `bson:"websiteUrl"`
-	Instagram  string             `bson:"instagram"`
-	YouTube    string             `bson:"youTube"`
-	UserId     primitive.ObjectID `bson:"userId"` // TODO: UserId should no come from body but from token
+	Name       string `bson:"name"`
+	WebsiteUrl string `bson:"websiteUrl"`
+	Instagram  string `bson:"instagram"`
+	YouTube    string `bson:"youTube"`
+	UserId     string `bson:"userId"` // TODO: UserId should no come from body but from token
 }
 
 type AuthorResponse struct {

@@ -24,8 +24,7 @@ func TestGetAllUsers(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := DeleteAllUsers(DB)
-		if err != nil {
+		if err := DropUsersCollection(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
@@ -58,8 +57,7 @@ func TestGetUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := DeleteAllUsers(DB)
-		if err != nil {
+		if err := DropUsersCollection(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
@@ -97,8 +95,7 @@ func TestCreateUser(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := DeleteAllUsers(DB)
-		if err != nil {
+		if err := DropUsersCollection(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
@@ -130,8 +127,7 @@ func TestUpdateUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := DeleteAllUsers(DB)
-		if err != nil {
+		if err := DropUsersCollection(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
@@ -174,8 +170,7 @@ func TestDeleteUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := DeleteAllUsers(DB)
-		if err != nil {
+		if err := DropUsersCollection(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
