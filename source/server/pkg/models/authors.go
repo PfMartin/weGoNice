@@ -11,7 +11,7 @@ type AuthorRequest struct {
 	WebsiteUrl string             `bson:"websiteUrl"`
 	Instagram  string             `bson:"instagram"`
 	YouTube    string             `bson:"youTube"`
-	UserId     primitive.ObjectID `bson:"userId"`
+	UserId     primitive.ObjectID `bson:"userId"` // TODO: UserId should no come from body but from token
 }
 
 type AuthorResponse struct {

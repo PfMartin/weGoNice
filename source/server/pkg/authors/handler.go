@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
@@ -110,7 +111,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := bson.D{{Key: "name", Value: author.Name}, {Key: "websiteUrl", Value: author.WebsiteUrl}, {Key: "instagram", Value: author.Instagram}, {Key: "youTube", Value: author.YouTube}, {Key: "userId", Value: author.UserId}}
+	data := bson.D{{Key: "name", Value: author.Name}, {Key: "websiteUrl", Value: author.WebsiteUrl}, {Key: "instagram", Value: author.Instagram}, {Key: "youTube", Value: author.YouTube}, {Key: "userId", Value: author.UserId}, {Key: "createdAt", Value: time.Now()}, {Key: "modifiedAt", Value: time.Now()}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Error: Failed to insert data: %v", err)
@@ -125,6 +126,50 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(authorId)
 }
 
+func (h *Handler) UpdateAuthorById(w http.ResponseWriter, r *http.Request) {
+	var author models.AuthorRequest
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&author)
+	if err != nil {
+		log.Printf("Error: Failed to decode request body for author: %v", r.Body)
+		http.Error(w, "Failed to decode request body for author", http.StatusBadRequest)
+		return
+	}
+
+	id := mux.Vars(r)["id"]
+	authorID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error: Failed to parse id to authorID: %v", err)
+		http.Error(w, "Failed to parse id to authorID", http.StatusBadRequest)
+		return
+	}
+
+	// TODO: Compare author.UserId with user._id of request
+
+	filter := bson.M{"_id": authorID}
+	update := bson.M{
+		"name":       author.Name,
+		"websiteUrl": author.WebsiteUrl,
+		"instagram":  author.Instagram,
+		"youTube":    author.YouTube,
+		"userId":     author.UserId,
+		"modifiedAt": time.Now(),
+	}
+
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+	result, err := coll.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		log.Printf("Error: Failed to update author: %v", err)
+		http.Error(w, "Failed to update author", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
+
+}
+
 func (h *Handler) DeleteAuthorById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
@@ -135,7 +180,7 @@ func (h *Handler) DeleteAuthorById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Compare author.User id with id of user who wants to delete the author
+	// TODO: Compare author.UserId with user._id of request
 
 	filter := bson.M{"_id": authorID}
 	coll := h.DB.Database(h.dbName).Collection(h.collection)

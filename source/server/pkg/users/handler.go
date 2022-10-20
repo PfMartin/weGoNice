@@ -144,7 +144,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	objectId, err := primitive.ObjectIDFromHex(id)
+	userID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusInternalServerError)
@@ -157,8 +157,8 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	decoder.DisallowUnknownFields()
 	err = decoder.Decode(&user)
 	if err != nil {
-		log.Printf("Error: Failed to decode user: %v", r.Body)
-		http.Error(w, "Failed to decode user", http.StatusBadRequest)
+		log.Printf("Error: Failed to decode request body for user: %v", r.Body)
+		http.Error(w, "Failed to decode request body for user", http.StatusBadRequest)
 		return
 	}
 
@@ -167,7 +167,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filter := bson.M{"_id": objectId}
+	filter := bson.M{"_id": userID}
 	update := bson.M{"$set": bson.M{
 		"lastname":  user.Lastname,
 		"firstname": user.Firstname,
@@ -188,14 +188,14 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	objectId, err := primitive.ObjectIDFromHex(id)
+	userID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Printf("Error: Failed to parse id to objectId: %v", err)
+		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
 		return
 	}
 
-	filter := bson.M{"_id": objectId}
+	filter := bson.M{"_id": userID}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
@@ -212,7 +212,7 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filter = bson.M{"_id": objectId}
+	filter = bson.M{"_id": userID}
 	coll = h.DB.Database(h.dbName).Collection(h.collection)
 	coll.DeleteOne(context.TODO(), filter)
 
