@@ -24,12 +24,12 @@ func TestGetAllUsers(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := deleteAllUsers(t, h)
+		err := DeleteAllUsers(DB)
 		if err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		insertedID, err := createTestUser(t, h)
+		insertedID, err := CreateTestUser(DB)
 		if err != nil {
 			t.Fatalf("User could not be created, %v", err)
 		}
@@ -58,12 +58,12 @@ func TestGetUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := deleteAllUsers(t, h)
+		err := DeleteAllUsers(DB)
 		if err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		insertedUserId, err := createTestUser(t, h)
+		insertedUserId, err := CreateTestUser(DB)
 		if err != nil {
 			t.Errorf("User could not be created, %v", err)
 		}
@@ -97,7 +97,7 @@ func TestCreateUser(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := deleteAllUsers(t, h)
+		err := DeleteAllUsers(DB)
 		if err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
@@ -130,12 +130,12 @@ func TestUpdateUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := deleteAllUsers(t, h)
+		err := DeleteAllUsers(DB)
 		if err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		insertedUserId, err := createTestUser(t, h)
+		insertedUserId, err := CreateTestUser(DB)
 		if err != nil {
 			t.Fatalf("Failed to insert User, %v", err)
 		}
@@ -174,12 +174,12 @@ func TestDeleteUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		err := deleteAllUsers(t, h)
+		err := DeleteAllUsers(DB)
 		if err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		insertedUserId, err := createTestUser(t, h)
+		insertedUserId, err := CreateTestUser(DB)
 		if err != nil {
 			t.Fatalf("Failed to insert User, %v", err)
 		}

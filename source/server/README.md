@@ -6,7 +6,7 @@
 
 - [ ] Use context for database queries
 - [ ] Tests for author handler
-- [ ] Use user id for authentication instead of email
+- [x] Use userId for authentication instead of email
 
 ## Setup the Postgres database
 

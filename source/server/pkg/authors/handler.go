@@ -53,7 +53,7 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) GetAuthorById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	authorId, err := primitive.ObjectIDFromHex(id)
+	authorID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
@@ -63,7 +63,7 @@ func (h *Handler) GetAuthorById(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	var authors []models.AuthorResponse
-	matchStage := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: authorId}}}}
+	matchStage := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: authorID}}}}
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, projectStage, utils.UserUnset})
 	if err != nil {
 		log.Printf("Error: Failed to find author")
@@ -119,11 +119,11 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	authorId := cursor.InsertedID.(primitive.ObjectID)
+	authorID := cursor.InsertedID.(primitive.ObjectID)
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(authorId)
+	json.NewEncoder(w).Encode(authorID)
 }
 
 func (h *Handler) UpdateAuthorById(w http.ResponseWriter, r *http.Request) {
