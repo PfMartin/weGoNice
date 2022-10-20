@@ -15,5 +15,4 @@ func RegisterUserRoutes(r *mux.Router, h Handler) {
 	usersR.HandleFunc("", auth.CheckTokenHandler(h.CreateUser)).Methods(http.MethodPost)
 	usersR.HandleFunc("/{id}", auth.CheckTokenHandler(h.UpdateUserById)).Methods(http.MethodPut)
 	usersR.HandleFunc("/{id}", auth.CheckTokenHandler(h.DeleteUserById)).Methods(http.MethodDelete)
-	usersR.HandleFunc("", auth.CheckTokenHandler(h.DeleteAllUsers)).Methods(http.MethodDelete)
 }

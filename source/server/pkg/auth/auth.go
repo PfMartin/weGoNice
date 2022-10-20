@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -25,12 +26,12 @@ func checkPassword(password string, hashedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func createToken(email string, isAdmin bool) (string, error) {
+func createToken(id string, isAdmin bool) (string, error) {
 	var err error
 
 	atClaims := jwt.MapClaims{}
-	atClaims["autorized"] = true
-	atClaims["email"] = email
+	atClaims["authorized"] = true
+	atClaims["userId"] = id
 	if isAdmin {
 		atClaims["role"] = "admin"
 	} else {
@@ -52,12 +53,12 @@ func createToken(email string, isAdmin bool) (string, error) {
 	return token, nil
 }
 
-func IsEmailContextOk(email string, r *http.Request) bool {
-	emailCtx, ok := context.Get(r, "email").(string)
+func IsUserIdContextOk(id string, r *http.Request) bool {
+	userIdCtx, ok := context.Get(r, "userId").(string)
 	if !ok {
 		return false
 	}
-	if emailCtx != email && emailCtx != "wego@nice.com" {
+	if userIdCtx != id {
 		return false
 	}
 	return true
@@ -93,22 +94,25 @@ func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc {
 		}
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if ok && token.Valid {
-			email, ok := claims["email"].(string)
+			id, ok := claims["userId"].(string)
 			if !ok {
-				http.Error(w, "Unautorized", http.StatusUnauthorized)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				log.Println(id)
+				log.Println("Check token Handler Unauthorized")
 				return
 			}
 
 			role, ok := claims["role"].(string)
 			if !ok {
-				http.Error(w, "Unautorized", http.StatusUnauthorized)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
 				return
 			}
 
 			// Set email in the request, so I will use it in check after
-			context.Set(r, "email", email)
+			context.Set(r, "userId", id)
 			context.Set(r, "role", role)
 		}
+
 		next(w, r)
 
 	}

@@ -1,5 +1,13 @@
 # Server Documentation
 
+## TODOS
+
+### Authors backend
+
+- [ ] Use context for database queries
+- [ ] Tests for author handler
+- [ ] Use user id for authentication instead of email
+
 ## Setup the Postgres database
 
 ### Start the Container

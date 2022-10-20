@@ -72,7 +72,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !auth.IsEmailContextOk(user.Email, r) {
+	if !auth.IsUserIdContextOk(user.Id, r) && !auth.IsAdminContextOk(r) {
 		http.Error(w, "Not authorized to see details about another user", http.StatusUnauthorized)
 		return
 	}
@@ -152,7 +152,6 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user models.User
-
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
 	err = decoder.Decode(&user)
@@ -162,7 +161,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !auth.IsEmailContextOk(user.Email, r) {
+	if !auth.IsUserIdContextOk(id, r) && !auth.IsAdminContextOk(r) {
 		http.Error(w, "Not authorized to update other user", http.StatusUnauthorized)
 		return
 	}
@@ -207,7 +206,7 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !auth.IsEmailContextOk(user.Email, r) {
+	if !auth.IsUserIdContextOk(id, r) && !auth.IsAdminContextOk(r) {
 		http.Error(w, "Not authorized to delete other user", http.StatusUnauthorized)
 		return
 	}
@@ -219,24 +218,4 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Deleted user")
-}
-
-func (h *Handler) DeleteAllUsers(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAdminContextOk(r) {
-		http.Error(w, "Not authorized to delete all users", http.StatusUnauthorized)
-		return
-	}
-
-	coll := h.DB.Database(h.dbName).Collection(h.collection)
-
-	result, err := coll.DeleteMany(context.TODO(), bson.D{})
-	if err != nil {
-		log.Printf("Error: Failed to delete all users: %v", err)
-		http.Error(w, "Failed to delete all users", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(result.DeletedCount)
 }
