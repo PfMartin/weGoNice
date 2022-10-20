@@ -38,11 +38,11 @@ var testLogin = models.Login{
 	Password: TestUser.Password,
 }
 
-func DropUsersCollection(db *mongo.Client) error {
-	coll := db.Database("weGoNice").Collection("users")
-	if err := coll.Drop(context.TODO()); err != nil {
+func ClearDatabase(db *mongo.Client) error {
+	if err := db.Database("weGoNice").Drop(context.TODO()); err != nil {
 		return err
 	}
+
 	return nil
 }
 

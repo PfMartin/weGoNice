@@ -24,7 +24,7 @@ func TestGetAllAuthors(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := ClearDatabase(DB); err != nil {
+		if err := users.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
 		}
 
@@ -64,7 +64,7 @@ func TestGetAuthorByID(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := ClearDatabase(DB); err != nil {
+		if err := users.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
 		}
 
@@ -105,7 +105,7 @@ func TestCreateAuthor(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := ClearDatabase(DB); err != nil {
+		if err := users.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
 		}
 
