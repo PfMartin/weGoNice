@@ -9,13 +9,22 @@ import (
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
+	gorillaContext "github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var projectStage = bson.D{{Key: "$project", Value: bson.D{{Key: "name", Value: 1}, {Key: "websiteUrl", Value: 1}, {Key: "instagram", Value: 1}, {Key: "youTube", Value: 1}, {Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}}}}}
+var projectStage = bson.D{
+	{Key: "$project", Value: bson.D{
+		{Key: "name", Value: 1},
+		{Key: "websiteUrl", Value: 1},
+		{Key: "instagram", Value: 1},
+		{Key: "youTube", Value: 1},
+		{Key: "createdAt", Value: 1},
+		{Key: "modifiedAt", Value: 1},
+		{Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}}}}}
 
 type Handler struct {
 	DB         *mongo.Client
@@ -31,7 +40,7 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	matchStage := bson.D{{Key: "$match", Value: bson.D{{}}}}
-	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, projectStage, utils.UserUnset})
+	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, projectStage})
 	if err != nil {
 		log.Printf("Error: Failed to find authors: %v", err)
 		http.Error(w, "Failed to find authors", http.StatusNotFound)
@@ -44,6 +53,8 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to parse authors", http.StatusInternalServerError)
 		return
 	}
+
+	log.Println(authors)
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -64,7 +75,7 @@ func (h *Handler) GetAuthorById(w http.ResponseWriter, r *http.Request) {
 
 	var authors []models.AuthorResponse
 	matchStage := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: authorID}}}}
-	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, projectStage, utils.UserUnset})
+	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, projectStage})
 	if err != nil {
 		log.Printf("Error: Failed to find author")
 		http.Error(w, "Failed to find author", http.StatusNotFound)
@@ -111,7 +122,24 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := bson.D{{Key: "name", Value: author.Name}, {Key: "websiteUrl", Value: author.WebsiteUrl}, {Key: "instagram", Value: author.Instagram}, {Key: "youTube", Value: author.YouTube}, {Key: "userId", Value: author.UserId}, {Key: "createdAt", Value: time.Now()}, {Key: "modifiedAt", Value: time.Now()}}
+	userIDCtx := gorillaContext.Get(r, "userId").(string)
+
+	userID, err := primitive.ObjectIDFromHex(userIDCtx)
+	if err != nil {
+		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
+		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
+	}
+
+	data := bson.M{
+		"name":       author.Name,
+		"websiteUrl": author.WebsiteUrl,
+		"instagram":  author.Instagram,
+		"youTube":    author.YouTube,
+		"userId":     userID,
+		"createdAt":  time.Now(),
+		"modifiedAt": time.Now(),
+	}
+
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Error: Failed to insert data: %v", err)

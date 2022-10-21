@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,6 +19,8 @@ type testArgs struct {
 }
 
 const url = "http://localhost:8080/users"
+
+var date = time.Date(2020, time.April, 11, 21, 34, 01, 0, time.UTC)
 
 var TestUser = models.User{
 	Lastname:  "Zarella",
@@ -48,7 +51,14 @@ func ClearDatabase(db *mongo.Client) error {
 
 func CreateTestUser(db *mongo.Client) (string, error) {
 	coll := db.Database("weGoNice").Collection("users")
-	data := bson.M{"lastname": TestUser.Lastname, "firstname": TestUser.Firstname, "email": TestUser.Email, "password": TestUser.Password}
+	data := bson.M{
+		"lastname":   TestUser.Lastname,
+		"firstname":  TestUser.Firstname,
+		"email":      TestUser.Email,
+		"password":   TestUser.Password,
+		"modifiedAt": date,
+		"createdAt":  date,
+	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Error: Failed insert data: %v", err)

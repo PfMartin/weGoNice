@@ -2,12 +2,14 @@ package authors
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
 	"github.com/PfMartin/weGoNice/server/pkg/db"
+	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/users"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -49,8 +51,24 @@ func TestGetAllAuthors(t *testing.T) {
 
 		h.GetAllAuthors(w, req)
 
+		res := w.Result()
+		defer res.Body.Close()
+		data, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			t.Errorf("Failed to read body of response %v", err)
+		}
+
+		var authorRes []models.AuthorResponse
+		err = json.Unmarshal(data, &authorRes)
+		if err != nil {
+			t.Errorf("Failed to unmarshal response to author: %v", err)
+		}
+
+		t.Errorf("Data: %v", authorRes)
+
 		got := w.Code
 		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
+
 	}
 }
 
@@ -90,6 +108,21 @@ func TestGetAuthorByID(t *testing.T) {
 		}
 
 		h.GetAuthorById(w, req)
+
+		res := w.Result()
+		defer res.Body.Close()
+		data, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			t.Errorf("Failed to read body of response %v", err)
+		}
+
+		var authorRes models.AuthorResponse
+		err = json.Unmarshal(data, &authorRes)
+		if err != nil {
+			t.Errorf("Failed to unmarshal response to author: %v", err)
+		}
+
+		t.Errorf("Data: %v", authorRes)
 
 		got := w.Code
 		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
