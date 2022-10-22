@@ -56,6 +56,7 @@ func CreateTestUser(db *mongo.Client) (string, error) {
 		"firstname":  TestUser.Firstname,
 		"email":      TestUser.Email,
 		"password":   TestUser.Password,
+		"role":       "user",
 		"modifiedAt": date,
 		"createdAt":  date,
 	}

@@ -18,8 +18,8 @@ import (
 
 func TestGetAllAuthors(t *testing.T) {
 	tests := []testArgs{
-		{name: "with correct userID", hasMatchingUserID: true, expected: http.StatusOK},
-		{name: "without correct userID", hasMatchingUserID: false, expected: http.StatusOK},
+		{name: "with correct userID", hasMatchingUserID: true, expectedAuthor: expectedAuthor},
+		{name: "without correct userID", hasMatchingUserID: false, expectedAuthor: expectedAuthor},
 	}
 
 	for _, tt := range tests {
@@ -35,7 +35,7 @@ func TestGetAllAuthors(t *testing.T) {
 			t.Errorf("User could not be created, %v", err)
 		}
 
-		_, err = CreateTestAuthor(DB, insertedUserID)
+		insertedAuthorID, err := CreateTestAuthor(DB, insertedUserID)
 		if err != nil {
 			t.Fatalf("Author could not be created, %v", err)
 		}
@@ -64,18 +64,21 @@ func TestGetAllAuthors(t *testing.T) {
 			t.Errorf("Failed to unmarshal response to author: %v", err)
 		}
 
-		t.Errorf("Data: %v", authorRes)
+		tt.expectedAuthor.Id = insertedAuthorID
+		tt.expectedAuthor.User.Id = insertedUserID
 
-		got := w.Code
-		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
+		expectedAuthors := []models.AuthorResponse{tt.expectedAuthor}
+
+		got := authorRes
+		assert.Equal(t, expectedAuthors, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, expectedAuthors, got)
 
 	}
 }
 
 func TestGetAuthorByID(t *testing.T) {
 	tests := []testArgs{
-		{name: "with correct userID", hasMatchingUserID: true, expected: http.StatusOK},
-		{name: "without correct userID", hasMatchingUserID: false, expected: http.StatusOK},
+		{name: "with correct userID", hasMatchingUserID: true, expectedAuthor: expectedAuthor},
+		{name: "without correct userID", hasMatchingUserID: false, expectedAuthor: expectedAuthor},
 	}
 
 	for _, tt := range tests {
@@ -122,16 +125,17 @@ func TestGetAuthorByID(t *testing.T) {
 			t.Errorf("Failed to unmarshal response to author: %v", err)
 		}
 
-		t.Errorf("Data: %v", authorRes)
+		tt.expectedAuthor.Id = insertedAuthorID
+		tt.expectedAuthor.User.Id = insertedUserID
 
-		got := w.Code
-		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
+		got := authorRes
+		assert.Equal(t, tt.expectedAuthor, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedAuthor, got)
 	}
 }
 
 func TestCreateAuthor(t *testing.T) {
 	tests := []testArgs{
-		{name: "with correct userID", hasMatchingUserID: true, expected: http.StatusCreated},
+		{name: "with correct userID", hasMatchingUserID: true, expectedStatus: http.StatusCreated},
 	}
 
 	for _, tt := range tests {
@@ -166,14 +170,14 @@ func TestCreateAuthor(t *testing.T) {
 		h.CreateAuthor(w, req)
 
 		got := w.Code
-		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
+		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expectedStatus, got)
 	}
 }
 
 func TestDeleteAuthorByID(t *testing.T) {
 	tests := []testArgs{
-		{name: "with correct userID", hasMatchingUserID: true, expected: http.StatusOK},
-		{name: "without correct userID", hasMatchingUserID: false, expected: http.StatusOK},
+		{name: "with correct userID", hasMatchingUserID: true, expectedStatus: http.StatusOK},
+		{name: "without correct userID", hasMatchingUserID: false, expectedStatus: http.StatusOK},
 	}
 
 	for _, tt := range tests {
@@ -208,6 +212,6 @@ func TestDeleteAuthorByID(t *testing.T) {
 		h.DeleteAuthorById(w, req)
 
 		got := w.Code
-		assert.Equal(t, tt.expected, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expected, got)
+		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expectedStatus, got)
 	}
 }
