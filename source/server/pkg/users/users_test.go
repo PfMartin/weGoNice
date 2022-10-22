@@ -8,10 +8,20 @@ import (
 	"testing"
 
 	"github.com/PfMartin/weGoNice/server/pkg/db"
+	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
+
+type testArgs struct {
+	name              string
+	hasMatchingUserId bool
+	role              string
+	expected          int
+}
+
+const url = "http://localhost:8080/users"
 
 func TestGetAllUsers(t *testing.T) {
 	tests := []testArgs{
@@ -24,11 +34,11 @@ func TestGetAllUsers(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		insertedID, err := CreateTestUser(DB)
+		insertedID, err := testUtils.CreateTestUser(DB)
 		if err != nil {
 			t.Fatalf("User could not be created, %v", err)
 		}
@@ -57,11 +67,11 @@ func TestGetUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		insertedUserId, err := CreateTestUser(DB)
+		insertedUserId, err := testUtils.CreateTestUser(DB)
 		if err != nil {
 			t.Errorf("User could not be created, %v", err)
 		}
@@ -95,11 +105,11 @@ func TestCreateUser(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		userLogin, err := json.Marshal(testLogin)
+		userLogin, err := json.Marshal(testUtils.TestLogin)
 		if err != nil {
 			t.Errorf("Failed to marshal testUser: %v", err)
 		}
@@ -127,16 +137,16 @@ func TestUpdateUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		insertedUserId, err := CreateTestUser(DB)
+		insertedUserId, err := testUtils.CreateTestUser(DB)
 		if err != nil {
 			t.Fatalf("Failed to insert User, %v", err)
 		}
 
-		updateUser, err := json.Marshal(TestUser)
+		updateUser, err := json.Marshal(testUtils.TestUser)
 		if err != nil {
 			t.Errorf("Failed to marshal testUser: %v", err)
 		}
@@ -170,16 +180,16 @@ func TestDeleteUserById(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Failed to delete all users, %v", err)
 		}
 
-		insertedUserId, err := CreateTestUser(DB)
+		insertedUserId, err := testUtils.CreateTestUser(DB)
 		if err != nil {
 			t.Fatalf("Failed to insert User, %v", err)
 		}
 
-		updateUser, err := json.Marshal(TestUser)
+		updateUser, err := json.Marshal(testUtils.TestUser)
 		if err != nil {
 			t.Errorf("Failed to marshal testUser: %v", err)
 		}

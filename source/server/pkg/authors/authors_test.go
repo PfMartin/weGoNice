@@ -10,32 +10,41 @@ import (
 
 	"github.com/PfMartin/weGoNice/server/pkg/db"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
-	"github.com/PfMartin/weGoNice/server/pkg/users"
+	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
 
+type testArgs struct {
+	name              string
+	hasMatchingUserID bool
+	expectedStatus    int
+	expectedAuthor    models.AuthorResponse
+}
+
+const url = "http://localhost:8080/authors"
+
 func TestGetAllAuthors(t *testing.T) {
 	tests := []testArgs{
-		{name: "with correct userID", hasMatchingUserID: true, expectedAuthor: expectedAuthor},
-		{name: "without correct userID", hasMatchingUserID: false, expectedAuthor: expectedAuthor},
+		{name: "with correct userID", hasMatchingUserID: true, expectedAuthor: testUtils.ExpectedAuthor},
+		{name: "without correct userID", hasMatchingUserID: false, expectedAuthor: testUtils.ExpectedAuthor},
 	}
 
 	for _, tt := range tests {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := users.ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
 		}
 
-		insertedUserID, err := users.CreateTestUser(DB)
+		insertedUserID, err := testUtils.CreateTestUser(DB)
 		if err != nil {
 			t.Errorf("User could not be created, %v", err)
 		}
 
-		insertedAuthorID, err := CreateTestAuthor(DB, insertedUserID)
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
 		if err != nil {
 			t.Fatalf("Author could not be created, %v", err)
 		}
@@ -77,24 +86,24 @@ func TestGetAllAuthors(t *testing.T) {
 
 func TestGetAuthorByID(t *testing.T) {
 	tests := []testArgs{
-		{name: "with correct userID", hasMatchingUserID: true, expectedAuthor: expectedAuthor},
-		{name: "without correct userID", hasMatchingUserID: false, expectedAuthor: expectedAuthor},
+		{name: "with correct userID", hasMatchingUserID: true, expectedAuthor: testUtils.ExpectedAuthor},
+		{name: "without correct userID", hasMatchingUserID: false, expectedAuthor: testUtils.ExpectedAuthor},
 	}
 
 	for _, tt := range tests {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := users.ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
 		}
 
-		insertedUserID, err := users.CreateTestUser(DB)
+		insertedUserID, err := testUtils.CreateTestUser(DB)
 		if err != nil {
 			t.Errorf("User could not be created, %v", err)
 		}
 
-		insertedAuthorID, err := CreateTestAuthor(DB, insertedUserID)
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
 		if err != nil {
 			t.Fatalf("Author could not be created, %v", err)
 		}
@@ -142,16 +151,16 @@ func TestCreateAuthor(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := users.ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
 		}
 
-		insertedUserID, err := users.CreateTestUser(DB)
+		insertedUserID, err := testUtils.CreateTestUser(DB)
 		if err != nil {
 			t.Errorf("User could not be created, %v", err)
 		}
 
-		newAuthor := testAuthor
+		newAuthor := testUtils.TestAuthor
 		newAuthor.UserId = insertedUserID
 
 		author, err := json.Marshal(newAuthor)
@@ -184,16 +193,16 @@ func TestDeleteAuthorByID(t *testing.T) {
 		DB := db.Init(false)
 		h := NewHandler(DB)
 
-		if err := users.ClearDatabase(DB); err != nil {
+		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
 		}
 
-		insertedUserID, err := users.CreateTestUser(DB)
+		insertedUserID, err := testUtils.CreateTestUser(DB)
 		if err != nil {
 			t.Errorf("User could not be created, %v", err)
 		}
 
-		insertedAuthorID, err := CreateTestAuthor(DB, insertedUserID)
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
 		if err != nil {
 			t.Fatalf("Author could not be created, %v", err)
 		}
