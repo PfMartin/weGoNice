@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
-	gorillaContext "github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -53,8 +53,6 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to parse authors", http.StatusInternalServerError)
 		return
 	}
-
-	log.Println(authors)
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -107,7 +105,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	var existingAuthor models.AuthorResponse
-	filter := bson.D{{Key: "name", Value: author.Name}}
+	filter := bson.M{"name": author.Name}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingAuthor)
 	if err == nil {
 		log.Printf("Error: Author with name %s already exists", author.Name)
@@ -122,9 +120,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userIDCtx := gorillaContext.Get(r, "userId").(string)
-
-	userID, err := primitive.ObjectIDFromHex(userIDCtx)
+	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
 		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
@@ -172,7 +168,11 @@ func (h *Handler) UpdateAuthorById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Compare author.UserId with user._id of request
+	userID, err := auth.GetUserIDFromCtx(r)
+	if err != nil {
+		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
+		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
+	}
 
 	filter := bson.M{"_id": authorID}
 	update := bson.M{
@@ -180,7 +180,7 @@ func (h *Handler) UpdateAuthorById(w http.ResponseWriter, r *http.Request) {
 		"websiteUrl": author.WebsiteUrl,
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
-		"userId":     author.UserId,
+		"userId":     userID,
 		"modifiedAt": time.Now(),
 	}
 
@@ -195,7 +195,6 @@ func (h *Handler) UpdateAuthorById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(result)
-
 }
 
 func (h *Handler) DeleteAuthorById(w http.ResponseWriter, r *http.Request) {
@@ -207,8 +206,6 @@ func (h *Handler) DeleteAuthorById(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to parse id to authorID", http.StatusBadRequest)
 		return
 	}
-
-	// TODO: Compare author.UserId with user._id of request
 
 	filter := bson.M{"_id": authorID}
 	coll := h.DB.Database(h.dbName).Collection(h.collection)

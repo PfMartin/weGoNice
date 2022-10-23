@@ -5,7 +5,7 @@
 ### Authors backend
 
 - [ ] Use context for database queries
-- [ ] Tests for author handler
+- [x] Tests for author handler
 - [x] Use userId for authentication instead of email
 
 ## Setup the Postgres database

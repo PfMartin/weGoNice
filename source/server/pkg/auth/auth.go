@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,7 +10,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/context"
+	gorillaCtx "github.com/gorilla/context"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -54,7 +56,7 @@ func createToken(id string, isAdmin bool) (string, error) {
 }
 
 func IsUserIdContextOk(id string, r *http.Request) bool {
-	userIdCtx, ok := context.Get(r, "userId").(string)
+	userIdCtx, ok := gorillaCtx.Get(r, "userId").(string)
 	if !ok {
 		return false
 	}
@@ -65,7 +67,7 @@ func IsUserIdContextOk(id string, r *http.Request) bool {
 }
 
 func IsAdminContextOk(r *http.Request) bool {
-	roleCtx, ok := context.Get(r, "role").(string)
+	roleCtx, ok := gorillaCtx.Get(r, "role").(string)
 	if !ok {
 		return false
 	}
@@ -109,8 +111,8 @@ func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc {
 			}
 
 			// Set email in the request, so I will use it in check after
-			context.Set(r, "userId", id)
-			context.Set(r, "role", role)
+			gorillaCtx.Set(r, "userId", id)
+			gorillaCtx.Set(r, "role", role)
 		}
 
 		next(w, r)
@@ -136,4 +138,20 @@ func checkToken(tokenString string) (*jwt.Token, bool) {
 	}
 
 	return token, true
+}
+
+func GetUserIDFromCtx(r *http.Request) (primitive.ObjectID, error) {
+	userIDCtx, ok := gorillaCtx.Get(r, "userId").(string)
+	if !ok {
+		userID, _ := primitive.ObjectIDFromHex("123")
+		return userID, errors.New("Failed to retrieve userId from token")
+	}
+
+	userID, err := primitive.ObjectIDFromHex(userIDCtx)
+	if err != nil {
+		userID, _ := primitive.ObjectIDFromHex("123")
+		return userID, errors.New("Failed to parse id to ObjectID")
+	}
+
+	return userID, nil
 }

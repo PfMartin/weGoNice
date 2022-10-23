@@ -10,7 +10,3 @@ var UserLookup = bson.D{
 		{Key: "as", Value: "user"}},
 	},
 }
-
-var UserUnwind = bson.D{{
-	Key: "$unwind", Value: "$user",
-}}

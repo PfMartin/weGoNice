@@ -80,7 +80,6 @@ func TestGetAllAuthors(t *testing.T) {
 
 		got := authorRes
 		assert.Equal(t, expectedAuthors, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, expectedAuthors, got)
-
 	}
 }
 
@@ -161,7 +160,7 @@ func TestCreateAuthor(t *testing.T) {
 		}
 
 		newAuthor := testUtils.TestAuthor
-		newAuthor.UserId = insertedUserID
+		newAuthor.UserID = insertedUserID
 
 		author, err := json.Marshal(newAuthor)
 		if err != nil {

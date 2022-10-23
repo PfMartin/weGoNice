@@ -9,7 +9,7 @@ type AuthorRequest struct {
 	WebsiteUrl string `bson:"websiteUrl"`
 	Instagram  string `bson:"instagram"`
 	YouTube    string `bson:"youTube"`
-	UserId     string `bson:"userId"` // TODO: UserId should no come from body but from token
+	UserID     string `bson:"userId"` // Is set by gorillaCtx retrieved from token
 }
 
 type AuthorResponse struct {
@@ -29,7 +29,7 @@ type AuthorDB struct {
 	WebsiteUrl string    `bson:"websiteUrl"`
 	Instagram  string    `bson:"instagram"`
 	YouTube    string    `bson:"youTube"`
-	UserId     string    `bson:"userId"`
+	UserID     string    `bson:"userId"`
 	CreatedAt  time.Time `bson:"createdAt"`
 	ModifiedAt time.Time `bson:"modifiedAt"`
 }
