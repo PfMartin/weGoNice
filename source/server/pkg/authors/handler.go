@@ -64,7 +64,7 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(authors)
 }
 
-func (h *Handler) GetAuthorById(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	authorID, err := primitive.ObjectIDFromHex(id)
@@ -156,7 +156,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(authorID)
 }
 
-func (h *Handler) UpdateAuthorById(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 	var author models.AuthorRequest
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&author)
@@ -181,14 +181,14 @@ func (h *Handler) UpdateAuthorById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filter := bson.M{"_id": authorID}
-	update := bson.M{
+	update := bson.M{"$set": bson.M{
 		"name":       author.Name,
 		"websiteUrl": author.WebsiteUrl,
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
 		"userId":     userID,
 		"modifiedAt": time.Now(),
-	}
+	}}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	result, err := coll.UpdateOne(context.TODO(), filter, update)
@@ -203,7 +203,7 @@ func (h *Handler) UpdateAuthorById(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-func (h *Handler) DeleteAuthorById(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	authorID, err := primitive.ObjectIDFromHex(id)

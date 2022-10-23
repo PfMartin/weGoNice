@@ -17,6 +17,13 @@ var TestAuthor = models.AuthorRequest{
 	YouTube:    "testYouTube",
 }
 
+var UpdateAuthor = models.AuthorRequest{
+	Name:       "Nico Rittenau",
+	WebsiteUrl: "https://www.nikorittenau.com/",
+	Instagram:  "rittenau",
+	YouTube:    "rittenau",
+}
+
 var ExpectedUser = models.UserResponse{
 	Id:         "willChange",
 	Lastname:   TestUser.Lastname,

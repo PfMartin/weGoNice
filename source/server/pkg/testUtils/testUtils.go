@@ -8,6 +8,7 @@ import (
 )
 
 var testDate = time.Date(2020, time.April, 11, 21, 34, 01, 0, time.UTC)
+var updateDate = time.Date(2020, time.May, 12, 10, 0, 0, 0, time.UTC)
 
 func ClearDatabase(db *mongo.Client) error {
 	if err := db.Database("weGoNice").Drop(context.TODO()); err != nil {
