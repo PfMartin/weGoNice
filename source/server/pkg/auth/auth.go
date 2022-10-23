@@ -144,13 +144,13 @@ func GetUserIDFromCtx(r *http.Request) (primitive.ObjectID, error) {
 	userIDCtx, ok := gorillaCtx.Get(r, "userId").(string)
 	if !ok {
 		userID, _ := primitive.ObjectIDFromHex("123")
-		return userID, errors.New("Failed to retrieve userId from token")
+		return userID, errors.New("failed to retrieve userId from token")
 	}
 
 	userID, err := primitive.ObjectIDFromHex(userIDCtx)
 	if err != nil {
 		userID, _ := primitive.ObjectIDFromHex("123")
-		return userID, errors.New("Failed to parse id to ObjectID")
+		return userID, errors.New("failed to parse id to ObjectID")
 	}
 
 	return userID, nil
