@@ -11,3 +11,5 @@ node_modules
 
 volumes/production
 volumes/development
+
+start_weGoNice.sh

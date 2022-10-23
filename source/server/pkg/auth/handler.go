@@ -49,14 +49,14 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessionToken, err := createToken(user.Email, false)
+	sessionToken, err := createToken(user.ID, false)
 	if err != nil {
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return
 	}
 
 	response := map[string]string{
-		"id":           user.Id,
+		"id":           user.ID,
 		"sessionToken": sessionToken,
 	}
 
@@ -113,7 +113,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 
 	userId := cursor.InsertedID.(primitive.ObjectID).Hex()
 
-	sessionToken, err := createToken(user.Email, false)
+	sessionToken, err := createToken(userId, false)
 	if err != nil {
 		log.Printf("Failed to create token: %v", err)
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
@@ -131,13 +131,13 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) getTokenByToken(w http.ResponseWriter, r *http.Request) {
-	email, ok := gorillaContext.Get(r, "email").(string)
+	userId, ok := gorillaContext.Get(r, "userId").(string)
 	if !ok {
-		http.Error(w, "Failed to check email", http.StatusInternalServerError)
+		http.Error(w, "Failed to check userId", http.StatusInternalServerError)
 		return
 	}
 
-	token, err := createToken(email, false)
+	token, err := createToken(userId, false)
 	if err != nil {
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return

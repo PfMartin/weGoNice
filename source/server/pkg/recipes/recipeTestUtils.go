@@ -14,7 +14,7 @@ type testArgs struct {
 
 var testRecipeAll = models.RecipeRequest{
 	Name:        "Test Recipe",
-	AuthorId:    "Test Author ID",
+	AuthorID:    "Test Author ID",
 	Time:        "45 min",
 	Category:    "main",
 	Ingredients: []models.Ingredient{{Name: "Ingredient1", Amount: "5"}, {Name: "Ingredient2", Amount: "10 ml"}, {Name: "Ingredient3", Amount: "15"}},
@@ -26,7 +26,7 @@ var testRecipeName = models.RecipeRequest{
 }
 
 var testRecipeNoName = models.RecipeRequest{
-	AuthorId:    testRecipeAll.AuthorId,
+	AuthorID:    testRecipeAll.AuthorID,
 	Time:        testRecipeAll.Time,
 	Category:    testRecipeAll.Time,
 	Ingredients: testRecipeAll.Ingredients,

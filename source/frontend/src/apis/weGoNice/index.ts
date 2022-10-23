@@ -54,6 +54,8 @@ export const loginUser = async (body: {
       headers,
     });
 
+    console.log(res.data.sessionToken);
+
     return res;
   } catch (error) {
     return handleError(error);

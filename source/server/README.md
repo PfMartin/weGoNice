@@ -1,5 +1,13 @@
 # Server Documentation
 
+## TODOS
+
+### Authors backend
+
+- [ ] Use context for database queries
+- [x] Tests for author handler
+- [x] Use userId for authentication instead of email
+
 ## Setup the Postgres database
 
 ### Start the Container
@@ -55,6 +63,24 @@ curl -X DELETE \
 curl -X DELETE \
   -H "Content-type: application/json" \
   "http://localhost:8080/users"
+```
+
+## Aggregate referenced documents
+
+```mongo
+db.authors.aggregate([{
+    $match: {}
+  },
+  {
+    $lookup: {from: 'users', localField: 'userId', foreignField: '_id', as: 'user'}
+  },
+  {
+    $project: {user: {$first: "$user"}}
+  },
+  {
+    $unset: ["user.password"]
+  }
+  ])
 ```
 
 ## Resources

@@ -1,14 +1,17 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/context"
+	gorillaCtx "github.com/gorilla/context"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -25,12 +28,12 @@ func checkPassword(password string, hashedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func createToken(email string, isAdmin bool) (string, error) {
+func createToken(id string, isAdmin bool) (string, error) {
 	var err error
 
 	atClaims := jwt.MapClaims{}
-	atClaims["autorized"] = true
-	atClaims["email"] = email
+	atClaims["authorized"] = true
+	atClaims["userId"] = id
 	if isAdmin {
 		atClaims["role"] = "admin"
 	} else {
@@ -52,19 +55,19 @@ func createToken(email string, isAdmin bool) (string, error) {
 	return token, nil
 }
 
-func IsEmailContextOk(email string, r *http.Request) bool {
-	emailCtx, ok := context.Get(r, "email").(string)
+func IsUserIdContextOk(id string, r *http.Request) bool {
+	userIdCtx, ok := gorillaCtx.Get(r, "userId").(string)
 	if !ok {
 		return false
 	}
-	if emailCtx != email && emailCtx != "wego@nice.com" {
+	if userIdCtx != id {
 		return false
 	}
 	return true
 }
 
 func IsAdminContextOk(r *http.Request) bool {
-	roleCtx, ok := context.Get(r, "role").(string)
+	roleCtx, ok := gorillaCtx.Get(r, "role").(string)
 	if !ok {
 		return false
 	}
@@ -93,22 +96,25 @@ func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc {
 		}
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if ok && token.Valid {
-			email, ok := claims["email"].(string)
+			id, ok := claims["userId"].(string)
 			if !ok {
-				http.Error(w, "Unautorized", http.StatusUnauthorized)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				log.Println(id)
+				log.Println("Check token Handler Unauthorized")
 				return
 			}
 
 			role, ok := claims["role"].(string)
 			if !ok {
-				http.Error(w, "Unautorized", http.StatusUnauthorized)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
 				return
 			}
 
 			// Set email in the request, so I will use it in check after
-			context.Set(r, "email", email)
-			context.Set(r, "role", role)
+			gorillaCtx.Set(r, "userId", id)
+			gorillaCtx.Set(r, "role", role)
 		}
+
 		next(w, r)
 
 	}
@@ -132,4 +138,20 @@ func checkToken(tokenString string) (*jwt.Token, bool) {
 	}
 
 	return token, true
+}
+
+func GetUserIDFromCtx(r *http.Request) (primitive.ObjectID, error) {
+	userIDCtx, ok := gorillaCtx.Get(r, "userId").(string)
+	if !ok {
+		userID, _ := primitive.ObjectIDFromHex("123")
+		return userID, errors.New("failed to retrieve userId from token")
+	}
+
+	userID, err := primitive.ObjectIDFromHex(userIDCtx)
+	if err != nil {
+		userID, _ := primitive.ObjectIDFromHex("123")
+		return userID, errors.New("failed to parse id to ObjectID")
+	}
+
+	return userID, nil
 }
