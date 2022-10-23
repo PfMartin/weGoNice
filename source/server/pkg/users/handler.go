@@ -72,7 +72,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !auth.IsUserIdContextOk(user.Id, r) && !auth.IsAdminContextOk(r) {
+	if !auth.IsUserIdContextOk(user.ID, r) && !auth.IsAdminContextOk(r) {
 		http.Error(w, "Not authorized to see details about another user", http.StatusUnauthorized)
 		return
 	}

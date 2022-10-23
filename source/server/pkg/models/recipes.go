@@ -4,7 +4,7 @@ import "time"
 
 type RecipeRequest struct {
 	Name        string       `bson:"name"`
-	AuthorId    string       `bson:"authorId"`
+	AuthorID    string       `bson:"authorId"`
 	Time        string       `bson:"time"`
 	Category    string       `bson:"category"`
 	Ingredients []Ingredient `bson:"ingredients"`

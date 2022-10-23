@@ -13,7 +13,7 @@ type AuthorRequest struct {
 }
 
 type AuthorResponse struct {
-	Id         string       `bson:"_id"`
+	ID         string       `bson:"_id"`
 	Name       string       `bson:"name"`
 	WebsiteURL string       `bson:"WebsiteURL"`
 	Instagram  string       `bson:"instagram"`
@@ -24,7 +24,7 @@ type AuthorResponse struct {
 }
 
 type AuthorDB struct {
-	Id         string    `bson:"_id"`
+	ID         string    `bson:"_id"`
 	Name       string    `bson:"name"`
 	WebsiteURL string    `bson:"WebsiteURL"`
 	Instagram  string    `bson:"instagram"`

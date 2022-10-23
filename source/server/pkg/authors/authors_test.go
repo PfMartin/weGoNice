@@ -73,8 +73,8 @@ func TestGetAllAuthors(t *testing.T) {
 			t.Errorf("Failed to unmarshal response to author: %v", err)
 		}
 
-		tt.expectedAuthor.Id = insertedAuthorID
-		tt.expectedAuthor.User.Id = insertedUserID
+		tt.expectedAuthor.ID = insertedAuthorID
+		tt.expectedAuthor.User.ID = insertedUserID
 
 		expectedAuthors := []models.AuthorResponse{tt.expectedAuthor}
 
@@ -133,8 +133,8 @@ func TestGetAuthorByID(t *testing.T) {
 			t.Errorf("Failed to unmarshal response to author: %v", err)
 		}
 
-		tt.expectedAuthor.Id = insertedAuthorID
-		tt.expectedAuthor.User.Id = insertedUserID
+		tt.expectedAuthor.ID = insertedAuthorID
+		tt.expectedAuthor.User.ID = insertedUserID
 
 		got := authorRes
 		assert.Equal(t, tt.expectedAuthor, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedAuthor, got)

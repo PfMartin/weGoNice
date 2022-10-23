@@ -25,7 +25,7 @@ var UpdateAuthor = models.AuthorRequest{
 }
 
 var ExpectedUser = models.UserResponse{
-	Id:         "willChange",
+	ID:         "willChange",
 	Lastname:   TestUser.Lastname,
 	Firstname:  TestUser.Firstname,
 	Email:      TestUser.Email,
@@ -35,7 +35,7 @@ var ExpectedUser = models.UserResponse{
 }
 
 var ExpectedAuthor = models.AuthorResponse{
-	Id:         "willChange",
+	ID:         "willChange",
 	Name:       TestAuthor.Name,
 	WebsiteURL: TestAuthor.WebsiteURL,
 	Instagram:  TestAuthor.Instagram,

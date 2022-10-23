@@ -16,7 +16,7 @@ import (
 
 type testArgs struct {
 	name              string
-	hasMatchingUserId bool
+	hasMatchingUserID bool
 	role              string
 	expected          int
 }
@@ -58,9 +58,9 @@ func TestGetAllUsers(t *testing.T) {
 
 func TestGetUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", hasMatchingUserId: false, role: "admin", expected: http.StatusOK},
-		{name: "as test user", hasMatchingUserId: true, role: "user", expected: http.StatusOK},
-		{name: "as any user", hasMatchingUserId: false, role: "user", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", hasMatchingUserID: false, role: "admin", expected: http.StatusOK},
+		{name: "as test user", hasMatchingUserID: true, role: "user", expected: http.StatusOK},
+		{name: "as any user", hasMatchingUserID: false, role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -80,7 +80,7 @@ func TestGetUserById(t *testing.T) {
 		w := httptest.NewRecorder()
 
 		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
-		if !tt.hasMatchingUserId {
+		if !tt.hasMatchingUserID {
 			context.Set(req, "userId", "anyId")
 		} else {
 			context.Set(req, "userId", insertedUserId)
@@ -128,9 +128,9 @@ func TestCreateUser(t *testing.T) {
 
 func TestUpdateUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", hasMatchingUserId: false, role: "admin", expected: http.StatusOK},
-		{name: "as test user", hasMatchingUserId: true, role: "user", expected: http.StatusOK},
-		{name: "as any user", hasMatchingUserId: false, role: "user", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", hasMatchingUserID: false, role: "admin", expected: http.StatusOK},
+		{name: "as test user", hasMatchingUserID: true, role: "user", expected: http.StatusOK},
+		{name: "as any user", hasMatchingUserID: false, role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -155,7 +155,7 @@ func TestUpdateUserById(t *testing.T) {
 		w := httptest.NewRecorder()
 
 		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
-		if !tt.hasMatchingUserId {
+		if !tt.hasMatchingUserID {
 			context.Set(req, "userId", "anyId")
 		} else {
 			context.Set(req, "userId", insertedUserId)
@@ -171,9 +171,9 @@ func TestUpdateUserById(t *testing.T) {
 
 func TestDeleteUserById(t *testing.T) {
 	tests := []testArgs{
-		{name: "as wego@nice.com user", hasMatchingUserId: false, role: "admin", expected: http.StatusOK},
-		{name: "as test user", hasMatchingUserId: true, role: "user", expected: http.StatusOK},
-		{name: "as any user", hasMatchingUserId: false, role: "user", expected: http.StatusUnauthorized},
+		{name: "as wego@nice.com user", hasMatchingUserID: false, role: "admin", expected: http.StatusOK},
+		{name: "as test user", hasMatchingUserID: true, role: "user", expected: http.StatusOK},
+		{name: "as any user", hasMatchingUserID: false, role: "user", expected: http.StatusUnauthorized},
 	}
 
 	for _, tt := range tests {
@@ -198,7 +198,7 @@ func TestDeleteUserById(t *testing.T) {
 		w := httptest.NewRecorder()
 
 		req = mux.SetURLVars(req, map[string]string{"id": insertedUserId})
-		if !tt.hasMatchingUserId {
+		if !tt.hasMatchingUserID {
 			context.Set(req, "userId", "anyId")
 		} else {
 			context.Set(req, "userId", insertedUserId)

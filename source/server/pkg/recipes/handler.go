@@ -63,7 +63,7 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
-	data := bson.D{{Key: "name", Value: recipe.Name}, {Key: "author", Value: recipe.AuthorId}, {Key: "time", Value: recipe.Time}, {Key: "category", Value: recipe.Category}, {Key: "ingredients", Value: recipe.Ingredients}, {Key: "steps", Value: recipe.Steps}, {Key: "userAdded", Value: recipe.UserId}, {Key: "createdAt", Value: time.Now()}, {Key: "modifiedAt", Value: time.Now()}}
+	data := bson.D{{Key: "name", Value: recipe.Name}, {Key: "author", Value: recipe.AuthorID}, {Key: "time", Value: recipe.Time}, {Key: "category", Value: recipe.Category}, {Key: "ingredients", Value: recipe.Ingredients}, {Key: "steps", Value: recipe.Steps}, {Key: "userAdded", Value: recipe.UserId}, {Key: "createdAt", Value: time.Now()}, {Key: "modifiedAt", Value: time.Now()}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Recipes Error: Failed to insert data: %v", err)

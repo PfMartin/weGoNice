@@ -49,14 +49,14 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessionToken, err := createToken(user.Id, false)
+	sessionToken, err := createToken(user.ID, false)
 	if err != nil {
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return
 	}
 
 	response := map[string]string{
-		"id":           user.Id,
+		"id":           user.ID,
 		"sessionToken": sessionToken,
 	}
 
