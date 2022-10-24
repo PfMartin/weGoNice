@@ -77,7 +77,7 @@ const logout = () => {
 
   body {
     position: absolute;
-    background: $bg-color;
+    background: $bg-color-dark;
     display: flex;
     flex-direction: column;
     width: 50px;
@@ -125,7 +125,7 @@ const logout = () => {
       a {
         text-decoration: none;
         color: inherit;
-        border-left: 3px solid $bg-color;
+        border-left: 3px solid $bg-color-dark;
         display: flex;
         align-items: center;
         gap: 20px;

@@ -1,8 +1,9 @@
 <template>
   <div class="login-view">
+    <!-- <img class="image" src="mangold.jpg" alt="mangold picture" /> -->
     <main class="main-content">
       <h2>{{ headline }}</h2>
-      <section class="card">
+      <div class="card">
         <form action="apply">
           <TextInput
             label="Email"
@@ -35,7 +36,7 @@
             </button>
           </div>
         </form>
-      </section>
+      </div>
       <footer>
         <small>
           {{ forwardText }}
@@ -166,20 +167,26 @@ const apply = async () => {
 
 <style scoped lang="scss">
 @import '../styles/colors.scss';
+@import '../styles/outline.scss';
 
 .login-view {
   display: flex;
   justify-content: center;
+
+  .image {
+    max-height: 100vh;
+  }
   .main-content {
     padding: 1rem;
-    background: #000;
-    border-radius: 10px;
+    background: $bg-color-dark;
+    border-radius: $border-radius;
     width: 500px;
+    color: $text-color;
 
     .card {
-      background: $bg-color;
+      background: $card-color;
       padding: 1rem;
-      border-radius: 7px;
+      border-radius: $border-radius;
 
       form {
         display: flex;
