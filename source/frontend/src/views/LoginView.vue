@@ -177,6 +177,7 @@ const apply = async () => {
     max-height: 100vh;
   }
   .main-content {
+    margin: 5rem;
     padding: 1rem;
     background: $bg-color-dark;
     border-radius: $border-radius;

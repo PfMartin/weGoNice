@@ -1,5 +1,5 @@
 <template>
-  <NavBar />
+  <NavBar v-if="isLoggedIn" />
   <section>
     <router-view />
   </section>
@@ -7,6 +7,14 @@
 
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const isLoggedIn = computed(() => {
+  return !!store.getters['auth/sessionToken'];
+});
 </script>
 
 <style lang="scss">
