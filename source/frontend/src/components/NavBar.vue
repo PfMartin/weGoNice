@@ -64,7 +64,6 @@ const router = useRouter();
 const logout = () => {
   store.dispatch('auth/setSessionToken', '');
   router.push({ name: 'Login' });
-  console.log('logout');
 };
 </script>
 
