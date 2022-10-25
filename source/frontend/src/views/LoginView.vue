@@ -1,6 +1,5 @@
 <template>
   <div class="login-view">
-    <!-- <img class="image" src="mangold.jpg" alt="mangold picture" /> -->
     <main class="main-content">
       <h2>{{ headline }}</h2>
       <div class="card">

@@ -1,19 +1,21 @@
 <template>
   <NavBar v-if="isLoggedIn" />
   <section>
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <Transition name="fade">
+        <component :is="Component" />
+      </Transition>
+    </router-view>
   </section>
 </template>
 
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue';
 import { computed } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
+import { isAuthenticated } from '@/auth';
 
 const isLoggedIn = computed(() => {
-  return !!store.getters['auth/sessionToken'];
+  return isAuthenticated();
 });
 </script>
 

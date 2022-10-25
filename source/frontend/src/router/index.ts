@@ -7,29 +7,34 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: LoginView,
+    meta: { requiresAuth: false },
     props: { isRegister: false },
   },
   {
     path: '/register',
     name: 'Register',
     component: LoginView,
+    meta: { requiresAuth: false },
     props: { isRegister: true },
   },
   {
     path: '/home',
     name: 'Home',
+    meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/HomeView.vue'),
   },
   {
     path: '/recipes',
     name: 'Recipes',
+    meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/RecipesView.vue'),
   },
   {
     path: '/authors',
     name: 'Authors',
+    meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/AuthorsView.vue'),
   },
@@ -41,16 +46,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  console.log(isAuthenticated());
-  if (!isAuthenticated() && !(to.name === 'Login' || to.name === 'Register')) {
+  if (!isAuthenticated() && to.meta.requiresAuth) {
     if (from.name === 'Login') {
       return { name: 'Register' };
     }
     return { name: 'Login' };
-  } else if (
-    isAuthenticated() &&
-    (to.name === 'Login' || to.name === 'Register')
-  ) {
+  } else if (isAuthenticated() && !to.meta.requiresAuth) {
     return { name: 'Home' };
   }
 
