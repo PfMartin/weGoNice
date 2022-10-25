@@ -1,4 +1,5 @@
 import { useStore } from 'vuex';
+import store from '../store';
 
 const parseJwt = (token: string) => {
   try {
@@ -9,7 +10,7 @@ const parseJwt = (token: string) => {
 };
 
 export const isTokenExpired = (): boolean => {
-  const token = useStore().getters['auth/sessionToken'];
+  const token = store.getters['auth/sessionToken'];
   try {
     const { exp } = parseJwt(token);
 
@@ -22,4 +23,8 @@ export const isTokenExpired = (): boolean => {
   } catch {
     return true;
   }
+};
+
+export const isAuthenticated = (): boolean => {
+  return !!store.getters['auth/sessionToken'] && !isTokenExpired();
 };

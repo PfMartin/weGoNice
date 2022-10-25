@@ -28,8 +28,8 @@
           <ion-icon name="settings" />
           <p>Settings</p>
         </div>
-        <div class="logout">
-          <ion-icon name="log-out" @click="logout" />
+        <div class="logout" @click="logout">
+          <ion-icon name="log-out" />
           <p>Logout</p>
         </div>
       </div>
@@ -64,6 +64,7 @@ const router = useRouter();
 const logout = () => {
   store.dispatch('auth/setSessionToken', '');
   router.push({ name: 'Login' });
+  console.log('logout');
 };
 </script>
 

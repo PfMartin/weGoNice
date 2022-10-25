@@ -38,6 +38,10 @@ body {
   a {
     text-decoration: none;
   }
+
+  ion-icon {
+    pointer-events: none;
+  }
 }
 
 section {

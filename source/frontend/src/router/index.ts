@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import LoginView from '../views/LoginView.vue';
-import store from '../store';
+import { isAuthenticated } from '@/auth';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -41,16 +41,14 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if (
-    !store.getters['auth/sessionToken'] &&
-    !(to.name === 'Login' || to.name === 'Register')
-  ) {
+  console.log(isAuthenticated());
+  if (!isAuthenticated() && !(to.name === 'Login' || to.name === 'Register')) {
     if (from.name === 'Login') {
       return { name: 'Register' };
     }
     return { name: 'Login' };
   } else if (
-    store.getters['auth/sessionToken'] &&
+    isAuthenticated() &&
     (to.name === 'Login' || to.name === 'Register')
   ) {
     return { name: 'Home' };
