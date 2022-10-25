@@ -26,11 +26,7 @@
             @on-input="updateConfirmPassword"
           />
           <div class="control">
-            <button
-              @click.prevent="apply"
-              :class="buttonClass"
-              :disabled="!isValid"
-            >
+            <button @click.prevent="apply">
               {{ headline }}
             </button>
           </div>
@@ -64,33 +60,44 @@ const store = useStore();
 const router = useRouter();
 
 const headline = computed(() => (props.isRegister ? 'Register' : 'Login'));
-const email = ref<string>('');
-const password = ref<string>('');
-const confirmPassword = ref<string>('');
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const isFirstTry = ref(true);
 
 // Routing
 const nextRouteName = computed(() => (props.isRegister ? 'Login' : 'Register'));
 
 // Input handling
 const validationService = new ValidationService();
-const emailError = ref<string>('');
+const emailError = ref('');
 const updateEmail = (newValue: string) => {
   email.value = newValue;
+  if (!isFirstTry.value) {
+    validateEmail();
+  }
+};
+const validateEmail = () => {
   emailError.value = validationService.validateEmail(email.value);
 };
 
-const passwordError = ref<string>('');
+const passwordError = ref('');
 const updatePassword = (newValue: string) => {
   password.value = newValue;
+  if (!isFirstTry.value) {
+    validatePassword();
+  }
+};
+const validatePassword = () => {
   passwordError.value = validationService.validatePassword(password.value);
-  confirmPasswordError.value =
-    confirmPassword.value &&
-    validationService.validateConfirmPassword(confirmPassword.value);
 };
 
-const confirmPasswordError = ref<string>('');
+const confirmPasswordError = ref('');
 const updateConfirmPassword = (newValue: string) => {
   confirmPassword.value = newValue;
+  confirmPasswordError.value = '';
+};
+const validateConfirmPassword = () => {
   confirmPasswordError.value = validationService.validateConfirmPassword(
     confirmPassword.value
   );
@@ -104,18 +111,18 @@ const clearInputs = () => {
 
 // Error Handling
 const isValid = computed(() => {
-  const isEmailValid = !emailError.value && email.value !== '';
-  const isPasswordValid = !passwordError.value && password.value !== '';
-  const isConfirmPasswordValid =
-    !confirmPasswordError.value && confirmPassword.value !== '';
+  validateEmail();
+  validatePassword();
+  validateConfirmPassword();
+
+  const isEmailValid = !emailError.value;
+  const isPasswordValid = !passwordError.value;
+  const isConfirmPasswordValid = !confirmPasswordError.value;
 
   return props.isRegister
     ? isEmailValid && isPasswordValid && isConfirmPasswordValid
     : isEmailValid && isPasswordValid;
 });
-
-// Styling
-const buttonClass = computed(() => ({ disabled: !isValid.value }));
 
 // Content
 const forwardText = computed(() =>
@@ -149,6 +156,8 @@ const loginSuccess = (id: string, sessionToken: string) => {
 };
 
 const apply = async () => {
+  isFirstTry.value = false;
+
   if (isValid.value) {
     const body = {
       email: email.value,
@@ -203,19 +212,11 @@ const apply = async () => {
             border-radius: 3px;
             padding: 0.5rem 1rem;
             font-size: inherit;
+            transition: background-color 0.2s;
 
-            &.disabled {
-              opacity: 0.5;
-              color: #000;
-            }
-
-            &.disabled:hover {
-              cursor: not-allowed;
-            }
-
-            &:hover:not(.disabled) {
+            &:hover {
               cursor: pointer;
-              color: $accent-hover-color;
+              background: $accent-hover-color;
             }
           }
         }

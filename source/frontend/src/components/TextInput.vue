@@ -28,6 +28,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'on-input', value: string): void;
+  (e: 'on-blur'): void;
 }>();
 
 const inputValue = ref<string>(props.initialValue);
