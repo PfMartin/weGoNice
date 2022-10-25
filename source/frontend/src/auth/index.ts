@@ -1,5 +1,5 @@
-import { useStore } from 'vuex';
 import store from '../store';
+import router from '../router';
 
 const parseJwt = (token: string) => {
   try {
@@ -27,4 +27,11 @@ export const isTokenExpired = (): boolean => {
 
 export const isAuthenticated = (): boolean => {
   return !!store.getters['auth/sessionToken'] && !isTokenExpired();
+};
+
+export const loginSuccess = (id: string, sessionToken: string) => {
+  store.dispatch('auth/setUserId', id);
+  store.dispatch('auth/setSessionToken', sessionToken);
+
+  router.push({ name: 'Home' });
 };
