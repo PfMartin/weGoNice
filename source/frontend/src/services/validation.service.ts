@@ -6,7 +6,9 @@ export default class ValidationService {
   }
 
   public validateEmail = (value: string): string =>
-    value.includes('@') ? '' : 'Please enter a valid email address';
+    value.includes('@') && value.includes('.')
+      ? ''
+      : 'Please enter a valid email address';
 
   public validatePassword = (password: string, isRegister: boolean): string => {
     this.password = password;

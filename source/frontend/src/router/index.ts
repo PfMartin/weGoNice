@@ -8,13 +8,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: false, transition: 'slide-fade' },
   },
   {
     path: '/register',
     name: 'Register',
     component: RegisterView,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: false, transition: 'slide-fade' },
   },
   {
     path: '/home',

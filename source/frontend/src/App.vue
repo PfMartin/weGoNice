@@ -1,8 +1,8 @@
 <template>
   <NavBar v-if="isLoggedIn" />
   <section>
-    <router-view v-slot="{ Component }">
-      <Transition name="fade">
+    <router-view v-slot="{ Component, route }">
+      <Transition :name="route.meta.transition || ''" mode="out-in">
         <component :is="Component" />
       </Transition>
     </router-view>
@@ -50,10 +50,22 @@ section {
   border-radius: 10px;
   height: calc(100vh - 1rem - 2 * $section-padding);
   color: $text-color-dark;
+  overflow: hidden;
 
   h1 {
     padding: 0;
     margin: 0;
+  }
+
+  .slide-fade-enter-active,
+  .slide-fade-leave-active {
+    transition: all 0.2s ease-out;
+  }
+
+  .slide-fade-enter-from,
+  .slide-fade-leave-to {
+    transform: translateY(-600px);
+    opacity: 0;
   }
 }
 </style>
