@@ -1,12 +1,22 @@
 <template>
-  <NavBar />
+  <NavBar v-if="isLoggedIn" />
   <section>
-    <router-view />
+    <router-view v-slot="{ Component, route }">
+      <Transition :name="route.meta.transition || ''" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </router-view>
   </section>
 </template>
 
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue';
+import { computed } from 'vue';
+import { isAuthenticated } from '@/auth';
+
+const isLoggedIn = computed(() => {
+  return isAuthenticated();
+});
 </script>
 
 <style lang="scss">
@@ -30,16 +40,32 @@ body {
   a {
     text-decoration: none;
   }
+
+  ion-icon {
+    pointer-events: none;
+  }
 }
 
 section {
   border-radius: 10px;
   height: calc(100vh - 1rem - 2 * $section-padding);
   color: $text-color-dark;
+  overflow: hidden;
 
   h1 {
     padding: 0;
     margin: 0;
+  }
+
+  .slide-fade-enter-active,
+  .slide-fade-leave-active {
+    transition: all 0.2s ease-out;
+  }
+
+  .slide-fade-enter-from,
+  .slide-fade-leave-to {
+    transform: translateY(-600px);
+    opacity: 0;
   }
 }
 </style>

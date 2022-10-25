@@ -6,15 +6,17 @@ export default class ValidationService {
   }
 
   public validateEmail = (value: string): string =>
-    value.includes('@') || value === ''
+    value.includes('@') && value.includes('.')
       ? ''
       : 'Please enter a valid email address';
 
-  public validatePassword = (password: string): string => {
+  public validatePassword = (password: string, isRegister: boolean): string => {
     this.password = password;
-    return password.length >= 5 || password === ''
-      ? ''
-      : 'The password must be at least 5 characters long';
+    const errMsg = isRegister
+      ? 'The password must be at least 5 characters long'
+      : 'The password is not correct';
+
+    return password.length >= 5 ? '' : errMsg;
   };
 
   public validateConfirmPassword = (confirmPassword: string): string =>

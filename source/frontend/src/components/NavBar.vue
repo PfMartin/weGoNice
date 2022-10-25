@@ -28,8 +28,8 @@
           <ion-icon name="settings" />
           <p>Settings</p>
         </div>
-        <div class="logout">
-          <ion-icon name="log-out" @click="logout" />
+        <div class="logout" @click="logout">
+          <ion-icon name="log-out" />
           <p>Logout</p>
         </div>
       </div>
@@ -64,6 +64,7 @@ const router = useRouter();
 const logout = () => {
   store.dispatch('auth/setSessionToken', '');
   router.push({ name: 'Login' });
+  console.log('logout');
 };
 </script>
 
@@ -77,7 +78,7 @@ const logout = () => {
 
   body {
     position: absolute;
-    background: $bg-color;
+    background: $bg-color-dark;
     display: flex;
     flex-direction: column;
     width: 50px;
@@ -125,7 +126,7 @@ const logout = () => {
       a {
         text-decoration: none;
         color: inherit;
-        border-left: 3px solid $bg-color;
+        border-left: 3px solid $bg-color-dark;
         display: flex;
         align-items: center;
         gap: 20px;

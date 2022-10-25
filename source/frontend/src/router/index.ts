@@ -1,35 +1,39 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import LoginView from '../views/LoginView.vue';
-import store from '../store';
+import RegisterView from '../views/RegisterView.vue';
+import { isAuthenticated } from '@/auth';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
     component: LoginView,
-    props: { isRegister: false },
+    meta: { requiresAuth: false, transition: 'slide-fade' },
   },
   {
     path: '/register',
     name: 'Register',
-    component: LoginView,
-    props: { isRegister: true },
+    component: RegisterView,
+    meta: { requiresAuth: false, transition: 'slide-fade' },
   },
   {
     path: '/home',
     name: 'Home',
+    meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/HomeView.vue'),
   },
   {
     path: '/recipes',
     name: 'Recipes',
+    meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/RecipesView.vue'),
   },
   {
     path: '/authors',
     name: 'Authors',
+    meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/AuthorsView.vue'),
   },
@@ -41,18 +45,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  if (
-    !store.getters['auth/sessionToken'] &&
-    !(to.name === 'Login' || to.name === 'Register')
-  ) {
+  if (!isAuthenticated() && to.meta.requiresAuth) {
     if (from.name === 'Login') {
       return { name: 'Register' };
     }
     return { name: 'Login' };
-  } else if (
-    store.getters['auth/sessionToken'] &&
-    (to.name === 'Login' || to.name === 'Register')
-  ) {
+  } else if (isAuthenticated() && !to.meta.requiresAuth) {
     return { name: 'Home' };
   }
 
