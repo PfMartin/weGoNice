@@ -14,9 +14,7 @@ import NavBar from '@/components/NavBar.vue';
 import { computed } from 'vue';
 import { isAuthenticated } from '@/auth';
 
-const isLoggedIn = computed(() => {
-  return isAuthenticated();
-});
+const isLoggedIn = computed(() => isAuthenticated());
 </script>
 
 <style lang="scss">
