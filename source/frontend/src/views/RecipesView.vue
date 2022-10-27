@@ -11,7 +11,7 @@ import { getAllRecipes } from '@/apis/weGoNice';
 const headerConfig = {
   pageTitle: 'Recipes',
   iconName: 'add-circle-outline',
-  buttonText: 'Create Recipe',
+  buttonText: 'Add Recipe',
 };
 
 const getRecipes = async () => {

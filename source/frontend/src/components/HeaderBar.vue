@@ -42,7 +42,7 @@ const onSearchInput = (inputValue: string) => {
 
 body {
   margin-left: $nav-bar-width;
-  padding: 0.3rem 0.3rem 0.3rem 1rem;
+  padding: 0.6rem 1rem 0.6rem 1rem;
   background: $bg-color-mid;
   color: $text-color;
   display: flex;

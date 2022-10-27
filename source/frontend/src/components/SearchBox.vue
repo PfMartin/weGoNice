@@ -24,7 +24,7 @@ watch(inputValue, (newValue) => {
 .search-box {
   border-radius: 3px;
   background: $main-bg-color;
-  padding: 0.3rem;
+  padding: 0.3rem 0.3rem 0.3rem 0.5rem;
   display: flex;
   align-items: center;
   color: $bg-color-dark;
@@ -39,6 +39,7 @@ watch(inputValue, (newValue) => {
     margin-left: 5px;
     border: none;
     background: $main-bg-color;
+    font-size: 0.9rem;
 
     &:focus {
       outline: none;
