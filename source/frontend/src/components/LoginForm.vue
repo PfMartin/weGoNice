@@ -164,7 +164,6 @@ const apply = () => {
     margin: 5rem;
     padding: 1rem;
     background: $bg-color-dark;
-    border-radius: $border-radius;
     width: 500px;
     color: $text-color;
 

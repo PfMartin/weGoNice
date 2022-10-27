@@ -79,7 +79,7 @@ const logout = () => {
     background: $bg-color-dark;
     display: flex;
     flex-direction: column;
-    width: 50px;
+    width: $nav-bar-width;
     height: 100vh;
     justify-content: space-between;
     transition: width 1s;

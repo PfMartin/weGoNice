@@ -22,9 +22,9 @@ watch(inputValue, (newValue) => {
 @import '../styles/colors.scss';
 
 .search-box {
-  border-radius: 8px;
+  border-radius: 3px;
   background: $main-bg-color;
-  padding: 0.2rem;
+  padding: 0.3rem;
   display: flex;
   align-items: center;
   color: $bg-color-dark;
