@@ -73,7 +73,6 @@ const logout = () => {
 
 .navbar {
   position: relative;
-  margin: $margin-out;
 
   body {
     position: absolute;
@@ -81,12 +80,10 @@ const logout = () => {
     display: flex;
     flex-direction: column;
     width: 50px;
-    height: calc(100vh - 1rem);
+    height: 100vh;
     justify-content: space-between;
     transition: width 1s;
     overflow: hidden;
-    border-radius: 10px;
-    box-shadow: $box-shadow;
 
     &:hover {
       cursor: pointer;
@@ -129,7 +126,7 @@ const logout = () => {
         display: flex;
         align-items: center;
         gap: 20px;
-        padding-left: 10px;
+        padding: 5px 5px 5px 10px;
         width: 200px;
         transition: color 0.5s;
 
@@ -152,7 +149,7 @@ const logout = () => {
       display: flex;
       flex-direction: column;
       width: 100%;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       width: 200px;
 
       & * {
