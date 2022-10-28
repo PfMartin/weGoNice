@@ -1,6 +1,12 @@
 <template>
   <div class="navbar">
-    <body @click="toggleExpand" :class="navBarClass">
+    <body
+      @click="toggleExpand"
+      :class="navBarClass"
+      ref="navBarBody"
+      :tabindex="-1"
+      @blur="collapseBar"
+    >
       <div class="account">
         <ion-icon name="person-circle" />
         <p>Account</p>
@@ -43,12 +49,14 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 // Expanding the navbar
+const navBarBody = ref<HTMLElement | null>(null);
 const isExpanded = ref(false);
 const toggleExpand = (e: Event) => {
   const target = e.target as HTMLElement;
 
   if (target.classList.contains('bar')) {
     isExpanded.value = !isExpanded.value;
+    navBarBody.value?.focus();
   }
 };
 const navBarClass = computed(() => {
@@ -57,6 +65,9 @@ const navBarClass = computed(() => {
     expanded: isExpanded.value,
   };
 });
+const collapseBar = (): void => {
+  isExpanded.value = false;
+};
 // Routing
 const store = useStore();
 const router = useRouter();
@@ -73,20 +84,17 @@ const logout = () => {
 
 .navbar {
   position: relative;
-  margin: $margin-out;
 
   body {
     position: absolute;
     background: $bg-color-dark;
     display: flex;
     flex-direction: column;
-    width: 50px;
-    height: calc(100vh - 1rem);
+    width: $nav-bar-width;
+    height: 100vh;
     justify-content: space-between;
     transition: width 1s;
     overflow: hidden;
-    border-radius: 10px;
-    box-shadow: $box-shadow;
 
     &:hover {
       cursor: pointer;
@@ -125,11 +133,11 @@ const logout = () => {
       a {
         text-decoration: none;
         color: inherit;
-        border-left: 3px solid $bg-color-dark;
+        border-left: 2px solid $bg-color-dark;
         display: flex;
         align-items: center;
         gap: 20px;
-        padding-left: 10px;
+        padding: 5px 5px 5px 10px;
         width: 200px;
         transition: color 0.5s;
 
@@ -144,7 +152,7 @@ const logout = () => {
 
       .router-link-active {
         color: $accent-color;
-        border-left: 3px solid $accent-color;
+        border-left: 2px solid $accent-color;
       }
     }
 
@@ -152,7 +160,7 @@ const logout = () => {
       display: flex;
       flex-direction: column;
       width: 100%;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       width: 200px;
 
       & * {

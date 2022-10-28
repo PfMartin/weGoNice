@@ -164,14 +164,14 @@ const apply = () => {
     margin: 5rem;
     padding: 1rem;
     background: $bg-color-dark;
-    border-radius: $border-radius;
     width: 500px;
     color: $text-color;
+    border-radius: 5px;
 
     .card {
-      background: $card-color;
+      background: $bg-color-mid;
       padding: 1rem;
-      border-radius: $border-radius;
+      border-radius: 5px;
 
       form {
         display: flex;

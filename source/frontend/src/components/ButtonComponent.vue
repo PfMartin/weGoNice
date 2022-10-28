@@ -1,6 +1,6 @@
 <template>
   <div @click="onClick" class="button">
-    <ion-icon :name="iconName" />
+    <ion-icon :name="buttonIconName" />
     <p>{{ buttonText }}</p>
   </div>
 </template>
@@ -10,7 +10,7 @@ import { defineProps, defineEmits } from 'vue';
 
 defineProps<{
   buttonText: string;
-  iconName?: string;
+  buttonIconName?: string;
 }>();
 
 const emit = defineEmits<{
@@ -27,9 +27,9 @@ const onClick = () => {
 @import '../styles/outline.scss';
 
 .button {
-  border-radius: 10px;
+  border-radius: 5px;
   background: $accent-color;
-  padding: 0.5rem 1.5rem;
+  padding: 6px 20px;
   color: $bg-color-dark;
   display: flex;
   align-items: center;
@@ -41,13 +41,14 @@ const onClick = () => {
   }
 
   p {
+    font-size: 0.9rem;
     padding: 0;
     margin: 0;
   }
 
   ion-icon {
-    width: 25px;
-    height: 25px;
+    width: 24px;
+    height: 24px;
     margin-right: 5px;
   }
 }

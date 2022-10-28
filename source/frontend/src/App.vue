@@ -23,7 +23,7 @@ const isLoggedIn = computed(() => isAuthenticated());
 @import './styles/outline.scss';
 
 body {
-  background: $view-bg-color;
+  background: $bg-color-light;
   margin: 0;
   padding: 0;
 }
@@ -45,7 +45,6 @@ body {
 }
 
 section {
-  border-radius: 10px;
   height: calc(100vh - 1rem - 2 * $section-padding);
   color: $text-color-dark;
   overflow: hidden;
