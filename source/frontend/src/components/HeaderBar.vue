@@ -50,11 +50,11 @@ const searchBoxStyle = ref({
   ['search-box']: true,
   ['has-focus']: false,
 });
-const toggleSearchBoxFocus = () => {
+const toggleSearchBoxFocus = (): void => {
   searchBoxStyle.value['has-focus'] = !searchBoxStyle.value['has-focus'];
 };
 const searchInputElement = ref<HTMLInputElement | null>(null);
-const focusSearchInput = () => {
+const focusSearchInput = (): void => {
   searchInputElement.value && searchInputElement.value.focus();
 };
 </script>
