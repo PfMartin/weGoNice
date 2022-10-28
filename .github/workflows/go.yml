@@ -39,10 +39,3 @@ jobs:
     
     - name: List directories
       run: ls -l
-
-    - name: Run tests
-      run: |
-        cd ./source/server/pkg
-        go mod tidy
-        go test -v ./users
-        go test -v ./authors
