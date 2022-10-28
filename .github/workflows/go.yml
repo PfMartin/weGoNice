@@ -27,16 +27,21 @@ jobs:
         cd ./source/server/cmd
         go build -v -o server
   
-    - name: start mongodb
-      run: |
-        echo "sudo docker run --name mongo -d -p 27017-27020:27017-27020 mongo:latest"
-        sudo docker run --name mongo -d -p 27017:27017 mongo:latest
-  
     - name: Run Tests
       run: |
         cd ./source/server/pkg
         go test ./users
         go test ./authors
+        
+    services:
+      mongodb:
+        image: mongo:latest
+        env:
+          MONGO_INITDB_DATABASE: weGoNiceTest
+          MONGO_INITDB_USERNAME: TestUser
+          MONGO_INITDB_PASSWORD: testPassword
+          
+        
           
  
 
