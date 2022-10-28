@@ -1,7 +1,5 @@
 <template>
-  <div v-if="isLoggedIn" class="frame">
-    <NavBar />
-  </div>
+  <NavBar v-if="isLoggedIn" />
   <section>
     <router-view v-slot="{ Component, route }">
       <Transition :name="route.meta.transition || ''" mode="out-in">
@@ -25,7 +23,7 @@ const isLoggedIn = computed(() => isAuthenticated());
 @import './styles/outline.scss';
 
 body {
-  background: $main-bg-color;
+  background: $bg-color-light;
   margin: 0;
   padding: 0;
 }

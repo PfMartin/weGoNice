@@ -72,7 +72,7 @@ const inputClass = computed(() => ({
     border: none;
     border-bottom: 1px solid #fff;
     outline: none;
-    background: $card-color;
+    background: $bg-color-mid;
     margin: 0.5rem 0;
     padding: 0.5rem;
     transition: border 0.3s;

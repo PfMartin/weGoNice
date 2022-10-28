@@ -23,11 +23,12 @@ watch(inputValue, (newValue) => {
 
 .search-box {
   border-radius: 3px;
-  background: $main-bg-color;
+  background: $bg-color-light;
   padding: 0.3rem 0.3rem 0.3rem 0.5rem;
   display: flex;
   align-items: center;
   color: $bg-color-dark;
+  width: 500px;
 
   .icon {
     width: 20px;
@@ -38,8 +39,9 @@ watch(inputValue, (newValue) => {
     color: inherit;
     margin-left: 5px;
     border: none;
-    background: $main-bg-color;
+    background: $bg-color-light;
     font-size: 0.9rem;
+    width: 100%;
 
     &:focus {
       outline: none;

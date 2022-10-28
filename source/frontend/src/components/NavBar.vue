@@ -122,7 +122,7 @@ const logout = () => {
       a {
         text-decoration: none;
         color: inherit;
-        border-left: 3px solid $bg-color-dark;
+        border-left: 2px solid $bg-color-dark;
         display: flex;
         align-items: center;
         gap: 20px;
@@ -141,7 +141,7 @@ const logout = () => {
 
       .router-link-active {
         color: $accent-color;
-        border-left: 3px solid $accent-color;
+        border-left: 2px solid $accent-color;
       }
     }
 
