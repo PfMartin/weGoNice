@@ -1,5 +1,7 @@
 <template>
-  <NavBar v-if="isLoggedIn" />
+  <div v-if="isLoggedIn" class="frame">
+    <NavBar />
+  </div>
   <section>
     <router-view v-slot="{ Component, route }">
       <Transition :name="route.meta.transition || ''" mode="out-in">

@@ -7,7 +7,7 @@
     <ButtonComponent
       @click="emit('on-button')"
       :buttonText="props.config.buttonText"
-      :iconName="props.config.iconName"
+      :buttonIconName="props.config.buttonIconName"
     />
   </body>
 </template>
@@ -19,7 +19,7 @@ import { defineProps, defineEmits } from 'vue';
 
 interface HeaderConfig {
   pageTitle: string;
-  iconName: string;
+  buttonIconName: string;
   buttonText: string;
 }
 
@@ -57,6 +57,7 @@ body {
       margin: 0;
       padding: 0;
       margin-right: 3rem;
+      width: 120px;
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div @click="onClick" class="button">
-    <ion-icon :name="iconName" />
+    <ion-icon :name="buttonIconName" />
     <p>{{ buttonText }}</p>
   </div>
 </template>
@@ -10,7 +10,7 @@ import { defineProps, defineEmits } from 'vue';
 
 defineProps<{
   buttonText: string;
-  iconName?: string;
+  buttonIconName?: string;
 }>();
 
 const emit = defineEmits<{
