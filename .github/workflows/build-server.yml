@@ -1,7 +1,7 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
-name: Go
+name: build-server
 
 on:
   push:
@@ -26,20 +26,6 @@ jobs:
       run: |
         cd ./source/server/cmd
         go build -v -o server
-  
-    - name: Run Tests
-      run: |
-        cd ./source/server/pkg
-        go test ./users
-        go test ./authors
-        
-    services:
-      mongodb:
-        image: mongo:latest
-        env:
-          MONGO_INITDB_DATABASE: weGoNiceTest
-          MONGO_INITDB_USERNAME: TestUser
-          MONGO_INITDB_PASSWORD: testPassword
           
         
           
