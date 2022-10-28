@@ -1,6 +1,6 @@
 <template>
   <body>
-    <HeaderBar :config="headerConfig" />
+    <HeaderBar :config="headerConfig" @search-input="onSearchInput" />
   </body>
 </template>
 
@@ -12,6 +12,10 @@ const headerConfig = {
   pageTitle: 'Recipes',
   buttonIconName: 'add-circle-outline',
   buttonText: 'Add Recipe',
+};
+
+const onSearchInput = (searchValue: string) => {
+  console.log(searchValue);
 };
 
 const getRecipes = async () => {

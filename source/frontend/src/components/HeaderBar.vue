@@ -2,10 +2,19 @@
   <body>
     <header>
       <h2>{{ props.config.pageTitle }}</h2>
-      <SearchBox @on-input="onSearchInput" />
+      <div :class="searchBoxStyle" ref="searchBox" @click="focusSearchInput">
+        <ion-icon name="search-outline" class="icon" />
+        <input
+          type="text"
+          v-model="searchInput"
+          ref="searchInputElement"
+          @focus="toggleSearchBoxFocus"
+          @blur="toggleSearchBoxFocus"
+        />
+      </div>
     </header>
     <ButtonComponent
-      @click="emit('on-button')"
+      @click="emit('button-click')"
       :buttonText="props.config.buttonText"
       :buttonIconName="props.config.buttonIconName"
     />
@@ -13,9 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import SearchBox from '@/components/SearchBox.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref, watch } from 'vue';
 
 interface HeaderConfig {
   pageTitle: string;
@@ -23,16 +31,31 @@ interface HeaderConfig {
   buttonText: string;
 }
 
+const emit = defineEmits<{
+  (e: 'button-click'): void;
+  (e: 'search-input', searchValue: string): void;
+}>();
+
 const props = defineProps<{
   config: HeaderConfig;
 }>();
 
-const emit = defineEmits<{
-  (e: 'on-button'): void;
-}>();
+// Search box
+const searchInput = ref('');
+watch(searchInput, (newValue) => {
+  emit('search-input', newValue);
+});
 
-const onSearchInput = (inputValue: string) => {
-  console.log(inputValue);
+const searchBoxStyle = ref({
+  ['search-box']: true,
+  ['has-focus']: false,
+});
+const toggleSearchBoxFocus = () => {
+  searchBoxStyle.value['has-focus'] = !searchBoxStyle.value['has-focus'];
+};
+const searchInputElement = ref<HTMLInputElement | null>(null);
+const focusSearchInput = () => {
+  searchInputElement.value && searchInputElement.value.focus();
 };
 </script>
 
@@ -58,6 +81,42 @@ body {
       padding: 0;
       margin-right: 3rem;
       width: 120px;
+    }
+
+    @import '../styles/colors.scss';
+
+    .search-box {
+      border-radius: 3px;
+      background: $bg-color-light;
+      padding-left: 0.5rem;
+      display: flex;
+      align-items: center;
+      color: $bg-color-dark;
+      width: 500px;
+      transition: background 0.3s;
+
+      &.has-focus {
+        background: #ddd;
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      input {
+        color: inherit;
+        padding: 0.4rem 0.3rem 0.4rem 0.3rem;
+        margin-left: 5px;
+        border: none;
+        background: none;
+        font-size: 0.9rem;
+        width: 100%;
+
+        &:focus {
+          outline: none;
+        }
+      }
     }
   }
 }
