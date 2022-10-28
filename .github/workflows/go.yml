@@ -10,12 +10,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        mongodb-version: ['4.2', '4.4', '5.0', '6.0']
     
     steps:
     - name: Git checkout
@@ -30,18 +26,17 @@ jobs:
       run: |
         cd ./source/server/cmd
         go build -v -o server
-    
-    - name: Start MongoDB
-      uses: supercharge/mongodb-github-action@1.8.0
-      with:
-        mongodb-version: ${{ matrix.mongodb-version }}
-        mongodb-username: TestUser
-        mongodb-password: testPassword
-        mongodb-db: weGoNiceTest
-        
+  
+    - name: start mongodb
+      run: |
+        echo "sudo docker run --name mongo -d -p 27017:27017 mongo:latest"
+        sudo docker run --name mongo -d -p 27017:27017 mongo:latest
+  
     - name: Run Tests
       run: |
         cd ./source/server/pkg
         go test ./users
         go test ./authors
+          
+ 
 
