@@ -25,7 +25,15 @@ jobs:
       uses: actions/setup-go@v3
       with:
         go-version: 1.18
+        
+    - name: List file system
+      run: ls -l
       
+    - name: Build package
+      run: |
+        cd ./source/server/cmd
+        go build main
+    
     - name: Start MongoDB
       uses: supercharge/mongodb-github-action@1.8.0
       with:
