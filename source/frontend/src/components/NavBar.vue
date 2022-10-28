@@ -1,6 +1,12 @@
 <template>
   <div class="navbar">
-    <body @click="toggleExpand" :class="navBarClass">
+    <body
+      @click="toggleExpand"
+      :class="navBarClass"
+      ref="navBarBody"
+      :tabindex="-1"
+      @blur="collapseBar"
+    >
       <div class="account">
         <ion-icon name="person-circle" />
         <p>Account</p>
@@ -43,12 +49,14 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 // Expanding the navbar
+const navBarBody = ref<HTMLElement | null>(null);
 const isExpanded = ref(false);
 const toggleExpand = (e: Event) => {
   const target = e.target as HTMLElement;
 
   if (target.classList.contains('bar')) {
     isExpanded.value = !isExpanded.value;
+    navBarBody.value?.focus();
   }
 };
 const navBarClass = computed(() => {
@@ -57,6 +65,9 @@ const navBarClass = computed(() => {
     expanded: isExpanded.value,
   };
 });
+const collapseBar = (): void => {
+  isExpanded.value = false;
+};
 // Routing
 const store = useStore();
 const router = useRouter();
