@@ -1,0 +1,33 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: test-server
+
+on: [push]
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+
+    # runs all of the steps inside the specified container rather than on the VM host.
+    # Because of this the network configuration changes from host based network to a container network.
+    container:
+      image:  go:1.18
+
+    services:
+      mongodb:
+        image: mongo
+        ports:
+        - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v1
+    - run: |
+        cd ./source/server/pkg
+        go test ./users
+        go test ./authors
+      env:
+        # use mongodb for the host here because we have specified a container for the job.
+        # If we were running the job on the VM this would be localhost
+        MONGODB_HOST: mongodb
+        MONGODB_PORT: ${{ job.services.mongodb.ports[27017] }}
