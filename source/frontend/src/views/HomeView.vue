@@ -1,5 +1,9 @@
 <template>
-  <HeaderBar :config="headerConfig" @search-input="onSearchInput" />
+  <HeaderBar
+    :config="headerConfig"
+    @search-input="onSearchInput"
+    @button-click="createRecipe"
+  />
 </template>
 
 <script setup lang="ts">
@@ -13,8 +17,12 @@ const headerConfig = {
   buttonText: 'Add Recipe',
 };
 
-const onSearchInput = (searchValue: string) => {
+const onSearchInput = (searchValue: string): void => {
   console.log(searchValue);
+};
+
+const createRecipe = (): void => {
+  console.log('create recipe');
 };
 
 isTokenExpired() && refreshToken();

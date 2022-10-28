@@ -1,6 +1,10 @@
 <template>
   <body>
-    <HeaderBar :config="headerConfig" @search-input="onSearchInput" />
+    <HeaderBar
+      :config="headerConfig"
+      @search-input="onSearchInput"
+      @button-click="createAuthor"
+    />
   </body>
 </template>
 
@@ -13,8 +17,12 @@ const headerConfig = {
   buttonText: 'Add Author',
 };
 
-const onSearchInput = (searchValue: string) => {
+const onSearchInput = (searchValue: string): void => {
   console.log(searchValue);
+};
+
+const createAuthor = (): void => {
+  console.log('createAuthor');
 };
 </script>
 

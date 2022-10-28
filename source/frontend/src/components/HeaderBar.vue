@@ -2,7 +2,7 @@
   <body>
     <header>
       <h2>{{ props.config.pageTitle }}</h2>
-      <div :class="searchBoxStyle" ref="searchBox" @click="focusSearchInput">
+      <div :class="searchBoxStyle" @click="focusSearchInput">
         <ion-icon name="search-outline" class="icon" />
         <input
           type="text"
@@ -82,8 +82,6 @@ body {
       margin-right: 3rem;
       width: 120px;
     }
-
-    @import '../styles/colors.scss';
 
     .search-box {
       border-radius: 3px;
