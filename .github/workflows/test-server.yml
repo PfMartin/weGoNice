@@ -12,7 +12,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image:  go:1.18
+      image:  golang:1.18-alpine
 
     services:
       mongodb:
