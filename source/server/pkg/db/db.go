@@ -25,7 +25,7 @@ func Init(isProduction bool) *mongo.Client {
 		creds["Username"] = "TestUser"
 		creds["Password"] = "testPassword"
 
-		dbURI = "mongodb://localhost:27020"
+		dbURI = "mongodb://mongodb:27017"
 	}
 
 	credentials := options.Credential{
