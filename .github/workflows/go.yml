@@ -25,9 +25,6 @@ jobs:
       uses: actions/setup-go@v3
       with:
         go-version: 1.18
-        
-    - name: List file system
-      run: ls -l
       
     - name: Build package
       run: |
@@ -41,4 +38,10 @@ jobs:
         mongodb-username: TestUser
         mongodb-password: testPassword
         mongodb-db: weGoNiceTest
+        
+    - name: Run Tests
+      run: |
+        cd ./source/server/pkg
+        go test users
+        go test authors
 
