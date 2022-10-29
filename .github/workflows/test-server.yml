@@ -37,7 +37,7 @@ jobs:
           MONGO_INITDB_ROOT_DATABASE: ${MONGO_INITDB_DATABASE}
           TEST_DB_URI: ${TEST_DB_URI}
         options: >-
-          --health-cmd mongo
+          --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
