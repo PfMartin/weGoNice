@@ -31,11 +31,9 @@ jobs:
       mongodb:
         image: mongo
         env:
-          MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
-          MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
-          MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
-        volumes:
-          - source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+          MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_USERNAME}
+          MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_PASSWORD}
+          MONGO_INITDB_ROOT_DATABASE: ${MONGO_INITDB_DATABASE}
         ports:
         - 27020-27022:27017-27019
 
