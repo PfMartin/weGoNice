@@ -13,13 +13,7 @@ jobs:
     # Because of this the network configuration changes from host based network to a container network.
     container:
       image:  golang:1.18-buster
-
-    services:
-      mongodb:
-        image: mongo
-        ports:
-        - 27020:27020
-
+      
     steps:
     - uses: actions/checkout@v1
     - run: |
@@ -31,3 +25,12 @@ jobs:
         # If we were running the job on the VM this would be localhost
         MONGODB_HOST: mongodb
         MONGODB_PORT: ${{ job.services.mongodb.ports[27020] }}
+        TEST_DB_URI: mongodb://mongodb:27020
+
+    services:
+      mongodb:
+        image: mongo
+        ports:
+        - 27017-27020:27020
+
+    
