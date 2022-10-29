@@ -5,12 +5,16 @@ name: test-server
 
 on: [push]
 
+env:
+  MONGO_INITDB_DATABASE: weGoNiceTest
+  MONGO_INITDB_USERNAME: TestUser
+  MONGO_INITDB_PASSWORD: testPassword
+
 jobs:
   container-job:
+    name: server-test
     runs-on: ubuntu-latest
-
-    # runs all of the steps inside the specified container rather than on the VM host.
-    # Because of this the network configuration changes from host based network to a container network.
+    
     container:
       image:  golang:1.18-buster
       
@@ -20,17 +24,17 @@ jobs:
         cd ./source/server/pkg
         go test ./users
         go test ./authors
-      env:
-        # use mongodb for the host here because we have specified a container for the job.
-        # If we were running the job on the VM this would be localhost
-        MONGODB_HOST: mongodb
-        MONGODB_PORT: ${{ job.services.mongodb.ports[27020] }}
-        TEST_DB_URI: mongodb://mongodb:27020
 
     services:
       mongodb:
         image: mongo
+        env:
+          MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
+          MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+          MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+        volumes:
+          - ./source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
         ports:
-        - 27017-27020:27020
+        - 27020-27022:27017-27019
 
-    
+
