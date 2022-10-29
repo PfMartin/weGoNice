@@ -21,7 +21,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: |
+        ls -l
         cd ./source/server/pkg
+        ls -l
         go test ./users
         go test ./authors
 
@@ -33,7 +35,7 @@ jobs:
           MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
           MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
         volumes:
-          - ./source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+          - source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
         ports:
         - 27020-27022:27017-27019
 
