@@ -28,11 +28,11 @@ jobs:
           TEST_DB_URI: ${TEST_DB_URI}
         volumes:
          - "/__w/weGoNice/weGoNice/source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js"
-        options: >-
-          --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
-          --health-interval 10s
-          --health-timeout 10s
-          --health-retries 5
+        # options: >-
+        #  --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
+        #  --health-interval 10s
+        #  --health-timeout 10s
+        #  --health-retries 5
       
     steps:
     - uses: actions/checkout@v1
