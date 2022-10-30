@@ -29,22 +29,6 @@ jobs:
         go test ./users
         go test ./authors
 
-    services:
-      mongodb:
-        image: mongo
-        env:
-          MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
-          MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
-          MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
-          TEST_DB_URI: ${TEST_DB_URI}
-        volumes:
-          - source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
-        options: >-
-          --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-        - 27020-27022:27017-27019
+
 
 
