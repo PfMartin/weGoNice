@@ -9,7 +9,7 @@ env:
   MONGO_INITDB_DATABASE: weGoNiceTest
   MONGO_INITDB_USERNAME: TestUser
   MONGO_INITDB_PASSWORD: testPassword
-  TEST_DB_URI: mongodb://localhost:27020
+  TEST_DB_URI: mongodb://mongodb:27020
 
 jobs:
   container-job:
@@ -34,6 +34,8 @@ jobs:
           MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
           MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
           TEST_DB_URI: ${TEST_DB_URI}
+        volumes:
+          - source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
         options: >-
           --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
           --health-interval 10s
