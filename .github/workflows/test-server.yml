@@ -9,7 +9,7 @@ env:
   MONGO_INITDB_DATABASE: weGoNiceTest
   MONGO_INITDB_USERNAME: TestUser
   MONGO_INITDB_PASSWORD: testPassword
-  TEST_DB_URI: mongodb://localhost:27020
+  TEST_DB_URI: mongodb://mongodb:27020
 
 jobs:
   container-job:
@@ -22,6 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: |
+        echo ${{github.workspace}}
         ls -l
         cd ./source/server/pkg
         ls -l
@@ -32,10 +33,12 @@ jobs:
       mongodb:
         image: mongo
         env:
-          MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_USERNAME}
-          MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_PASSWORD}
-          MONGO_INITDB_ROOT_DATABASE: ${MONGO_INITDB_DATABASE}
+          MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
+          MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+          MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
           TEST_DB_URI: ${TEST_DB_URI}
+        volumes:
+          - ${{github.workspace}}/source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
         options: >-
           --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
           --health-interval 10s
