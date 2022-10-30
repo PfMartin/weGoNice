@@ -30,11 +30,10 @@ jobs:
       mongodb:
         image: mongo
         env:
-          MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_USERNAME}
-          MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_PASSWORD}
+          MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
+          MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+          MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
           TEST_DB_URI: ${TEST_DB_URI}
-        volumes:
-          - ${{github.workspace}}/source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
         options: >-
           --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
           --health-interval 10s
