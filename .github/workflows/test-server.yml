@@ -37,6 +37,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: |
+        ls -l /__w/weGoNice/weGoNice/source/server/build/development
+        cat /__w/weGoNice/weGoNice/source/server/build/development/init-mongo.js
         cd ./source/server/pkg
         go test ./users
         go test ./authors
