@@ -22,7 +22,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: |
-        cd ${{github.workspace}}/source/server/pkg
+        ls -l ${{github.workspace}}
+        cd ./source/server/pkg
         go test ./users
         go test ./authors
 
