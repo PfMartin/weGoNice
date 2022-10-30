@@ -28,7 +28,7 @@ func Init(isProduction bool) *mongo.Client {
 		dbURI = os.Getenv("TEST_DB_URI")
 
 		if dbURI == "" {
-			dbURI = "mongodb://localhost:27020"
+			dbURI = "mongodb://localhost:27017"
 		}
 	}
 

@@ -8,7 +8,7 @@ services:
       - MONGO_INITDB_USERNAME=TestUser
       - MONGO_INITDB_PASSWORD=testPassword
     volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      # - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ../../../../volumes/development/data:/data/db
     ports:
-      - '27020-27022:27017-27019'
+      - '27017-27019:27017-27019'
