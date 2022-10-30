@@ -9,7 +9,7 @@ env:
   MONGO_INITDB_DATABASE: weGoNiceTest
   MONGO_INITDB_USERNAME: TestUser
   MONGO_INITDB_PASSWORD: testPassword
-  TEST_DB_URI: mongodb://mongodb:27020
+  TEST_DB_URI: mongodb://mongodb:27017
 
 jobs:
   container-job:
