@@ -6,7 +6,7 @@ name: test-server
 on: [push]
 
 env:
-  TEST_DB_URI: mongodb://mongodb:27017
+  TEST_DB_URI: mongodb://localhost:27017
 
 jobs:
   test-server:
