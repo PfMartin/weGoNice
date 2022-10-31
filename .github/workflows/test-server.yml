@@ -19,7 +19,7 @@ jobs:
         env:
           MONGO_INITDB_USERNAME: TestUser
           MONGO_INITDB_PASSWORD: testPassword
-          MONGO_INITDB_DATABASE: weGoNiceTest
+          MONGO_INITDB_DATABASE: weGoNice
         options: >-
           --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
           --health-interval 10s
