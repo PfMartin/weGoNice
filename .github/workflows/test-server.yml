@@ -20,11 +20,14 @@ jobs:
           MONGO_INITDB_ROOT_USERNAME: TestUser
           MONGO_INITDB_ROOT_PASSWORD: testPassword
           MONGO_INITDB_DATABASE: weGoNice
+        ports:
+          - 27017-27019:27017-27019
         options: >-
           --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
           --health-interval 10s
           --health-timeout 10s
           --health-retries 5
+          --name mongodb
 
     steps:
       - name: Checkout source
