@@ -21,7 +21,7 @@ func Init(isProduction bool) *mongo.Client {
 	dbURI := os.Getenv("DATABASE_URI")
 
 	if !isProduction {
-		creds["AuthSource"] = "weGoNiceTest"
+		creds["AuthSource"] = "weGoNice"
 		creds["Username"] = "TestUser"
 		creds["Password"] = "testPassword"
 

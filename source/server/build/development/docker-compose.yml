@@ -4,10 +4,10 @@ services:
     image: 'mongo:latest'
     container_name: 'weGoNice-test-db'
     environment:
-      - MONGO_INITDB_DATABASE=weGoNiceTest
-      - MONGO_INITDB_USERNAME=TestUser
-      - MONGO_INITDB_PASSWORD=testPassword
-    volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - MONGO_INITDB_DATABASE=weGoNice
+      - MONGO_INITDB_ROOT_USERNAME=TestUser
+      - MONGO_INITDB_ROOT_PASSWORD=testPassword
+    # volumes:
+    #   - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     ports:
       - '27020-27022:27017-27019'
