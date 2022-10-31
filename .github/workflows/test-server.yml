@@ -13,8 +13,8 @@ jobs:
     name: server-test
     runs-on: ubuntu-latest
     container:
-      image:  golang:1.18-buster
-      
+      image: golang:1.18-buster
+
     services:
       mongodb:
         image: mongo:latest
@@ -22,23 +22,17 @@ jobs:
           MONGO_INITDB_USERNAME: TestUser
           MONGO_INITDB_PASSWORD: testPassword
           MONGO_INITDB_DATABASE: weGoNiceTest
-        volumes:
-         - "${{ github.workspace }}/source/server/build/development/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js"
         options: >-
           --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
           --health-interval 10s
           --health-timeout 10s
           --health-retries 5
-      
+          --name weGoNice-test-db
+
     steps:
-    - uses: actions/checkout@v1
-    - run: |
-        echo ${{ github.workspace }}
-        echo ${TEST_DB_URI}
-        cd ./source/server/pkg
-        go test ./users
-        go test ./authors
-
-
-
-
+      - uses: actions/checkout@v1
+      - run: |
+          docker exec weGoNice-test-db mongosh weGoNice -u TestUser -p testPassword --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})" 
+          cd ./source/server/pkg
+          go test ./users
+          go test ./authors
