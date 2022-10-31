@@ -31,8 +31,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - run: |
-          docker exec weGoNice-test-db mongosh weGoNice -u TestUser -p testPassword --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})" 
+      
+      - name: Create User for tests
+        run: |
+          docker exec weGoNice-test-db mongosh weGoNice -u TestUser -p testPassword --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
+      
+      - name: Run tests
+        run: |
           cd ./source/server/pkg
           go test ./users
           go test ./authors
