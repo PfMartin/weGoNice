@@ -20,9 +20,9 @@ jobs:
       mongodb:
         image: mongo:latest
         env:
-          MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
-          MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
-          MONGO_INITDB_DATABASE: ${MONGODB_DB}
+          MONGO_INITDB_ROOT_USERNAME: $MONGODB_USER
+          MONGO_INITDB_ROOT_PASSWORD: $MONGODB_PASSWORD
+          MONGO_INITDB_DATABASE: $MONGODB_DB
         ports:
           - 27017-27019:27017-27019
         options: >-
@@ -38,7 +38,7 @@ jobs:
 
       - name: Setup database
         run: |
-          docker exec mongodb mongosh ${MONGODB_DB} -u ${MONGODB_USER} -p ${MONGDB_PASSWORD} --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
+          docker exec mongodb mongosh $MONGODB_DB -u $MONGODB_USER -p $MONGDB_PASSWORD --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
 
       - name: Run tests
         run: |
