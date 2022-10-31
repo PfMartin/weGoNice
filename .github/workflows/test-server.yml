@@ -17,8 +17,8 @@ jobs:
       mongodb:
         image: mongo:latest
         env:
-          MONGO_INITDB_USERNAME: TestUser
-          MONGO_INITDB_PASSWORD: testPassword
+          MONGO_INITDB_ROOT_USERNAME: TestUser
+          MONGO_INITDB_ROOT_PASSWORD: testPassword
           MONGO_INITDB_DATABASE: weGoNice
         options: >-
           --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
