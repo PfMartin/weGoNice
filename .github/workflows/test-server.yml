@@ -11,7 +11,7 @@ env:
 jobs:
   container-job:
     name: server-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest    
     container:
       image: golang:1.18-buster
 
@@ -30,10 +30,12 @@ jobs:
           --name weGoNice-test-db
 
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout source
+        uses: actions/checkout@v1
       
       - name: Create User for tests
         run: |
+          apt update && apt install docker
           docker exec weGoNice-test-db mongosh weGoNice -u TestUser -p testPassword --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
       
       - name: Run tests
