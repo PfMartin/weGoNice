@@ -6,7 +6,7 @@ name: test-server
 on: [push]
 
 env:
-  TEST_DB_URI: mongodb://mongodb:27017
+  TEST_DB_URI: mongodb://localhost:27017
 
 jobs:
   test-server:
@@ -25,7 +25,7 @@ jobs:
           --health-interval 10s
           --health-timeout 10s
           --health-retries 5
-          --name mongodb
+          --name weGoNice-test-db
 
     steps:
       - name: Checkout source
@@ -33,7 +33,7 @@ jobs:
       
       - name: Create User for tests
         run: |
-          docker exec mongodb mongosh weGoNice -u TestUser -p testPassword --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
+          docker exec weGONice-test-db mongosh weGoNice -u TestUser -p testPassword --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
       
       - name: Run tests
         run: |
