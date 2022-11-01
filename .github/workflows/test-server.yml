@@ -7,6 +7,9 @@ on: [push]
 
 env:
   TEST_DB_URI: mongodb://localhost:27017
+  MONGO_INIT_ROOT_USERNAME: TestUser
+  MONGO_INITDB_ROOT_PASSWORD: testPassword
+  MONGO_INITDB_DATABASE: weGoNice
 
 jobs:
   test-server:
@@ -17,9 +20,9 @@ jobs:
       mongodb:
         image: mongo:latest
         env:
-          MONGO_INITDB_ROOT_USERNAME: TestUser
-          MONGO_INITDB_ROOT_PASSWORD: testPassword
-          MONGO_INITDB_DATABASE: weGoNice
+          MONGO_INITDB_ROOT_USERNAME: ${{env.MONGO_INIT_ROOT_USERNAME}}
+          MONGO_INITDB_ROOT_PASSWORD: ${{env.MONGO_INITDB_ROOT_PASSWORD}}
+          MONGO_INITDB_DATABASE: ${{env.MONGO_INITDB_DATABASE}}
         ports:
           - 27017-27019:27017-27019
         options: >-
@@ -35,7 +38,7 @@ jobs:
 
       - name: Setup database
         run: |
-          docker exec mongodb mongosh weGoNice -u TestUser -p testPassword --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
+          docker exec mongodb mongosh weGoNice -u ${{env.MONGO_INIT_ROOT_USERNAME}} -p ${{env.MONGO_INITDB_ROOT_PASSWORD}} --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
 
       - name: Run tests
         run: |
