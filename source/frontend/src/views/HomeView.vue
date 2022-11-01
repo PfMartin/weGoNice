@@ -13,7 +13,7 @@ import HeaderBar from '@/components/HeaderBar.vue';
 
 const headerConfig = {
   pageTitle: 'Home',
-  buttonIconName: 'add-circle-outline',
+  buttonIconName: 'add',
   buttonText: 'Add Recipe',
 };
 

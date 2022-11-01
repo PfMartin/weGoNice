@@ -22,6 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/HomeView.vue'),
+    alias: '/',
   },
   {
     path: '/recipes',

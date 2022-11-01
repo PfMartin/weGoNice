@@ -14,7 +14,7 @@ import { getAllRecipes } from '@/apis/weGoNice';
 
 const headerConfig = {
   pageTitle: 'Recipes',
-  buttonIconName: 'add-circle-outline',
+  buttonIconName: 'add',
   buttonText: 'Add Recipe',
 };
 

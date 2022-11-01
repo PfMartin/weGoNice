@@ -29,7 +29,7 @@ const onClick = () => {
 .button {
   border-radius: 5px;
   background: $accent-color;
-  padding: 6px 20px;
+  padding: 4px 12px;
   color: $bg-color-dark;
   display: flex;
   align-items: center;
@@ -47,8 +47,8 @@ const onClick = () => {
   }
 
   ion-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     margin-right: 5px;
   }
 }

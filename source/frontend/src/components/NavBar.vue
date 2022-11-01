@@ -93,7 +93,7 @@ const logout = () => {
     width: $nav-bar-width;
     height: 100vh;
     justify-content: space-between;
-    transition: width 1s;
+    transition: width 0.3s;
     overflow: hidden;
 
     &:hover {
@@ -120,7 +120,7 @@ const logout = () => {
 
       &:hover {
         color: $accent-color;
-        transition: color 0.5s;
+        transition: color 0.3s;
       }
     }
 
@@ -139,7 +139,7 @@ const logout = () => {
         gap: 20px;
         padding: 5px 5px 5px 10px;
         width: 200px;
-        transition: color 0.5s;
+        transition: color 0.2s;
 
         &:hover {
           color: $accent-color;
