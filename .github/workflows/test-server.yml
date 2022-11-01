@@ -38,7 +38,7 @@ jobs:
 
       - name: Setup database
         run: |
-          docker exec mongodb mongosh weGoNice -u ${{env.MONGO_INIT_ROOT_USERNAME}} -p ${{env.MONGO_INITDB_ROOT_PASSWORD}} --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
+          docker exec mongodb mongosh weGoNice -u ${{env.MONGO_INIT_ROOT_USERNAME}} -p ${{env.MONGO_INITDB_ROOT_PASSWORD}} --authenticationDatabase admin --eval "db.createUser({user: ${{env.MONGO_INIT_ROOT_USERNAME}}, pwd: ${{env.MONGO_INITDB_ROOT_PASSWORD}}, roles: [{role: 'readWrite', db: ${{env.MONGO_INITDB_DATABASE}}}]})"
 
       - name: Run tests
         run: |
