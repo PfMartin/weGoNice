@@ -29,7 +29,7 @@ const onClick = () => {
 .button {
   border-radius: 5px;
   background: $accent-color;
-  padding: 4px 12px;
+  padding: 6px 12px;
   color: $bg-color-dark;
   display: flex;
   align-items: center;

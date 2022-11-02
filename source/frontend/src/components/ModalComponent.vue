@@ -5,9 +5,9 @@
         <header>
           <slot name="header"></slot>
         </header>
-        <body>
+        <main>
           <slot></slot>
-        </body>
+        </main>
         <footer>
           <slot name="footer"></slot>
         </footer>
@@ -57,6 +57,11 @@ $modal-height: 720px;
     width: $modal-width;
     max-height: $modal-height;
     padding: 1rem;
+  }
+
+  main {
+    background: $bg-color-mid;
+    margin: 1rem 0;
   }
 }
 </style>
