@@ -7,7 +7,7 @@
     />
 
     <Teleport to="#body">
-      <AuthorCreateModal v-if="isCreateModalVisible" />
+      <AuthorCreateModal v-if="isCreateModalVisible" @closeModal="closeModal" />
     </Teleport>
   </body>
 </template>
