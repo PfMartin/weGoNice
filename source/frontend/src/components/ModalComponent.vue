@@ -115,16 +115,16 @@ main {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.1s ease-out;
+  transition: opacity 0.2s ease-out;
 }
 
 .slide-enter-from,
 .slide-leave-to {
-  transform: translateY(-200px);
+  transform: translateY(-100vh);
 }
 
 .slide-enter-active,
 .slide-leave-active {
-  transition: transform 0.1s ease-out;
+  transition: transform 0.2s ease-out;
 }
 </style>
