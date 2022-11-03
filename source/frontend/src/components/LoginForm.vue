@@ -166,12 +166,12 @@ const apply = () => {
     background: $bg-color-dark;
     width: 500px;
     color: $text-color;
-    border-radius: 5px;
+    border-radius: $border-radius;
 
     .card {
       background: $bg-color-mid;
       padding: 1rem;
-      border-radius: 5px;
+      border-radius: $border-radius;
 
       form {
         display: flex;

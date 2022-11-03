@@ -26,7 +26,7 @@ const emit = defineEmits<{
 }>();
 
 const config: ModalConfig = {
-  size: 'l',
+  size: 'm',
 };
 </script>
 
