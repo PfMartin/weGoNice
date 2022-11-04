@@ -1,7 +1,11 @@
 <template>
   <div :class="inputClass">
     <label :for="label"
-      ><div>{{ label }}</div>
+      ><div class="label-text">
+        <slot name="label">
+          {{ label }}
+        </slot>
+      </div>
       <Transition name="fade">
         <small v-if="inputError">{{ inputError }}</small>
       </Transition>
@@ -20,7 +24,7 @@
 import { defineEmits, defineProps, ref, computed, watch } from 'vue';
 
 const props = defineProps<{
-  label: string;
+  label?: string;
   isPassword?: boolean;
   inputError?: string;
   initialValue: string;
@@ -81,6 +85,11 @@ const inputClass = computed(() => ({
     &:focus {
       border-bottom: 1px solid $accent-color;
     }
+  }
+
+  .label-text {
+    display: flex;
+    align-items: center;
   }
 
   label {

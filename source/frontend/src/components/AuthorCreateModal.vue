@@ -12,25 +12,44 @@
             :initialValue="name"
             :inputError="nameError"
             :on-input="updateName"
-          />
+          >
+            <template v-slot:label
+              ><ion-icon name="person" /> &nbsp;<span>Name</span></template
+            >
+          </TextInput>
           <TextInput
-            label="WebsiteUrl"
+            label="websiteUrl"
             :initialValue="websiteUrl"
             :inputError="websiteUrlError"
             :on-input="updateWebsiteUrl"
-          />
+          >
+            <template v-slot:label
+              ><ion-icon name="earth" /> &nbsp;
+              <span>WebsiteUrl</span></template
+            >
+          </TextInput>
           <TextInput
             label="Instagram"
             :initialValue="instagram"
             :inputError="instagramError"
             :on-input="updateInstagram"
-          />
+          >
+            <template v-slot:label
+              ><ion-icon name="logo-instagram" /> &nbsp;
+              <span>Instagram</span></template
+            >
+          </TextInput>
           <TextInput
             label="YouTube"
             :initialValue="youTube"
             :inputError="youTubeError"
             :on-input="updateYouTube"
-          />
+          >
+            <template v-slot:label
+              ><ion-icon name="logo-youtube" /> &nbsp;
+              <span>YouTube</span></template
+            >
+          </TextInput>
         </form>
       </template>
 
@@ -66,16 +85,19 @@ const nameError = ref('');
 const updateName = (newValue: string): void => {
   name.value = newValue;
 };
+
 const websiteUrl = ref('');
 const websiteUrlError = ref('');
 const updateWebsiteUrl = (newValue: string): void => {
   websiteUrl.value = newValue;
 };
+
 const instagram = ref('');
 const instagramError = ref('');
 const updateInstagram = (newValue: string): void => {
   instagram.value = newValue;
 };
+
 const youTube = ref('');
 const youTubeError = ref('');
 const updateYouTube = (newValue: string): void => {
