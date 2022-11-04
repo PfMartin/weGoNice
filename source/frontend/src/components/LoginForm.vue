@@ -74,24 +74,24 @@ const nextRouteName = computed(() => (props.isRegister ? 'Login' : 'Register'));
 // Input handling
 const validationService = new ValidationService();
 const emailError = ref('');
-const updateEmail = (newValue: string) => {
+const updateEmail = (newValue: string): void => {
   email.value = newValue;
   if (!isFirstTry.value) {
     validateEmail();
   }
 };
-const validateEmail = () => {
+const validateEmail = (): void => {
   emailError.value = validationService.validateEmail(email.value);
 };
 
 const passwordError = ref('');
-const updatePassword = (newValue: string) => {
+const updatePassword = (newValue: string): void => {
   password.value = newValue;
   if (!isFirstTry.value) {
     validatePassword();
   }
 };
-const validatePassword = () => {
+const validatePassword = (): void => {
   passwordError.value = validationService.validatePassword(
     password.value,
     props.isRegister
@@ -99,17 +99,17 @@ const validatePassword = () => {
 };
 
 const confirmPasswordError = ref('');
-const updateConfirmPassword = (newValue: string) => {
+const updateConfirmPassword = (newValue: string): void => {
   confirmPassword.value = newValue;
   confirmPasswordError.value = '';
 };
-const validateConfirmPassword = () => {
+const validateConfirmPassword = (): void => {
   confirmPasswordError.value = validationService.validateConfirmPassword(
     confirmPassword.value
   );
 };
 
-const clearInputs = () => {
+const clearInputs = (): void => {
   email.value = '';
   password.value = '';
   confirmPassword.value = '';
