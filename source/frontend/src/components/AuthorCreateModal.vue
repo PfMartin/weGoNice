@@ -8,48 +8,29 @@
       <template v-slot:default>
         <form>
           <TextInput
-            label="Name"
+            :label="{ name: 'Name', iconName: 'person' }"
             :initialValue="name"
             :inputError="nameError"
             :on-input="updateName"
-          >
-            <template v-slot:label
-              ><ion-icon name="person" /> &nbsp;<span>Name</span></template
-            >
-          </TextInput>
+          />
           <TextInput
-            label="websiteUrl"
-            :initialValue="websiteUrl"
-            :inputError="websiteUrlError"
-            :on-input="updateWebsiteUrl"
-          >
-            <template v-slot:label
-              ><ion-icon name="earth" /> &nbsp;
-              <span>WebsiteUrl</span></template
-            >
-          </TextInput>
+            :label="{ name: 'Website', iconName: 'earth' }"
+            :initialValue="website"
+            :inputError="websiteError"
+            :on-input="updateWebsite"
+          />
           <TextInput
-            label="Instagram"
+            :label="{ name: 'Instagram', iconName: 'logo-instagram' }"
             :initialValue="instagram"
             :inputError="instagramError"
             :on-input="updateInstagram"
-          >
-            <template v-slot:label
-              ><ion-icon name="logo-instagram" /> &nbsp;
-              <span>Instagram</span></template
-            >
-          </TextInput>
+          />
           <TextInput
-            label="YouTube"
+            :label="{ name: 'YouTube', iconName: 'logo-youtube' }"
             :initialValue="youTube"
             :inputError="youTubeError"
             :on-input="updateYouTube"
-          >
-            <template v-slot:label
-              ><ion-icon name="logo-youtube" /> &nbsp;
-              <span>YouTube</span></template
-            >
-          </TextInput>
+          />
         </form>
       </template>
 
@@ -86,10 +67,10 @@ const updateName = (newValue: string): void => {
   name.value = newValue;
 };
 
-const websiteUrl = ref('');
-const websiteUrlError = ref('');
-const updateWebsiteUrl = (newValue: string): void => {
-  websiteUrl.value = newValue;
+const website = ref('');
+const websiteError = ref('');
+const updateWebsite = (newValue: string): void => {
+  website.value = newValue;
 };
 
 const instagram = ref('');
@@ -105,7 +86,12 @@ const updateYouTube = (newValue: string): void => {
 };
 
 const submit = (): void => {
-  console.log('create author');
+  const body = {
+    name: name.value,
+    website: website.value,
+    instagram: instagram.value,
+    youTube: youTube.value,
+  };
 };
 </script>
 

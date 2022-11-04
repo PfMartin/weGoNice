@@ -1,10 +1,9 @@
 <template>
   <div :class="inputClass">
-    <label :for="label"
+    <label :for="label.name"
       ><div class="label-text">
-        <slot name="label">
-          {{ label }}
-        </slot>
+        <ion-icon :name="label.iconName" /> &nbsp;
+        <span>{{ label.name }}</span>
       </div>
       <Transition name="fade">
         <small v-if="inputError">{{ inputError }}</small>
@@ -13,7 +12,7 @@
     <input
       @focus="toggleActive"
       @blur="toggleActive"
-      :id="label"
+      :id="label.name"
       :type="isPassword ? 'password' : 'text'"
       v-model="inputValue"
     />
@@ -24,7 +23,7 @@
 import { defineEmits, defineProps, ref, computed, watch } from 'vue';
 
 const props = defineProps<{
-  label?: string;
+  label: Record<string, string>;
   isPassword?: boolean;
   inputError?: string;
   initialValue: string;
