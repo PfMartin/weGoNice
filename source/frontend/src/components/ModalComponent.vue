@@ -43,6 +43,7 @@ const isVisible = ref(true);
 const closeModal = () => {
   isVisible.value = false;
   setTimeout(() => {
+    // Timeout required for leave animation
     emit('close');
   }, 200);
 };
@@ -76,28 +77,41 @@ $modal-width-xxl: 1520px;
   max-height: $modal-height;
   padding: 1rem;
   border-radius: $border-radius;
+  left: calc(100vw / 2 - 80vw / 2);
+  width: 80vw;
+  max-width: 80vw;
 
   &.s {
-    left: calc(100vw / 2 - #{$modal-width-s / 2});
-    width: $modal-width-s;
+    @media screen and (min-width: 600px) {
+      left: calc(100vw / 2 - #{$modal-width-s / 2});
+      width: $modal-width-s;
+    }
   }
 
   &.m {
-    left: calc(100vw / 2 - #{$modal-width-m / 2});
-    width: $modal-width-m;
+    @media screen and (min-width: 900px) {
+      left: calc(100vw / 2 - #{$modal-width-m / 2});
+      width: $modal-width-m;
+    }
   }
   &.l {
-    left: calc(100vw / 2 - #{$modal-width-l / 2});
-    width: $modal-width-l;
+    @media screen and (min-width: calc($modal-width-l + 3 * $nav-bar-width)) {
+      left: calc(100vw / 2 - #{$modal-width-l / 2});
+      width: $modal-width-l;
+    }
   }
   &.xl {
-    left: calc(100vw / 2 - #{$modal-width-xl / 2});
-    width: $modal-width-xl;
+    @media screen and (min-width: 1550px) {
+      left: calc(100vw / 2 - #{$modal-width-xl / 2});
+      width: $modal-width-xl;
+    }
   }
 
   &.xxl {
-    left: calc(100vw / 2 - #{$modal-width-xxl / 2});
-    width: $modal-width-xxl;
+    @media screen and (min-width: 1850px) {
+      left: calc(100vw / 2 - #{$modal-width-xxl / 2});
+      width: $modal-width-xxl;
+    }
   }
 }
 
