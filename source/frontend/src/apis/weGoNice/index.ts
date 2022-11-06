@@ -1,91 +1,7 @@
 import axios from 'axios';
-import { useStore } from 'vuex';
+import { url, headers, store, handleError } from './utils';
 
-interface RequestResponse {
-  status: number | null;
-  data: Record<string, any>;
-}
-
-const url = 'http://localhost:8000';
-const headers = {
-  'Content-Type': 'application/json',
-  Accept: 'application/json',
-  Authorization: '',
-};
-
-const store = useStore();
-
-const handleError = (error: unknown): RequestResponse => {
-  if (axios.isAxiosError(error)) {
-    return {
-      status: error.response?.status || null,
-      data: {
-        msg: error.message,
-      },
-    };
-  }
-  return {
-    status: null,
-    data: {
-      msg: 'unexpected error',
-    },
-  };
-};
-
-export const registerUser = async (body: {
-  email: string;
-  password: string;
-}): Promise<RequestResponse> => {
-  try {
-    const res = await axios.post(`${url}/auth/register`, body, {
-      headers,
-    });
-
-    return res;
-  } catch (error) {
-    return handleError(error);
-  }
-};
-
-export const loginUser = async (body: {
-  email: string;
-  password: string;
-}): Promise<RequestResponse> => {
-  try {
-    const res = await axios.post(`${url}/auth/login`, body, {
-      headers,
-    });
-
-    console.log(res.data.sessionToken);
-
-    return res;
-  } catch (error) {
-    return handleError(error);
-  }
-};
-
-export const refreshToken = async (): Promise<void> => {
-  const store = useStore();
-  const token = store.getters['auth/sessionToken'];
-  headers.Authorization = `Bearer ${token}`;
-  try {
-    const { data } = await axios.get(`${url}/auth/token`, {
-      headers,
-    });
-
-    data.token && store.dispatch('setSessionToken', token);
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error(error);
-      return;
-    }
-
-    console.error(`An unexpected error occurred: %{error}`);
-  }
-};
-
-export const getAllRecipes = async (): Promise<any> => {
-  const token = useStore().getters['auth/sessionToken'];
+export const getAllRecipes = async (token: string): Promise<any> => {
   headers.Authorization = `Bearer ${token}`;
 
   try {
@@ -97,23 +13,6 @@ export const getAllRecipes = async (): Promise<any> => {
       status: res.status,
       data: res.data,
     };
-  } catch (error) {
-    return handleError(error);
-  }
-};
-
-export const createAuthor = async (
-  body: Authors.CreateAuthorBody,
-  token: string
-): Promise<any> => {
-  headers.Authorization = `Bearer ${token}`;
-
-  try {
-    const res = await axios.post(`${url}/authors`, body, {
-      headers,
-    });
-
-    return res;
   } catch (error) {
     return handleError(error);
   }

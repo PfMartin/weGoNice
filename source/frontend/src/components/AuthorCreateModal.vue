@@ -56,7 +56,7 @@ import ModalComponent, { ModalConfig } from '@/components/ModalComponent.vue';
 import { defineEmits, ref } from 'vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import TextInput from '@/components/TextInput.vue';
-import { createAuthor } from '@/apis/weGoNice';
+import { createAuthor } from '@/apis/weGoNice/authors';
 import { useStore } from 'vuex';
 
 const emit = defineEmits<{
@@ -68,8 +68,6 @@ const config: ModalConfig = {
 };
 
 const store = useStore();
-const token = store.getters['auth/sessionToken'];
-console.log(token);
 
 const name = ref('');
 const nameError = ref('');
