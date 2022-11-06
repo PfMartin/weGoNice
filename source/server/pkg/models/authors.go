@@ -5,17 +5,17 @@ import (
 )
 
 type AuthorRequest struct {
-	Name       string `bson:"name"`
-	WebsiteURL string `bson:"WebsiteURL"`
-	Instagram  string `bson:"instagram"`
-	YouTube    string `bson:"youTube"`
-	UserID     string `bson:"userId"` // Is set by gorillaCtx retrieved from token
+	Name      string `bson:"name"`
+	Website   string `bson:"website"`
+	Instagram string `bson:"instagram"`
+	YouTube   string `bson:"youTube"`
+	UserID    string `bson:"userId"` // Is set by gorillaCtx retrieved from token
 }
 
 type AuthorResponse struct {
 	ID         string       `bson:"_id"`
 	Name       string       `bson:"name"`
-	WebsiteURL string       `bson:"WebsiteURL"`
+	Website    string       `bson:"website"`
 	Instagram  string       `bson:"instagram"`
 	YouTube    string       `bson:"youTube"`
 	User       UserResponse `bson:"user"`
@@ -26,7 +26,7 @@ type AuthorResponse struct {
 type AuthorDB struct {
 	ID         string    `bson:"_id"`
 	Name       string    `bson:"name"`
-	WebsiteURL string    `bson:"WebsiteURL"`
+	Website    string    `bson:"website"`
 	Instagram  string    `bson:"instagram"`
 	YouTube    string    `bson:"youTube"`
 	UserID     string    `bson:"userId"`

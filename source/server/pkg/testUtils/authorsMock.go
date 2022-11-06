@@ -11,17 +11,17 @@ import (
 )
 
 var TestAuthor = models.AuthorRequest{
-	Name:       "Schnabularasa",
-	WebsiteURL: "https://schnabularasa.at",
-	Instagram:  "testAccount",
-	YouTube:    "testYouTube",
+	Name:      "Schnabularasa",
+	Website:   "https://schnabularasa.at",
+	Instagram: "testAccount",
+	YouTube:   "testYouTube",
 }
 
 var UpdateAuthor = models.AuthorRequest{
-	Name:       "Nico Rittenau",
-	WebsiteURL: "https://www.nikorittenau.com/",
-	Instagram:  "rittenau",
-	YouTube:    "rittenau",
+	Name:      "Nico Rittenau",
+	Website:   "https://www.nikorittenau.com/",
+	Instagram: "rittenau",
+	YouTube:   "rittenau",
 }
 
 var ExpectedUser = models.UserResponse{
@@ -37,7 +37,7 @@ var ExpectedUser = models.UserResponse{
 var ExpectedAuthor = models.AuthorResponse{
 	ID:         "willChange",
 	Name:       TestAuthor.Name,
-	WebsiteURL: TestAuthor.WebsiteURL,
+	Website:    TestAuthor.Website,
 	Instagram:  TestAuthor.Instagram,
 	YouTube:    TestAuthor.YouTube,
 	CreatedAt:  testDate,
@@ -55,7 +55,7 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 
 	data := bson.M{
 		"name":       TestAuthor.Name,
-		"WebsiteURL": TestAuthor.WebsiteURL,
+		"website":    TestAuthor.Website,
 		"instagram":  TestAuthor.Instagram,
 		"youTube":    TestAuthor.YouTube,
 		"userId":     objectID,

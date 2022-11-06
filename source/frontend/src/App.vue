@@ -1,12 +1,14 @@
 <template>
-  <NavBar v-if="isLoggedIn" />
-  <section>
-    <router-view v-slot="{ Component, route }">
-      <Transition :name="route.meta.transition || ''" mode="out-in">
-        <component :is="Component" />
-      </Transition>
-    </router-view>
-  </section>
+  <body id="body">
+    <NavBar v-if="isLoggedIn" />
+    <section>
+      <router-view v-slot="{ Component, route }">
+        <Transition :name="route.meta.transition || ''" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </router-view>
+    </section>
+  </body>
 </template>
 
 <script setup lang="ts">

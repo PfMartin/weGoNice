@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import LoginForm from '@/components/LoginForm.vue';
-import { registerUser } from '@/apis/weGoNice';
+import { registerUser } from '@/apis/weGoNice/auth';
 import { loginSuccess } from '@/auth';
 
 const register = async (body: { email: string; password: string }) => {
