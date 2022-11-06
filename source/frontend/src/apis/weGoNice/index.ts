@@ -13,6 +13,8 @@ const headers = {
   Authorization: '',
 };
 
+const store = useStore();
+
 const handleError = (error: unknown): RequestResponse => {
   if (axios.isAxiosError(error)) {
     return {
@@ -95,6 +97,23 @@ export const getAllRecipes = async (): Promise<any> => {
       status: res.status,
       data: res.data,
     };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const createAuthor = async (
+  body: Authors.CreateAuthorBody,
+  token: string
+): Promise<any> => {
+  headers.Authorization = `Bearer ${token}`;
+
+  try {
+    const res = await axios.post(`${url}/authors`, body, {
+      headers,
+    });
+
+    return res;
   } catch (error) {
     return handleError(error);
   }

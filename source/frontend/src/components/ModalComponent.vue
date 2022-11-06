@@ -11,6 +11,9 @@
     <Transition name="slide" appear>
       <div v-if="isVisible" :class="modalStyle">
         <header>
+          <div class="close-button" @click="closeModal">
+            <ion-icon name="close" />
+          </div>
           <slot name="header"></slot>
         </header>
         <main>
@@ -25,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, defineEmits, ref } from 'vue';
+import { defineProps, computed, defineEmits, ref, watch } from 'vue';
 
 export interface ModalConfig {
   size: 's' | 'm' | 'l' | 'xl' | 'xxl';
@@ -33,6 +36,7 @@ export interface ModalConfig {
 
 const props = defineProps<{
   config: ModalConfig;
+  shouldClose?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -49,6 +53,11 @@ const closeModal = () => {
 };
 
 const modalStyle = computed(() => `modal-content ${props.config.size}`);
+
+watch(
+  () => props.shouldClose,
+  () => closeModal()
+);
 </script>
 
 <style scoped lang="scss">
@@ -111,6 +120,21 @@ $modal-width-xxl: 1520px;
     @media screen and (min-width: 1850px) {
       left: calc(100vw / 2 - #{$modal-width-xxl / 2});
       width: $modal-width-xxl;
+    }
+  }
+}
+
+header {
+  .close-button {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    font-size: 1.3rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $accent-color;
+      cursor: pointer;
     }
   }
 }

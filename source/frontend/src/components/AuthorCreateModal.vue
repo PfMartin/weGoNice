@@ -1,6 +1,10 @@
 <template lang="html">
   <div class="author-create-modal">
-    <ModalComponent :config="config" @close="emit('closeModal')">
+    <ModalComponent
+      :config="config"
+      @close="emit('closeModal')"
+      :shouldClose="shouldClose"
+    >
       <template v-slot:header>
         <h2>Add Author</h2>
       </template>
@@ -11,25 +15,25 @@
             :label="{ name: 'Name', iconName: 'person' }"
             :initialValue="name"
             :inputError="nameError"
-            :on-input="updateName"
+            @on-input="updateName"
           />
           <TextInput
             :label="{ name: 'Website', iconName: 'earth' }"
             :initialValue="website"
             :inputError="websiteError"
-            :on-input="updateWebsite"
+            @on-input="updateWebsite"
           />
           <TextInput
             :label="{ name: 'Instagram', iconName: 'logo-instagram' }"
             :initialValue="instagram"
             :inputError="instagramError"
-            :on-input="updateInstagram"
+            @on-input="updateInstagram"
           />
           <TextInput
             :label="{ name: 'YouTube', iconName: 'logo-youtube' }"
             :initialValue="youTube"
             :inputError="youTubeError"
-            :on-input="updateYouTube"
+            @on-input="updateYouTube"
           />
         </form>
       </template>
@@ -52,6 +56,8 @@ import ModalComponent, { ModalConfig } from '@/components/ModalComponent.vue';
 import { defineEmits, ref } from 'vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import TextInput from '@/components/TextInput.vue';
+import { createAuthor } from '@/apis/weGoNice';
+import { useStore } from 'vuex';
 
 const emit = defineEmits<{
   (e: 'closeModal'): void;
@@ -60,6 +66,10 @@ const emit = defineEmits<{
 const config: ModalConfig = {
   size: 's',
 };
+
+const store = useStore();
+const token = store.getters['auth/sessionToken'];
+console.log(token);
 
 const name = ref('');
 const nameError = ref('');
@@ -85,13 +95,27 @@ const updateYouTube = (newValue: string): void => {
   youTube.value = newValue;
 };
 
-const submit = (): void => {
-  const body = {
+const shouldClose = ref(false);
+const submit = async (): Promise<void> => {
+  const body: Authors.CreateAuthorBody = {
     name: name.value,
     website: website.value,
     instagram: instagram.value,
     youTube: youTube.value,
   };
+
+  const { status, data } = await createAuthor(
+    body,
+    store.getters['auth/sessionToken']
+  );
+
+  if (status === 201) {
+    // Message for notification system
+    console.log(`Successfully created author with id: ${data}`);
+    shouldClose.value = true;
+  } else {
+    console.error(data);
+  }
 };
 </script>
 

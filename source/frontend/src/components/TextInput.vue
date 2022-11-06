@@ -2,7 +2,7 @@
   <div :class="inputClass">
     <label :for="label.name"
       ><div class="label-text">
-        <ion-icon :name="label.iconName" /> &nbsp;
+        <ion-icon v-if="label.iconName" :name="label.iconName" /> &nbsp;
         <span>{{ label.name }}</span>
       </div>
       <Transition name="fade">

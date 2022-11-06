@@ -5,13 +5,13 @@
       <div class="card">
         <form action="apply">
           <TextInput
-            label="Email"
+            :label="{ name: 'Email' }"
             :initialValue="email"
             :inputError="emailError"
             @on-input="updateEmail"
           />
           <TextInput
-            label="Password"
+            :label="{ name: 'Password' }"
             isPassword
             :initialValue="password"
             :inputError="passwordError"
@@ -19,7 +19,7 @@
           />
           <TextInput
             v-if="isRegister"
-            label="Confirm Password"
+            :label="{ name: 'Confirm Password' }"
             isPassword
             :initialValue="confirmPassword"
             :inputError="confirmPasswordError"

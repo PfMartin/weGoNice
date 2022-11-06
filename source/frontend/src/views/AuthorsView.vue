@@ -7,7 +7,11 @@
     />
 
     <Teleport to="#body">
-      <AuthorCreateModal v-if="isCreateModalVisible" @closeModal="closeModal" />
+      <AuthorCreateModal
+        v-if="isCreateModalVisible"
+        @closeModal="closeModal"
+        @success="closeModal"
+      />
     </Teleport>
   </body>
 </template>
