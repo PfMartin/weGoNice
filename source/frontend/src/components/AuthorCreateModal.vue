@@ -102,7 +102,7 @@ const instagramError = ref('');
 const updateInstagram = (newValue: string): void => {
   instagram.value = newValue;
   if (!isFirstTry.value) {
-    validateName();
+    validateInstagram();
   }
 };
 const validateInstagram = (): void => {
@@ -114,25 +114,25 @@ const youTubeError = ref('');
 const updateYouTube = (newValue: string): void => {
   youTube.value = newValue;
   if (!isFirstTry.value) {
-    validateName();
+    validateYouTube();
   }
 };
 const validateYouTube = (): void => {
   youTubeError.value = validationService.validateYouTube(youTube.value);
 };
 
-const isValid = computed(() => {
+const isValid = computed((): boolean => {
   validateName();
   validateWebsite();
   validateInstagram();
   validateYouTube();
 
-  const isNameValid = !nameError.value;
-  const isWebsiteValid = !websiteError.value;
-  const isInstagramValid = !instagramError.value;
-  const isYouTubeValid = !youTubeError.value;
-
-  return isNameValid && isWebsiteValid && isInstagramValid && isYouTubeValid;
+  return (
+    !nameError.value &&
+    !websiteError.value &&
+    !instagramError.value &&
+    !youTubeError.value
+  );
 });
 
 const shouldClose = ref(false);

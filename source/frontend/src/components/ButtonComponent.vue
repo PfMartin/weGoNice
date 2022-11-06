@@ -1,5 +1,5 @@
 <template>
-  <div @click.prevent="onClick" class="button">
+  <div @click="onClick" class="button">
     <ion-icon :name="buttonIconName" />
     <p>{{ buttonText }}</p>
   </div>

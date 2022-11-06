@@ -44,7 +44,7 @@ const emit = defineEmits<{
 }>();
 
 const isVisible = ref(true);
-const closeModal = () => {
+const closeModal = (): void => {
   isVisible.value = false;
   setTimeout(() => {
     // Timeout required for leave animation
@@ -52,8 +52,9 @@ const closeModal = () => {
   }, 200);
 };
 
-const modalStyle = computed(() => `modal-content ${props.config.size}`);
+const modalStyle = computed((): string => `modal-content ${props.config.size}`);
 
+// Programmatic close needs to be this way for the animation to work
 watch(
   () => props.shouldClose,
   () => closeModal()
