@@ -153,11 +153,16 @@ const submit = async (): Promise<void> => {
     );
 
     if (status === 201) {
-      // Message for notification system
-      console.log(`Successfully created author with id: ${data}`);
+      store.dispatch('notifications/pushNotification', {
+        headline: 'Success',
+        body: `Author '${name.value}' has successfully been added`,
+      });
       shouldClose.value = true;
     } else {
-      console.error(data);
+      store.dispatch('notifications/pushNotification', {
+        headline: 'Error',
+        body: `The author could not be saved: ${data}`,
+      });
     }
   }
 };

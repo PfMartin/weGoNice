@@ -5,9 +5,6 @@
       @search-input="onSearchInput"
       @button-click="createAuthor"
     />
-    <button @click="push">PUSH NEW</button>
-    <button @click="remove">REMOVE</button>
-
     <Teleport to="#body">
       <AuthorCreateModal
         v-if="isCreateModalVisible"
@@ -22,7 +19,6 @@
 import HeaderBar from '@/components/HeaderBar.vue';
 import AuthorCreateModal from '@/components/AuthorCreateModal.vue';
 import { ref } from 'vue';
-import { useStore } from 'vuex';
 
 const headerConfig = {
   pageTitle: 'Authors',
@@ -41,20 +37,6 @@ const createAuthor = (): void => {
 
 const closeModal = (): void => {
   isCreateModalVisible.value = false;
-};
-
-const store = useStore();
-const push = () => {
-  store.dispatch('notifications/pushNotification', {
-    headline: 'Success',
-    body: "Successfully added author 'Nico Rittenau'",
-  });
-  console.log(store.getters['notifications/notifications']);
-};
-
-const remove = () => {
-  store.dispatch('notifications/popNotification');
-  console.log(store.getters['notifications/notifications']);
 };
 </script>
 

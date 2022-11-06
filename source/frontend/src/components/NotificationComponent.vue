@@ -3,9 +3,11 @@
     <div @click="closeNotification" class="close-button">
       <ion-icon name="close" />
     </div>
-    <header><h4>Success</h4></header>
+    <header>
+      <h4>{{ config.headline }}</h4>
+    </header>
     <div class="body">
-      New author with name 'Nico Rittenau' has been created
+      {{ config.body }}
     </div>
   </div>
 </template>
@@ -34,9 +36,10 @@ const closeNotification = (): void => {
   border: 1px solid $border-color-notification;
   border-radius: $border-radius;
   color: $text-color;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   max-width: 400px;
   margin-top: 0.5rem;
+  font-size: 1rem;
 
   .close-button {
     position: absolute;
