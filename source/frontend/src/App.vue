@@ -2,9 +2,10 @@
   <body id="body">
     <NavBar v-if="isLoggedIn" />
     <section>
-      <div id="notificaiton">
-        <NotificationComponent v-if="hasNotification" />
-      </div>
+      <NotificationBar
+        v-if="notifications.length"
+        :notifications="notifications"
+      />
       <router-view v-slot="{ Component, route }">
         <Transition :name="route.meta.transition || ''" mode="out-in">
           <component :is="Component" />
@@ -18,11 +19,16 @@
 import NavBar from '@/components/NavBar.vue';
 import { computed } from 'vue';
 import { isAuthenticated } from '@/auth';
-import NotificationComponent from '@/components/NotificationComponent.vue';
+import NotificationBar from '@/components/NotificationBar.vue';
+import { useStore } from 'vuex';
 
 const isLoggedIn = computed(() => isAuthenticated());
 
-const hasNotification = true;
+const store = useStore();
+
+const notifications = computed(
+  () => store.getters['notifications/notifications']
+);
 </script>
 
 <style lang="scss">

@@ -11,8 +11,16 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps } from 'vue';
+import { useStore } from 'vuex';
+
+const props = defineProps<{
+  config: Store.Notification;
+}>();
+
+const store = useStore();
 const closeNotification = (): void => {
-  console.log('close');
+  store.dispatch('notifications/removeNotification', props.config.id);
 };
 </script>
 
@@ -21,15 +29,14 @@ const closeNotification = (): void => {
 @import '../styles/outline.scss';
 
 .notification {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
+  position: relative;
   background: $bg-color-notification;
   border: 1px solid $border-color-notification;
   border-radius: $border-radius;
   color: $text-color;
   padding: 0.5rem;
   max-width: 400px;
+  margin-top: 0.5rem;
 
   .close-button {
     position: absolute;
