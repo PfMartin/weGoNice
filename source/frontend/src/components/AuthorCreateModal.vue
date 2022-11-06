@@ -53,11 +53,12 @@
 
 <script setup lang="ts">
 import ModalComponent, { ModalConfig } from '@/components/ModalComponent.vue';
-import { defineEmits, ref } from 'vue';
+import { defineEmits, ref, computed } from 'vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import TextInput from '@/components/TextInput.vue';
 import { createAuthor } from '@/apis/weGoNice/authors';
 import { useStore } from 'vuex';
+import ValidationService from '@/services/validation.service';
 
 const emit = defineEmits<{
   (e: 'closeModal'): void;
@@ -69,50 +70,95 @@ const config: ModalConfig = {
 
 const store = useStore();
 
+const validationService = new ValidationService();
+const isFirstTry = ref(true);
+
 const name = ref('');
 const nameError = ref('');
 const updateName = (newValue: string): void => {
   name.value = newValue;
+  if (!isFirstTry.value) {
+    validateName();
+  }
+};
+const validateName = (): void => {
+  nameError.value = validationService.validateAuthorName(name.value);
 };
 
 const website = ref('');
 const websiteError = ref('');
 const updateWebsite = (newValue: string): void => {
   website.value = newValue;
+  if (!isFirstTry.value) {
+    validateWebsite();
+  }
+};
+const validateWebsite = (): void => {
+  websiteError.value = validationService.validateWebsite(website.value);
 };
 
 const instagram = ref('');
 const instagramError = ref('');
 const updateInstagram = (newValue: string): void => {
   instagram.value = newValue;
+  if (!isFirstTry.value) {
+    validateName();
+  }
+};
+const validateInstagram = (): void => {
+  instagramError.value = validationService.validateInstagram(instagram.value);
 };
 
 const youTube = ref('');
 const youTubeError = ref('');
 const updateYouTube = (newValue: string): void => {
   youTube.value = newValue;
+  if (!isFirstTry.value) {
+    validateName();
+  }
 };
+const validateYouTube = (): void => {
+  youTubeError.value = validationService.validateYouTube(youTube.value);
+};
+
+const isValid = computed(() => {
+  validateName();
+  validateWebsite();
+  validateInstagram();
+  validateYouTube();
+
+  const isNameValid = !nameError.value;
+  const isWebsiteValid = !websiteError.value;
+  const isInstagramValid = !instagramError.value;
+  const isYouTubeValid = !youTubeError.value;
+
+  return isNameValid && isWebsiteValid && isInstagramValid && isYouTubeValid;
+});
 
 const shouldClose = ref(false);
 const submit = async (): Promise<void> => {
-  const body: Authors.CreateAuthorBody = {
-    name: name.value,
-    website: website.value,
-    instagram: instagram.value,
-    youTube: youTube.value,
-  };
+  isFirstTry.value = false;
 
-  const { status, data } = await createAuthor(
-    body,
-    store.getters['auth/sessionToken']
-  );
+  if (isValid.value) {
+    const body: Authors.CreateAuthorBody = {
+      name: name.value,
+      website: website.value,
+      instagram: instagram.value,
+      youTube: youTube.value,
+    };
 
-  if (status === 201) {
-    // Message for notification system
-    console.log(`Successfully created author with id: ${data}`);
-    shouldClose.value = true;
-  } else {
-    console.error(data);
+    const { status, data } = await createAuthor(
+      body,
+      store.getters['auth/sessionToken']
+    );
+
+    if (status === 201) {
+      // Message for notification system
+      console.log(`Successfully created author with id: ${data}`);
+      shouldClose.value = true;
+    } else {
+      console.error(data);
+    }
   }
 };
 </script>

@@ -23,4 +23,20 @@ export default class ValidationService {
     this.password !== confirmPassword
       ? "The provided passwords don't match"
       : '';
+
+  public validateAuthorName = (name: string): string =>
+    name ? '' : 'Please provide a name for the author';
+
+  public validateWebsite = (url: string): string =>
+    url && !url.includes('.') ? 'Please provide a valid website URL' : '';
+
+  public validateYouTube = (url: string): string =>
+    url && !url.includes('youtube.com/channel/')
+      ? 'Please provide a valid YouTube URL'
+      : '';
+
+  public validateInstagram = (url: string): string =>
+    url && !url.includes('instagram.com/')
+      ? 'Please provide a valid Instagram URL'
+      : '';
 }
