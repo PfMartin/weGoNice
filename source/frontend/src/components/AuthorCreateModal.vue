@@ -6,7 +6,7 @@
       :shouldClose="shouldClose"
     >
       <template v-slot:header>
-        <h2>Add Author</h2>
+        <h2>New Author</h2>
       </template>
 
       <template v-slot:default>

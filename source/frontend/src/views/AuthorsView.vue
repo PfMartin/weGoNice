@@ -24,7 +24,7 @@ import { ref } from 'vue';
 const headerConfig = {
   pageTitle: 'Authors',
   buttonIconName: 'add',
-  buttonText: 'Add Author',
+  buttonText: 'New Author',
 };
 
 const onSearchInput = (searchValue: string): void => {

@@ -2,6 +2,9 @@
   <body id="body">
     <NavBar v-if="isLoggedIn" />
     <section>
+      <div id="notificaiton">
+        <NotificationComponent v-if="hasNotification" />
+      </div>
       <router-view v-slot="{ Component, route }">
         <Transition :name="route.meta.transition || ''" mode="out-in">
           <component :is="Component" />
@@ -15,8 +18,11 @@
 import NavBar from '@/components/NavBar.vue';
 import { computed } from 'vue';
 import { isAuthenticated } from '@/auth';
+import NotificationComponent from '@/components/NotificationComponent.vue';
 
 const isLoggedIn = computed(() => isAuthenticated());
+
+const hasNotification = true;
 </script>
 
 <style lang="scss">
