@@ -1,7 +1,12 @@
 <template>
   <body id="body">
+    <div id="modals"></div>
     <NavBar v-if="isLoggedIn" />
     <section>
+      <NotificationBar
+        v-if="notifications.length"
+        :notifications="notifications"
+      />
       <router-view v-slot="{ Component, route }">
         <Transition :name="route.meta.transition || ''" mode="out-in">
           <component :is="Component" />
@@ -15,8 +20,16 @@
 import NavBar from '@/components/NavBar.vue';
 import { computed } from 'vue';
 import { isAuthenticated } from '@/auth';
+import NotificationBar from '@/components/NotificationBar.vue';
+import { useStore } from 'vuex';
 
 const isLoggedIn = computed(() => isAuthenticated());
+
+const store = useStore();
+
+const notifications = computed(
+  () => store.getters['notifications/notifications']
+);
 </script>
 
 <style lang="scss">

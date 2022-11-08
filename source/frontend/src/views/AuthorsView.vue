@@ -5,8 +5,7 @@
       @search-input="onSearchInput"
       @button-click="createAuthor"
     />
-
-    <Teleport to="#body">
+    <Teleport to="#modals">
       <AuthorCreateModal
         v-if="isCreateModalVisible"
         @closeModal="closeModal"
@@ -20,11 +19,14 @@
 import HeaderBar from '@/components/HeaderBar.vue';
 import AuthorCreateModal from '@/components/AuthorCreateModal.vue';
 import { ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const headerConfig = {
   pageTitle: 'Authors',
   buttonIconName: 'add',
-  buttonText: 'Add Author',
+  buttonText: 'New Author',
 };
 
 const onSearchInput = (searchValue: string): void => {

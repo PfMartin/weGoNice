@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { url, headers, store, handleError } from './utils';
+import { url, headers, handleError } from './utils';
 
 export const getAllRecipes = async (token: string): Promise<any> => {
   headers.Authorization = `Bearer ${token}`;

@@ -1,10 +1,5 @@
 import { ActionContext } from 'vuex';
 
-interface State {
-  sessionToken: string;
-  userId: string;
-}
-
 export default {
   namespaced: true,
   state: {
@@ -12,26 +7,32 @@ export default {
     userId: '',
   },
   getters: {
-    sessionToken: (state: State) => {
+    sessionToken: (state: Store.State) => {
       return state.sessionToken;
     },
-    userId: (state: State) => {
+    userId: (state: Store.State) => {
       return state.userId;
     },
   },
   mutations: {
-    setSessionToken: (state: State, token: string) => {
+    setSessionToken: (state: Store.State, token: string) => {
       state.sessionToken = token;
     },
-    setUserId: (state: State, id: string) => {
+    setUserId: (state: Store.State, id: string) => {
       state.userId = id;
     },
   },
   actions: {
-    setSessionToken: (context: ActionContext<State, State>, token: string) => {
+    setSessionToken: (
+      context: ActionContext<Store.State, Store.State>,
+      token: string
+    ) => {
       context.commit('setSessionToken', token);
     },
-    setUserId: (context: ActionContext<State, State>, id: string) => {
+    setUserId: (
+      context: ActionContext<Store.State, Store.State>,
+      id: string
+    ) => {
       context.commit('setUserId', id);
     },
   },

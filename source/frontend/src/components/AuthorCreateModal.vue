@@ -6,7 +6,7 @@
       :shouldClose="shouldClose"
     >
       <template v-slot:header>
-        <h2>Add Author</h2>
+        <h2>New Author</h2>
       </template>
 
       <template v-slot:default>
@@ -59,6 +59,7 @@ import TextInput from '@/components/TextInput.vue';
 import { createAuthor } from '@/apis/weGoNice/authors';
 import { useStore } from 'vuex';
 import ValidationService from '@/services/validation.service';
+import NotificationService from '@/services/notification.service';
 
 const emit = defineEmits<{
   (e: 'closeModal'): void;
@@ -152,12 +153,30 @@ const submit = async (): Promise<void> => {
       store.getters['auth/sessionToken']
     );
 
-    if (status === 201) {
-      // Message for notification system
-      console.log(`Successfully created author with id: ${data}`);
-      shouldClose.value = true;
-    } else {
-      console.error(data);
+    let notification = {
+      type: '',
+      body: '',
+    };
+
+    switch (status) {
+      case 201:
+        NotificationService.addNotification(
+          'success',
+          `Author '${name.value}' has successfully been added`
+        );
+        shouldClose.value = true;
+        break;
+      case 406:
+        NotificationService.addNotification(
+          'error',
+          `There already is an author with the name '${name.value}'`
+        );
+        break;
+      default:
+        NotificationService.addNotification(
+          'error',
+          `The author could not be saved: ${data.msg}`
+        );
     }
   }
 };
