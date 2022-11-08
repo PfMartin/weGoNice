@@ -7,7 +7,7 @@
     />
 
     <div class="authors" v-if="isReady">
-      <AuthorCard :data="authors[10]" />
+      <AuthorCard v-for="author in authors" :data="author" :key="author.name" />
     </div>
 
     <Teleport to="#modals">
@@ -56,4 +56,11 @@ onMounted(async () => {
 const isReady = computed(() => authors.value.length);
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import '../styles/outline.scss';
+
+.authors {
+  margin-left: $nav-bar-width;
+  padding: 1rem;
+}
+</style>

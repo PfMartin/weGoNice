@@ -1,9 +1,9 @@
 <template>
   <body>
-    <h1>{{ data.name }}</h1>
-    <p>{{ data.website }}</p>
-    <p>{{ data.instagram }}</p>
-    <p>{{ data.youTube }}</p>
+    <h2>{{ data.name }}</h2>
+    <p>{{ data.website || 'n/a' }}</p>
+    <p>{{ data.instagram || 'n/a' }}</p>
+    <p>{{ data.youTube || 'n/a' }}</p>
   </body>
 </template>
 
@@ -15,4 +15,20 @@ defineProps<{
 }>();
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import '../styles/colors.scss';
+@import '../styles/outline.scss';
+
+body {
+  background: $bg-color-mid;
+  border-radius: $border-radius;
+  color: $text-color;
+  padding: 1rem;
+  max-width: 200px;
+
+  h2 {
+    padding: 0;
+    margin: 0;
+  }
+}
+</style>
