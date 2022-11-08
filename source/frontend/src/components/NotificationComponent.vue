@@ -13,12 +13,18 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps, onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 const props = defineProps<{
   config: Store.Notification;
 }>();
+
+onMounted((): void => {
+  setTimeout(() => {
+    closeNotification();
+  }, 5000);
+});
 
 const store = useStore();
 const closeNotification = (): void => {
