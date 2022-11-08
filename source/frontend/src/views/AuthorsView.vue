@@ -12,7 +12,6 @@
         @success="closeModal"
       />
     </Teleport>
-    <button @click="add">Add Notification</button>
   </body>
 </template>
 
@@ -41,13 +40,6 @@ const createAuthor = (): void => {
 
 const closeModal = (): void => {
   isCreateModalVisible.value = false;
-};
-
-const add = (): void => {
-  store.dispatch('notifications/pushNotification', {
-    headline: 'Success',
-    body: 'That worked',
-  });
 };
 </script>
 

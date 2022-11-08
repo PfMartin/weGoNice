@@ -1,5 +1,6 @@
-import { url, headers, store, handleError } from './utils';
+import { url, headers, handleError } from './utils';
 import axios from 'axios';
+import store from '@/store';
 
 export const refreshToken = async (): Promise<void> => {
   const token = store.getters['auth/sessionToken'];

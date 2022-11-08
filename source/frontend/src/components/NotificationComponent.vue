@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { defineProps, onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
+import NotificationService from '@/services/notification.service';
 
 const props = defineProps<{
   config: Store.Notification;
@@ -30,11 +30,10 @@ onMounted((): void => {
 
 const isVisible = ref(true);
 
-const store = useStore();
 const closeNotification = (): void => {
   isVisible.value = false;
   setTimeout(() => {
-    store.dispatch('notifications/removeNotification', props.config.id);
+    NotificationService.removeNotification(props.config.id);
   }, 200);
 };
 </script>

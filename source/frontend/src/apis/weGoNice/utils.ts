@@ -1,4 +1,3 @@
-import { useStore } from 'vuex';
 import axios from 'axios';
 
 export const url = 'http://localhost:8000';
@@ -7,8 +6,6 @@ export const headers = {
   Accept: 'application/json',
   Authorization: '',
 };
-
-export const store = useStore();
 
 export const handleError = (error: unknown): WeGoNiceApi.RequestResponse => {
   if (axios.isAxiosError(error)) {

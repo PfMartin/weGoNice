@@ -59,6 +59,7 @@ import TextInput from '@/components/TextInput.vue';
 import { createAuthor } from '@/apis/weGoNice/authors';
 import { useStore } from 'vuex';
 import ValidationService from '@/services/validation.service';
+import NotificationService from '@/services/notification.service';
 
 const emit = defineEmits<{
   (e: 'closeModal'): void;
@@ -153,16 +154,16 @@ const submit = async (): Promise<void> => {
     );
 
     if (status === 201) {
-      store.dispatch('notifications/pushNotification', {
-        headline: 'Success',
-        body: `Author '${name.value}' has successfully been added`,
-      });
+      NotificationService.addNotification(
+        'success',
+        `Author '${name.value}' has successfully been added`
+      );
       shouldClose.value = true;
     } else {
-      store.dispatch('notifications/pushNotification', {
-        headline: 'Error',
-        body: `The author could not be saved: ${data}`,
-      });
+      NotificationService.addNotification(
+        'error',
+        `The author could not be saved: ${data}`
+      );
     }
   }
 };

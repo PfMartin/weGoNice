@@ -24,9 +24,6 @@ export default {
       };
       state.notifications.push(newNotification);
     },
-    popNotification: (state: Store.State) => {
-      state.notifications.shift();
-    },
     removeNotification: (state: Store.State, notificationId: number) => {
       state.notifications = state.notifications.filter(
         (notification: Store.Notification) => notification.id !== notificationId
@@ -39,9 +36,6 @@ export default {
       notification: Store.Notification
     ) => {
       context.commit('pushNotification', notification);
-    },
-    popNotification: (context: ActionContext<Store.State, Store.State>) => {
-      context.commit('popNotification');
     },
     removeNotification: (
       context: ActionContext<Store.State, Store.State>,
