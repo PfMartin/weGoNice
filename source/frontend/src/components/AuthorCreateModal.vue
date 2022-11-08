@@ -153,17 +153,30 @@ const submit = async (): Promise<void> => {
       store.getters['auth/sessionToken']
     );
 
-    if (status === 201) {
-      NotificationService.addNotification(
-        'success',
-        `Author '${name.value}' has successfully been added`
-      );
-      shouldClose.value = true;
-    } else {
-      NotificationService.addNotification(
-        'error',
-        `The author could not be saved: ${data}`
-      );
+    let notification = {
+      type: '',
+      body: '',
+    };
+
+    switch (status) {
+      case 201:
+        NotificationService.addNotification(
+          'success',
+          `Author '${name.value}' has successfully been added`
+        );
+        shouldClose.value = true;
+        break;
+      case 406:
+        NotificationService.addNotification(
+          'error',
+          `There already is an author with the name '${name.value}'`
+        );
+        break;
+      default:
+        NotificationService.addNotification(
+          'error',
+          `The author could not be saved: ${data.msg}`
+        );
     }
   }
 };

@@ -5,7 +5,7 @@
       @search-input="onSearchInput"
       @button-click="createAuthor"
     />
-    <Teleport to="#body">
+    <Teleport to="#modals">
       <AuthorCreateModal
         v-if="isCreateModalVisible"
         @closeModal="closeModal"

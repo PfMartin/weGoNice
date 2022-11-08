@@ -1,5 +1,6 @@
 <template>
   <body id="body">
+    <div id="modals"></div>
     <NavBar v-if="isLoggedIn" />
     <section>
       <NotificationBar
