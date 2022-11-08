@@ -4,6 +4,7 @@ export default {
   namespaced: true,
   state: {
     notifications: [],
+    notificationCounter: 0,
   },
   getters: {
     notifications: (state: Store.State) => {
@@ -15,11 +16,9 @@ export default {
       state: Store.State,
       notification: Store.Notification
     ) => {
-      const lastNotification =
-        state.notifications[state.notifications.length - 1];
-
+      state.notificationCounter++;
       const newNotification = {
-        id: lastNotification?.id ? lastNotification.id + 1 : 1,
+        id: state.notificationCounter,
         headline: notification.headline,
         body: notification.body,
       };

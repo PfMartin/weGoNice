@@ -1,19 +1,21 @@
 <template>
-  <div class="notification">
-    <div @click="closeNotification" class="close-button">
-      <ion-icon name="close" />
+  <Transition name="slide" appear>
+    <div class="notification" v-if="isVisible">
+      <div @click="closeNotification" class="close-button">
+        <ion-icon name="close" />
+      </div>
+      <header>
+        <h4>{{ config.headline }}</h4>
+      </header>
+      <div class="body">
+        {{ config.body }}
+      </div>
     </div>
-    <header>
-      <h4>{{ config.headline }}</h4>
-    </header>
-    <div class="body">
-      {{ config.body }}
-    </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted } from 'vue';
+import { defineProps, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 
 const props = defineProps<{
@@ -26,9 +28,14 @@ onMounted((): void => {
   }, 5000);
 });
 
+const isVisible = ref(true);
+
 const store = useStore();
 const closeNotification = (): void => {
-  store.dispatch('notifications/removeNotification', props.config.id);
+  isVisible.value = false;
+  setTimeout(() => {
+    store.dispatch('notifications/removeNotification', props.config.id);
+  }, 200);
 };
 </script>
 
@@ -63,5 +70,15 @@ const closeNotification = (): void => {
     padding: 0;
     margin: 0.3rem 0;
   }
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100vw);
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.4s ease;
 }
 </style>

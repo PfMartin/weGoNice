@@ -9,5 +9,6 @@ declare namespace Store {
     sessionToken: string;
     userId: string;
     notifications: Notification[];
+    notificationCounter: number;
   }
 }
