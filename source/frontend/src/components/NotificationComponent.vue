@@ -5,7 +5,7 @@
         <ion-icon name="close" />
       </div>
       <header>
-        <h4>{{ config.headline }}</h4>
+        <h4><ion-icon :name="iconName" /> &nbsp;{{ config.headline }}</h4>
       </header>
       <div class="body">
         {{ config.body }}
@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import { defineProps, onMounted, ref } from 'vue';
 import NotificationService from '@/services/notification.service';
+import { computed } from '@vue/reactivity';
 
 const props = defineProps<{
   config: Store.Notification;
@@ -29,6 +30,23 @@ onMounted((): void => {
 });
 
 const isVisible = ref(true);
+
+const iconName = computed((): string => {
+  let name = '';
+
+  switch (props.config.headline) {
+    case 'Success!':
+      name = 'checkmark-done';
+      break;
+    case 'Error!':
+      name = 'alert-circle';
+      break;
+    default:
+      name = 'warning';
+  }
+
+  return name;
+});
 
 const closeNotification = (): void => {
   isVisible.value = false;
@@ -68,6 +86,8 @@ const closeNotification = (): void => {
   h4 {
     padding: 0;
     margin: 0.3rem 0;
+    display: flex;
+    align-items: center;
   }
 }
 
