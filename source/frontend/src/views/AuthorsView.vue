@@ -50,6 +50,7 @@ const closeModal = (): void => {
 const authors = ref<any>([]);
 onMounted(async () => {
   authors.value = await getAllAuthors();
+  console.log(authors.value);
 });
 
 const isReady = computed(() => authors.value.length);

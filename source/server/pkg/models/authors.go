@@ -5,7 +5,7 @@ import (
 )
 
 type AuthorRequest struct {
-	Name      string `bson:"name"`
+	Name      string `bson:"name" `
 	Website   string `bson:"website"`
 	Instagram string `bson:"instagram"`
 	YouTube   string `bson:"youTube"`
@@ -13,14 +13,14 @@ type AuthorRequest struct {
 }
 
 type AuthorResponse struct {
-	ID         string       `bson:"_id"`
-	Name       string       `bson:"name"`
-	Website    string       `bson:"website"`
-	Instagram  string       `bson:"instagram"`
-	YouTube    string       `bson:"youTube"`
-	User       UserResponse `bson:"user"`
-	CreatedAt  time.Time    `bson:"createdAt"`
-	ModifiedAt time.Time    `bson:"modifiedAt"`
+	ID         string       `bson:"_id" json:"id"`
+	Name       string       `bson:"name" json:"name"`
+	Website    string       `bson:"website" json:"website"`
+	Instagram  string       `bson:"instagram" json:"instagram"`
+	YouTube    string       `bson:"youTube" json:"youTube"`
+	User       UserResponse `bson:"user" json:"user"`
+	CreatedAt  time.Time    `bson:"createdAt" json:"createdAt"`
+	ModifiedAt time.Time    `bson:"modifiedAt" json:"modifiedAt"`
 }
 
 type AuthorDB struct {
