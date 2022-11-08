@@ -148,10 +148,7 @@ const submit = async (): Promise<void> => {
       youTube: youTube.value,
     };
 
-    const { status, data } = await createAuthor(
-      body,
-      store.getters['auth/sessionToken']
-    );
+    const { status, data } = await createAuthor(body);
 
     let notification = {
       type: '',
