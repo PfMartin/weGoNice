@@ -8,6 +8,7 @@
       <header>
         <h3>{{ data.name || 'n/a' }}</h3>
       </header>
+      <div class="body">5 recipes</div>
       <footer class="footer">
         <a v-if="data.website" :href="data.website"
           ><ion-icon name="earth"
@@ -49,10 +50,17 @@ const getDetails = () => {
   grid-template-columns: 100px auto;
   align-items: center;
   min-height: 100px;
+  transition: background-color 0.3s;
+  transition: border-color 0.3s;
 
   &:hover {
     cursor: pointer;
     border: 1px solid $accent-color;
+    background: $bg-color-dark;
+
+    .main {
+      background: $bg-color-mid;
+    }
   }
 
   .picture {
@@ -81,12 +89,17 @@ const getDetails = () => {
     padding: 0.5rem;
     border-radius: $border-radius;
     height: calc(100% - 1rem);
+    transition: background-color 0.3s;
 
     header {
       h3 {
         padding: 0;
         margin: 0;
       }
+    }
+
+    .body {
+      font-size: 0.9rem;
     }
 
     footer {
