@@ -1,13 +1,19 @@
 <template>
   <div class="author-card">
-    <header>
-      <h3>{{ data.name || 'n/a' }}</h3>
-    </header>
-    <footer class="footer">
-      <a :href="data.website"><ion-icon name="earth" /></a>
-      <a :href="data.instagram"><ion-icon name="logo-instagram" /></a>
-      <a :href="data.youTube"><ion-icon name="logo-youTube" /></a>
-    </footer>
+    <div class="picture">
+      <img v-if="data.image" :src="data.image" />
+      <ion-icon v-else name="person" />
+    </div>
+    <div class="main">
+      <header>
+        <h3>{{ data.name || 'n/a' }}</h3>
+      </header>
+      <footer class="footer">
+        <a :href="data.website"><ion-icon name="earth" /></a>
+        <a :href="data.instagram"><ion-icon name="logo-instagram" /></a>
+        <a :href="data.youTube"><ion-icon name="logo-youTube" /></a>
+      </footer>
+    </div>
   </div>
 </template>
 
@@ -28,34 +34,59 @@ defineProps<{
   border-radius: $border-radius;
   color: $text-color;
   padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 100px auto;
 
-  header {
-    h3 {
-      padding: 0;
-      margin: 0;
+  .picture {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    width: 100px;
+    overflow: hidden;
+    justify-content: center;
+
+    img {
+      height: 100px;
+    }
+
+    ion-icon {
+      font-size: 6rem;
+      color: $bg-color-light;
     }
   }
 
-  footer {
-    margin-top: 1rem;
+  .main {
+    margin-left: 1rem;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    justify-content: space-between;
+    // width: 100%;
 
-    a {
+    header {
+      h3 {
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    footer {
+      margin-top: 1rem;
       display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: $text-color;
-      font-size: 1.5rem;
-      margin-left: 2rem;
-      transition: color 0.2s;
+      justify-content: flex-end;
 
-      &:hover {
-        color: $accent-color;
-        cursor: pointer;
+      a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: $text-color;
+        font-size: 1.5rem;
+        margin-left: 2rem;
+        transition: color 0.2s;
+
+        &:hover {
+          color: $accent-color;
+          cursor: pointer;
+        }
       }
     }
   }
