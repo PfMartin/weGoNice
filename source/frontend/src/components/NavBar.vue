@@ -84,6 +84,7 @@ const logout = () => {
 
 .navbar {
   position: relative;
+  z-index: 20;
 
   body {
     position: absolute;

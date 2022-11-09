@@ -1,5 +1,5 @@
 <template>
-  <div class="author-card">
+  <div @click="getDetails" class="author-card">
     <div class="picture">
       <img v-if="data.image" :src="data.image" />
       <ion-icon v-else name="person" />
@@ -9,9 +9,15 @@
         <h3>{{ data.name || 'n/a' }}</h3>
       </header>
       <footer class="footer">
-        <a :href="data.website"><ion-icon name="earth" /></a>
-        <a :href="data.instagram"><ion-icon name="logo-instagram" /></a>
-        <a :href="data.youTube"><ion-icon name="logo-youTube" /></a>
+        <a v-if="data.website" :href="data.website"
+          ><ion-icon name="earth"
+        /></a>
+        <a v-if="data.instagram" :href="data.instagram"
+          ><ion-icon name="logo-instagram"
+        /></a>
+        <a v-if="data.youTube" :href="data.youTube"
+          ><ion-icon name="logo-youTube"
+        /></a>
       </footer>
     </div>
   </div>
@@ -20,9 +26,13 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   data: any;
 }>();
+
+const getDetails = () => {
+  console.log(props.data.id);
+};
 </script>
 
 <style scoped lang="scss">
