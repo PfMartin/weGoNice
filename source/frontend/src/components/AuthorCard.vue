@@ -1,10 +1,14 @@
 <template>
-  <body>
-    <h3>{{ data.name }}</h3>
-    <p>{{ data.website || 'n/a' }}</p>
-    <p>{{ data.instagram || 'n/a' }}</p>
-    <p>{{ data.youTube || 'n/a' }}</p>
-  </body>
+  <div class="author-card">
+    <header>
+      <h3>{{ data.name || 'n/a' }}</h3>
+    </header>
+    <footer class="footer">
+      <a :href="data.website"><ion-icon name="earth" /></a>
+      <a :href="data.instagram"><ion-icon name="logo-instagram" /></a>
+      <a :href="data.youTube"><ion-icon name="logo-youTube" /></a>
+    </footer>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -19,15 +23,41 @@ defineProps<{
 @import '../styles/colors.scss';
 @import '../styles/outline.scss';
 
-body {
+.author-card {
   background: $bg-color-mid;
   border-radius: $border-radius;
   color: $text-color;
-  padding: 1rem;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  h3 {
-    padding: 0;
-    margin: 0;
+  header {
+    h3 {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  footer {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: $text-color;
+      font-size: 1.5rem;
+      margin-left: 2rem;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $accent-color;
+        cursor: pointer;
+      }
+    }
   }
 }
 </style>

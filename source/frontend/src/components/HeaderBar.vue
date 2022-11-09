@@ -74,6 +74,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 15;
 
   header {
     display: flex;
