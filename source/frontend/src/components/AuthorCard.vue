@@ -1,6 +1,6 @@
 <template>
   <body>
-    <h2>{{ data.name }}</h2>
+    <h3>{{ data.name }}</h3>
     <p>{{ data.website || 'n/a' }}</p>
     <p>{{ data.instagram || 'n/a' }}</p>
     <p>{{ data.youTube || 'n/a' }}</p>
@@ -24,9 +24,8 @@ body {
   border-radius: $border-radius;
   color: $text-color;
   padding: 1rem;
-  max-width: 200px;
 
-  h2 {
+  h3 {
     padding: 0;
     margin: 0;
   }

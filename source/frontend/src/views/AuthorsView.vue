@@ -58,9 +58,11 @@ const isReady = computed(() => authors.value.length);
 
 <style scoped lang="scss">
 @import '../styles/outline.scss';
-
 .authors {
   margin-left: $nav-bar-width;
   padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 1rem;
 }
 </style>

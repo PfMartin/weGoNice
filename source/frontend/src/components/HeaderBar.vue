@@ -64,6 +64,9 @@ const focusSearchInput = (): void => {
 @import '../styles/outline.scss';
 
 body {
+  position: sticky;
+  top: 0;
+  left: 0;
   margin-left: $nav-bar-width;
   padding: 0.6rem 1rem 0.6rem 1rem;
   background: $bg-color-mid;
