@@ -15,6 +15,7 @@ var TestAuthor = models.AuthorRequest{
 	Website:   "https://schnabularasa.at",
 	Instagram: "testAccount",
 	YouTube:   "testYouTube",
+	ImageURL:  "anything/Schnabu",
 }
 
 var UpdateAuthor = models.AuthorRequest{
@@ -22,6 +23,7 @@ var UpdateAuthor = models.AuthorRequest{
 	Website:   "https://www.nikorittenau.com/",
 	Instagram: "rittenau",
 	YouTube:   "rittenau",
+	ImageURL:  "anything/Nico",
 }
 
 var ExpectedUser = models.UserResponse{
@@ -40,6 +42,7 @@ var ExpectedAuthor = models.AuthorResponse{
 	Website:    TestAuthor.Website,
 	Instagram:  TestAuthor.Instagram,
 	YouTube:    TestAuthor.YouTube,
+	ImageURL:   TestAuthor.ImageURL,
 	CreatedAt:  testDate,
 	ModifiedAt: testDate,
 	User:       ExpectedUser,
@@ -58,6 +61,7 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 		"website":    TestAuthor.Website,
 		"instagram":  TestAuthor.Instagram,
 		"youTube":    TestAuthor.YouTube,
+		"imageUrl":   TestAuthor.ImageURL,
 		"userId":     objectID,
 		"modifiedAt": testDate,
 		"createdAt":  testDate,
