@@ -32,21 +32,29 @@ defineProps<{
 .author-card {
   background: $bg-color-mid;
   border-radius: $border-radius;
+  border: 1px solid $bg-color-mid;
   color: $text-color;
   padding: 0.5rem;
   display: grid;
   grid-template-columns: 100px auto;
+  align-items: center;
+  min-height: 100px;
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid $accent-color;
+  }
 
   .picture {
     display: flex;
-    align-items: center;
-    height: 100px;
-    width: 100px;
-    overflow: hidden;
+    height: 80px;
     justify-content: center;
+    align-items: center;
+    width: 80px;
+    overflow: hidden;
 
     img {
-      height: 100px;
+      height: 80px;
     }
 
     ion-icon {
@@ -56,11 +64,13 @@ defineProps<{
   }
 
   .main {
-    margin-left: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    // width: 100%;
+    background: $bg-color-dark;
+    padding: 0.5rem;
+    border-radius: $border-radius;
+    height: calc(100% - 1rem);
 
     header {
       h3 {
@@ -79,7 +89,7 @@ defineProps<{
         align-items: center;
         text-decoration: none;
         color: $text-color;
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         margin-left: 2rem;
         transition: color 0.2s;
 
