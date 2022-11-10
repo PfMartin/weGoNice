@@ -6,6 +6,8 @@
       @button-click="createAuthor"
     />
 
+    <ListControl />
+
     <div class="authors" v-if="isReady">
       <AuthorCard v-for="author in authors" :data="author" :key="author.name" />
     </div>
@@ -26,6 +28,7 @@ import AuthorCreateModal from '@/components/AuthorCreateModal.vue';
 import { onMounted, ref, computed } from 'vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
+import ListControl from '@/components/ListControl.vue';
 
 const headerConfig = {
   pageTitle: 'Authors',
