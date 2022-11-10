@@ -4,5 +4,6 @@ declare namespace Authors {
     website: string;
     youTube: string;
     instagram: string;
+    imageUrl: string;
   }
 }

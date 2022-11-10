@@ -39,4 +39,7 @@ export default class ValidationService {
     url && !url.includes('instagram.com/')
       ? 'Please provide a valid Instagram URL'
       : '';
+
+  public validateImageUrl = (url: string): string =>
+    url && !url.includes('.') ? 'Please provide a valid URL' : '';
 }

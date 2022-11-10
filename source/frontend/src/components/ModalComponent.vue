@@ -1,12 +1,7 @@
 <template lang="html">
   <div class="modal-component">
     <Transition name="fade" appear>
-      <div
-        v-if="isVisible"
-        class="outline"
-        z-index="10"
-        @click="closeModal"
-      ></div>
+      <div v-if="isVisible" class="outline" @click="closeModal"></div>
     </Transition>
     <Transition name="slide" appear>
       <div v-if="isVisible" :class="modalStyle">
@@ -79,6 +74,7 @@ $modal-width-xxl: 1520px;
   height: 100vh;
   width: 100vw;
   background: $bg-dark-modal;
+  z-index: 10;
 }
 .modal-content {
   top: 100px;
@@ -90,6 +86,7 @@ $modal-width-xxl: 1520px;
   left: calc(100vw / 2 - 80vw / 2);
   width: 80vw;
   max-width: 80vw;
+  z-index: 15;
 
   &.s {
     @media screen and (min-width: 600px) {

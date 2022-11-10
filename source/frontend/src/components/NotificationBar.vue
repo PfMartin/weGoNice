@@ -27,5 +27,6 @@ defineProps<{
   right: 1rem;
   display: flex;
   flex-direction: column;
+  z-index: 20;
 }
 </style>

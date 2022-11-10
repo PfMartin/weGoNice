@@ -78,6 +78,7 @@ const getDetails = () => {
     ion-icon {
       font-size: 6rem;
       color: $bg-color-light;
+      z-index: 1;
     }
   }
 

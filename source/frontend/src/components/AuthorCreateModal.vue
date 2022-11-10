@@ -35,6 +35,12 @@
             :inputError="youTubeError"
             @on-input="updateYouTube"
           />
+          <TextInput
+            :label="{ name: 'Image URL', iconName: 'camera' }"
+            :initialValue="imageUrl"
+            :inputError="imageUrlError"
+            @on-input="updateImageUrl"
+          />
         </form>
       </template>
 
@@ -68,8 +74,6 @@ const emit = defineEmits<{
 const config: ModalConfig = {
   size: 's',
 };
-
-const store = useStore();
 
 const validationService = new ValidationService();
 const isFirstTry = ref(true);
@@ -122,6 +126,18 @@ const validateYouTube = (): void => {
   youTubeError.value = validationService.validateYouTube(youTube.value);
 };
 
+const imageUrl = ref('');
+const imageUrlError = ref('');
+const updateImageUrl = (newValue: string): void => {
+  imageUrl.value = newValue;
+  if (!isFirstTry.value) {
+    validateImageUrl();
+  }
+};
+const validateImageUrl = (): void => {
+  imageUrlError.value = validationService.validateImageUrl(youTube.value);
+};
+
 const isValid = computed((): boolean => {
   validateName();
   validateWebsite();
@@ -146,14 +162,10 @@ const submit = async (): Promise<void> => {
       website: website.value,
       instagram: instagram.value,
       youTube: youTube.value,
+      imageUrl: imageUrl.value,
     };
 
     const { status, data } = await createAuthor(body);
-
-    let notification = {
-      type: '',
-      body: '',
-    };
 
     switch (status) {
       case 201:
