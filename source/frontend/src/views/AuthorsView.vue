@@ -14,7 +14,7 @@
       <AuthorCreateModal
         v-if="isCreateModalVisible"
         @closeModal="closeModal"
-        @success="closeModal"
+        @success="closeModal(true)"
       />
     </Teleport>
   </body>
@@ -42,18 +42,18 @@ const createAuthor = (): void => {
   isCreateModalVisible.value = true;
 };
 
-const closeModal = (): void => {
+const closeModal = async (isSuccess = false): Promise<void> => {
   isCreateModalVisible.value = false;
+  authors.value = (await getAllAuthors()) || [];
 };
 
 // Get All Authors
 const authors = ref<any>([]);
-onMounted(async () => {
-  authors.value = await getAllAuthors();
-  console.log(authors.value);
+onMounted(async (): Promise<void> => {
+  authors.value = (await getAllAuthors()) || [];
 });
 
-const isReady = computed(() => authors.value.length);
+const isReady = computed((): boolean => !!authors.value.length);
 </script>
 
 <style scoped lang="scss">

@@ -1,7 +1,7 @@
 <template>
   <div @click="getDetails" class="author-card">
     <div class="picture">
-      <img v-if="data.image" :src="data.image" />
+      <img v-if="data.imageUrl" :src="data.imageUrl" />
       <ion-icon v-else name="person" />
     </div>
     <div class="main">
@@ -48,6 +48,7 @@ const getDetails = () => {
   padding: 0.5rem;
   display: grid;
   grid-template-columns: 100px auto;
+  grid-gap: 0.5rem;
   align-items: center;
   min-height: 100px;
   transition: background-color 0.3s;
@@ -65,14 +66,15 @@ const getDetails = () => {
 
   .picture {
     display: flex;
-    height: 80px;
+    height: 100px;
     justify-content: center;
     align-items: center;
-    width: 80px;
+    width: 100px;
     overflow: hidden;
+    border-radius: $border-radius;
 
     img {
-      height: 80px;
+      height: 100px;
     }
 
     ion-icon {

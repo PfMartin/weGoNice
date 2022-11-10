@@ -41,5 +41,5 @@ export default class ValidationService {
       : '';
 
   public validateImageUrl = (url: string): string =>
-    url && !url.includes('.') ? 'Please provide a valid URL' : '';
+    url && !url.includes('https://') ? 'Please provide a valid URL' : '';
 }
