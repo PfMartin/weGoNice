@@ -68,6 +68,7 @@ const navBarClass = computed(() => {
 const collapseBar = (): void => {
   isExpanded.value = false;
 };
+
 // Routing
 const store = useStore();
 const router = useRouter();

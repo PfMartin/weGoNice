@@ -11,7 +11,13 @@
         <ion-icon name="chevron-down" />
       </div>
       <Transition name="expand">
-        <ul v-if="isDropdownVisible" class="dropdown-content">
+        <ul
+          v-if="isDropdownVisible"
+          class="dropdown-content"
+          ref="dropdownContent"
+          :tabindex="-1"
+          @blur="toggleDropdown"
+        >
           <li
             v-for="option in selectOptions"
             :key="option"
@@ -26,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 const props = defineProps<{
   options: string[];
   selectedOption: string;
@@ -37,8 +43,15 @@ const emit = defineEmits<{
 
 // Dropdown Content Visibility
 const isDropdownVisible = ref(false);
+const dropdownContent = ref<HTMLInputElement | null>(null);
 const toggleDropdown = (): void => {
   isDropdownVisible.value = !isDropdownVisible.value;
+
+  if (isDropdownVisible.value) {
+    nextTick(() => {
+      dropdownContent.value?.focus();
+    });
+  }
 };
 
 // Option selection
@@ -107,6 +120,11 @@ const selectOption = (option: string): void => {
       color: $text-color;
       border-radius: $border-radius;
       overflow: hidden;
+
+      &:focus {
+        border: none;
+        outline: none;
+      }
 
       li {
         padding: 0.5rem 1rem;
