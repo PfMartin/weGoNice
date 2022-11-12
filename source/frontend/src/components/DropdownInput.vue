@@ -1,5 +1,10 @@
 <template>
-  <div class="dropdown-input">
+  <div
+    class="dropdown-input"
+    @blur="collapseDropdown"
+    ref="dropdown"
+    :tabindex="-1"
+  >
     <label for="dropdown" @click="toggleDropdown"
       ><div class="label-text">
         <ion-icon name="list" /> &nbsp; <span>Sort By</span>
@@ -11,13 +16,7 @@
         <ion-icon name="chevron-down" />
       </div>
       <Transition name="expand">
-        <ul
-          v-if="isDropdownVisible"
-          class="dropdown-content"
-          ref="dropdownContent"
-          :tabindex="-1"
-          @blur="toggleDropdown"
-        >
+        <ul v-if="isDropdownVisible" class="dropdown-content">
           <li
             v-for="option in selectOptions"
             :key="option"
@@ -43,15 +42,18 @@ const emit = defineEmits<{
 
 // Dropdown Content Visibility
 const isDropdownVisible = ref(false);
-const dropdownContent = ref<HTMLInputElement | null>(null);
+const dropdown = ref<HTMLInputElement | null>(null);
 const toggleDropdown = (): void => {
   isDropdownVisible.value = !isDropdownVisible.value;
 
   if (isDropdownVisible.value) {
     nextTick(() => {
-      dropdownContent.value?.focus();
+      dropdown.value?.focus();
     });
   }
+};
+const collapseDropdown = (): void => {
+  isDropdownVisible.value = false;
 };
 
 // Option selection
@@ -60,7 +62,7 @@ const selectOptions = computed((): string[] =>
 );
 const selectOption = (option: string): void => {
   emit('select-option', option);
-  isDropdownVisible.value = false;
+  collapseDropdown();
 };
 </script>
 
@@ -70,6 +72,11 @@ const selectOption = (option: string): void => {
 
 .dropdown-input {
   display: flex;
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
 
   label {
     display: flex;
@@ -120,11 +127,6 @@ const selectOption = (option: string): void => {
       color: $text-color;
       border-radius: $border-radius;
       overflow: hidden;
-
-      &:focus {
-        border: none;
-        outline: none;
-      }
 
       li {
         padding: 0.5rem 1rem;
