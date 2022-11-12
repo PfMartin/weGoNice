@@ -1,36 +1,49 @@
 <template>
   <div class="dropdown-input">
-    <label for="dropdown"
+    <label for="dropdown" @click="toggleDropdown"
       ><div class="label-text">
         <ion-icon name="list" /> &nbsp; <span>Sort By</span>
       </div>
     </label>
     <div id="dropdown" class="dropdown">
-      <div class="selected">
+      <div class="selected" @click="toggleDropdown">
         <span class="selected-item">None</span>
         <ion-icon name="chevron-down" />
       </div>
-      <ul class="dropdown-content">
-        <li>Option 1</li>
-        <li>Option 2</li>
-        <li>Option 3</li>
-        <li>Option 4</li>
-      </ul>
+      <Transition name="expand">
+        <ul v-if="isDropdownVisible" class="dropdown-content">
+          <li>Option 1</li>
+          <li>Option 2</li>
+          <li>Option 3</li>
+          <li>Option 4</li>
+        </ul>
+      </Transition>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const isDropdownVisible = ref(false);
+const toggleDropdown = (): void => {
+  isDropdownVisible.value = !isDropdownVisible.value;
+};
+</script>
 
 <style scoped lang="scss">
 @import '../styles/outline.scss';
 @import '../styles/colors.scss';
 
 .dropdown-input {
+  display: flex;
+
   label {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-right: 0.5rem;
+
     .label-text {
       display: flex;
       align-items: center;
@@ -48,12 +61,17 @@
       justify-content: space-between;
       color: $bg-color-light;
       min-width: 300px;
-
       padding: 0.5rem;
       border-radius: $border-radius;
+      transition: background-color 0.2s;
 
       ion-icon {
         color: $text-color;
+      }
+
+      &:hover {
+        cursor: pointer;
+        background: $bg-color-dark;
       }
     }
 
@@ -68,19 +86,30 @@
       background: $bg-color-mid;
       color: $text-color;
       border-radius: $border-radius;
+      overflow: hidden;
 
       li {
         padding: 0.5rem 1rem;
-        transition: all 0.1s;
 
         &:hover {
-          background-color: $accent-color;
-          color: $bg-color-mid;
+          background-color: $bg-color-dark;
+          color: $accent-color;
           border-radius: $border-radius;
           cursor: pointer;
         }
       }
     }
   }
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  transition: all 0.2s;
+  max-height: 200px;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  max-height: 0px;
 }
 </style>
