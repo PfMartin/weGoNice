@@ -2,7 +2,7 @@
   <div class="list-control">
     <div class="controls">
       <div class="dropdown-container">
-        <DropdownInput />
+        <DropdownInput :options="sortingOptions" />
       </div>
       <!-- <p>Name Ascending Descending</p>
       <p>Amount Recipes Ascending Descending</p>
@@ -16,6 +16,10 @@
 
 <script setup lang="ts">
 import DropdownInput from '@/components/DropdownInput.vue';
+
+defineProps<{
+  sortingOptions: string[];
+}>();
 </script>
 
 <style scoped lang="scss">

@@ -6,7 +6,7 @@
       @button-click="createAuthor"
     />
 
-    <ListControl />
+    <ListControl :sortingOptions="AUTHOR_SORTING_OPTIONS" />
 
     <div class="authors" v-if="isReady">
       <AuthorCard v-for="author in authors" :data="author" :key="author.name" />
@@ -29,6 +29,7 @@ import { onMounted, ref, computed } from 'vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
 import ListControl from '@/components/ListControl.vue';
+import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
 
 const headerConfig = {
   pageTitle: 'Authors',
@@ -36,15 +37,16 @@ const headerConfig = {
   buttonText: 'New Author',
 };
 
+// Searching and Filtering
 const onSearchInput = (searchValue: string): void => {
   console.log(searchValue);
 };
 
+// Create Modal
 const isCreateModalVisible = ref(false);
 const createAuthor = (): void => {
   isCreateModalVisible.value = true;
 };
-
 const closeModal = async (isSuccess = false): Promise<void> => {
   isCreateModalVisible.value = false;
   authors.value = (await getAllAuthors()) || [];
@@ -54,6 +56,7 @@ const closeModal = async (isSuccess = false): Promise<void> => {
 const authors = ref<any>([]);
 onMounted(async (): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
+  console.log(authors.value);
 });
 
 const isReady = computed((): boolean => !!authors.value.length);

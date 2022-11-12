@@ -7,15 +7,18 @@
     </label>
     <div id="dropdown" class="dropdown">
       <div class="selected" @click="toggleDropdown">
-        <span class="selected-item">None</span>
+        <span class="selected-item">{{ selectedOption }}</span>
         <ion-icon name="chevron-down" />
       </div>
       <Transition name="expand">
         <ul v-if="isDropdownVisible" class="dropdown-content">
-          <li>Option 1</li>
-          <li>Option 2</li>
-          <li>Option 3</li>
-          <li>Option 4</li>
+          <li
+            v-for="option in selectOptions"
+            :key="option"
+            @click="selectOption(option)"
+          >
+            {{ option }}
+          </li>
         </ul>
       </Transition>
     </div>
@@ -23,11 +26,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+const props = defineProps<{
+  options: string[];
+}>();
 
+// Dropdown Content Visibility
 const isDropdownVisible = ref(false);
 const toggleDropdown = (): void => {
   isDropdownVisible.value = !isDropdownVisible.value;
+};
+
+// Option selection
+const selectOptions = computed((): string[] =>
+  props.options.filter((option) => option !== selectedOption.value)
+);
+const selectedOption = ref('Name');
+const selectOption = (option: string): void => {
+  selectedOption.value = option;
 };
 </script>
 
@@ -59,7 +75,7 @@ const toggleDropdown = (): void => {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: $bg-color-light;
+      color: $text-color;
       min-width: 300px;
       padding: 0.5rem;
       border-radius: $border-radius;
