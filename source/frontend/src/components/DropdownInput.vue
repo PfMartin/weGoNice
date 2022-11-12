@@ -29,6 +29,10 @@
 import { ref, computed } from 'vue';
 const props = defineProps<{
   options: string[];
+  selectedOption: string;
+}>();
+const emit = defineEmits<{
+  (e: 'select-option', option: string): void;
 }>();
 
 // Dropdown Content Visibility
@@ -39,11 +43,11 @@ const toggleDropdown = (): void => {
 
 // Option selection
 const selectOptions = computed((): string[] =>
-  props.options.filter((option) => option !== selectedOption.value)
+  props.options.filter((option) => option !== props.selectedOption)
 );
-const selectedOption = ref('Name');
 const selectOption = (option: string): void => {
-  selectedOption.value = option;
+  emit('select-option', option);
+  isDropdownVisible.value = false;
 };
 </script>
 

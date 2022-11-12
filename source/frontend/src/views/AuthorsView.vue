@@ -6,7 +6,23 @@
       @button-click="createAuthor"
     />
 
-    <ListControl :sortingOptions="AUTHOR_SORTING_OPTIONS" />
+    <div class="list-control">
+      <div class="controls">
+        <div class="dropdown-container">
+          <DropdownInput
+            :options="AUTHOR_SORTING_OPTIONS"
+            :selectedOption="selectedOption"
+            @select-option="setSelectedOption"
+          />
+        </div>
+        <!-- <p>Name Ascending Descending</p>
+      <p>Amount Recipes Ascending Descending</p>
+      <p>Toggle show authors with 0 Recipes</p>
+      <p>Creation Date Ascending Descending</p>
+      <p>Modification Date Ascending Descending</p>
+      <p>Toggle for youtube, instagram, website</p> -->
+      </div>
+    </div>
 
     <div class="authors" v-if="isReady">
       <AuthorCard v-for="author in authors" :data="author" :key="author.name" />
@@ -28,7 +44,7 @@ import AuthorCreateModal from '@/components/AuthorCreateModal.vue';
 import { onMounted, ref, computed } from 'vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
-import ListControl from '@/components/ListControl.vue';
+import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
 
 const headerConfig = {
@@ -40,6 +56,10 @@ const headerConfig = {
 // Searching and Filtering
 const onSearchInput = (searchValue: string): void => {
   console.log(searchValue);
+};
+const selectedOption = ref('Name');
+const setSelectedOption = (option: string): void => {
+  selectedOption.value = option;
 };
 
 // Create Modal
@@ -64,11 +84,33 @@ const isReady = computed((): boolean => !!authors.value.length);
 
 <style scoped lang="scss">
 @import '../styles/outline.scss';
-.authors {
-  margin-left: $nav-bar-width;
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: 1rem;
+@import '../styles/colors.scss';
+
+body {
+  .list-control {
+    margin-left: $nav-bar-width;
+    padding: 1rem 2rem;
+
+    h1 {
+      padding: 0;
+      margin: 0;
+    }
+
+    .controls {
+      display: flex;
+
+      p {
+        margin: 1rem;
+        border: 1px solid $bg-color-dark;
+      }
+    }
+  }
+  .authors {
+    margin-left: $nav-bar-width;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 1rem;
+  }
 }
 </style>
