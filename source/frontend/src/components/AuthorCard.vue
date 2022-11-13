@@ -8,17 +8,24 @@
       <header>
         <h3>{{ data.name || 'n/a' }}</h3>
       </header>
-      <div class="body">5 recipes</div>
+      <div class="body">
+        <p>{{ data.firstname || '' }} {{ data.lastname || '' }}</p>
+      </div>
       <footer class="footer">
-        <a v-if="data.website" :href="data.website"
-          ><ion-icon name="earth"
-        /></a>
-        <a v-if="data.instagram" :href="data.instagram"
-          ><ion-icon name="logo-instagram"
-        /></a>
-        <a v-if="data.youTube" :href="data.youTube"
-          ><ion-icon name="logo-youTube"
-        /></a>
+        <div class="recipes-count">
+          <p>5 recipes</p>
+        </div>
+        <div class="social-media">
+          <a v-if="data.website" :href="data.website"
+            ><ion-icon name="earth"
+          /></a>
+          <a v-if="data.instagram" :href="data.instagram"
+            ><ion-icon name="logo-instagram"
+          /></a>
+          <a v-if="data.youTube" :href="data.youTube"
+            ><ion-icon name="logo-youTube"
+          /></a>
+        </div>
       </footer>
     </div>
   </div>
@@ -103,25 +110,46 @@ const getDetails = () => {
 
     .body {
       font-size: 0.9rem;
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
     }
 
     footer {
       margin-top: 1rem;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
 
-      a {
+      .recipes-count {
+        margin: 0;
+        padding: 0;
+
+        p {
+          margin: 0;
+          padding: 0;
+        }
+      }
+
+      .social-media {
         display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: $text-color;
-        font-size: 1.3rem;
-        margin-left: 2rem;
-        transition: color 0.2s;
+        justify-content: flex-end;
+        gap: 0.5rem;
 
-        &:hover {
-          color: $accent-color;
-          cursor: pointer;
+        a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+          color: $text-color;
+          font-size: 1.3rem;
+          transition: color 0.2s;
+
+          &:hover {
+            color: $accent-color;
+            cursor: pointer;
+          }
         }
       }
     }

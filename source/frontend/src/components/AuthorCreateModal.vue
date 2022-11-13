@@ -12,11 +12,23 @@
       <template v-slot:default>
         <form>
           <TextInput
-            :label="{ name: 'Name', iconName: 'person' }"
+            :label="{ name: 'Display Name', iconName: 'person' }"
             :initialValue="name"
             :inputError="nameError"
             @on-input="updateName"
           />
+          <div class="name-info">
+            <TextInput
+              :label="{ name: 'Firstname' }"
+              :initialValue="firstname"
+              @on-input="updateFirstname"
+            />
+            <TextInput
+              :label="{ name: 'Lastname' }"
+              :initialValue="lastname"
+              @on-input="updateLastname"
+            />
+          </div>
           <TextInput
             :label="{ name: 'Website', iconName: 'earth' }"
             :initialValue="website"
@@ -90,6 +102,16 @@ const validateName = (): void => {
   nameError.value = validationService.validateAuthorName(name.value);
 };
 
+const firstname = ref('');
+const updateFirstname = (newValue: string): void => {
+  firstname.value = newValue;
+};
+
+const lastname = ref('');
+const updateLastname = (newValue: string): void => {
+  lastname.value = newValue;
+};
+
 const website = ref('');
 const websiteError = ref('');
 const updateWebsite = (newValue: string): void => {
@@ -159,6 +181,8 @@ const submit = async (): Promise<void> => {
   if (isValid.value) {
     const body: Authors.CreateAuthorBody = {
       name: name.value,
+      lastname: lastname.value,
+      firstname: firstname.value,
       website: website.value,
       instagram: instagram.value,
       youTube: youTube.value,
@@ -199,6 +223,17 @@ form {
   display: flex;
   flex-direction: column;
   padding: 1rem;
+
+  .name-info {
+    display: flex;
+    gap: 1rem;
+    padding: 0 1rem;
+    justify-content: space-between;
+
+    & * {
+      width: 45%;
+    }
+  }
 }
 
 .save-button {
