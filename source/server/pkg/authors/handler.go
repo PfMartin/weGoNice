@@ -19,10 +19,13 @@ import (
 var projectStage = bson.D{
 	{Key: "$project", Value: bson.D{
 		{Key: "name", Value: 1},
+		{Key: "firstname", Value: 1},
+		{Key: "lastname", Value: 1},
 		{Key: "website", Value: 1},
 		{Key: "instagram", Value: 1},
 		{Key: "youTube", Value: 1},
 		{Key: "createdAt", Value: 1},
+		{Key: "imageUrl", Value: 1},
 		{Key: "modifiedAt", Value: 1},
 		{Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}}}}}
 
@@ -134,10 +137,13 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	data := bson.M{
 		"name":       author.Name,
+		"firstname":  author.Firstname,
+		"lastname":   author.Lastname,
 		"website":    author.Website,
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
 		"userId":     userID,
+		"imageUrl":   author.ImageURL,
 		"createdAt":  time.Now(),
 		"modifiedAt": time.Now(),
 	}
@@ -183,9 +189,12 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 	filter := bson.M{"_id": authorID}
 	update := bson.M{"$set": bson.M{
 		"name":       author.Name,
+		"firstname":  author.Firstname,
+		"lastname":   author.Lastname,
 		"website":    author.Website,
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
+		"imageUrl":   author.ImageURL,
 		"userId":     userID,
 		"modifiedAt": time.Now(),
 	}}

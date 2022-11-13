@@ -60,9 +60,9 @@ body {
 }
 
 section {
-  height: calc(100vh - 1rem - 2 * $section-padding);
+  height: calc(100vh);
   color: $text-color-dark;
-  overflow: hidden;
+  overflow: auto;
 
   h1 {
     padding: 0;

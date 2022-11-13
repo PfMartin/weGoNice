@@ -12,11 +12,23 @@
       <template v-slot:default>
         <form>
           <TextInput
-            :label="{ name: 'Name', iconName: 'person' }"
+            :label="{ name: 'Display Name', iconName: 'person' }"
             :initialValue="name"
             :inputError="nameError"
             @on-input="updateName"
           />
+          <div class="name-info">
+            <TextInput
+              :label="{ name: 'Firstname' }"
+              :initialValue="firstname"
+              @on-input="updateFirstname"
+            />
+            <TextInput
+              :label="{ name: 'Lastname' }"
+              :initialValue="lastname"
+              @on-input="updateLastname"
+            />
+          </div>
           <TextInput
             :label="{ name: 'Website', iconName: 'earth' }"
             :initialValue="website"
@@ -34,6 +46,12 @@
             :initialValue="youTube"
             :inputError="youTubeError"
             @on-input="updateYouTube"
+          />
+          <TextInput
+            :label="{ name: 'Image URL', iconName: 'camera' }"
+            :initialValue="imageUrl"
+            :inputError="imageUrlError"
+            @on-input="updateImageUrl"
           />
         </form>
       </template>
@@ -69,8 +87,6 @@ const config: ModalConfig = {
   size: 's',
 };
 
-const store = useStore();
-
 const validationService = new ValidationService();
 const isFirstTry = ref(true);
 
@@ -84,6 +100,16 @@ const updateName = (newValue: string): void => {
 };
 const validateName = (): void => {
   nameError.value = validationService.validateAuthorName(name.value);
+};
+
+const firstname = ref('');
+const updateFirstname = (newValue: string): void => {
+  firstname.value = newValue;
+};
+
+const lastname = ref('');
+const updateLastname = (newValue: string): void => {
+  lastname.value = newValue;
 };
 
 const website = ref('');
@@ -122,6 +148,18 @@ const validateYouTube = (): void => {
   youTubeError.value = validationService.validateYouTube(youTube.value);
 };
 
+const imageUrl = ref('');
+const imageUrlError = ref('');
+const updateImageUrl = (newValue: string): void => {
+  imageUrl.value = newValue;
+  if (!isFirstTry.value) {
+    validateImageUrl();
+  }
+};
+const validateImageUrl = (): void => {
+  imageUrlError.value = validationService.validateImageUrl(youTube.value);
+};
+
 const isValid = computed((): boolean => {
   validateName();
   validateWebsite();
@@ -143,20 +181,15 @@ const submit = async (): Promise<void> => {
   if (isValid.value) {
     const body: Authors.CreateAuthorBody = {
       name: name.value,
+      lastname: lastname.value,
+      firstname: firstname.value,
       website: website.value,
       instagram: instagram.value,
       youTube: youTube.value,
+      imageUrl: imageUrl.value,
     };
 
-    const { status, data } = await createAuthor(
-      body,
-      store.getters['auth/sessionToken']
-    );
-
-    let notification = {
-      type: '',
-      body: '',
-    };
+    const { status, data } = await createAuthor(body);
 
     switch (status) {
       case 201:
@@ -190,6 +223,17 @@ form {
   display: flex;
   flex-direction: column;
   padding: 1rem;
+
+  .name-info {
+    display: flex;
+    gap: 1rem;
+    padding: 0 1rem;
+    justify-content: space-between;
+
+    & * {
+      width: 45%;
+    }
+  }
 }
 
 .save-button {

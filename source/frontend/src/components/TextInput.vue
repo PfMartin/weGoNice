@@ -119,15 +119,15 @@ const inputClass = computed(() => ({
     }
   }
 
-  .label-text {
-    display: flex;
-    align-items: center;
-  }
-
   label {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .label-text {
+      display: flex;
+      align-items: center;
+    }
 
     small {
       display: block;
