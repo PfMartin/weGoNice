@@ -18,6 +18,9 @@
         <span @click="toggleSortDirection" class="sort-direction"
           ><ion-icon :name="sortDirectionIcon"
         /></span>
+        <div class="filter-switches">
+          <SwitchComponent />
+        </div>
         <!-- <p>Name Ascending Descending</p>
           <p>Amount Recipes Ascending Descending</p>
           <p>Toggle show authors with 0 Recipes</p>
@@ -49,6 +52,7 @@ import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
+import SwitchComponent from '@/components/SwitchComponent.vue';
 
 const headerConfig = {
   pageTitle: 'Authors',
