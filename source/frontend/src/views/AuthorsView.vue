@@ -19,7 +19,7 @@
           ><ion-icon :name="sortDirectionIcon"
         /></span>
         <div class="filter-switches">
-          <SwitchComponent />
+          <SwitchComponent @toggle-switch="applyFilter" />
         </div>
         <!-- <p>Name Ascending Descending</p>
           <p>Amount Recipes Ascending Descending</p>
@@ -96,6 +96,9 @@ const sortAuthors = (): void => {
     }
     return sortDirection.value === sortDirections.ASC ? 1 : -1;
   });
+};
+const applyFilter = (filterState: boolean) => {
+  console.log(filterState);
 };
 
 // Create Modal

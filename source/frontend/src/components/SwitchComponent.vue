@@ -5,19 +5,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { defineEmits, ref, computed } from 'vue';
+
+const emit = defineEmits<{
+  (e: 'toggle-switch', toggleState: boolean): void;
+}>();
 
 const isSwitchOn = ref(true);
 const toggleSwitch = (): void => {
   isSwitchOn.value = !isSwitchOn.value;
-  console.log(isSwitchOn.value);
+  emit('toggle-switch', isSwitchOn.value);
 };
 
 const switchStyle = computed(
   (): Record<string, boolean> => ({
     ['switch']: true,
     ['off']: !isSwitchOn.value,
-    ['on']: isSwitchOn.value,
   })
 );
 </script>
@@ -35,19 +38,21 @@ const switchStyle = computed(
   display: flex;
   align-items: center;
 
+  &:hover {
+    cursor: pointer;
+  }
+
   .switch {
     position: absolute;
     width: 20px;
     height: 20px;
     background: $text-color;
+    left: 2px;
+    transition: all 0.2s;
     border-radius: 100%;
-    transition: all 0.5s;
 
-    &.on {
-      left: 2px;
-    }
     &.off {
-      right: 2px;
+      left: 23px;
     }
   }
 }
