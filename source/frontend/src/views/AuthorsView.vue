@@ -19,19 +19,24 @@
           ><ion-icon :name="sortDirectionIcon"
         /></span>
         <div class="filter-switches">
-          <SwitchComponent @toggle-switch="applyFilter" />
+          <SwitchComponent @toggle-switch="setFilter" label="Website" />
+          <SwitchComponent @toggle-switch="setFilter" label="Instagram" />
+          <SwitchComponent @toggle-switch="setFilter" label="YouTube" />
         </div>
         <!-- <p>Name Ascending Descending</p>
           <p>Amount Recipes Ascending Descending</p>
           <p>Toggle show authors with 0 Recipes</p>
           <p>Creation Date Ascending Descending</p>
-          <p>Modification Date Ascending Descending</p>
-          <p>Toggle for youtube, instagram, website</p> -->
+          <p>Modification Date Ascending Descending</p> -->
       </div>
     </div>
 
     <div class="authors" v-if="isReady">
-      <AuthorCard v-for="author in authors" :data="author" :key="author.name" />
+      <AuthorCard
+        v-for="author in visibleAuthors"
+        :data="author"
+        :key="author.name"
+      />
     </div>
 
     <Teleport to="#modals">
@@ -97,8 +102,23 @@ const sortAuthors = (): void => {
     return sortDirection.value === sortDirections.ASC ? 1 : -1;
   });
 };
-const applyFilter = (filterState: boolean) => {
-  console.log(filterState);
+let filters: Record<string, boolean> = {};
+const visibleAuthors = ref<any>([]);
+const setFilter = (property: string, filterState: boolean) => {
+  filters[property] = filterState;
+  applyFilter();
+};
+const applyFilter = (): void => {
+  visibleAuthors.value = Object.keys(filters).reduce((acc: any, filterProp) => {
+    acc = acc.filter((author: any) => {
+      if (!filters[filterProp] && author[filterProp] === '') {
+        return false;
+      }
+      return true;
+    });
+
+    return acc;
+  }, authors.value);
 };
 
 // Create Modal
@@ -111,10 +131,11 @@ const closeModal = async (isSuccess = false): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
 };
 
-// Get All Authors
 const authors = ref<any>([]);
+// Get All Authors
 onMounted(async (): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
+  visibleAuthors.value = authors.value;
   console.log(authors.value);
 });
 
@@ -150,6 +171,12 @@ body {
           cursor: pointer;
           color: $bg-color-dark;
         }
+      }
+
+      .filter-switches {
+        margin: 0 1rem;
+        display: flex;
+        gap: 0.5rem;
       }
     }
   }
