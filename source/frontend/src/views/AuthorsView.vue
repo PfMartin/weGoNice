@@ -22,12 +22,9 @@
           <SwitchComponent @toggle-switch="setFilter" label="Website" />
           <SwitchComponent @toggle-switch="setFilter" label="Instagram" />
           <SwitchComponent @toggle-switch="setFilter" label="YouTube" />
+          <!-- Still has to be implemented -->
+          <SwitchComponent @toggle-switch="setFilter" label="No Recipes" />
         </div>
-        <!-- <p>Name Ascending Descending</p>
-          <p>Amount Recipes Ascending Descending</p>
-          <p>Toggle show authors with 0 Recipes</p>
-          <p>Creation Date Ascending Descending</p>
-          <p>Modification Date Ascending Descending</p> -->
       </div>
     </div>
 
