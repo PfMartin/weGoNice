@@ -8,16 +8,18 @@
 
     <div class="list-control">
       <div class="controls">
-        <div class="dropdown-container">
-          <DropdownInput
-            :options="AUTHOR_SORTING_OPTIONS"
-            :selectedOption="selectedOption"
-            @select-option="setSelectedOption"
-          />
+        <div class="sorting">
+          <div class="dropdown-container">
+            <DropdownInput
+              :options="AUTHOR_SORTING_OPTIONS"
+              :selectedOption="selectedOption"
+              @select-option="setSelectedOption"
+            />
+          </div>
+          <span @click="toggleSortDirection" class="sort-direction"
+            ><ion-icon :name="sortDirectionIcon"
+          /></span>
         </div>
-        <span @click="toggleSortDirection" class="sort-direction"
-          ><ion-icon :name="sortDirectionIcon"
-        /></span>
         <div class="filter-switches">
           <SwitchComponent @toggle-switch="setFilter" label="Website" />
           <SwitchComponent @toggle-switch="setFilter" label="Instagram" />
@@ -156,22 +158,26 @@ body {
     .controls {
       display: flex;
       align-items: center;
+      justify-content: flex-start;
 
-      .sort-direction {
-        margin-left: 0.2rem;
-        font-size: 1.5rem;
-        color: $bg-color-mid;
+      .sorting {
         display: flex;
-        align-items: center;
+        margin-right: 1rem;
+        .sort-direction {
+          margin-left: 0.2rem;
+          font-size: 1.5rem;
+          color: $bg-color-mid;
+          display: flex;
+          align-items: center;
 
-        &:hover {
-          cursor: pointer;
-          color: $bg-color-dark;
+          &:hover {
+            cursor: pointer;
+            color: $bg-color-dark;
+          }
         }
       }
 
       .filter-switches {
-        margin: 0 1rem;
         display: flex;
         gap: 0.5rem;
       }
