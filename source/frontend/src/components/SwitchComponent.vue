@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, ref, computed } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps<{
   label: string;
