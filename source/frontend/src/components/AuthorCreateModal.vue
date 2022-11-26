@@ -71,11 +71,10 @@
 
 <script setup lang="ts">
 import ModalComponent, { ModalConfig } from '@/components/ModalComponent.vue';
-import { defineEmits, ref, computed } from 'vue';
+import { ref, computed } from 'vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import TextInput from '@/components/TextInput.vue';
 import { createAuthor } from '@/apis/weGoNice/authors';
-import { useStore } from 'vuex';
 import ValidationService from '@/services/validation.service';
 import NotificationService from '@/services/notification.service';
 

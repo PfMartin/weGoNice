@@ -8,27 +8,34 @@
 
     <div class="list-control">
       <div class="controls">
-        <div class="dropdown-container">
-          <DropdownInput
-            :options="AUTHOR_SORTING_OPTIONS"
-            :selectedOption="selectedOption"
-            @select-option="setSelectedOption"
-          />
+        <div class="sorting">
+          <div class="dropdown-container">
+            <DropdownInput
+              :options="AUTHOR_SORTING_OPTIONS"
+              :selectedOption="selectedOption"
+              @select-option="setSelectedOption"
+            />
+          </div>
+          <span @click="toggleSortDirection" class="sort-direction"
+            ><ion-icon :name="sortDirectionIcon"
+          /></span>
         </div>
-        <span @click="toggleSortDirection" class="sort-direction"
-          ><ion-icon :name="sortDirectionIcon"
-        /></span>
-        <!-- <p>Name Ascending Descending</p>
-          <p>Amount Recipes Ascending Descending</p>
-          <p>Toggle show authors with 0 Recipes</p>
-          <p>Creation Date Ascending Descending</p>
-          <p>Modification Date Ascending Descending</p>
-          <p>Toggle for youtube, instagram, website</p> -->
+        <div class="filter-switches">
+          <SwitchComponent @toggle-switch="setFilter" label="Website" />
+          <SwitchComponent @toggle-switch="setFilter" label="Instagram" />
+          <SwitchComponent @toggle-switch="setFilter" label="YouTube" />
+          <!-- Still has to be implemented -->
+          <SwitchComponent @toggle-switch="setFilter" label="No Recipes" />
+        </div>
       </div>
     </div>
 
     <div class="authors" v-if="isReady">
-      <AuthorCard v-for="author in authors" :data="author" :key="author.name" />
+      <AuthorCard
+        v-for="author in visibleAuthors"
+        :data="author"
+        :key="author.name"
+      />
     </div>
 
     <Teleport to="#modals">
@@ -49,6 +56,7 @@ import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
+import SwitchComponent from '@/components/SwitchComponent.vue';
 
 const headerConfig = {
   pageTitle: 'Authors',
@@ -93,6 +101,24 @@ const sortAuthors = (): void => {
     return sortDirection.value === sortDirections.ASC ? 1 : -1;
   });
 };
+let filters: Record<string, boolean> = {};
+const visibleAuthors = ref<any>([]);
+const setFilter = (property: string, filterState: boolean) => {
+  filters[property] = filterState;
+  applyFilter();
+};
+const applyFilter = (): void => {
+  visibleAuthors.value = Object.keys(filters).reduce((acc: any, filterProp) => {
+    acc = acc.filter((author: any) => {
+      if (!filters[filterProp] && author[filterProp] === '') {
+        return false;
+      }
+      return true;
+    });
+
+    return acc;
+  }, authors.value);
+};
 
 // Create Modal
 const isCreateModalVisible = ref(false);
@@ -104,10 +130,11 @@ const closeModal = async (isSuccess = false): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
 };
 
-// Get All Authors
 const authors = ref<any>([]);
+// Get All Authors
 onMounted(async (): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
+  visibleAuthors.value = authors.value;
   console.log(authors.value);
 });
 
@@ -131,18 +158,28 @@ body {
     .controls {
       display: flex;
       align-items: center;
+      justify-content: flex-start;
 
-      .sort-direction {
-        margin-left: 0.2rem;
-        font-size: 1.5rem;
-        color: $bg-color-mid;
+      .sorting {
         display: flex;
-        align-items: center;
+        margin-right: 1rem;
+        .sort-direction {
+          margin-left: 0.2rem;
+          font-size: 1.5rem;
+          color: $bg-color-mid;
+          display: flex;
+          align-items: center;
 
-        &:hover {
-          cursor: pointer;
-          color: $bg-color-dark;
+          &:hover {
+            cursor: pointer;
+            color: $bg-color-dark;
+          }
         }
+      }
+
+      .filter-switches {
+        display: flex;
+        gap: 0.5rem;
       }
     }
   }
