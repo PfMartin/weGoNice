@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import LoginView from '../views/LoginView.vue';
-import RegisterView from '../views/RegisterView.vue';
+import LoginView from '@/views/LoginView.vue';
+import RegisterView from '@/views/RegisterView.vue';
 import { isAuthenticated } from '@/auth';
 
 const routes: Array<RouteRecordRaw> = [
@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     meta: { requiresAuth: true },
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/HomeView.vue'),
+      import(/* webpackChunkName: "about" */ '@/views/HomeView.vue'),
     alias: '/',
   },
   {
@@ -29,14 +29,23 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Recipes',
     meta: { requiresAuth: true },
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/RecipesView.vue'),
+      import(/* webpackChunkName: "about" */ '@/views/RecipesView.vue'),
   },
   {
     path: '/authors',
     name: 'Authors',
     meta: { requiresAuth: true },
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/AuthorsView.vue'),
+      import(/* webpackChunkName: "about" */ '@/views/AuthorsView.vue'),
+    children: [
+      {
+        path: 'create',
+        name: 'AuthorsCreate',
+        component: () =>
+          import(/* webpackChunkName: "about" */ '@/views/AuthorsView.vue'),
+        meta: { requiresAuth: true },
+      },
+    ],
   },
 ];
 
