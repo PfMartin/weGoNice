@@ -16,17 +16,20 @@
             :initialValue="name"
             :inputError="nameError"
             @on-input="updateName"
+            :isDetail="isDetail"
           />
           <div class="name-info">
             <TextInput
               :label="{ name: 'Firstname' }"
               :initialValue="firstname"
               @on-input="updateFirstname"
+              :isDetail="isDetail"
             />
             <TextInput
               :label="{ name: 'Lastname' }"
               :initialValue="lastname"
               @on-input="updateLastname"
+              :isDetail="isDetail"
             />
           </div>
           <TextInput
@@ -34,24 +37,28 @@
             :initialValue="website"
             :inputError="websiteError"
             @on-input="updateWebsite"
+            :isDetail="isDetail"
           />
           <TextInput
             :label="{ name: 'Instagram', iconName: 'logo-instagram' }"
             :initialValue="instagram"
             :inputError="instagramError"
             @on-input="updateInstagram"
+            :isDetail="isDetail"
           />
           <TextInput
             :label="{ name: 'YouTube', iconName: 'logo-youtube' }"
             :initialValue="youTube"
             :inputError="youTubeError"
             @on-input="updateYouTube"
+            :isDetail="isDetail"
           />
           <TextInput
             :label="{ name: 'Image URL', iconName: 'camera' }"
             :initialValue="imageUrl"
             :inputError="imageUrlError"
             @on-input="updateImageUrl"
+            :isDetail="isDetail"
           />
         </form>
       </template>
@@ -78,6 +85,10 @@ import { createAuthor } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
 import NotificationService from '@/services/notification.service';
 
+const props = defineProps<{
+  isDetail?: boolean;
+}>();
+
 const emit = defineEmits<{
   (e: 'closeModal'): void;
 }>();
@@ -88,6 +99,8 @@ const config: ModalConfig = {
 
 const validationService = new ValidationService();
 const isFirstTry = ref(true);
+
+const isDetail = ref(props.isDetail || false);
 
 const name = ref('');
 const nameError = ref('');

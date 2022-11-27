@@ -20,6 +20,7 @@
       v-model="inputValue"
     >
     </textarea>
+    <p v-else-if="isDetail">{{ initialValue }}</p>
     <input
       v-else
       @focus="toggleActive"
@@ -40,6 +41,7 @@ const props = defineProps<{
   inputError?: string;
   initialValue: string;
   isTextarea?: boolean;
+  isDetail?: boolean;
 }>();
 
 const emit = defineEmits<{

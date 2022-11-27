@@ -35,22 +35,20 @@
         v-for="author in visibleAuthors"
         :data="author"
         :key="author.name"
+        @click="showDetails(author.id)"
       />
     </div>
 
     <Teleport to="#modals">
-      <AuthorCreateModal
-        v-if="isCreate"
-        @closeModal="closeModal"
-        @success="closeModal(true)"
-      />
+      <AuthorModal v-if="isCreate" @closeModal="closeModal" />
+      <AuthorModal v-if="isDetail" @closeModal="closeModal" :isDetail="true" />
     </Teleport>
   </body>
 </template>
 
 <script setup lang="ts">
 import HeaderBar from '@/components/HeaderBar.vue';
-import AuthorCreateModal from '@/components/AuthorCreateModal.vue';
+import AuthorModal from '@/components/AuthorModal.vue';
 import { onMounted, ref, computed } from 'vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
@@ -125,7 +123,7 @@ const applyFilter = (): void => {
 
 // Create Modal
 const isCreate = computed(
-  () => router.currentRoute.value.path === '/authors/create'
+  () => router.currentRoute.value.name === 'AuthorsCreate'
 );
 const createAuthor = (): void => {
   router.push({ name: 'AuthorsCreate' });
@@ -133,6 +131,14 @@ const createAuthor = (): void => {
 const closeModal = async (isSuccess = false): Promise<void> => {
   router.push({ name: 'Authors' });
   authors.value = (await getAllAuthors()) || [];
+};
+
+// Detail Modal
+const isDetail = computed(
+  (): boolean => router.currentRoute.value.name === 'AuthorsDetail'
+);
+const showDetails = (id: string): void => {
+  router.push({ name: 'AuthorsDetail', params: { id: id } });
 };
 
 const authors = ref<any>([]);
