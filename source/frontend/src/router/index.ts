@@ -37,6 +37,15 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/AuthorsView.vue'),
+    children: [
+      {
+        path: 'create',
+        name: 'AuthorsCreate',
+        component: () =>
+          import(/* webpackChunkName: "about" */ '../views/AuthorsView.vue'),
+        meta: { requiresAuth: true },
+      },
+    ],
   },
 ];
 

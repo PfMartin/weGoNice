@@ -40,7 +40,7 @@
 
     <Teleport to="#modals">
       <AuthorCreateModal
-        v-if="isCreateModalVisible"
+        v-if="isCreate"
         @closeModal="closeModal"
         @success="closeModal(true)"
       />
@@ -57,6 +57,9 @@ import AuthorCard from '@/components/AuthorCard.vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
 import SwitchComponent from '@/components/SwitchComponent.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const headerConfig = {
   pageTitle: 'Authors',
@@ -121,12 +124,14 @@ const applyFilter = (): void => {
 };
 
 // Create Modal
-const isCreateModalVisible = ref(false);
+const isCreate = computed(
+  () => router.currentRoute.value.path === '/authors/create'
+);
 const createAuthor = (): void => {
-  isCreateModalVisible.value = true;
+  router.push({ name: 'AuthorsCreate' });
 };
 const closeModal = async (isSuccess = false): Promise<void> => {
-  isCreateModalVisible.value = false;
+  router.push({ name: 'Authors' });
   authors.value = (await getAllAuthors()) || [];
 };
 
