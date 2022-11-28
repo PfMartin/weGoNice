@@ -1,5 +1,5 @@
 <template>
-  <div @click="getDetails" class="author-card">
+  <div class="author-card">
     <div class="picture">
       <img v-if="data.imageUrl" :src="data.imageUrl" />
       <ion-icon v-else name="person" />
@@ -15,7 +15,7 @@
         <div class="recipes-count">
           <p>5 recipes</p>
         </div>
-        <div class="social-media">
+        <div class="social-media" @click.stop>
           <a v-if="data.website" :href="data.website"
             ><ion-icon name="earth"
           /></a>
@@ -34,13 +34,9 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 
-const props = defineProps<{
+defineProps<{
   data: any;
 }>();
-
-const getDetails = () => {
-  console.log(props.data.id);
-};
 </script>
 
 <style scoped lang="scss">

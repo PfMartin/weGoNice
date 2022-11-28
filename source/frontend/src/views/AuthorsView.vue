@@ -31,19 +31,22 @@
     </div>
 
     <div class="authors" v-if="isReady">
-      <AuthorCard
-        v-for="author in visibleAuthors"
-        :data="author"
-        :key="author.name"
-      />
+      <template v-for="author in visibleAuthors" :key="author.name">
+        <RouterLink
+          :to="{
+            name: 'AuthorDetail',
+            params: {
+              id: author.id,
+            },
+          }"
+        >
+          <AuthorCard :data="author" />
+        </RouterLink>
+      </template>
     </div>
 
     <Teleport to="#modals">
-      <AuthorCreateModal
-        v-if="isCreate"
-        @closeModal="closeModal"
-        @success="closeModal(true)"
-      />
+      <AuthorCreateModal v-if="isCreate" @closeModal="closeModal" />
     </Teleport>
   </body>
 </template>
@@ -140,7 +143,6 @@ const authors = ref<any>([]);
 onMounted(async (): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
   visibleAuthors.value = authors.value;
-  console.log(authors.value);
 });
 
 const isReady = computed((): boolean => !!authors.value.length);
