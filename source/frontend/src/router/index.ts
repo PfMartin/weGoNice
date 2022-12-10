@@ -35,9 +35,19 @@ const routes: Array<RouteRecordRaw> = [
     path: '/authors',
     name: 'Authors',
     meta: { requiresAuth: true },
+    redirect: { name: 'AuthorsOverview' },
     component: () =>
       import(/* webpackChunkName: "authors" */ '@/views/AuthorsView.vue'),
     children: [
+      {
+        path: 'overview',
+        name: 'AuthorsOverview',
+        component: () =>
+          import(
+            /* webpackChunkName: "authorsOverview" */ '@/views/AuthorsOverview.vue'
+          ),
+        meta: { requiresAuth: true },
+      },
       {
         path: 'create',
         name: 'AuthorsCreate',

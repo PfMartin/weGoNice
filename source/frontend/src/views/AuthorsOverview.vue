@@ -11,21 +11,12 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const headerConfig = {
-  pageTitle: 'Authors',
-  buttonIconName: 'add',
-  buttonText: 'New Author',
-};
-
 enum sortDirections {
   ASC,
   DESC,
 }
 
 // Searching, sorting and filtering
-const onSearchInput = (searchValue: string): void => {
-  console.log(searchValue);
-};
 const selectedOption = ref('Name');
 const setSelectedOption = (option: string): void => {
   selectedOption.value = option;
@@ -73,18 +64,6 @@ const applyFilter = (): void => {
   }, authors.value);
 };
 
-// Create Modal
-const isCreate = computed(
-  () => router.currentRoute.value.path === '/authors/create'
-);
-const createAuthor = (): void => {
-  router.push({ name: 'AuthorsCreate' });
-};
-const closeModal = async (isSuccess = false): Promise<void> => {
-  router.push({ name: 'Authors' });
-  authors.value = (await getAllAuthors()) || [];
-};
-
 const authors = ref<any>([]);
 // Get All Authors
 onMounted(async (): Promise<void> => {
@@ -96,25 +75,51 @@ const isReady = computed((): boolean => !!authors.value.length);
 </script>
 
 <template>
-  <div class="authors-overview">
-    <Teleport to="#modals">
-      <AuthorCreateModal v-if="isCreate" @closeModal="closeModal" />
-    </Teleport>
-    <body>
-      <HeaderBar
-        :config="headerConfig"
-        @search-input="onSearchInput"
-        @button-click="createAuthor"
-      />
+  <div class="author-overview">
+    <div class="list-control">
+      <div class="controls">
+        <div class="sorting">
+          <div class="dropdown-container">
+            <DropdownInput
+              :options="AUTHOR_SORTING_OPTIONS"
+              :selectedOption="selectedOption"
+              @select-option="setSelectedOption"
+            />
+          </div>
+          <span @click="toggleSortDirection" class="sort-direction"
+            ><ion-icon :name="sortDirectionIcon"
+          /></span>
+        </div>
+        <div class="filter-switches">
+          <SwitchComponent @toggle-switch="setFilter" label="Website" />
+          <SwitchComponent @toggle-switch="setFilter" label="Instagram" />
+          <SwitchComponent @toggle-switch="setFilter" label="YouTube" />
+          <!-- Still has to be implemented -->
+          <SwitchComponent @toggle-switch="setFilter" label="No Recipes" />
+        </div>
+      </div>
+    </div>
 
-      <RouterView />
-    </body>
+    <div class="authors" v-if="isReady">
+      <template v-for="author in visibleAuthors" :key="author.name">
+        <RouterLink
+          :to="{
+            name: 'AuthorDetail',
+            params: {
+              id: author.id,
+            },
+          }"
+        >
+          <AuthorCard :data="author" />
+        </RouterLink>
+      </template>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-@import '@/styles/outline.scss';
-@import '@/styles/colors.scss';
+@import '../styles/outline.scss';
+@import '../styles/colors.scss';
 
 body {
   .list-control {

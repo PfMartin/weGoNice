@@ -1,74 +1,3 @@
-<template lang="html">
-  <div class="author-create-modal">
-    <ModalComponent
-      :config="config"
-      @close="emit('closeModal')"
-      :shouldClose="shouldClose"
-    >
-      <template v-slot:header>
-        <h2>New Author</h2>
-      </template>
-
-      <template v-slot:default>
-        <form>
-          <TextInput
-            :label="{ name: 'Display Name', iconName: 'person' }"
-            :initialValue="name"
-            :inputError="nameError"
-            @on-input="updateName"
-          />
-          <div class="name-info">
-            <TextInput
-              :label="{ name: 'Firstname' }"
-              :initialValue="firstname"
-              @on-input="updateFirstname"
-            />
-            <TextInput
-              :label="{ name: 'Lastname' }"
-              :initialValue="lastname"
-              @on-input="updateLastname"
-            />
-          </div>
-          <TextInput
-            :label="{ name: 'Website', iconName: 'earth' }"
-            :initialValue="website"
-            :inputError="websiteError"
-            @on-input="updateWebsite"
-          />
-          <TextInput
-            :label="{ name: 'Instagram', iconName: 'logo-instagram' }"
-            :initialValue="instagram"
-            :inputError="instagramError"
-            @on-input="updateInstagram"
-          />
-          <TextInput
-            :label="{ name: 'YouTube', iconName: 'logo-youtube' }"
-            :initialValue="youTube"
-            :inputError="youTubeError"
-            @on-input="updateYouTube"
-          />
-          <TextInput
-            :label="{ name: 'Image URL', iconName: 'camera' }"
-            :initialValue="imageUrl"
-            :inputError="imageUrlError"
-            @on-input="updateImageUrl"
-          />
-        </form>
-      </template>
-
-      <template v-slot:footer>
-        <div class="save-button">
-          <ButtonComponent
-            buttonText="Add Author"
-            buttonIconName="add"
-            @on-click="submit"
-          />
-        </div>
-      </template>
-    </ModalComponent>
-  </div>
-</template>
-
 <script setup lang="ts">
 import ModalComponent, { ModalConfig } from '@/components/ModalComponent.vue';
 import { ref, computed } from 'vue';
@@ -214,9 +143,80 @@ const submit = async (): Promise<void> => {
 };
 </script>
 
+<template lang="html">
+  <div class="author-create-modal">
+    <ModalComponent
+      :config="config"
+      @close="emit('closeModal')"
+      :shouldClose="shouldClose"
+    >
+      <template v-slot:header>
+        <h2>New Author</h2>
+      </template>
+
+      <template v-slot:default>
+        <form>
+          <TextInput
+            :label="{ name: 'Display Name', iconName: 'person' }"
+            :initialValue="name"
+            :inputError="nameError"
+            @on-input="updateName"
+          />
+          <div class="name-info">
+            <TextInput
+              :label="{ name: 'Firstname' }"
+              :initialValue="firstname"
+              @on-input="updateFirstname"
+            />
+            <TextInput
+              :label="{ name: 'Lastname' }"
+              :initialValue="lastname"
+              @on-input="updateLastname"
+            />
+          </div>
+          <TextInput
+            :label="{ name: 'Website', iconName: 'earth' }"
+            :initialValue="website"
+            :inputError="websiteError"
+            @on-input="updateWebsite"
+          />
+          <TextInput
+            :label="{ name: 'Instagram', iconName: 'logo-instagram' }"
+            :initialValue="instagram"
+            :inputError="instagramError"
+            @on-input="updateInstagram"
+          />
+          <TextInput
+            :label="{ name: 'YouTube', iconName: 'logo-youtube' }"
+            :initialValue="youTube"
+            :inputError="youTubeError"
+            @on-input="updateYouTube"
+          />
+          <TextInput
+            :label="{ name: 'Image URL', iconName: 'camera' }"
+            :initialValue="imageUrl"
+            :inputError="imageUrlError"
+            @on-input="updateImageUrl"
+          />
+        </form>
+      </template>
+
+      <template v-slot:footer>
+        <div class="save-button">
+          <ButtonComponent
+            buttonText="Add Author"
+            buttonIconName="add"
+            @on-click="submit"
+          />
+        </div>
+      </template>
+    </ModalComponent>
+  </div>
+</template>
+
 <style scoped lang="scss">
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 form {
   display: flex;
