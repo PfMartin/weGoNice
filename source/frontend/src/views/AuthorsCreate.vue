@@ -1,19 +1,13 @@
 <script setup lang="ts">
-import ModalComponent, { ModalConfig } from '@/components/ModalComponent.vue';
 import { ref, computed } from 'vue';
-import ButtonComponent from '@/components/ButtonComponent.vue';
 import TextInput from '@/components/TextInput.vue';
 import { createAuthor } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
 import NotificationService from '@/services/notification.service';
+import ButtonComponent from '@/components/ButtonComponent.vue';
+import { useRouter } from 'vue-router';
 
-const emit = defineEmits<{
-  (e: 'closeModal'): void;
-}>();
-
-const config: ModalConfig = {
-  size: 's',
-};
+const router = useRouter();
 
 const validationService = new ValidationService();
 const isFirstTry = ref(true);
@@ -102,7 +96,6 @@ const isValid = computed((): boolean => {
   );
 });
 
-const shouldClose = ref(false);
 const submit = async (): Promise<void> => {
   isFirstTry.value = false;
 
@@ -125,7 +118,7 @@ const submit = async (): Promise<void> => {
           'success',
           `Author '${name.value}' has successfully been added`
         );
-        shouldClose.value = true;
+        router.push({ name: 'AuthorsOverview' });
         break;
       case 406:
         NotificationService.addNotification(
@@ -143,74 +136,59 @@ const submit = async (): Promise<void> => {
 };
 </script>
 
-<template lang="html">
-  <div class="author-create-modal">
-    <ModalComponent
-      :config="config"
-      @close="emit('closeModal')"
-      :shouldClose="shouldClose"
-    >
-      <template v-slot:header>
-        <h2>New Author</h2>
-      </template>
-
-      <template v-slot:default>
-        <form>
-          <TextInput
-            :label="{ name: 'Display Name', iconName: 'person' }"
-            :initialValue="name"
-            :inputError="nameError"
-            @on-input="updateName"
-          />
-          <div class="name-info">
-            <TextInput
-              :label="{ name: 'Firstname' }"
-              :initialValue="firstname"
-              @on-input="updateFirstname"
-            />
-            <TextInput
-              :label="{ name: 'Lastname' }"
-              :initialValue="lastname"
-              @on-input="updateLastname"
-            />
-          </div>
-          <TextInput
-            :label="{ name: 'Website', iconName: 'earth' }"
-            :initialValue="website"
-            :inputError="websiteError"
-            @on-input="updateWebsite"
-          />
-          <TextInput
-            :label="{ name: 'Instagram', iconName: 'logo-instagram' }"
-            :initialValue="instagram"
-            :inputError="instagramError"
-            @on-input="updateInstagram"
-          />
-          <TextInput
-            :label="{ name: 'YouTube', iconName: 'logo-youtube' }"
-            :initialValue="youTube"
-            :inputError="youTubeError"
-            @on-input="updateYouTube"
-          />
-          <TextInput
-            :label="{ name: 'Image URL', iconName: 'camera' }"
-            :initialValue="imageUrl"
-            :inputError="imageUrlError"
-            @on-input="updateImageUrl"
-          />
-        </form>
-      </template>
-
-      <template v-slot:footer>
-        <div class="save-button">
-          <ButtonComponent
-            buttonText="Add Author"
-            buttonIconName="add"
-            @on-click="submit"
-          />
-        </div>
-      </template>
-    </ModalComponent>
+<template>
+  <div class="authors-create">
+    <form>
+      <TextInput
+        :label="{ name: 'Display Name', iconName: 'person' }"
+        :initialValue="name"
+        :inputError="nameError"
+        @on-input="updateName"
+      />
+      <div class="name-info">
+        <TextInput
+          :label="{ name: 'Firstname' }"
+          :initialValue="firstname"
+          @on-input="updateFirstname"
+        />
+        <TextInput
+          :label="{ name: 'Lastname' }"
+          :initialValue="lastname"
+          @on-input="updateLastname"
+        />
+      </div>
+      <TextInput
+        :label="{ name: 'Website', iconName: 'earth' }"
+        :initialValue="website"
+        :inputError="websiteError"
+        @on-input="updateWebsite"
+      />
+      <TextInput
+        :label="{ name: 'Instagram', iconName: 'logo-instagram' }"
+        :initialValue="instagram"
+        :inputError="instagramError"
+        @on-input="updateInstagram"
+      />
+      <TextInput
+        :label="{ name: 'YouTube', iconName: 'logo-youtube' }"
+        :initialValue="youTube"
+        :inputError="youTubeError"
+        @on-input="updateYouTube"
+      />
+      <TextInput
+        :label="{ name: 'Image URL', iconName: 'camera' }"
+        :initialValue="imageUrl"
+        :inputError="imageUrlError"
+        @on-input="updateImageUrl"
+      />
+      <div class="save-button">
+        <ButtonComponent
+          buttonText="Add Author"
+          buttonIconName="add"
+          @on-click="submit"
+        />
+      </div>
+    </form>
   </div>
 </template>
 
@@ -218,25 +196,37 @@ const submit = async (): Promise<void> => {
 @import '@/styles/colors.scss';
 @import '@/styles/outline.scss';
 
-form {
+.authors-create {
+  margin-left: $nav-bar-width;
+  padding: 1rem 2rem;
   display: flex;
-  flex-direction: column;
-  padding: 1rem;
+  justify-content: center;
 
-  .name-info {
+  form {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
-    padding: 0 1rem;
-    justify-content: space-between;
+    padding: 2rem;
+    background: $bg-color-dark;
+    max-width: 700px;
+    border-radius: $border-radius;
+    color: $text-color;
 
-    & * {
-      width: 45%;
+    .name-info {
+      display: flex;
+      gap: 1rem;
+      padding: 0 1rem;
+      justify-content: space-between;
+
+      & * {
+        width: 45%;
+      }
     }
   }
-}
 
-.save-button {
-  display: flex;
-  justify-content: flex-end;
+  .save-button {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 </style>

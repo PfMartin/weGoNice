@@ -53,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'AuthorsCreate',
         component: () =>
           import(
-            /* webpackChunkName: "authorsCreate" */ '@/components/AuthorCreateModal.vue'
+            /* webpackChunkName: "authorsCreate" */ '@/views/AuthorsCreate.vue'
           ),
         meta: { requiresAuth: true },
       },

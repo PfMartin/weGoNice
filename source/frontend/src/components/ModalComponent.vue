@@ -57,8 +57,8 @@ watch(
 </script>
 
 <style scoped lang="scss">
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 $modal-height: 720px;
 $modal-width-s: 480px;
