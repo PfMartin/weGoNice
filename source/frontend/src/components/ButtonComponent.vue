@@ -4,7 +4,7 @@ import { computed } from 'vue';
 const props = defineProps<{
   buttonText: string;
   buttonIconName?: string;
-  isDefault?: boolean;
+  isPrimary?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -18,7 +18,7 @@ const onClick = () => {
 const buttonClass = computed(() => {
   return {
     button: true,
-    default: props.isDefault || false,
+    primary: props.isPrimary || false,
   };
 });
 </script>
@@ -36,23 +36,23 @@ const buttonClass = computed(() => {
 
 .button {
   border-radius: 5px;
-  background: $accent-color;
+  background: $bg-color-lighter;
   padding: 6px 12px;
   color: $bg-color-dark;
   display: flex;
   align-items: center;
   transition: background-color 0.5s;
 
-  &.default {
-    background: $bg-color-lighter;
+  &.primary {
+    background: $accent-color;
 
     &:hover {
-      background: $bg-color-light;
+      background: $accent-hover-color;
     }
   }
 
   &:hover {
-    background-color: $accent-hover-color;
+    background: $bg-color-light;
     cursor: pointer;
   }
 

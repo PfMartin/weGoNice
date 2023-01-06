@@ -191,12 +191,12 @@ const submit = async (): Promise<void> => {
           buttonText="Cancel"
           buttonIconName="close"
           @on-click="cancel"
-          isDefault
         />
         <ButtonComponent
           buttonText="Add Author"
           buttonIconName="create"
           @on-click="submit"
+          isPrimary
         />
       </div>
     </form>

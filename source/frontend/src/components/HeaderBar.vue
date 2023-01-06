@@ -17,6 +17,7 @@
       @click="emit('button-click')"
       :buttonText="props.config.buttonText"
       :buttonIconName="props.config.buttonIconName"
+      isPrimary
     />
   </body>
 </template>
