@@ -1,16 +1,10 @@
-<template>
-  <div @click="onClick" class="button">
-    <ion-icon :name="buttonIconName" />
-    <p>{{ buttonText }}</p>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   buttonText: string;
   buttonIconName?: string;
+  isDefault?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -20,11 +14,25 @@ const emit = defineEmits<{
 const onClick = () => {
   emit('on-click');
 };
+
+const buttonClass = computed(() => {
+  return {
+    button: true,
+    default: props.isDefault || false,
+  };
+});
 </script>
 
+<template>
+  <div @click="onClick" :class="buttonClass">
+    <ion-icon :name="buttonIconName" />
+    <p>{{ buttonText }}</p>
+  </div>
+</template>
+
 <style scoped lang="scss">
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 .button {
   border-radius: 5px;
@@ -34,6 +42,14 @@ const onClick = () => {
   display: flex;
   align-items: center;
   transition: background-color 0.5s;
+
+  &.default {
+    background: $bg-color-lighter;
+
+    &:hover {
+      background: $bg-color-light;
+    }
+  }
 
   &:hover {
     background-color: $accent-hover-color;

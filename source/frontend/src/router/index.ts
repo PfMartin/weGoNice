@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import { isAuthenticated } from '@/auth';
+import authorsRoutes from '@/router/authors-routes';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -38,35 +39,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: { name: 'AuthorsOverview' },
     component: () =>
       import(/* webpackChunkName: "authors" */ '@/views/AuthorsView.vue'),
-    children: [
-      {
-        path: 'overview',
-        name: 'AuthorsOverview',
-        component: () =>
-          import(
-            /* webpackChunkName: "authorsOverview" */ '@/views/AuthorsOverview.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'create',
-        name: 'AuthorsCreate',
-        component: () =>
-          import(
-            /* webpackChunkName: "authorsCreate" */ '@/views/AuthorsCreate.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: ':id',
-        name: 'AuthorDetail',
-        component: () =>
-          import(
-            /* webpackChunkName: "authorsDetail" */ '@/views/AuthorsDetail.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-    ],
+    children: authorsRoutes,
   },
 ];
 

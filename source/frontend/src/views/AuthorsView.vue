@@ -8,7 +8,7 @@ const router = useRouter();
 
 const headerConfig = {
   pageTitle: 'Authors',
-  buttonIconName: 'add',
+  buttonIconName: 'create',
   buttonText: 'New Author',
 };
 

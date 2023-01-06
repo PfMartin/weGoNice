@@ -96,6 +96,10 @@ const isValid = computed((): boolean => {
   );
 });
 
+const cancel = () => {
+  console.log('cancel');
+};
+
 const submit = async (): Promise<void> => {
   isFirstTry.value = false;
 
@@ -139,6 +143,7 @@ const submit = async (): Promise<void> => {
 <template>
   <div class="authors-create">
     <form>
+      <h2>Create Author</h2>
       <TextInput
         :label="{ name: 'Display Name', iconName: 'person' }"
         :initialValue="name"
@@ -181,10 +186,16 @@ const submit = async (): Promise<void> => {
         :inputError="imageUrlError"
         @on-input="updateImageUrl"
       />
-      <div class="save-button">
+      <div class="buttons">
+        <ButtonComponent
+          buttonText="Cancel"
+          buttonIconName="close"
+          @on-click="cancel"
+          isDefault
+        />
         <ButtonComponent
           buttonText="Add Author"
-          buttonIconName="add"
+          buttonIconName="create"
           @on-click="submit"
         />
       </div>
@@ -212,6 +223,11 @@ const submit = async (): Promise<void> => {
     border-radius: $border-radius;
     color: $text-color;
 
+    h2 {
+      margin: 0;
+      padding: 0;
+    }
+
     .name-info {
       display: flex;
       gap: 1rem;
@@ -224,9 +240,9 @@ const submit = async (): Promise<void> => {
     }
   }
 
-  .save-button {
+  .buttons {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
 }
 </style>
