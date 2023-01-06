@@ -1,15 +1,21 @@
 <template>
-  <div class="author-detail">
-    <div v-if="author" class="author-card">
-      <div class="card-content">
-        <div class="img-container">
-          <img :src="author.imageUrl" />
-        </div>
-        <h1>{{ author.name }}</h1>
-        <h2>{{ author.firstname }} {{ author.lastname }}</h2>
+  <div class="author-info">
+    <div v-if="author" class="author-header">
+      <div class="picture">
+        <img
+          v-if="author.imageUrl"
+          :src="author.imageUrl"
+          alt="Author Picture"
+        />
+        <ion-icon v-else name="person" />
+      </div>
+      <div class="info">
+        <h1>Author Name: {{ author.name }}</h1>
+        <h2>Author Details: {{ author.firstname }} {{ author.lastname }}</h2>
       </div>
     </div>
     <div v-else>
+      <!-- ADD SPINNER -->
       <p>Waiting for data...</p>
     </div>
   </div>
@@ -27,6 +33,7 @@ const author = ref<Authors.CreateAuthorBody | null>(null);
 const init = async () => {
   const res = await getAuthorById(route.params.id);
   author.value = res;
+  console.log(author.value);
 };
 
 init();
@@ -36,43 +43,37 @@ init();
 @import '@/styles/outline.scss';
 @import '@/styles/colors.scss';
 
-.author-detail {
+.author-info {
   margin: 1rem;
-  margin-left: $nav-bar-width;
+  margin-left: calc($nav-bar-width + 1rem);
   display: flex;
-  justify-content: center;
+  background: $bg-color-mid;
+  border-radius: $border-radius;
+  padding: 1rem;
 
-  .author-card {
-    width: 80%;
-    background: $bg-color-mid;
-    border-radius: $border-radius;
-    border: 1px solid $bg-color-mid;
-    color: $text-color;
-    padding: 1rem;
+  .author-header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .card-content {
-      width: 80%;
-      background: $bg-color-dark;
+    .picture {
       border-radius: $border-radius;
-      padding: 1rem;
-    }
-
-    .img-container {
       display: flex;
+      height: 200px;
+      align-items: center;
       justify-content: center;
+      width: 200px;
+      overflow: hidden;
 
       img {
-        border-radius: $border-radius;
-        max-height: 300px;
+        height: 200px;
+      }
+
+      ion-icon {
+        font-size: 6rem;
+        z-index: 1;
       }
     }
+  }
 
-    h1 {
-      text-align: center;
-    }
+  .author-header {
   }
 }
 </style>
