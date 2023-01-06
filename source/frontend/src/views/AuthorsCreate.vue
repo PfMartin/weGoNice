@@ -97,7 +97,7 @@ const isValid = computed((): boolean => {
 });
 
 const cancel = () => {
-  console.log('cancel');
+  router.push({ name: 'AuthorsOverview' });
 };
 
 const submit = async (): Promise<void> => {
