@@ -10,8 +10,47 @@
         <ion-icon v-else name="person" />
       </div>
       <div class="info">
-        <h1>Author Name: {{ author.name }}</h1>
-        <h2>Author Details: {{ author.firstname }} {{ author.lastname }}</h2>
+        <div class="info-section">
+          <TextInputField
+            headline="Name"
+            iconName="person"
+            id="name"
+            :initialValue="author.name || 'n/a'"
+            @changed="nameChanged"
+          />
+          <TextInputField
+            headline="Firstname"
+            iconName="person"
+            id="firstname"
+            :initialValue="author.firstname || 'n/a'"
+          />
+          <TextInputField
+            headline="Lastname"
+            iconName="person"
+            id="lastname"
+            :initialValue="author.lastname || 'n/a'"
+          />
+        </div>
+        <div class="info-section">
+          <TextInputField
+            headline="Website"
+            iconName="earth"
+            id="website"
+            :initialValue="author.website || 'n/a'"
+          />
+          <TextInputField
+            headline="Instagram"
+            iconName="logo-instagram"
+            id="instagram"
+            :initialValue="author.instagram || 'n/a'"
+          />
+          <TextInputField
+            headline="YouTube"
+            iconName="logo-youtube"
+            id="youtube"
+            :initialValue="author.youTube || 'n/a'"
+          />
+        </div>
       </div>
     </div>
     <div v-else>
@@ -25,6 +64,7 @@
 import { useRoute } from 'vue-router';
 import { getAuthorById } from '@/apis/weGoNice/authors';
 import { ref } from 'vue';
+import TextInputField from '@/components/TextInputField.vue';
 
 const route = useRoute();
 
@@ -33,7 +73,10 @@ const author = ref<Authors.CreateAuthorBody | null>(null);
 const init = async () => {
   const res = await getAuthorById(route.params.id);
   author.value = res;
-  console.log(author.value);
+};
+
+const nameChanged = (value: string) => {
+  console.log(value);
 };
 
 init();
@@ -53,6 +96,8 @@ init();
 
   .author-header {
     display: flex;
+    gap: 1rem;
+    width: 100%;
     .picture {
       border-radius: $border-radius;
       display: flex;
@@ -61,6 +106,7 @@ init();
       justify-content: center;
       width: 200px;
       overflow: hidden;
+      background: $bg-color-light;
 
       img {
         height: 200px;
@@ -71,9 +117,22 @@ init();
         z-index: 1;
       }
     }
-  }
 
-  .author-header {
+    .info {
+      background: $bg-color-dark;
+      border-radius: $border-radius;
+      color: $text-color;
+      padding: 1rem;
+      width: 100%;
+      display: flex;
+      gap: 1rem;
+
+      .info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
   }
 }
 </style>
