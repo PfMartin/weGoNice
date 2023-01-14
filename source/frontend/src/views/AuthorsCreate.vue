@@ -6,8 +6,22 @@ import ValidationService from '@/services/validation.service';
 import NotificationService from '@/services/notification.service';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { useRouter } from 'vue-router';
+import AuthorInfo from '@/components/AuthorInfo.vue';
+import { OperationMode } from '@/utils/constants';
 
 const router = useRouter();
+
+const author: Authors.Author = {
+  name: '',
+  lastname: '',
+  firstname: '',
+  website: '',
+  youTube: '',
+  instagram: '',
+  imageUrl: '',
+};
+
+// OLD Version with validation
 
 const validationService = new ValidationService();
 const isFirstTry = ref(true);
@@ -104,7 +118,7 @@ const submit = async (): Promise<void> => {
   isFirstTry.value = false;
 
   if (isValid.value) {
-    const body: Authors.CreateAuthorBody = {
+    const body: Authors.Author = {
       name: name.value,
       lastname: lastname.value,
       firstname: firstname.value,
@@ -142,64 +156,7 @@ const submit = async (): Promise<void> => {
 
 <template>
   <div class="authors-create">
-    <form>
-      <h2>Create Author</h2>
-      <TextInput
-        :label="{ name: 'Display Name', iconName: 'person' }"
-        :initialValue="name"
-        :inputError="nameError"
-        @on-input="updateName"
-      />
-      <div class="name-info">
-        <TextInput
-          :label="{ name: 'Firstname' }"
-          :initialValue="firstname"
-          @on-input="updateFirstname"
-        />
-        <TextInput
-          :label="{ name: 'Lastname' }"
-          :initialValue="lastname"
-          @on-input="updateLastname"
-        />
-      </div>
-      <TextInput
-        :label="{ name: 'Website', iconName: 'earth' }"
-        :initialValue="website"
-        :inputError="websiteError"
-        @on-input="updateWebsite"
-      />
-      <TextInput
-        :label="{ name: 'Instagram', iconName: 'logo-instagram' }"
-        :initialValue="instagram"
-        :inputError="instagramError"
-        @on-input="updateInstagram"
-      />
-      <TextInput
-        :label="{ name: 'YouTube', iconName: 'logo-youtube' }"
-        :initialValue="youTube"
-        :inputError="youTubeError"
-        @on-input="updateYouTube"
-      />
-      <TextInput
-        :label="{ name: 'Image URL', iconName: 'camera' }"
-        :initialValue="imageUrl"
-        :inputError="imageUrlError"
-        @on-input="updateImageUrl"
-      />
-      <div class="buttons">
-        <ButtonComponent
-          buttonText="Cancel"
-          buttonIconName="close"
-          @on-click="cancel"
-        />
-        <ButtonComponent
-          buttonText="Add Author"
-          buttonIconName="create"
-          @on-click="submit"
-          isPrimary
-        />
-      </div>
-    </form>
+    <AuthorInfo :initialData="author" :mode="OperationMode.Create" />
   </div>
 </template>
 
@@ -208,10 +165,11 @@ const submit = async (): Promise<void> => {
 @import '@/styles/outline.scss';
 
 .authors-create {
-  margin-left: $nav-bar-width;
-  padding: 1rem 2rem;
+  margin: 1rem;
+  margin-left: calc($nav-bar-width + 1rem);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
 
   form {
     display: flex;

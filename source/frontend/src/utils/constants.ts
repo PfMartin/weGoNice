@@ -6,3 +6,8 @@ export const AUTHOR_SORTING_OPTIONS = [
   'ModifiedAt',
   'Amount of Recipes', // Still has to be implemented
 ];
+
+export enum OperationMode {
+  Create,
+  Edit,
+}

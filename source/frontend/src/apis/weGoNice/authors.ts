@@ -2,7 +2,7 @@ import { url, headers, handleError, addAuthorization } from './utils';
 import axios from 'axios';
 
 export const createAuthor = async (
-  body: Authors.CreateAuthorBody
+  body: Authors.Author
 ): Promise<WeGoNiceApi.RequestResponse> => {
   headers.Authorization = addAuthorization();
 

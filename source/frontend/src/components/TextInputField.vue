@@ -28,6 +28,7 @@ const inputClass = computed(() => ({
     </label>
     <input
       id="id"
+      :placeholder="`Insert ${id}`"
       :class="inputClass"
       v-model="inputValue"
       @blur="emit('changed', inputValue)"
@@ -50,6 +51,7 @@ const inputClass = computed(() => ({
   }
 
   .value-input {
+    width: 100%;
     margin: 0;
     padding: 0;
     font-size: 1.2rem;

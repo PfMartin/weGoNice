@@ -1,5 +1,5 @@
 declare namespace Authors {
-  interface CreateAuthorBody {
+  interface Author {
     name: string;
     lastname: string;
     firstname: string;
@@ -7,5 +7,10 @@ declare namespace Authors {
     youTube: string;
     instagram: string;
     imageUrl: string;
+  }
+
+  enum OperationMode {
+    Edit,
+    Create,
   }
 }
