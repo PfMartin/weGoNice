@@ -4,6 +4,8 @@ import NotificationService from '@/services/notification.service';
 import { useRouter } from 'vue-router';
 import AuthorInfo from '@/components/AuthorInfo.vue';
 import { OperationMode } from '@/utils/constants';
+import { ref } from 'vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 
 const router = useRouter();
 
@@ -19,50 +21,35 @@ const author = ref<Authors.Author>({
 
 const setData = (data: Authors.Author): void => {
   author.value = data;
+  console.log(author.value);
 };
-
-// OLD Version with validation
 
 const cancel = () => {
   router.push({ name: 'AuthorsOverview' });
 };
 
 const submit = async (): Promise<void> => {
-  isFirstTry.value = false;
+  const { status, data } = await createAuthor(author.value);
 
-  if (isValid.value) {
-    const body: Authors.Author = {
-      name: name.value,
-      lastname: lastname.value,
-      firstname: firstname.value,
-      website: website.value,
-      instagram: instagram.value,
-      youTube: youTube.value,
-      imageUrl: imageUrl.value,
-    };
-
-    const { status, data } = await createAuthor(body);
-
-    switch (status) {
-      case 201:
-        NotificationService.addNotification(
-          'success',
-          `Author '${name.value}' has successfully been added`
-        );
-        router.push({ name: 'AuthorsOverview' });
-        break;
-      case 406:
-        NotificationService.addNotification(
-          'error',
-          `There already is an author with the name '${name.value}'`
-        );
-        break;
-      default:
-        NotificationService.addNotification(
-          'error',
-          `The author could not be saved: ${data.msg}`
-        );
-    }
+  switch (status) {
+    case 201:
+      NotificationService.addNotification(
+        'success',
+        `Author '${author.value.name}' has successfully been added`
+      );
+      router.push({ name: 'AuthorsOverview' });
+      break;
+    case 406:
+      NotificationService.addNotification(
+        'error',
+        `There already is an author with the name '${author.value.name}'`
+      );
+      break;
+    default:
+      NotificationService.addNotification(
+        'error',
+        `The author could not be saved: ${data.msg}`
+      );
   }
 };
 </script>
@@ -74,6 +61,19 @@ const submit = async (): Promise<void> => {
       :mode="OperationMode.Create"
       @on-change="setData"
     />
+    <div class="buttons">
+      <ButtonComponent
+        buttonText="Cancel"
+        buttonIconName="close-circle"
+        @on-click="cancel"
+      />
+      <ButtonComponent
+        isPrimary
+        buttonText="Save"
+        buttonIconName="checkmark-done"
+        @on-click="submit"
+      />
+    </div>
   </div>
 </template>
 
@@ -82,42 +82,18 @@ const submit = async (): Promise<void> => {
 @import '@/styles/outline.scss';
 
 .authors-create {
-  margin: 1rem;
+  margin-top: 1rem;
+  margin-right: 1rem;
   margin-left: calc($nav-bar-width + 1rem);
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 2rem;
-    background: $bg-color-dark;
-    max-width: 700px;
-    border-radius: $border-radius;
-    color: $text-color;
-
-    h2 {
-      margin: 0;
-      padding: 0;
-    }
-
-    .name-info {
-      display: flex;
-      gap: 1rem;
-      padding: 0 1rem;
-      justify-content: space-between;
-
-      & * {
-        width: 45%;
-      }
-    }
-  }
+  background: $bg-color-mid;
+  border-radius: $border-radius;
 
   .buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1rem;
+    padding-top: 0;
   }
 }
 </style>
