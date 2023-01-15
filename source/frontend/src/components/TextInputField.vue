@@ -20,12 +20,17 @@ const isInactive = ref(true);
 const inputClass = computed(() => ({
   ['value-input']: true,
   inactive: isInactive,
+  hasError: props.inputError,
+}));
+
+const labelClass = computed(() => ({
+  label: true,
 }));
 </script>
 
 <template>
   <div class="text-input-field">
-    <label :for="props.id" class="description">
+    <label :for="props.id" :class="labelClass">
       <div class="label-text">
         <ion-icon v-if="props.iconName" :name="props.iconName" />&nbsp;
         <span>{{ props.headline }}</span>
@@ -51,11 +56,11 @@ const inputClass = computed(() => ({
 .text-input-field {
   display: flex;
   flex-direction: column;
+  gap: 5px;
   width: 100%;
-  .description {
+  label {
     margin: 0;
     padding: 0;
-    // display: flex;
     gap: 0.5rem;
     align-items: center;
     justify-content: space-between;
@@ -68,10 +73,11 @@ const inputClass = computed(() => ({
   small {
     display: block;
     min-height: 1rem;
+    color: $accent-color;
 
     &.fade-enter-active,
     &.fade-leave-active {
-      transition: opacity 0.4s ease-in;
+      transition: opacity 0.2s ease;
     }
 
     &.fade-enter-from,
@@ -92,6 +98,10 @@ const inputClass = computed(() => ({
     padding: 8px 8px;
     border-radius: $border-radius;
     transition: background, border 0.2s;
+
+    &.hasError {
+      border: 1px solid $accent-color;
+    }
 
     &::placeholder {
       font-size: 1rem;

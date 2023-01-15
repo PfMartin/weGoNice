@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
@@ -9,6 +9,7 @@ const props = defineProps<{
   mode: OperationMode;
 }>();
 
+/* Handle User Input */
 const name = ref(props.initialData.name);
 const updateName = (newValue: string) => {
   name.value = newValue;
@@ -68,6 +69,26 @@ const validateYouTube = (): void => {
   youTubeError.value = validationService.validateYouTube(website.value);
 };
 
+const imageUrlError = ref('');
+const validateImageUrl = (): void => {
+  imageUrlError.value = validationService.validateImageUrl(imageUrl.value);
+};
+
+const isValid = computed((): boolean => {
+  validateName();
+  validateWebsite();
+  validateInstagram();
+  validateYouTube();
+
+  return (
+    !nameError.value &&
+    !websiteError.value &&
+    !instagramError.value &&
+    !youTubeError.value
+  );
+});
+
+/* Save Data*/
 // const saveChanges = (): void => {
 //   switch (props.mode) {
 //     case OperationMode.Edit:
@@ -168,6 +189,7 @@ const validateYouTube = (): void => {
     justify-content: center;
     overflow: hidden;
     background: $bg-color-light;
+    max-height: 300px;
 
     img {
       max-height: 100%;
