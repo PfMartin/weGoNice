@@ -6,6 +6,8 @@ const props = defineProps<{
   iconName: string;
   id: string;
   initialValue: string;
+  placeholder: string;
+  inputError?: string;
 }>();
 
 const emit = defineEmits<{
@@ -23,16 +25,23 @@ const inputClass = computed(() => ({
 
 <template>
   <div class="text-input-field">
-    <label :for="id" class="description">
-      <ion-icon v-if="iconName" :name="iconName" /><span>{{ headline }}</span>
+    <label :for="props.id" class="description">
+      <div class="label-text">
+        <ion-icon v-if="props.iconName" :name="props.iconName" />&nbsp;
+        <span>{{ props.headline }}</span>
+      </div>
     </label>
     <input
-      id="id"
-      :placeholder="`Insert ${id}`"
+      :id="props.id"
+      :placeholder="props.placeholder"
       :class="inputClass"
       v-model="inputValue"
       @blur="emit('changed', inputValue)"
     />
+    <Transition name="fade" mode="out-in">
+      <small v-if="props.inputError">{{ props.inputError }}</small>
+      <small v-else></small>
+    </Transition>
   </div>
 </template>
 
@@ -46,8 +55,29 @@ const inputClass = computed(() => ({
   .description {
     margin: 0;
     padding: 0;
-    display: flex;
+    // display: flex;
     gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+
+    .label-text {
+      display: flex;
+      align-items: center;
+    }
+  }
+  small {
+    display: block;
+    min-height: 1rem;
+
+    &.fade-enter-active,
+    &.fade-leave-active {
+      transition: opacity 0.4s ease-in;
+    }
+
+    &.fade-enter-from,
+    &.fade-leave-to {
+      opacity: 0;
+    }
   }
 
   .value-input {
@@ -63,6 +93,11 @@ const inputClass = computed(() => ({
     border-radius: $border-radius;
     transition: background, border 0.2s;
 
+    &::placeholder {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+
     &:hover {
       cursor: pointer;
       background: $bg-color-mid;
@@ -73,9 +108,6 @@ const inputClass = computed(() => ({
       border: 1px solid $accent-color;
       outline: none;
       background: $bg-color-mid;
-    }
-
-    &.inactive {
     }
   }
 }

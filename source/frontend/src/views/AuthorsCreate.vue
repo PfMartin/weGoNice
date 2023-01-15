@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import TextInput from '@/components/TextInput.vue';
 import { createAuthor } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
 import NotificationService from '@/services/notification.service';
-import ButtonComponent from '@/components/ButtonComponent.vue';
 import { useRouter } from 'vue-router';
 import AuthorInfo from '@/components/AuthorInfo.vue';
 import { OperationMode } from '@/utils/constants';
