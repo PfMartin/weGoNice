@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
 import { createAuthor } from '@/apis/weGoNice/authors';
-import ValidationService from '@/services/validation.service';
 import NotificationService from '@/services/notification.service';
 import { useRouter } from 'vue-router';
 import AuthorInfo from '@/components/AuthorInfo.vue';
@@ -9,7 +7,7 @@ import { OperationMode } from '@/utils/constants';
 
 const router = useRouter();
 
-const author: Authors.Author = {
+const author = ref<Authors.Author>({
   name: '',
   lastname: '',
   firstname: '',
@@ -17,96 +15,13 @@ const author: Authors.Author = {
   youTube: '',
   instagram: '',
   imageUrl: '',
+});
+
+const setData = (data: Authors.Author): void => {
+  author.value = data;
 };
 
 // OLD Version with validation
-
-const validationService = new ValidationService();
-const isFirstTry = ref(true);
-
-const name = ref('');
-const nameError = ref('');
-const updateName = (newValue: string): void => {
-  name.value = newValue;
-  if (!isFirstTry.value) {
-    validateName();
-  }
-};
-const validateName = (): void => {
-  nameError.value = validationService.validateAuthorName(name.value);
-};
-
-const firstname = ref('');
-const updateFirstname = (newValue: string): void => {
-  firstname.value = newValue;
-};
-
-const lastname = ref('');
-const updateLastname = (newValue: string): void => {
-  lastname.value = newValue;
-};
-
-const website = ref('');
-const websiteError = ref('');
-const updateWebsite = (newValue: string): void => {
-  website.value = newValue;
-  if (!isFirstTry.value) {
-    validateWebsite();
-  }
-};
-const validateWebsite = (): void => {
-  websiteError.value = validationService.validateWebsite(website.value);
-};
-
-const instagram = ref('');
-const instagramError = ref('');
-const updateInstagram = (newValue: string): void => {
-  instagram.value = newValue;
-  if (!isFirstTry.value) {
-    validateInstagram();
-  }
-};
-const validateInstagram = (): void => {
-  instagramError.value = validationService.validateInstagram(instagram.value);
-};
-
-const youTube = ref('');
-const youTubeError = ref('');
-const updateYouTube = (newValue: string): void => {
-  youTube.value = newValue;
-  if (!isFirstTry.value) {
-    validateYouTube();
-  }
-};
-const validateYouTube = (): void => {
-  youTubeError.value = validationService.validateYouTube(youTube.value);
-};
-
-const imageUrl = ref('');
-const imageUrlError = ref('');
-const updateImageUrl = (newValue: string): void => {
-  imageUrl.value = newValue;
-  if (!isFirstTry.value) {
-    validateImageUrl();
-  }
-};
-const validateImageUrl = (): void => {
-  imageUrlError.value = validationService.validateImageUrl(youTube.value);
-};
-
-const isValid = computed((): boolean => {
-  validateName();
-  validateWebsite();
-  validateInstagram();
-  validateYouTube();
-
-  return (
-    !nameError.value &&
-    !websiteError.value &&
-    !instagramError.value &&
-    !youTubeError.value
-  );
-});
 
 const cancel = () => {
   router.push({ name: 'AuthorsOverview' });
@@ -154,7 +69,11 @@ const submit = async (): Promise<void> => {
 
 <template>
   <div class="authors-create">
-    <AuthorInfo :initialData="author" :mode="OperationMode.Create" />
+    <AuthorInfo
+      :initialData="author"
+      :mode="OperationMode.Create"
+      @on-change="setData"
+    />
   </div>
 </template>
 

@@ -9,39 +9,45 @@ const props = defineProps<{
   mode: OperationMode;
 }>();
 
+const emit = defineEmits<{
+  (e: 'on-change', body: Authors.Author): void;
+}>();
+
 /* Handle User Input */
 const name = ref(props.initialData.name);
 const updateName = (newValue: string) => {
   name.value = newValue;
-  validateName();
+  emitInput();
 };
 
 const firstname = ref(props.initialData.firstname);
 const updateFirstname = (newValue: string): void => {
   firstname.value = newValue;
+  emitInput();
 };
 
 const lastname = ref(props.initialData.lastname);
 const updateLastname = (newValue: string): void => {
   lastname.value = newValue;
+  emitInput();
 };
 
 const website = ref(props.initialData.website);
 const updateWebsite = (newValue: string) => {
   website.value = newValue;
-  validateWebsite();
+  emitInput();
 };
 
 const instagram = ref(props.initialData.instagram);
 const updateInstagram = (newValue: string) => {
   instagram.value = newValue;
-  validateInstagram();
+  emitInput();
 };
 
 const youTube = ref(props.initialData.youTube);
 const updateYouTube = (newValue: string) => {
   youTube.value = newValue;
-  validateYouTube();
+  emitInput();
 };
 
 const imageUrl = ref(props.initialData.imageUrl);
@@ -66,7 +72,8 @@ const validateInstagram = (): void => {
 
 const youTubeError = ref('');
 const validateYouTube = (): void => {
-  youTubeError.value = validationService.validateYouTube(website.value);
+  console.log('validate YouTube');
+  youTubeError.value = validationService.validateYouTube(youTube.value);
 };
 
 const imageUrlError = ref('');
@@ -88,17 +95,31 @@ const isValid = computed((): boolean => {
   );
 });
 
-/* Save Data*/
-// const saveChanges = (): void => {
-//   switch (props.mode) {
-//     case OperationMode.Edit:
-//       console.log('save edited author');
-//       console.log(websiteError.value);
-//       break;
-//     default:
-//       console.log('create new author');
-//   }
-// };
+/* Emit Input */
+const emitInput = (): void => {
+  if (!isValid.value) {
+    console.log('not valid');
+    return;
+  }
+
+  const body = {
+    name: name.value,
+    firstname: firstname.value,
+    lastname: lastname.value,
+    website: website.value,
+    instagram: instagram.value,
+    youTube: youTube.value,
+    imageUrl: imageUrl.value,
+  };
+
+  switch (props.mode) {
+    case OperationMode.Edit:
+      console.log(body);
+      break;
+    default:
+      emit('on-change', body);
+  }
+};
 </script>
 
 <template>
@@ -183,13 +204,13 @@ const isValid = computed((): boolean => {
     border-radius: $border-radius;
     display: flex;
     flex: 1;
-    min-width: 250px;
-    max-width: 350px;
+    min-width: 300px;
+    max-width: 400px;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     background: $bg-color-light;
-    max-height: 300px;
+    height: 330px;
 
     img {
       max-height: 100%;
