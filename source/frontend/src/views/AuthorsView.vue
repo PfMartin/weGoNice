@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import HeaderBar from '@/components/HeaderBar.vue';
-import { onMounted, ref, computed } from 'vue';
-import { getAllAuthors } from '@/apis/weGoNice/authors';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

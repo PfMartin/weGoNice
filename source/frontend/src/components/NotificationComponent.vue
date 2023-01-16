@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import NotificationService from '@/services/notification.service';
 import { computed } from '@vue/reactivity';
 

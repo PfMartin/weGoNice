@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, defineEmits, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 export interface ModalConfig {
   size: 's' | 'm' | 'l' | 'xl' | 'xxl';

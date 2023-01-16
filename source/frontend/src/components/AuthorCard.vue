@@ -32,16 +32,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
-
 defineProps<{
-  data: any;
+  data: Authors.Author;
 }>();
 </script>
 
 <style scoped lang="scss">
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 .author-card {
   background: $bg-color-mid;

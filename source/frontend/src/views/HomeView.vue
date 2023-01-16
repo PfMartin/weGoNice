@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { refreshToken } from '@/apis/weGoNice';
+import { refreshToken } from '@/apis/weGoNice/auth';
 import { isTokenExpired } from '@/auth';
 import HeaderBar from '@/components/HeaderBar.vue';
 

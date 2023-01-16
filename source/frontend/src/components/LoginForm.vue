@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, computed, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
 import TextInput from '@/components/TextInput.vue';
 import ValidationService from '@/services/validation.service';
 

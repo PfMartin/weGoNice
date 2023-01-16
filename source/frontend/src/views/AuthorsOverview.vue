@@ -1,15 +1,10 @@
 <script setup lang="ts">
-import HeaderBar from '@/components/HeaderBar.vue';
-import AuthorCreateModal from '@/components/AuthorCreateModal.vue';
 import { onMounted, ref, computed } from 'vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
 import SwitchComponent from '@/components/SwitchComponent.vue';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 enum sortDirections {
   ASC,
@@ -34,11 +29,11 @@ const sortDirectionIcon = computed((): string =>
   sortDirection.value === sortDirections.ASC ? 'arrow-down' : 'arrow-up'
 );
 const sortAuthors = (): void => {
-  const sortKey =
+  const sortKey: string =
     selectedOption.value.charAt(0).toLowerCase() +
     selectedOption.value.slice(1);
 
-  authors.value = authors.value.sort((a: any, b: any) => {
+  authors.value = authors.value.sort((a: Authors.Author, b: Authors.Author) => {
     if (a[sortKey] < b[sortKey]) {
       return sortDirection.value === sortDirections.ASC ? -1 : 1;
     }
@@ -46,25 +41,28 @@ const sortAuthors = (): void => {
   });
 };
 let filters: Record<string, boolean> = {};
-const visibleAuthors = ref<any>([]);
+const visibleAuthors = ref<Authors.Author[]>([]);
 const setFilter = (property: string, filterState: boolean) => {
   filters[property] = filterState;
   applyFilter();
 };
 const applyFilter = (): void => {
-  visibleAuthors.value = Object.keys(filters).reduce((acc: any, filterProp) => {
-    acc = acc.filter((author: any) => {
-      if (!filters[filterProp] && author[filterProp] === '') {
-        return false;
-      }
-      return true;
-    });
+  visibleAuthors.value = Object.keys(filters).reduce(
+    (acc: Authors.Author[], filterProp) => {
+      acc = acc.filter((author) => {
+        if (!filters[filterProp] && author[filterProp] === '') {
+          return false;
+        }
+        return true;
+      });
 
-    return acc;
-  }, authors.value);
+      return acc;
+    },
+    authors.value
+  );
 };
 
-const authors = ref<any>([]);
+const authors = ref<Authors.Author[]>([]);
 // Get All Authors
 onMounted(async (): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
