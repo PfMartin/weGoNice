@@ -43,3 +43,19 @@ export const getAuthorById = async (id: string | string[]) => {
     return handleError(error);
   }
 };
+
+export const updateAuthorById = async (
+  id: string | string[],
+  body: Authors.Author
+) => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.put(`${url}/authors/${id}`, body, {
+      headers,
+    });
+    return res;
+  } catch (error) {
+    return handleError(error);
+  }
+};

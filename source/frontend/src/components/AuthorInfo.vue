@@ -3,6 +3,9 @@ import { ref, computed } from 'vue';
 import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
+import { updateAuthorById } from '@/apis/weGoNice/authors';
+import { useRoute } from 'vue-router';
+import notificationService from '@/services/notification.service';
 
 const props = defineProps<{
   initialData: Authors.Author;
@@ -72,7 +75,6 @@ const validateInstagram = (): void => {
 
 const youTubeError = ref('');
 const validateYouTube = (): void => {
-  console.log('validate YouTube');
   youTubeError.value = validationService.validateYouTube(youTube.value);
 };
 
@@ -96,9 +98,9 @@ const isValid = computed((): boolean => {
 });
 
 /* Emit Input */
-const emitInput = (): void => {
+const route = useRoute();
+const emitInput = async (): Promise<void> => {
   if (!isValid.value) {
-    console.log('not valid');
     return;
   }
 
@@ -112,13 +114,20 @@ const emitInput = (): void => {
     imageUrl: imageUrl.value,
   };
 
-  switch (props.mode) {
-    case OperationMode.Edit:
-      console.log(body);
-      break;
-    default:
-      emit('on-change', body);
+  if (props.mode === OperationMode.Edit) {
+    const { status, data } = await updateAuthorById(route.params.id, body);
+
+    if (status !== 200) {
+      notificationService.addNotification(
+        'error',
+        `The author could not be updated: ${data.msg}`
+      );
+    }
+
+    return;
   }
+
+  emit('on-change', body);
 };
 </script>
 

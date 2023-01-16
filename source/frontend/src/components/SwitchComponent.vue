@@ -46,7 +46,7 @@ const switchId = computed(
   gap: 0.2rem;
   .wrapper {
     position: relative;
-    background: $bg-color-dark;
+    background: $bg-color-mid;
     width: 35px;
     height: 20px;
     border-radius: 100px;
