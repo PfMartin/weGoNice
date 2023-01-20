@@ -40,33 +40,19 @@ const sortAuthors = (): void => {
     return sortDirection.value === sortDirections.ASC ? 1 : -1;
   });
 };
-let filters: Record<string, boolean> = {};
 const visibleAuthors = ref<Authors.Author[]>([]);
-const setFilter = (property: string, filterState: boolean) => {
-  filters[property] = filterState;
-  applyFilter();
-};
-const applyFilter = (): void => {
-  visibleAuthors.value = Object.keys(filters).reduce(
-    (acc: Authors.Author[], filterProp) => {
-      acc = acc.filter((author) => {
-        if (!filters[filterProp] && author[filterProp] === '') {
-          return false;
-        }
-        return true;
-      });
 
-      return acc;
-    },
-    authors.value
-  );
-};
+const authorsList = ref<any | null>(null);
+const listHeight = ref(0);
+const computeListHeight = () => (listHeight.value = window.innerHeight - 180);
 
 const authors = ref<Authors.Author[]>([]);
 // Get All Authors
 onMounted(async (): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
   visibleAuthors.value = authors.value;
+  computeListHeight();
+  addEventListener('resize', computeListHeight);
 });
 
 const isReady = computed((): boolean => !!authors.value.length);
@@ -88,17 +74,15 @@ const isReady = computed((): boolean => !!authors.value.length);
             ><ion-icon :name="sortDirectionIcon"
           /></span>
         </div>
-        <div class="filter-switches">
-          <SwitchComponent @toggle-switch="setFilter" label="Website" />
-          <SwitchComponent @toggle-switch="setFilter" label="Instagram" />
-          <SwitchComponent @toggle-switch="setFilter" label="YouTube" />
-          <!-- Still has to be implemented -->
-          <SwitchComponent @toggle-switch="setFilter" label="No Recipes" />
-        </div>
       </div>
     </div>
 
-    <div class="authors" v-if="isReady">
+    <div
+      class="authors"
+      v-if="isReady"
+      ref="authorsList"
+      :style="`height: ${listHeight}px`"
+    >
       <template v-for="author in visibleAuthors" :key="author.name">
         <RouterLink
           :to="{
@@ -116,10 +100,10 @@ const isReady = computed((): boolean => !!authors.value.length);
 </template>
 
 <style scoped lang="scss">
-@import '../styles/outline.scss';
-@import '../styles/colors.scss';
+@import '@/styles/outline.scss';
+@import '@/styles/colors.scss';
 
-body {
+.author-overview {
   .list-control {
     margin-left: $nav-bar-width;
     padding: 1rem 2rem;
@@ -163,6 +147,27 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 1rem;
+    overflow: auto;
+    margin-right: 5px;
   }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: $border-radius;
+  padding: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #555;
+  border-radius: $border-radius;
+  padding: 5px;
+  margin: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #555;
+  background: $bg-color-mid;
+  border-radius: $border-radius;
 }
 </style>
