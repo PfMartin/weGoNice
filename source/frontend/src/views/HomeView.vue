@@ -1,11 +1,3 @@
-<template>
-  <HeaderBar
-    :config="headerConfig"
-    @search-input="onSearchInput"
-    @button-click="createRecipe"
-  />
-</template>
-
 <script setup lang="ts">
 import { refreshToken } from '@/apis/weGoNice/auth';
 import { isTokenExpired } from '@/auth';
@@ -28,5 +20,13 @@ const createRecipe = (): void => {
 isTokenExpired() && refreshToken();
 console.log(isTokenExpired());
 </script>
+
+<template>
+  <HeaderBar
+    :config="headerConfig"
+    @search-input="onSearchInput"
+    @button-click="createRecipe"
+  />
+</template>
 
 <style scoped lang="scss"></style>

@@ -8,9 +8,4 @@ declare namespace Authors {
     [instagram: string]: string;
     [imageUrl: string]: string;
   }
-
-  enum OperationMode {
-    Edit,
-    Create,
-  }
 }

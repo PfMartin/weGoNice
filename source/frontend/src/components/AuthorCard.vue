@@ -58,7 +58,6 @@ defineProps<{
 
   &:hover {
     cursor: pointer;
-    // border: 1px solid $accent-color;
     background: $bg-color-dark;
 
     .main {

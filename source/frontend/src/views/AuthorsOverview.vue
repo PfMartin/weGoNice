@@ -4,11 +4,7 @@ import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
-
-enum sortDirections {
-  ASC,
-  DESC,
-}
+import { sortDirections } from '@/utils/constants';
 
 // Searching, sorting and filtering
 const selectedOption = ref('Name');

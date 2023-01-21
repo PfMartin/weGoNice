@@ -78,11 +78,6 @@ const validateYouTube = (): void => {
   youTubeError.value = validationService.validateYouTube(youTube.value);
 };
 
-// const imageUrlError = ref('');
-// const validateImageUrl = (): void => {
-//   imageUrlError.value = validationService.validateImageUrl(imageUrl.value);
-// };
-
 const isValid = computed((): boolean => {
   validateName();
   validateWebsite();

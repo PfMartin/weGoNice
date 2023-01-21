@@ -11,3 +11,8 @@ export enum OperationMode {
   Create,
   Edit,
 }
+
+export enum sortDirections {
+  ASC,
+  DESC,
+}

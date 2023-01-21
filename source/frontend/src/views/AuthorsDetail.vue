@@ -1,16 +1,3 @@
-<template>
-  <div class="author-detail">
-    <AuthorInfo v-if="author" :mode="mode" :initialData="author" />
-    <div v-else>spinner</div>
-    <RecipesList
-      v-if="author"
-      :author="author?.name || 'unknown'"
-      :data="recipeData"
-    />
-    <div v-else>spinner</div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { getAuthorById } from '@/apis/weGoNice/authors';
@@ -39,6 +26,19 @@ const recipeData: Recipes.Recipe[] = [
 
 init();
 </script>
+
+<template>
+  <div class="author-detail">
+    <AuthorInfo v-if="author" :mode="mode" :initialData="author" />
+    <div v-else>spinner</div>
+    <RecipesList
+      v-if="author"
+      :author="author?.name || 'unknown'"
+      :data="recipeData"
+    />
+    <div v-else>spinner</div>
+  </div>
+</template>
 
 <style scoped lang="scss">
 @import '@/styles/outline.scss';
