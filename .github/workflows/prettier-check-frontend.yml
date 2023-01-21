@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 16.14.0
 
-      - name: Build package
+      - name: Check prettier for files in ./src
         run: |
           cd ./source/frontend
-          npm run pretter:check
+          npm run prettier:check

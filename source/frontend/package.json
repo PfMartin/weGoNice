@@ -8,7 +8,8 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "prettier:check": "pretter --check ./src"
+    "prettier:check": "npx prettier --check ./src",
+    "prettier:write": "npx prettier --write ./src"
   },
   "dependencies": {
     "axios": "^0.27.2",
