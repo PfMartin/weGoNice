@@ -3,31 +3,22 @@
 
 name: build-server
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Git checkout
-      uses: actions/checkout@v3
+      - name: Git checkout
+        uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.18
-      
-    - name: Build package
-      run: |
-        cd ./source/server/cmd
-        go build -v -o server
-          
-        
-          
- 
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
 
+      - name: Build package
+        run: |
+          cd ./source/server/cmd
+          go build -v -o server

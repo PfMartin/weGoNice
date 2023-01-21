@@ -17,7 +17,7 @@ export const refreshToken = async (): Promise<void> => {
       return;
     }
 
-    console.error(`An unexpected error occurred: %{error}`);
+    console.error(`An unexpected error occurred: ${error}`);
   }
 };
 
@@ -44,8 +44,6 @@ export const loginUser = async (body: {
     const res = await axios.post(`${url}/auth/login`, body, {
       headers,
     });
-
-    console.log(res.data.sessionToken);
 
     return res;
   } catch (error) {

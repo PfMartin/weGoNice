@@ -1,0 +1,21 @@
+name: prettier-check-frontend
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.0
+
+      - name: Check prettier for files in ./src
+        run: |
+          cd ./source/frontend
+          npm run prettier:check

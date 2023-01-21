@@ -21,7 +21,6 @@ const author = ref<Authors.Author>({
 
 const setData = (data: Authors.Author): void => {
   author.value = data;
-  console.log(author.value);
 };
 
 const cancel = () => {
