@@ -35,16 +35,18 @@ const buttonClass = computed(() => {
 @import '@/styles/outline.scss';
 
 .button {
-  border-radius: 5px;
-  background: $bg-color-lighter;
-  padding: 6px 12px;
-  color: $bg-color-dark;
+  border-radius: $border-radius;
+  background: $bg-color-dark;
+  padding: 6px 14px;
   display: flex;
   align-items: center;
-  transition: background-color 0.5s;
+  transition: background-color 0.2s;
+  box-shadow: $shadow;
+  color: $bg-color-lighter;
 
   &.primary {
     background: $accent-color;
+    color: $bg-color-dark;
 
     &:hover {
       background: $accent-hover-color;
@@ -52,7 +54,7 @@ const buttonClass = computed(() => {
   }
 
   &:hover {
-    background: $bg-color-light;
+    background: $bg-color-mid;
     cursor: pointer;
   }
 

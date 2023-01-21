@@ -82,18 +82,14 @@ const submit = async (): Promise<void> => {
 @import '@/styles/outline.scss';
 
 .authors-create {
-  margin-top: 1rem;
-  margin-right: 1rem;
-  margin-left: calc($nav-bar-width + 1rem);
-  background: $bg-color-mid;
-  border-radius: $border-radius;
+  margin: 1rem 1rem 1rem calc($nav-bar-width + 1rem);
 
   .buttons {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     padding: 1rem;
-    padding-top: 0;
+    padding-top: 1rem;
   }
 }
 </style>

@@ -208,6 +208,7 @@ const emitInput = async (): Promise<void> => {
   padding: 1rem;
   max-height: 400px;
   gap: 1rem;
+  box-shadow: $shadow;
 
   .picture {
     border-radius: $border-radius;

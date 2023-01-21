@@ -30,6 +30,7 @@ defineProps<{
     display: flex;
     gap: 5px;
     padding: 1rem;
+    box-shadow: $shadow;
   }
 }
 </style>
