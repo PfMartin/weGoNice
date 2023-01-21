@@ -4,7 +4,6 @@ import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
-import SwitchComponent from '@/components/SwitchComponent.vue';
 
 enum sortDirections {
   ASC,
@@ -42,7 +41,6 @@ const sortAuthors = (): void => {
 };
 const visibleAuthors = ref<Authors.Author[]>([]);
 
-const authorsList = ref<any | null>(null);
 const listHeight = ref(0);
 const computeListHeight = () => (listHeight.value = window.innerHeight - 180);
 
@@ -77,12 +75,7 @@ const isReady = computed((): boolean => !!authors.value.length);
       </div>
     </div>
 
-    <div
-      class="authors"
-      v-if="isReady"
-      ref="authorsList"
-      :style="`height: ${listHeight}px`"
-    >
+    <div class="authors" v-if="isReady" :style="`max-height: ${listHeight}px`">
       <template v-for="author in visibleAuthors" :key="author.name">
         <RouterLink
           :to="{

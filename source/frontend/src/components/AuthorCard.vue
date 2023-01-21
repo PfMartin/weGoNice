@@ -54,10 +54,11 @@ defineProps<{
   min-height: 100px;
   transition: background-color 0.3s;
   transition: border-color 0.3s;
+  box-shadow: 5px 5px 10px $bg-color-dark;
 
   &:hover {
     cursor: pointer;
-    border: 1px solid $accent-color;
+    // border: 1px solid $accent-color;
     background: $bg-color-dark;
 
     .main {
