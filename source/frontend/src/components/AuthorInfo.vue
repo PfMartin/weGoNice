@@ -16,6 +16,24 @@ const emit = defineEmits<{
   (e: 'on-change', body: Authors.Author): void;
 }>();
 
+const hasPictureOverlay = ref(false);
+const togglePictureOverlay = () => {
+  hasPictureOverlay.value = !hasPictureOverlay.value;
+};
+
+/* Handle File Input */
+const fileInput = ref<HTMLInputElement | null>(null);
+const openUploadWindow = () => {
+  fileInput.value?.click();
+};
+
+const getFilename = () => {
+  const pathArray = fileInput.value?.value.split('\\') || [];
+  const fileName = pathArray[pathArray.length - 1];
+
+  return fileName ? fileName : 'No file chosen...';
+};
+
 /* Handle User Input */
 const name = ref(props.initialData.name);
 const updateName = (newValue: string) => {
@@ -128,9 +146,21 @@ const emitInput = async (): Promise<void> => {
 
 <template>
   <div class="author-info">
-    <div class="picture">
+    <div
+      class="picture"
+      @click="openUploadWindow"
+      @mouseenter="togglePictureOverlay"
+      @mouseleave="togglePictureOverlay"
+    >
+      <Transition name="fade">
+        <div v-show="hasPictureOverlay" class="picture-overlay">
+          <input type="file" id="fileInput" ref="fileInput" />
+          <ion-icon name="create"></ion-icon>
+          <p>{{ getFilename() }}</p>
+        </div>
+      </Transition>
       <img v-if="imageUrl" :src="imageUrl" alt="Author Picture" />
-      <ion-icon v-else name="person" />
+      <ion-icon v-if="!imageUrl" name="person" />
     </div>
     <div class="info">
       <div class="info-section">
@@ -206,6 +236,7 @@ const emitInput = async (): Promise<void> => {
   box-shadow: $shadow;
 
   .picture {
+    position: relative;
     border-radius: $border-radius;
     display: flex;
     flex: 1;
@@ -219,6 +250,30 @@ const emitInput = async (): Promise<void> => {
 
     img {
       max-height: 100%;
+    }
+
+    .picture-overlay {
+      position: absolute;
+      z-index: 5;
+      background: #33333399;
+      height: 100%;
+      width: 100%;
+      border-radius: $border-radius;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: pointer;
+
+      input {
+        position: fixed;
+        left: 100vw;
+      }
+
+      ion-icon {
+        opacity: 1;
+        font-size: 3rem;
+      }
     }
 
     ion-icon {
@@ -243,5 +298,15 @@ const emitInput = async (): Promise<void> => {
       gap: 1rem;
     }
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
