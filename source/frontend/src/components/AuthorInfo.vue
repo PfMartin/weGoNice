@@ -154,7 +154,7 @@ const emitInput = async (): Promise<void> => {
     >
       <Transition name="fade">
         <div v-show="hasPictureOverlay" class="picture-overlay">
-          <input type="file" id="fileInput" ref="fileInput" />
+          <input type="file" name="picture" id="fileInput" ref="fileInput" />
           <ion-icon name="create"></ion-icon>
           <p>{{ getFilename() }}</p>
         </div>

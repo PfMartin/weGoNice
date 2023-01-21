@@ -8,6 +8,7 @@ import (
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/authors"
 	"github.com/PfMartin/weGoNice/server/pkg/db"
+	"github.com/PfMartin/weGoNice/server/pkg/files"
 	"github.com/PfMartin/weGoNice/server/pkg/recipes"
 	"github.com/PfMartin/weGoNice/server/pkg/users"
 	"github.com/joho/godotenv"
@@ -27,12 +28,14 @@ func main() {
 	authHandler := auth.NewHandler(DB)
 	recipeHandler := recipes.NewHandler(DB)
 	authorHandler := authors.NewHandler(DB)
+	filesHandler := files.NewHandler()
 
 	r := mux.NewRouter()
 	users.RegisterUserRoutes(r, userHandler)
 	auth.RegisterAuthRoutes(r, authHandler)
 	recipes.RegisterRecipeRoutes(r, recipeHandler)
 	authors.RegisterAuthorRoutes(r, authorHandler)
+	files.RegisterFilesRoutes(r, filesHandler)
 
 	url := "localhost:8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
