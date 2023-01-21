@@ -17,13 +17,14 @@
       @click="emit('button-click')"
       :buttonText="props.config.buttonText"
       :buttonIconName="props.config.buttonIconName"
+      isPrimary
     />
   </body>
 </template>
 
 <script setup lang="ts">
 import ButtonComponent from '@/components/ButtonComponent.vue';
-import { defineProps, defineEmits, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 interface HeaderConfig {
   pageTitle: string;

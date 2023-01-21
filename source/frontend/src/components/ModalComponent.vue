@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, defineEmits, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 export interface ModalConfig {
   size: 's' | 'm' | 'l' | 'xl' | 'xxl';
@@ -57,8 +57,8 @@ watch(
 </script>
 
 <style scoped lang="scss">
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 $modal-height: 720px;
 $modal-width-s: 480px;

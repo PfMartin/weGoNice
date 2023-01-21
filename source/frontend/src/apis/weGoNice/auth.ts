@@ -1,10 +1,10 @@
-import { url, headers, handleError } from './utils';
+import { url, headers, handleError, addAuthorization } from './utils';
 import axios from 'axios';
 import store from '@/store';
 
 export const refreshToken = async (): Promise<void> => {
   const token = store.getters['auth/sessionToken'];
-  headers.Authorization = `Bearer ${token}`;
+  headers.Authorization = addAuthorization(token);
   try {
     const { data } = await axios.get(`${url}/auth/token`, {
       headers,

@@ -1,21 +1,3 @@
-<template>
-  <body id="body">
-    <div id="modals"></div>
-    <NavBar v-if="isLoggedIn" />
-    <section>
-      <NotificationBar
-        v-if="notifications.length"
-        :notifications="notifications"
-      />
-      <router-view v-slot="{ Component, route }">
-        <Transition :name="route.meta.transition || ''" mode="out-in">
-          <component :is="Component" />
-        </Transition>
-      </router-view>
-    </section>
-  </body>
-</template>
-
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue';
 import { computed } from 'vue';
@@ -32,10 +14,28 @@ const notifications = computed(
 );
 </script>
 
+<template>
+  <body id="body">
+    <div id="modals"></div>
+    <NavBar v-if="isLoggedIn" />
+    <section>
+      <NotificationBar
+        v-if="notifications.length"
+        :notifications="notifications"
+      />
+      <router-view v-slot="{ Component, route }">
+        <Transition :name="route.meta?.transition || ''" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </router-view>
+    </section>
+  </body>
+</template>
+
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400&display=swap');
-@import './styles/colors.scss';
-@import './styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 body {
   background: $bg-color-light;

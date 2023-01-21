@@ -1,5 +1,5 @@
 <template>
-  <div @click="getDetails" class="author-card">
+  <div class="author-card">
     <div class="picture">
       <img v-if="data.imageUrl" :src="data.imageUrl" />
       <ion-icon v-else name="person" />
@@ -15,7 +15,7 @@
         <div class="recipes-count">
           <p>5 recipes</p>
         </div>
-        <div class="social-media">
+        <div class="social-media" @click.stop>
           <a v-if="data.website" :href="data.website"
             ><ion-icon name="earth"
           /></a>
@@ -32,20 +32,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
-
-const props = defineProps<{
-  data: any;
+defineProps<{
+  data: Authors.Author;
 }>();
-
-const getDetails = () => {
-  console.log(props.data.id);
-};
 </script>
 
 <style scoped lang="scss">
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 .author-card {
   background: $bg-color-mid;
@@ -60,10 +54,10 @@ const getDetails = () => {
   min-height: 100px;
   transition: background-color 0.3s;
   transition: border-color 0.3s;
+  box-shadow: $shadow;
 
   &:hover {
     cursor: pointer;
-    border: 1px solid $accent-color;
     background: $bg-color-dark;
 
     .main {

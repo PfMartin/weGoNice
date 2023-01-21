@@ -1,13 +1,3 @@
-<template>
-  <body>
-    <HeaderBar
-      :config="headerConfig"
-      @search-input="onSearchInput"
-      @button-click="createRecipe"
-    />
-  </body>
-</template>
-
 <script setup lang="ts">
 import HeaderBar from '@/components/HeaderBar.vue';
 import { getAllRecipes } from '@/apis/weGoNice';
@@ -35,5 +25,15 @@ const createRecipe = (): void => {
   console.log('createRecipe');
 };
 </script>
+
+<template>
+  <body>
+    <HeaderBar
+      :config="headerConfig"
+      @search-input="onSearchInput"
+      @button-click="createRecipe"
+    />
+  </body>
+</template>
 
 <style scoped lang="scss"></style>

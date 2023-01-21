@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from '@/store';
 
 export const url = 'http://localhost:8000';
 export const headers = {
@@ -22,4 +23,10 @@ export const handleError = (error: unknown): WeGoNiceApi.RequestResponse => {
       msg: 'unexpected error',
     },
   };
+};
+
+export const addAuthorization = (token?: string) => {
+  return token
+    ? `Bearer ${token}`
+    : `Bearer ${store.getters['auth/sessionToken']}`;
 };

@@ -1,12 +1,3 @@
-<template lang="html">
-  <div class="switch-component">
-    <label :for="label">{{ label }}</label>
-    <div @click="toggleSwitch" class="wrapper">
-      <input :id="label" type="checkbox" :class="switchStyle" />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
@@ -24,10 +15,10 @@ const toggleSwitch = (): void => {
   emit('toggle-switch', switchId.value, isSwitchOn.value);
 };
 
-const switchStyle = computed(
+const wrapperStyle = computed(
   (): Record<string, boolean> => ({
-    ['switch']: true,
-    ['on']: !isSwitchOn.value,
+    wrapper: true,
+    on: !isSwitchOn.value,
   })
 );
 
@@ -36,9 +27,18 @@ const switchId = computed(
 );
 </script>
 
+<template lang="html">
+  <div class="switch-component">
+    <label :for="label">{{ label }}</label>
+    <div @click="toggleSwitch" :class="wrapperStyle">
+      <input :id="label" type="checkbox" class="switch" />
+    </div>
+  </div>
+</template>
+
 <style scoped lang="scss">
-@import '../styles/outline.scss';
-@import '../styles/colors.scss';
+@import '@/styles/outline.scss';
+@import '@/styles/colors.scss';
 
 .switch-component {
   display: flex;
@@ -46,12 +46,20 @@ const switchId = computed(
   gap: 0.2rem;
   .wrapper {
     position: relative;
-    background: $bg-color-dark;
-    width: 45px;
-    height: 25px;
+    background: $bg-color-mid;
+    width: 35px;
+    height: 20px;
     border-radius: 100px;
     display: flex;
     align-items: center;
+
+    &.on {
+      background-color: $accent-color;
+
+      .switch {
+        left: 2px;
+      }
+    }
 
     &:hover {
       cursor: pointer;
@@ -64,18 +72,13 @@ const switchId = computed(
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      width: 19px;
-      height: 19px;
-      left: 22px;
-      background: $bg-color-light;
+      width: 16px;
+      height: 16px;
+      left: 17px;
+      background: $text-color;
       transition: all 0.2s;
       border-radius: 100%;
       cursor: pointer;
-
-      &.on {
-        background: $text-color;
-        left: 3px;
-      }
     }
   }
 }

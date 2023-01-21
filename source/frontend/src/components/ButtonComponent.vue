@@ -1,16 +1,10 @@
-<template>
-  <div @click="onClick" class="button">
-    <ion-icon :name="buttonIconName" />
-    <p>{{ buttonText }}</p>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   buttonText: string;
   buttonIconName?: string;
+  isPrimary?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -20,23 +14,47 @@ const emit = defineEmits<{
 const onClick = () => {
   emit('on-click');
 };
+
+const buttonClass = computed(() => {
+  return {
+    button: true,
+    primary: props.isPrimary || false,
+  };
+});
 </script>
 
+<template>
+  <div @click="onClick" :class="buttonClass">
+    <ion-icon :name="buttonIconName" />
+    <p>{{ buttonText }}</p>
+  </div>
+</template>
+
 <style scoped lang="scss">
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 .button {
-  border-radius: 5px;
-  background: $accent-color;
-  padding: 6px 12px;
-  color: $bg-color-dark;
+  border-radius: $border-radius;
+  background: $bg-color-dark;
+  padding: 6px 14px;
   display: flex;
   align-items: center;
-  transition: background-color 0.5s;
+  transition: background-color 0.2s;
+  box-shadow: $shadow;
+  color: $bg-color-lighter;
+
+  &.primary {
+    background: $accent-color;
+    color: $bg-color-dark;
+
+    &:hover {
+      background: $accent-hover-color;
+    }
+  }
 
   &:hover {
-    background-color: $accent-hover-color;
+    background: $bg-color-mid;
     cursor: pointer;
   }
 

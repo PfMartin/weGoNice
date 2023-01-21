@@ -1,9 +1,3 @@
-<template>
-  <div class="login-view">
-    <LoginForm :isRegister="false" @on-apply="login" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import LoginForm from '@/components/LoginForm.vue';
 import { loginUser } from '@/apis/weGoNice/auth';
@@ -18,4 +12,11 @@ const login = async (body: { email: string; password: string }) => {
   }
 };
 </script>
+
+<template>
+  <div class="login-view">
+    <LoginForm :isRegister="false" @on-apply="login" />
+  </div>
+</template>
+
 <style scoped lang="scss"></style>

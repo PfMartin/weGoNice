@@ -9,7 +9,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import NotificationComponent from '@/components/NotificationComponent.vue';
 
 defineProps<{
@@ -18,8 +17,8 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 .notifications {
   position: fixed;

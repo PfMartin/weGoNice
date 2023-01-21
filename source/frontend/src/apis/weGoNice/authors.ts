@@ -1,11 +1,10 @@
-import { url, headers, handleError } from './utils';
+import { url, headers, handleError, addAuthorization } from './utils';
 import axios from 'axios';
-import store from '@/store';
 
 export const createAuthor = async (
-  body: Authors.CreateAuthorBody
+  body: Authors.Author
 ): Promise<WeGoNiceApi.RequestResponse> => {
-  headers.Authorization = `Bearer ${store.getters['auth/sessionToken']}`;
+  headers.Authorization = addAuthorization();
 
   try {
     const res = await axios.post(`${url}/authors`, body, {
@@ -19,7 +18,7 @@ export const createAuthor = async (
 };
 
 export const getAllAuthors = async () => {
-  headers.Authorization = `Bearer ${store.getters['auth/sessionToken']}`;
+  headers.Authorization = addAuthorization();
 
   try {
     const res = await axios.get(`${url}/authors`, {
@@ -27,6 +26,35 @@ export const getAllAuthors = async () => {
     });
 
     return res.data;
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const getAuthorById = async (id: string | string[]) => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.get(`${url}/authors/${id}`, {
+      headers,
+    });
+    return res.data;
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const updateAuthorById = async (
+  id: string | string[],
+  body: Authors.Author
+) => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.put(`${url}/authors/${id}`, body, {
+      headers,
+    });
+    return res;
   } catch (error) {
     return handleError(error);
   }
