@@ -20,16 +20,16 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseMultipartForm(10 << 20)
 
-	file, handler, err := r.FormFile("picture")
+	file, fileHandler, err := r.FormFile("picture")
 	if err != nil {
 		log.Printf("Error Retrieving the File %s", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
-	log.Printf("Uploaded File: %+v\n", handler.Filename)
-	log.Printf("File Size: %+v\n", handler.Size)
-	log.Printf("MIME Header: %+v\n", handler.Header)
+	log.Printf("Uploaded File: %+v\n", fileHandler.Filename)
+	log.Printf("File Size: %+v\n", fileHandler.Size)
+	log.Printf("MIME Header: %+v\n", fileHandler.Header)
 
 	w.WriteHeader(http.StatusOK) // FIND BETTER STATUS
 }
