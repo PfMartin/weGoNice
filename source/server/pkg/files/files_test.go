@@ -57,4 +57,8 @@ func TestUploadImage(t *testing.T) {
 	expectedCode := http.StatusOK
 
 	assert.Equal(t, expectedCode, got, "Test failed:\nExpected: %d | Got: %d", expectedCode, got)
+
+	// TODO: Check if file exists on file systeme
+	// TODO: Delete file if it exists
+
 }

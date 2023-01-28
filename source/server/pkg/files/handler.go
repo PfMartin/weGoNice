@@ -4,8 +4,13 @@ package files
 // https://tutorialedge.net/golang/go-file-upload-tutorial/
 
 import (
+	"bytes"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
+	"strings"
 )
 
 type Handler struct {
@@ -27,9 +32,25 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
+
+	var buf bytes.Buffer
+	io.Copy(&buf, file)
+
+	content := buf.Bytes()
+	buf.Reset()
+
+	name := strings.Split(fileHandler.Filename, ".")[0]
+	filepath := fmt.Sprintf("testDir/%s.png", name)
+	err = os.WriteFile(filepath, content, 0644)
+	if err != nil {
+		log.Printf("Error while writing the file: %s", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	log.Printf("Uploaded File: %+v\n", fileHandler.Filename)
 	log.Printf("File Size: %+v\n", fileHandler.Size)
 	log.Printf("MIME Header: %+v\n", fileHandler.Header)
 
-	w.WriteHeader(http.StatusOK) // FIND BETTER STATUS
+	w.WriteHeader(http.StatusOK) // TODO: FIND BETTER STATUS
 }
