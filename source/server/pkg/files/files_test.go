@@ -2,6 +2,7 @@ package files
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -11,9 +12,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
+	"github.com/stretchr/testify/assert"
 )
 
 const url = "http://localhost:8080/files"
@@ -27,7 +27,11 @@ func TestUploadImage(t *testing.T) {
 		t.Errorf("Failed to get working directory: %s", err)
 	}
 
-	name := "../testUtils/test-image.png"
+	fileName := "test-image.png"
+	depotDir := "../../files"
+	depotFilePath := fmt.Sprintf("%s/%s", depotDir, fileName)
+
+	name := fmt.Sprintf("../testUtils/%s", fileName)
 	path := path.Join(dir, name)
 
 	// Open file and create multipart FormFile
@@ -60,9 +64,12 @@ func TestUploadImage(t *testing.T) {
 
 	assert.Equal(t, expectedCode, got, "Test failed:\nExpected: %d | Got: %d", expectedCode, got)
 
-	isSameFile := testUtils.CompareFileContent("../../files/test-image.png", "testDir/test-image.png")
+	isSameFile := testUtils.CompareFileContent(depotFilePath, fmt.Sprintf("testDir/%s", fileName))
 	expectIsSameFile := true
 
 	assert.Equal(t, expectIsSameFile, isSameFile, "Test failed:\nExpected: %b | Got: %b", expectIsSameFile, isSameFile)
 
+	if err := os.Remove(depotFilePath); err != nil {
+		t.Errorf("Error while removing the test image: %s", err)
+	}
 }
