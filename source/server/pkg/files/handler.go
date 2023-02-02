@@ -5,6 +5,7 @@ package files
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -40,7 +41,19 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	buf.Reset()
 
 	name := strings.Split(fileHandler.Filename, ".")[0]
-	filepath := fmt.Sprintf("testDir/%s.png", name)
+
+	fileDepot := "../../files"
+
+	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
+		log.Println("Creating directory")
+		if err := os.Mkdir(fileDepot, os.ModePerm); err != nil {
+			log.Printf("Error while creating directory for file depot: %s", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	}
+
+	filepath := fmt.Sprintf("%s/%s.png", fileDepot, name)
 	err = os.WriteFile(filepath, content, 0644)
 	if err != nil {
 		log.Printf("Error while writing the file: %s", err)

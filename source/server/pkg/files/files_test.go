@@ -12,6 +12,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
 )
 
 const url = "http://localhost:8080/files"
@@ -29,20 +31,20 @@ func TestUploadImage(t *testing.T) {
 	path := path.Join(dir, name)
 
 	// Open file and create multipart FormFile
-	file, err := os.Open(path)
+	testFile, err := os.Open(path)
 	if err != nil {
 		t.Errorf("Could not open file with path '%s': %s", path, err)
 	}
-	defer file.Close()
+	defer testFile.Close()
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
-	part, err := writer.CreateFormFile("picture", filepath.Base(file.Name()))
+	part, err := writer.CreateFormFile("picture", filepath.Base(testFile.Name()))
 	if err != nil {
-		t.Errorf("Failed to create FormFile from file named '%s': %s", file.Name(), err)
+		t.Errorf("Failed to create FormFile from file named '%s': %s", testFile.Name(), err)
 	}
 
-	io.Copy(part, file)
+	io.Copy(part, testFile)
 	writer.Close()
 
 	// Create Request
@@ -58,7 +60,9 @@ func TestUploadImage(t *testing.T) {
 
 	assert.Equal(t, expectedCode, got, "Test failed:\nExpected: %d | Got: %d", expectedCode, got)
 
-	// TODO: Check if file exists on file systeme
-	// TODO: Delete file if it exists
+	isSameFile := testUtils.CompareFileContent("../../files/test-image.png", "testDir/test-image.png")
+	expectIsSameFile := true
+
+	assert.Equal(t, expectIsSameFile, isSameFile, "Test failed:\nExpected: %b | Got: %b", expectIsSameFile, isSameFile)
 
 }
