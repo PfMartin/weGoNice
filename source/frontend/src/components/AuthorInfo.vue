@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
@@ -71,7 +71,7 @@ const updateYouTube = (newValue: string) => {
   emitInput();
 };
 
-const imageUrl = ref(props.initialData.imageUrl);
+const imageName = ref(props.initialData.imageName);
 
 /* Validation */
 const validationService = new ValidationService();
@@ -124,7 +124,7 @@ const emitInput = async (): Promise<void> => {
     website: website.value,
     instagram: instagram.value,
     youTube: youTube.value,
-    imageUrl: imageUrl.value,
+    imageName: getFilename(),
   };
 
   if (props.mode === OperationMode.Edit) {
@@ -159,8 +159,8 @@ const emitInput = async (): Promise<void> => {
           <p>{{ getFilename() }}</p>
         </div>
       </Transition>
-      <img v-if="imageUrl" :src="imageUrl" alt="Author Picture" />
-      <ion-icon v-if="!imageUrl" name="person" />
+      <img v-if="imageName" :src="imageName" alt="Author Picture" />
+      <ion-icon v-if="!imageName" name="person" />
     </div>
     <div class="info">
       <div class="info-section">

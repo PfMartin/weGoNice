@@ -76,7 +76,7 @@ func TestUploadImage(t *testing.T) {
 	depotDir := os.Getenv("FILE_DEPOT")
 
 	depotFilePath := fmt.Sprintf("%s/%s_%s_%s", depotDir, currentDate, authorId, fileName)
-	isSameFile := testUtils.CompareFileContent(depotFilePath, fmt.Sprintf("testDir/%s", fileName))
+	isSameFile := testUtils.CompareFileContent(depotFilePath, fmt.Sprintf("../testUtils/files/%s", fileName))
 	expectIsSameFile := true
 
 	assert.Equal(t, expectIsSameFile, isSameFile, "Test failed:\nExpected: %b | Got: %b", expectIsSameFile, isSameFile)

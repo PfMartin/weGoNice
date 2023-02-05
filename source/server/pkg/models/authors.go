@@ -11,7 +11,7 @@ type AuthorRequest struct {
 	Website   string `bson:"website"`
 	Instagram string `bson:"instagram"`
 	YouTube   string `bson:"youTube"`
-	ImageURL  string `bson:"imageUrl"`
+	ImageName string `bson:"imageName"`
 	UserID    string `bson:"userId"` // Is set by gorillaCtx retrieved from token
 }
 
@@ -23,7 +23,7 @@ type AuthorResponse struct {
 	Website    string       `bson:"website" json:"website"`
 	Instagram  string       `bson:"instagram" json:"instagram"`
 	YouTube    string       `bson:"youTube" json:"youTube"`
-	ImageURL   string       `bson:"imageUrl" json:"imageUrl"`
+	ImageName  string       `bson:"imageName" json:"imageName"`
 	User       UserResponse `bson:"user" json:"user"`
 	CreatedAt  time.Time    `bson:"createdAt" json:"createdAt"`
 	ModifiedAt time.Time    `bson:"modifiedAt" json:"modifiedAt"`
@@ -39,6 +39,6 @@ type AuthorDB struct {
 	YouTube    string    `bson:"youTube"`
 	UserID     string    `bson:"userId"`
 	CreatedAt  time.Time `bson:"createdAt"`
-	ImageURL   string    `bson:"imageUrl"`
+	ImageName  string    `bson:"imageName"`
 	ModifiedAt time.Time `bson:"modifiedAt"`
 }
