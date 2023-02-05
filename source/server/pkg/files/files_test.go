@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -13,6 +14,7 @@ import (
 	"testing"
 
 	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
+	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,6 +22,10 @@ const url = "http://localhost:8080/files"
 
 func TestUploadImage(t *testing.T) {
 	h := NewHandler()
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Printf(".env file not loaded. Using environment variables on machine.")
+	}
 
 	// Create path to test-image
 	dir, err := os.Getwd()
@@ -28,7 +34,7 @@ func TestUploadImage(t *testing.T) {
 	}
 
 	fileName := "test-image.png"
-	depotDir := "../../files"
+	depotDir := os.Getenv("FILE_DEPOT")
 	depotFilePath := fmt.Sprintf("%s/%s", depotDir, fileName)
 
 	name := fmt.Sprintf("../testUtils/%s", fileName)

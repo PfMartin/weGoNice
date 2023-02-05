@@ -42,7 +42,7 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 
 	name := strings.Split(fileHandler.Filename, ".")[0]
 
-	fileDepot := "../../files"
+	fileDepot := os.Getenv("FILE_DEPOT")
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
 		log.Println("Creating directory")
