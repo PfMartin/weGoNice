@@ -12,8 +12,10 @@ import (
 	"path"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
@@ -34,8 +36,6 @@ func TestUploadImage(t *testing.T) {
 	}
 
 	fileName := "test-image.png"
-	depotDir := os.Getenv("FILE_DEPOT")
-	depotFilePath := fmt.Sprintf("%s/%s", depotDir, fileName)
 
 	name := fmt.Sprintf("../testUtils/%s", fileName)
 	path := path.Join(dir, name)
@@ -58,8 +58,10 @@ func TestUploadImage(t *testing.T) {
 	writer.Close()
 
 	// Create Request
-	req := httptest.NewRequest(http.MethodPost, url, body)
+	authorId := "111"
+	req := httptest.NewRequest(http.MethodPost, url+"/"+authorId, body)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
+	req = mux.SetURLVars(req, map[string]string{"id": authorId})
 
 	w := httptest.NewRecorder()
 
@@ -70,6 +72,10 @@ func TestUploadImage(t *testing.T) {
 
 	assert.Equal(t, expectedCode, got, "Test failed:\nExpected: %d | Got: %d", expectedCode, got)
 
+	currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
+	depotDir := os.Getenv("FILE_DEPOT")
+
+	depotFilePath := fmt.Sprintf("%s/%s_%s_%s", depotDir, currentDate, authorId, fileName)
 	isSameFile := testUtils.CompareFileContent(depotFilePath, fmt.Sprintf("testDir/%s", fileName))
 	expectIsSameFile := true
 

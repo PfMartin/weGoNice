@@ -1,8 +1,5 @@
 package files
 
-// https://gist.github.com/mattetti/5914158/f4d1393d83ebedc682a3c8e7bdc6b49670083b84
-// https://tutorialedge.net/golang/go-file-upload-tutorial/
-
 import (
 	"bytes"
 	"errors"
@@ -12,6 +9,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
+
+	"github.com/gorilla/mux"
 )
 
 type Handler struct {
@@ -53,7 +53,11 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	filepath := fmt.Sprintf("%s/%s.png", fileDepot, name)
+	id := mux.Vars(r)["id"]
+	currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
+	fileName := fmt.Sprintf("%s_%s_%s.png", currentDate, id, name)
+
+	filepath := fmt.Sprintf("%s/%s", fileDepot, fileName)
 	err = os.WriteFile(filepath, content, 0644)
 	if err != nil {
 		log.Printf("Error while writing the file: %s", err)
@@ -61,9 +65,5 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("Uploaded File: %+v\n", fileHandler.Filename)
-	log.Printf("File Size: %+v\n", fileHandler.Size)
-	log.Printf("MIME Header: %+v\n", fileHandler.Header)
-
-	w.WriteHeader(http.StatusOK) // TODO: FIND BETTER STATUS
+	w.WriteHeader(http.StatusOK)
 }

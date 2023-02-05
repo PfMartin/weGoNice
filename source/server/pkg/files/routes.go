@@ -10,5 +10,5 @@ import (
 func RegisterFilesRoutes(r *mux.Router, h Handler) {
 	filesR := r.PathPrefix("/files").Subrouter()
 
-	filesR.HandleFunc("", auth.CheckTokenHandler(h.SaveFile)).Methods(http.MethodPost, http.MethodGet)
+	filesR.HandleFunc("/{id}", auth.CheckTokenHandler(h.SaveFile)).Methods(http.MethodPost)
 }
