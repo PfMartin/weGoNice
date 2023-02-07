@@ -4,6 +4,7 @@ import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
 import { updateAuthorById } from '@/apis/weGoNice/authors';
+import { uploadFile } from '@/apis/weGoNice/files';
 import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
 
@@ -27,11 +28,43 @@ const openUploadWindow = () => {
   fileInput.value?.click();
 };
 
-const getFilename = () => {
-  const pathArray = fileInput.value?.value.split('\\') || [];
-  const fileName = pathArray[pathArray.length - 1];
+const fileName = ref('');
+const executeUpload = async () => {
+  if (!isValid.value) {
+    return;
+  }
 
-  return fileName ? fileName : 'No file chosen...';
+  const pathArray = fileInput.value?.value.split('\\') || [];
+  fileName.value = pathArray[pathArray.length - 1];
+
+  const file =
+    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+
+  if (props.mode === OperationMode.Edit && file) {
+    const res = await uploadFile(route.params.id, file);
+    if (res.status !== 200) {
+      notificationService.addNotification(
+        'error',
+        'Something went wrong while uploading the picture.'
+      );
+    }
+    emitInput();
+    return;
+  }
+
+  const body = {
+    name: name.value,
+    firstname: firstname.value,
+    lastname: lastname.value,
+    website: website.value,
+    instagram: instagram.value,
+    youTube: youTube.value,
+    imageName: fileName.value,
+  };
+
+  emit('on-change', body);
+
+  // TODO: Change filename in database
 };
 
 /* Handle User Input */
@@ -124,7 +157,7 @@ const emitInput = async (): Promise<void> => {
     website: website.value,
     instagram: instagram.value,
     youTube: youTube.value,
-    imageName: getFilename(),
+    imageName: fileName.value,
   };
 
   if (props.mode === OperationMode.Edit) {
@@ -154,9 +187,15 @@ const emitInput = async (): Promise<void> => {
     >
       <Transition name="fade">
         <div v-show="hasPictureOverlay" class="picture-overlay">
-          <input type="file" name="picture" id="fileInput" ref="fileInput" />
+          <input
+            type="file"
+            name="picture"
+            id="fileInput"
+            ref="fileInput"
+            @change="executeUpload"
+          />
           <ion-icon name="create"></ion-icon>
-          <p>{{ getFilename() }}</p>
+          <p>{{ fileName || 'No file chosen...' }}</p>
         </div>
       </Transition>
       <img v-if="imageName" :src="imageName" alt="Author Picture" />

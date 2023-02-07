@@ -8,6 +8,11 @@ export const headers = {
   Authorization: '',
 };
 
+export const fileHeaders = {
+  'Content-Type': 'multipart/form-data',
+  Authorization: '',
+};
+
 export const handleError = (error: unknown): WeGoNiceApi.RequestResponse => {
   if (axios.isAxiosError(error)) {
     return {

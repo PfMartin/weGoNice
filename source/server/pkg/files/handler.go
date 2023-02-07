@@ -22,8 +22,6 @@ func NewHandler() Handler {
 }
 
 func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
-	log.Println("File Upload Endpoint Hit")
-
 	r.ParseMultipartForm(10 << 20)
 
 	file, fileHandler, err := r.FormFile("picture")
@@ -45,7 +43,7 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	fileDepot := os.Getenv("FILE_DEPOT")
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
-		log.Println("Creating directory")
+		log.Printf("Directory '%s' doesn't existing. Creating directory", fileDepot)
 		if err := os.Mkdir(fileDepot, os.ModePerm); err != nil {
 			log.Printf("Error while creating directory for file depot: %s", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -58,6 +56,9 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	fileName := fmt.Sprintf("%s_%s_%s.png", currentDate, id, name)
 
 	filepath := fmt.Sprintf("%s/%s", fileDepot, fileName)
+
+	// TODO: Compress file before writing it to os
+
 	err = os.WriteFile(filepath, content, 0644)
 	if err != nil {
 		log.Printf("Error while writing the file: %s", err)
