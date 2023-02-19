@@ -38,7 +38,9 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	content := buf.Bytes()
 	buf.Reset()
 
-	name := strings.Split(fileHandler.Filename, ".")[0]
+	name := strings.Split(fileHandler.Filename, ".")
+	nameString := name[0]
+	fileType := strings.ToLower(name[1])
 
 	fileDepot := os.Getenv("FILE_DEPOT")
 
@@ -53,7 +55,7 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["id"]
 	currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
-	fileName := fmt.Sprintf("%s_%s_%s.png", currentDate, id, name)
+	fileName := fmt.Sprintf("%s-%s-%s.%s", currentDate, id, nameString, fileType)
 
 	filepath := fmt.Sprintf("%s/%s", fileDepot, fileName)
 

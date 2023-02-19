@@ -8,7 +8,9 @@ import (
 )
 
 func RegisterFilesRoutes(r *mux.Router, h Handler) {
-	filesR := r.PathPrefix("/files").Subrouter()
+	prefix := "/files"
+	filesR := r.PathPrefix(prefix).Subrouter()
 
+	r.PathPrefix("/").Handler(http.StripPrefix(prefix, http.FileServer(http.Dir("../files/"))))
 	filesR.HandleFunc("/{id}", auth.CheckTokenHandler(h.SaveFile)).Methods(http.MethodPost)
 }

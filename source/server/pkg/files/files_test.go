@@ -11,6 +11,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -75,7 +76,11 @@ func TestUploadImage(t *testing.T) {
 	currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
 	depotDir := os.Getenv("FILE_DEPOT")
 
-	depotFilePath := fmt.Sprintf("%s/%s_%s_%s", depotDir, currentDate, authorId, fileName)
+	fileNameSlice := strings.Split(fileName, ".")
+	fName := fileNameSlice[0]
+	fType := fileNameSlice[1]
+
+	depotFilePath := fmt.Sprintf("%s/%s-%s-%s.%s", depotDir, currentDate, authorId, fName, fType)
 	isSameFile := testUtils.CompareFileContent(depotFilePath, fmt.Sprintf("../testUtils/files/%s", fileName))
 	expectIsSameFile := true
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
@@ -206,7 +207,11 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	currentDate := time.Now().Format("2006-01-02")
-	imageName := fmt.Sprintf("%s_%s_%s", currentDate, id, author.ImageName)
+	imageNameSlice := strings.Split(author.ImageName, ".")
+	iName := imageNameSlice[0]
+	iNameType := strings.ToLower(imageNameSlice[1])
+
+	imageName := fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
 
 	filter := bson.M{"_id": authorID}
 	update := bson.M{"$set": bson.M{

@@ -198,7 +198,12 @@ const emitInput = async (): Promise<void> => {
           <p>{{ fileName || 'No file chosen...' }}</p>
         </div>
       </Transition>
-      <img v-if="imageName" :src="imageName" alt="Author Picture" />
+      <!-- {{ imageName }} -->
+      <img
+        v-if="imageName"
+        :src="`http://localhost:8000/files/${imageName}`"
+        alt="Author Picture"
+      />
       <ion-icon v-if="!imageName" name="person" />
     </div>
     <div class="info">
