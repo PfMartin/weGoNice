@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
 import { updateAuthorById } from '@/apis/weGoNice/authors';
-import { uploadFile } from '@/apis/weGoNice/files';
+import { uploadFile, createImgUrl } from '@/apis/weGoNice/files';
 import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
 
@@ -63,8 +63,6 @@ const executeUpload = async () => {
   };
 
   emit('on-change', body);
-
-  // TODO: Change filename in database
 };
 
 /* Handle User Input */
@@ -175,6 +173,16 @@ const emitInput = async (): Promise<void> => {
 
   emit('on-change', body);
 };
+
+const img = ref<any>('');
+const updateImage = async (): Promise<void> => {
+  const url = await createImgUrl(props.initialData.imageName);
+  img.value = url;
+};
+
+onMounted(() => {
+  updateImage();
+});
 </script>
 
 <template>
@@ -199,11 +207,7 @@ const emitInput = async (): Promise<void> => {
         </div>
       </Transition>
       <!-- {{ imageName }} -->
-      <img
-        v-if="imageName"
-        :src="`http://localhost:8000/files/${imageName}`"
-        alt="Author Picture"
-      />
+      <img v-if="imageName" :src="img" alt="Author Picture" />
       <ion-icon v-if="!imageName" name="person" />
     </div>
     <div class="info">
