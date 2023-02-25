@@ -62,6 +62,8 @@ func CompareFileContent(file1 string, file2 string) bool {
 		}
 
 		if !bytes.Equal(b1, b2) {
+			log.Println(b1)
+			log.Println(b2)
 			return false
 		}
 	}

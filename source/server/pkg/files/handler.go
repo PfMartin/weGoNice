@@ -111,8 +111,3 @@ func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(bytes)
 }
-
-func (h *Handler) ServeFiles(prefix string) http.Handler {
-
-	return http.StripPrefix(prefix, http.FileServer(http.Dir("../files/")))
-}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -88,5 +89,71 @@ func TestUploadImage(t *testing.T) {
 
 	if err := os.Remove(depotFilePath); err != nil {
 		t.Errorf("Error while removing the test image: %s", err)
+	}
+}
+
+func TestServeImage(t *testing.T) {
+	fileName := "test-image.png"
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Printf(".env file not loaded. Using environment variables on machine.")
+	}
+
+	// Copy file to fileDepot
+
+	path := fmt.Sprintf("../testUtils/%s", fileName)
+	fileIn, err := os.Open(path)
+	if err != nil {
+		t.Errorf("Could not open file in path '%s': %s", path, err)
+	}
+	defer fileIn.Close()
+
+	destination := fmt.Sprintf("../%s/%s", os.Getenv("FILE_DEPOT"), fileName)
+	fileOut, err := os.Create(destination)
+	if err != nil {
+		t.Errorf("Could not create file destination '%s': %s", destination, err)
+	}
+	defer fileOut.Close()
+
+	_, err = io.Copy(fileOut, fileIn)
+	if err != nil {
+		t.Errorf("Could not copy file: %s", err)
+	}
+
+	// Test serving the file
+
+	req := httptest.NewRequest(http.MethodGet, url+"/"+fileName, nil)
+	req.Header.Add("Content-Type", "image")
+	req = mux.SetURLVars(req, map[string]string{"filename": fileName})
+
+	w := httptest.NewRecorder()
+
+	h := NewHandler()
+	h.ServeFile(w, req)
+
+	res := w.Result()
+	defer res.Body.Close()
+
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Errorf("Failed to read body of response %s", err)
+	}
+
+	err = os.WriteFile(fileName, data, 0644)
+	if err != nil {
+		t.Errorf("Failed to write file %s", err)
+	}
+
+	// isSameFile := testUtils.CompareFileContent(fmt.Sprintf("../files/%s", fileName), fmt.Sprintf("../testUtils/files/%s", fileName))
+	// expectIsSameFile := true
+
+	// assert.Equal(t, expectIsSameFile, isSameFile, "Test failed:\nExpected: %b | Got: %b", expectIsSameFile, isSameFile)
+
+	if err := os.Remove(destination); err != nil {
+		t.Errorf("Error while removing the test image from file depot: %s", err)
+	}
+
+	if err := os.Remove(fileName); err != nil {
+		t.Errorf("Error while removing the test image from file test dir: %s", err)
 	}
 }
