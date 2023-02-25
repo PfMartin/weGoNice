@@ -4,7 +4,7 @@ import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
 import { updateAuthorById } from '@/apis/weGoNice/authors';
-import { uploadFile, createImgUrl } from '@/apis/weGoNice/files';
+import { uploadFile, getImage } from '@/apis/weGoNice/files';
 import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
 
@@ -176,7 +176,7 @@ const emitInput = async (): Promise<void> => {
 
 const img = ref<any>('');
 const updateImage = async (): Promise<void> => {
-  const url = await createImgUrl(props.initialData.imageName);
+  const url = await getImage(props.initialData.imageName);
   img.value = url;
 };
 

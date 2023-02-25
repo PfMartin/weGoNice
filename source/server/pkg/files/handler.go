@@ -1,6 +1,7 @@
 package files
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -69,4 +70,49 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
+	fileDepot := os.Getenv("FILE_DEPOT")
+	filename := mux.Vars(r)["filename"]
+
+	filePath := fmt.Sprintf("%s/%s", fileDepot, filename)
+
+	// TODO: Decompress file before writing it to os
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Printf("Error: Failed to open file: %v", err)
+		http.Error(w, "Failed to open file", http.StatusInternalServerError)
+		return
+	}
+	defer file.Close()
+
+	fileInfo, err := file.Stat()
+	if err != nil {
+		log.Printf("Error: Failed to read stats of file: %v", err)
+		http.Error(w, "Failed to read stats of file", http.StatusInternalServerError)
+		return
+	}
+	size := fileInfo.Size()
+	bytes := make([]byte, size)
+
+	buffer := bufio.NewReader(file)
+	_, err = buffer.Read(bytes)
+	if err != nil {
+		log.Printf("Error: Failed to read bytes to buffer: %v", err)
+		http.Error(w, "Failed to read bytes to buffer", http.StatusInternalServerError)
+		return
+	}
+
+	filetype := http.DetectContentType(bytes)
+
+	w.Header().Add("Content-Type", filetype)
+	w.WriteHeader(http.StatusOK)
+	w.Write(bytes)
+}
+
+func (h *Handler) ServeFiles(prefix string) http.Handler {
+
+	return http.StripPrefix(prefix, http.FileServer(http.Dir("../files/")))
 }

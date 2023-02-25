@@ -21,12 +21,16 @@ export const uploadFile = async (
   }
 };
 
-export const createImgUrl = async (
-  fileName: string
+export const getImage = async (
+  filename: string
 ): Promise<string | WeGoNiceApi.RequestResponse> => {
   try {
-    const res: any = await axios.get(`${url}/files/${fileName}`, {
+    const res: any = await axios.get(`${url}/files/${filename}`, {
       responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'image',
+        Authorization: addAuthorization(),
+      },
     });
 
     const base64 = btoa(
