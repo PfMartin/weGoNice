@@ -33,6 +33,8 @@ export const getImage = async (
       },
     });
 
+    console.log(res.status === 404);
+
     const base64 = btoa(
       new Uint8Array(res.data).reduce(
         (data, byte) => data + String.fromCharCode(byte),

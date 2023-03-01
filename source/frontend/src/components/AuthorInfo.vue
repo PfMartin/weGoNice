@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
@@ -28,7 +28,7 @@ const openUploadWindow = () => {
   fileInput.value?.click();
 };
 
-const fileName = ref('');
+const fileName = ref(props.initialData.imageName);
 const executeUpload = async () => {
   if (!isValid.value) {
     return;
@@ -104,6 +104,10 @@ const updateYouTube = (newValue: string) => {
 
 const imageName = ref(props.initialData.imageName);
 
+watch(fileName, () => {
+  updateImage();
+});
+
 /* Validation */
 const validationService = new ValidationService();
 
@@ -176,11 +180,12 @@ const emitInput = async (): Promise<void> => {
 
 const img = ref<any>('');
 const updateImage = async (): Promise<void> => {
-  const url = await getImage(props.initialData.imageName);
+  const url = await getImage(fileName.value);
   img.value = url;
 };
 
 onMounted(() => {
+  console.log(props.initialData);
   updateImage();
 });
 </script>

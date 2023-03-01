@@ -25,6 +25,8 @@ export const getAllAuthors = async () => {
       headers,
     });
 
+    console.log(res.data);
+
     return res.data;
   } catch (error) {
     return handleError(error);
@@ -52,6 +54,19 @@ export const updateAuthorById = async (
 
   try {
     const res = await axios.put(`${url}/authors/${id}`, body, {
+      headers,
+    });
+    return res;
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const deleteAuthorById = async (id: string | string[]) => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.delete(`${url}/authors/${id}`, {
       headers,
     });
     return res;

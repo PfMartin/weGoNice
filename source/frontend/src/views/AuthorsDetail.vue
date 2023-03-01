@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { getAuthorById } from '@/apis/weGoNice/authors';
+import { useRoute, useRouter } from 'vue-router';
+import { getAuthorById, deleteAuthorById } from '@/apis/weGoNice/authors';
 import { ref } from 'vue';
 import RecipesList from '@/components/RecipesList.vue';
 import AuthorInfo from '@/components/AuthorInfo.vue';
 import { OperationMode } from '@/utils/constants';
+import ButtonComponent from '@/components/ButtonComponent.vue';
+import notificationService from '@/services/notification.service';
 
 const mode = OperationMode.Edit;
 
 const route = useRoute();
+const router = useRouter();
 
 const author = ref<Authors.Author | null>(null);
 
@@ -25,10 +28,29 @@ const recipeData: Recipes.Recipe[] = [
 ];
 
 init();
+
+const deleteAuthor = async () => {
+  const res = await deleteAuthorById(route.params.id);
+
+  if (res.status !== 200) {
+    notificationService.addNotification(
+      'error',
+      'Something went wrong while deleting the author'
+    );
+    return;
+  }
+
+  notificationService.addNotification(
+    'success',
+    `Successfully deleted ${author.value?.name}`
+  );
+  router.push({ name: 'AuthorsOverview' });
+};
 </script>
 
 <template>
   <div class="author-detail">
+    <ButtonComponent buttonText="Delete Author" @on-click="deleteAuthor" />
     <AuthorInfo v-if="author" :mode="mode" :initialData="author" />
     <div v-else>spinner</div>
     <RecipesList
