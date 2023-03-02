@@ -39,7 +39,7 @@ func TestUploadImage(t *testing.T) {
 
 	fileName := "test-image.png"
 
-	name := fmt.Sprintf("../testUtils/%s", fileName)
+	name := fmt.Sprintf("../testUtils/files/%s", fileName)
 	path := path.Join(dir, name)
 
 	// Open file and create multipart FormFile
@@ -94,21 +94,18 @@ func TestUploadImage(t *testing.T) {
 
 func TestServeImage(t *testing.T) {
 	fileName := "test-image.png"
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Printf(".env file not loaded. Using environment variables on machine.")
-	}
+	os.Setenv("FILE_DEPOT", "../../files")
 
 	// Copy file to fileDepot
 
-	path := fmt.Sprintf("../testUtils/%s", fileName)
+	path := fmt.Sprintf("../testUtils/files/%s", fileName)
 	fileIn, err := os.Open(path)
 	if err != nil {
 		t.Errorf("Could not open file in path '%s': %s", path, err)
 	}
 	defer fileIn.Close()
 
-	destination := fmt.Sprintf("../%s/%s", os.Getenv("FILE_DEPOT"), fileName)
+	destination := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), fileName)
 	fileOut, err := os.Create(destination)
 	if err != nil {
 		t.Errorf("Could not create file destination '%s': %s", destination, err)
@@ -144,10 +141,15 @@ func TestServeImage(t *testing.T) {
 		t.Errorf("Failed to write file %s", err)
 	}
 
-	// isSameFile := testUtils.CompareFileContent(fmt.Sprintf("../files/%s", fileName), fmt.Sprintf("../testUtils/files/%s", fileName))
-	// expectIsSameFile := true
+	expectedStatus := http.StatusOK
+	receivedStatus := w.Code
 
-	// assert.Equal(t, expectIsSameFile, isSameFile, "Test failed:\nExpected: %b | Got: %b", expectIsSameFile, isSameFile)
+	assert.Equal(t, expectedStatus, receivedStatus, "Test failed:\nExpected: %b | Got: %b", expectedStatus, receivedStatus)
+
+	isSameFile := testUtils.CompareFileContent(fmt.Sprintf("../../files/%s", fileName), fmt.Sprintf("../testUtils/files/%s", fileName))
+	expectIsSameFile := true
+
+	assert.Equal(t, expectIsSameFile, isSameFile, "Test failed:\nExpected: %b | Got: %b", expectIsSameFile, isSameFile)
 
 	if err := os.Remove(destination); err != nil {
 		t.Errorf("Error while removing the test image from file depot: %s", err)
