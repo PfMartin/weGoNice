@@ -6,10 +6,10 @@ const props = defineProps<{
   data: Authors.Author;
 }>();
 
-const img = ref<any>('');
+const img = ref('');
 onMounted(async () => {
   const res = await getImage(props.data.imageName);
-  img.value = res;
+  img.value = res as string;
 });
 </script>
 

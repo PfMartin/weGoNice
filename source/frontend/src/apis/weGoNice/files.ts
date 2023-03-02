@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const uploadFile = async (
   id: string | string[],
-  file: any
+  file: File
 ): Promise<WeGoNiceApi.RequestResponse> => {
   const formData = new FormData();
   formData.append('picture', file);
@@ -25,15 +25,13 @@ export const getImage = async (
   filename: string
 ): Promise<string | WeGoNiceApi.RequestResponse> => {
   try {
-    const res: any = await axios.get(`${url}/files/${filename}`, {
+    const res = await axios.get(`${url}/files/${filename}`, {
       responseType: 'arraybuffer',
       headers: {
         'Content-Type': 'image',
         Authorization: addAuthorization(),
       },
     });
-
-    console.log(res.status === 404);
 
     const base64 = btoa(
       new Uint8Array(res.data).reduce(

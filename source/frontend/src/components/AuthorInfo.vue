@@ -178,14 +178,13 @@ const emitInput = async (): Promise<void> => {
   emit('on-change', body);
 };
 
-const img = ref<any>('');
+const img = ref('');
 const updateImage = async (): Promise<void> => {
   const url = await getImage(fileName.value);
-  img.value = url;
+  img.value = url as string;
 };
 
 onMounted(() => {
-  console.log(props.initialData);
   updateImage();
 });
 </script>

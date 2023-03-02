@@ -25,8 +25,6 @@ export const getAllAuthors = async () => {
       headers,
     });
 
-    console.log(res.data);
-
     return res.data;
   } catch (error) {
     return handleError(error);
