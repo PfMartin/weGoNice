@@ -4,12 +4,18 @@ logs
 **/*.backup.*
 **/*.back.*
 
+# Server
 source/server/cmd/main
-
-node_modules
+source/server/files
 **/*.env
 
+# Frontend
+node_modules
+
+# Container
 volumes/production
 volumes/development
 
+# Scripts
 start_weGoNice.sh
+

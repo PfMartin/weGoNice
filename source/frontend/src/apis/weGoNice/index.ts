@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { url, headers, handleError } from './utils';
 
-export const getAllRecipes = async (token: string): Promise<any> => {
+export const getAllRecipes = async (
+  token: string
+): Promise<WeGoNiceApi.RequestResponse> => {
   headers.Authorization = `Bearer ${token}`;
 
   try {

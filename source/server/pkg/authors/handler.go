@@ -3,8 +3,10 @@ package authors
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
@@ -25,7 +27,7 @@ var projectStage = bson.D{
 		{Key: "instagram", Value: 1},
 		{Key: "youTube", Value: 1},
 		{Key: "createdAt", Value: 1},
-		{Key: "imageUrl", Value: 1},
+		{Key: "imageName", Value: 1},
 		{Key: "modifiedAt", Value: 1},
 		{Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}}}}}
 
@@ -143,7 +145,6 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
 		"userId":     userID,
-		"imageUrl":   author.ImageURL,
 		"createdAt":  time.Now(),
 		"modifiedAt": time.Now(),
 	}
@@ -156,6 +157,25 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	}
 
 	authorID := cursor.InsertedID.(primitive.ObjectID)
+
+	if author.ImageName != "" {
+		// Set imageName after retrieving the author id
+		currentDate := time.Now().Format("2006-01-02")
+		imageName := fmt.Sprintf("%s_%s_%s", currentDate, authorID.Hex(), author.ImageName)
+
+		filter = bson.M{"_id": authorID}
+		update := bson.M{"$set": bson.M{
+			"imageName": imageName,
+		}}
+
+		coll = h.DB.Database(h.dbName).Collection(h.collection)
+		_, err = coll.UpdateOne(context.TODO(), filter, update)
+		if err != nil {
+			log.Printf("Error: Failed to update author with new imageName: %v", err)
+			http.Error(w, "Failed to update author with new imageName", http.StatusInternalServerError)
+			return
+		}
+	}
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -186,6 +206,13 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
 	}
 
+	currentDate := time.Now().Format("2006-01-02")
+	imageNameSlice := strings.Split(author.ImageName, ".")
+	iName := imageNameSlice[0]
+	iNameType := strings.ToLower(imageNameSlice[1])
+
+	imageName := fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
+
 	filter := bson.M{"_id": authorID}
 	update := bson.M{"$set": bson.M{
 		"name":       author.Name,
@@ -194,7 +221,7 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		"website":    author.Website,
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
-		"imageUrl":   author.ImageURL,
+		"imageName":  imageName,
 		"userId":     userID,
 		"modifiedAt": time.Now(),
 	}}

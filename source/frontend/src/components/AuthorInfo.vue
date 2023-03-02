@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
 import { updateAuthorById } from '@/apis/weGoNice/authors';
+import { uploadFile, getImage } from '@/apis/weGoNice/files';
 import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
 
@@ -15,6 +16,54 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'on-change', body: Authors.Author): void;
 }>();
+
+const hasPictureOverlay = ref(false);
+const togglePictureOverlay = () => {
+  hasPictureOverlay.value = !hasPictureOverlay.value;
+};
+
+/* Handle File Input */
+const fileInput = ref<HTMLInputElement | null>(null);
+const openUploadWindow = () => {
+  fileInput.value?.click();
+};
+
+const fileName = ref(props.initialData.imageName);
+const executeUpload = async () => {
+  if (!isValid.value) {
+    return;
+  }
+
+  const pathArray = fileInput.value?.value.split('\\') || [];
+  fileName.value = pathArray[pathArray.length - 1];
+
+  const file =
+    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+
+  if (props.mode === OperationMode.Edit && file) {
+    const res = await uploadFile(route.params.id, file);
+    if (res.status !== 200) {
+      notificationService.addNotification(
+        'error',
+        'Something went wrong while uploading the picture.'
+      );
+    }
+    emitInput();
+    return;
+  }
+
+  const body = {
+    name: name.value,
+    firstname: firstname.value,
+    lastname: lastname.value,
+    website: website.value,
+    instagram: instagram.value,
+    youTube: youTube.value,
+    imageName: fileName.value,
+  };
+
+  emit('on-change', body);
+};
 
 /* Handle User Input */
 const name = ref(props.initialData.name);
@@ -53,7 +102,11 @@ const updateYouTube = (newValue: string) => {
   emitInput();
 };
 
-const imageUrl = ref(props.initialData.imageUrl);
+const imageName = ref(props.initialData.imageName);
+
+watch(fileName, () => {
+  updateImage();
+});
 
 /* Validation */
 const validationService = new ValidationService();
@@ -106,7 +159,7 @@ const emitInput = async (): Promise<void> => {
     website: website.value,
     instagram: instagram.value,
     youTube: youTube.value,
-    imageUrl: imageUrl.value,
+    imageName: fileName.value,
   };
 
   if (props.mode === OperationMode.Edit) {
@@ -124,13 +177,42 @@ const emitInput = async (): Promise<void> => {
 
   emit('on-change', body);
 };
+
+const img = ref('');
+const updateImage = async (): Promise<void> => {
+  const url = await getImage(fileName.value);
+  img.value = url as string;
+};
+
+onMounted(() => {
+  updateImage();
+});
 </script>
 
 <template>
   <div class="author-info">
-    <div class="picture">
-      <img v-if="imageUrl" :src="imageUrl" alt="Author Picture" />
-      <ion-icon v-else name="person" />
+    <div
+      class="picture"
+      @click="openUploadWindow"
+      @mouseenter="togglePictureOverlay"
+      @mouseleave="togglePictureOverlay"
+    >
+      <Transition name="fade">
+        <div v-show="hasPictureOverlay" class="picture-overlay">
+          <input
+            type="file"
+            name="picture"
+            id="fileInput"
+            ref="fileInput"
+            @change="executeUpload"
+          />
+          <ion-icon name="create"></ion-icon>
+          <p>{{ fileName || 'No file chosen...' }}</p>
+        </div>
+      </Transition>
+      <!-- {{ imageName }} -->
+      <img v-if="imageName" :src="img" alt="Author Picture" />
+      <ion-icon v-if="!imageName" name="person" />
     </div>
     <div class="info">
       <div class="info-section">
@@ -206,6 +288,7 @@ const emitInput = async (): Promise<void> => {
   box-shadow: $shadow;
 
   .picture {
+    position: relative;
     border-radius: $border-radius;
     display: flex;
     flex: 1;
@@ -219,6 +302,30 @@ const emitInput = async (): Promise<void> => {
 
     img {
       max-height: 100%;
+    }
+
+    .picture-overlay {
+      position: absolute;
+      z-index: 5;
+      background: #33333399;
+      height: 100%;
+      width: 100%;
+      border-radius: $border-radius;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: pointer;
+
+      input {
+        position: fixed;
+        left: 100vw;
+      }
+
+      ion-icon {
+        opacity: 1;
+        font-size: 3rem;
+      }
     }
 
     ion-icon {
@@ -243,5 +350,15 @@ const emitInput = async (): Promise<void> => {
       gap: 1rem;
     }
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

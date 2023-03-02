@@ -1,6 +1,7 @@
 import { url, headers, handleError, addAuthorization } from './utils';
 import axios from 'axios';
 import store from '@/store';
+import notificationService from '@/services/notification.service';
 
 export const refreshToken = async (): Promise<void> => {
   const token = store.getters['auth/sessionToken'];
@@ -13,11 +14,17 @@ export const refreshToken = async (): Promise<void> => {
     data.token && store.dispatch('setSessionToken', token);
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error(error);
+      notificationService.addNotification(
+        'error',
+        `An error occurred while refreshing the auth token: ${error}`
+      );
       return;
     }
 
-    console.error(`An unexpected error occurred: ${error}`);
+    notificationService.addNotification(
+      'error',
+      `An unexpected error occurred while refreshing the auth token: ${error}`
+    );
   }
 };
 

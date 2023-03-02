@@ -1,7 +1,22 @@
+<script setup lang="ts">
+import { getImage } from '@/apis/weGoNice/files';
+import { onMounted, ref } from 'vue';
+
+const props = defineProps<{
+  data: Authors.Author;
+}>();
+
+const img = ref('');
+onMounted(async () => {
+  const res = await getImage(props.data.imageName);
+  img.value = res as string;
+});
+</script>
+
 <template>
   <div class="author-card">
     <div class="picture">
-      <img v-if="data.imageUrl" :src="data.imageUrl" />
+      <img v-if="img" :src="img" />
       <ion-icon v-else name="person" />
     </div>
     <div class="main">
@@ -30,12 +45,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  data: Authors.Author;
-}>();
-</script>
 
 <style scoped lang="scss">
 @import '@/styles/colors.scss';

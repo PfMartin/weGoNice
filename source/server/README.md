@@ -63,6 +63,9 @@ curl -X DELETE \
 curl -X DELETE \
   -H "Content-type: application/json" \
   "http://localhost:8080/users"
+
+# Request with bearer token
+curl -i http://localhost:8000/files -H "Authorization: Bearer mytoken"
 ```
 
 ## Aggregate referenced documents

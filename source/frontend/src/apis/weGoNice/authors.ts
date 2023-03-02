@@ -59,3 +59,16 @@ export const updateAuthorById = async (
     return handleError(error);
   }
 };
+
+export const deleteAuthorById = async (id: string | string[]) => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.delete(`${url}/authors/${id}`, {
+      headers,
+    });
+    return res;
+  } catch (error) {
+    return handleError(error);
+  }
+};

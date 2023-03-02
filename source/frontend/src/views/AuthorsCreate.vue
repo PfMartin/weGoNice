@@ -16,7 +16,7 @@ const author = ref<Authors.Author>({
   website: '',
   youTube: '',
   instagram: '',
-  imageUrl: '',
+  imageName: '',
 });
 
 const setData = (data: Authors.Author): void => {
