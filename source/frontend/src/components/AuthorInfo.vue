@@ -106,7 +106,7 @@ const updateYouTube = (newValue: string) => {
 const imageName = ref(props.initialData.imageName);
 
 watch(fileName, () => {
-  updateImage(props.initialData.id);
+  updateImage();
 });
 
 /* Validation */
@@ -180,11 +180,21 @@ const emitInput = async (): Promise<void> => {
 };
 
 const img = ref('');
-const updateImage = async (id?: string): Promise<void> => {
+const updateImage = async (): Promise<void> => {
   let name = fileName.value;
 
-  if (id) {
-    name = `${dateToString(new Date())}-${id}-${name}`;
+  const id = props.initialData.id || undefined;
+  const file =
+    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+
+  if (id && file) {
+    await uploadFile(id, file);
+    const fileNameArray = name.split('.');
+    const fileType = fileNameArray[1].toLowerCase();
+
+    name = `${dateToString(new Date())}-${props.initialData.id}-${
+      fileNameArray[0]
+    }.${fileType}`;
   }
 
   const url = await getImage(name);
