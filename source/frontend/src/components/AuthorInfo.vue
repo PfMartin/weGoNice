@@ -7,6 +7,7 @@ import { updateAuthorById } from '@/apis/weGoNice/authors';
 import { uploadFile, getImage } from '@/apis/weGoNice/files';
 import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
+import { dateToString } from '@/utils/utility-functions';
 
 const props = defineProps<{
   initialData: Authors.Author;
@@ -105,7 +106,7 @@ const updateYouTube = (newValue: string) => {
 const imageName = ref(props.initialData.imageName);
 
 watch(fileName, () => {
-  updateImage();
+  updateImage(props.initialData.id);
 });
 
 /* Validation */
@@ -179,8 +180,14 @@ const emitInput = async (): Promise<void> => {
 };
 
 const img = ref('');
-const updateImage = async (): Promise<void> => {
-  const url = await getImage(fileName.value);
+const updateImage = async (id?: string): Promise<void> => {
+  let name = fileName.value;
+
+  if (id) {
+    name = `${dateToString(new Date())}-${id}-${name}`;
+  }
+
+  const url = await getImage(name);
   img.value = url as string;
 };
 
