@@ -36,7 +36,11 @@ const executeUpload = async () => {
   }
 
   const pathArray = fileInput.value?.value.split('\\') || [];
-  fileName.value = pathArray[pathArray.length - 1];
+  const fileNameArray = pathArray[pathArray.length - 1].split('.');
+  const fName = fileNameArray[0];
+  const fType = fileNameArray[1].toLowerCase();
+
+  fileName.value = `${fName}.${fType}`;
 
   const file =
     fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;

@@ -161,7 +161,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	if author.ImageName != "" {
 		// Set imageName after retrieving the author id
 		currentDate := time.Now().Format("2006-01-02")
-		imageName := fmt.Sprintf("%s_%s_%s", currentDate, authorID.Hex(), author.ImageName)
+		imageName := fmt.Sprintf("%s-%s-%s", currentDate, authorID.Hex(), author.ImageName)
 
 		filter = bson.M{"_id": authorID}
 		update := bson.M{"$set": bson.M{
