@@ -4,7 +4,12 @@ import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
 import { updateAuthorById } from '@/apis/weGoNice/authors';
-import { uploadFile, getImage } from '@/apis/weGoNice/files';
+import {
+  uploadFile,
+  getImage,
+  uploadFileTmp,
+  getImageTmp,
+} from '@/apis/weGoNice/files';
 import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
 import { dateToString } from '@/utils/utility-functions';
@@ -47,6 +52,16 @@ const executeUpload = async () => {
 
   if (props.mode === OperationMode.Edit && file) {
     const res = await uploadFile(route.params.id, file);
+    if (res.status !== 200) {
+      notificationService.addNotification(
+        'error',
+        'Something went wrong while uploading the picture.'
+      );
+    }
+    emitInput();
+    return;
+  } else if (props.mode === OperationMode.Create && file) {
+    const res = await uploadFileTmp(file);
     if (res.status !== 200) {
       notificationService.addNotification(
         'error',
@@ -110,6 +125,7 @@ const updateYouTube = (newValue: string) => {
 const imageName = ref(props.initialData.imageName);
 
 watch(fileName, () => {
+  console.log(fileName.value);
   updateImage();
 });
 
@@ -191,19 +207,34 @@ const updateImage = async (): Promise<void> => {
   const file =
     fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
 
-  if (id && file) {
-    await uploadFile(id, file);
+  if (props.mode === OperationMode.Edit && id && file) {
     const fileNameArray = name.split('.');
     const fileType = fileNameArray[1].toLowerCase();
 
     name = `${dateToString(new Date())}-${props.initialData.id}-${
       fileNameArray[0]
     }.${fileType}`;
+  } else if (props.mode === OperationMode.Create && file) {
+    const fileNameArray = name.split('.');
+    const fileType = fileNameArray[1].toLowerCase();
+
+    name = `${fileNameArray[0]}.${fileType}`;
   }
 
-  const url = await getImage(name);
+  let url!: string | WeGoNiceApi.RequestResponse;
+
+  if (props.mode === OperationMode.Create && file) {
+    url = await getImageTmp(name);
+  } else if (props.mode === OperationMode.Edit) {
+    url = await getImage(name);
+  }
+
   img.value = url as string;
 };
+
+watch(img, () => {
+  console.warn('img url changed');
+});
 
 onMounted(() => {
   updateImage();
@@ -231,7 +262,6 @@ onMounted(() => {
           <p>{{ fileName || 'No file chosen...' }}</p>
         </div>
       </Transition>
-      <!-- {{ imageName }} -->
       <img v-if="imageName" :src="img" alt="Author Picture" />
       <ion-icon v-if="!imageName" name="person" />
     </div>

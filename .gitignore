@@ -7,6 +7,7 @@ logs
 # Server
 source/server/cmd/main
 source/server/files
+source/server/files_tmp
 **/*.env
 
 # Frontend

@@ -36,6 +36,7 @@ func main() {
 	recipes.RegisterRecipeRoutes(r, recipeHandler)
 	authors.RegisterAuthorRoutes(r, authorHandler)
 	files.RegisterFilesRoutes(r, filesHandler)
+	files.RegisterFilesRoutesTmp(r, filesHandler)
 
 	url := "localhost:8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})

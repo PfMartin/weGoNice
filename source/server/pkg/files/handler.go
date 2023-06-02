@@ -23,6 +23,26 @@ func NewHandler() Handler {
 }
 
 func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
+	log.Println("Save permanent")
+	saveFile(w, r, false)
+}
+
+func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
+	log.Println("Serve permanent")
+	serveFile(w, r, false)
+}
+
+func (h *Handler) SaveFileTmp(w http.ResponseWriter, r *http.Request) {
+	log.Println("Save temp")
+	saveFile(w, r, true)
+}
+
+func (h *Handler) ServeFileTmp(w http.ResponseWriter, r *http.Request) {
+	log.Println("Serve temp")
+	serveFile(w, r, true)
+}
+
+func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	r.ParseMultipartForm(10 << 20)
 
 	file, fileHandler, err := r.FormFile("picture")
@@ -43,7 +63,14 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	nameString := name[0]
 	fileType := strings.ToLower(name[1])
 
-	fileDepot := os.Getenv("FILE_DEPOT")
+	fileDepot := os.Getenv("TMP_FILE_DEPOT")
+	fileName := fmt.Sprintf("%s.%s", nameString, fileType)
+	if !isTemporary {
+		fileDepot = os.Getenv("FILE_DEPOT")
+		id := mux.Vars(r)["id"]
+		currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
+		fileName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, nameString, fileType)
+	}
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
 		log.Printf("Directory '%s' doesn't existing. Creating directory", fileDepot)
@@ -53,10 +80,6 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	id := mux.Vars(r)["id"]
-	currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
-	fileName := fmt.Sprintf("%s-%s-%s.%s", currentDate, id, nameString, fileType)
 
 	filepath := fmt.Sprintf("%s/%s", fileDepot, fileName)
 
@@ -72,8 +95,12 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
-	fileDepot := os.Getenv("FILE_DEPOT")
+func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
+	fileDepot := os.Getenv("TMP_FILE_DEPOT")
+
+	if !isTemporary {
+		fileDepot = os.Getenv("FILE_DEPOT")
+	}
 	filename := mux.Vars(r)["filename"]
 
 	filePath := fmt.Sprintf("%s/%s", fileDepot, filename)
