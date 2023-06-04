@@ -125,8 +125,9 @@ const updateYouTube = (newValue: string) => {
 const imageName = ref(props.initialData.imageName);
 
 watch(fileName, () => {
-  console.log(fileName.value);
-  updateImage();
+  setTimeout(() => {
+    updateImage();
+  }, 1000);
 });
 
 /* Validation */
@@ -230,11 +231,8 @@ const updateImage = async (): Promise<void> => {
   }
 
   img.value = url as string;
+  imageName.value = name;
 };
-
-watch(img, () => {
-  console.warn('img url changed');
-});
 
 onMounted(() => {
   updateImage();
