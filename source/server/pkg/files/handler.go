@@ -23,22 +23,18 @@ func NewHandler() Handler {
 }
 
 func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
-	log.Println("Save permanent")
 	saveFile(w, r, false)
 }
 
 func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
-	log.Println("Serve permanent")
 	serveFile(w, r, false)
 }
 
 func (h *Handler) SaveFileTmp(w http.ResponseWriter, r *http.Request) {
-	log.Println("Save temp")
 	saveFile(w, r, true)
 }
 
 func (h *Handler) ServeFileTmp(w http.ResponseWriter, r *http.Request) {
-	log.Println("Serve temp")
 	serveFile(w, r, true)
 }
 
