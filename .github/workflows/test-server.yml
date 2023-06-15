@@ -40,10 +40,14 @@ jobs:
         run: |
           docker exec mongodb mongosh weGoNice -u ${{env.MONGO_INIT_ROOT_USERNAME}} -p ${{env.MONGO_INITDB_ROOT_PASSWORD}} --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
 
+      - name: File Depots for Tests
+        run: |
+          cd ./source/server/pkg/testUtils/files
+          mkdir perm
+          mkdir tmp
+
       - name: Run tests
         run: |
           cd ./source/server/pkg
-          mkdir ./testUtils/files/perm/
-          mkdir ./testUtils/files/tmp/
           go test ./users
           go test ./authors
