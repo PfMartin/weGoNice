@@ -137,6 +137,12 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 
 func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, withDelete bool) error {
 	errMsg := "Failed to update author with new imageName"
+	dir, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to get working directory: %s", err)
+	}
+
+	fmt.Printf("Move tmp file to perm: cwd %s", dir)
 
 	tmpFile, err := os.Open(tmpFilePath)
 	if err != nil {

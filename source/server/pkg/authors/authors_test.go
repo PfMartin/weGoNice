@@ -290,6 +290,9 @@ func prepareFile() error {
 
 	filePath := fmt.Sprintf("%s/%s", "../testUtils/files", fileName)
 	path := path.Join(dir, filePath)
+
+	fmt.Printf("Prepare file: cwd: %s", path)
+
 	fileIn, err := os.Open(path)
 	if err != nil {
 		return fmt.Errorf("Could not open file in path '%s': %s", path, err)
