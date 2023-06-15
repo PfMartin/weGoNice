@@ -3,6 +3,7 @@ package testUtils
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -68,4 +69,46 @@ func CompareFileContent(file1 string, file2 string) bool {
 		}
 	}
 
+}
+
+func PrepareFile() error {
+	// Copy testfile to tmp file depot
+	testFilePath := "../testUtils/files/test-image.png"
+	tmpFileDepot := os.Getenv("TMP_FILE_DEPOT")
+
+	fileIn, err := os.Open(testFilePath)
+	if err != nil {
+		return fmt.Errorf("could not open file in path '%s': %s", testFilePath, err)
+	}
+	defer fileIn.Close()
+
+	destination := fmt.Sprintf("%s/testImage.png", tmpFileDepot)
+	fileOut, err := os.Create(destination)
+	if err != nil {
+		return fmt.Errorf("could not create file destination '%s': %s", destination, err)
+	}
+	defer fileOut.Close()
+
+	_, err = io.Copy(fileOut, fileIn)
+	if err != nil {
+		return fmt.Errorf("could not copy file: %s", err)
+	}
+
+	return nil
+}
+
+func ClearTestFileDepot() error {
+	testFileDepot := os.Getenv("FILE_DEPOT")
+
+	err := os.RemoveAll(testFileDepot)
+	if err != nil {
+		return fmt.Errorf("failed to remove all files from Test File Depot: %s", err)
+	}
+
+	err = os.Mkdir(testFileDepot, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("failed to readd Test File Depot: %s", err)
+	}
+
+	return nil
 }

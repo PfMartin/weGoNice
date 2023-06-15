@@ -2,8 +2,6 @@ package authors
 
 import (
 	"encoding/json"
-	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -148,8 +146,6 @@ func TestCreateAuthor(t *testing.T) {
 	os.Setenv("FILE_DEPOT", "../testUtils/files/perm")
 	os.Setenv("TMP_FILE_DEPOT", "../testUtils/files/tmp")
 
-	prepareFile()
-
 	tests := []testArgs{
 		{name: "with correct userID", hasMatchingUserID: true, expectedStatus: http.StatusCreated},
 	}
@@ -157,6 +153,8 @@ func TestCreateAuthor(t *testing.T) {
 	for _, tt := range tests {
 		DB := db.Init(false)
 		h := NewHandler(DB)
+
+		testUtils.PrepareFile()
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
@@ -189,7 +187,7 @@ func TestCreateAuthor(t *testing.T) {
 		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expectedStatus, got)
 	}
 
-	clearTestFileDepot()
+	testUtils.ClearTestFileDepot()
 }
 
 func TestUpdateAuthorByID(t *testing.T) {
@@ -276,48 +274,4 @@ func TestDeleteAuthorByID(t *testing.T) {
 		got := w.Code
 		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expectedStatus, got)
 	}
-}
-
-func prepareFile() error {
-	// Copy testfile to tmp file depot
-	testFilePath := "../testUtils/files/test-image.png"
-	tmpFileDepot := os.Getenv("TMP_FILE_DEPOT")
-
-	fileIn, err := os.Open(testFilePath)
-	if err != nil {
-		return fmt.Errorf("Could not open file in path '%s': %s", testFilePath, err)
-	}
-	defer fileIn.Close()
-
-	destination := fmt.Sprintf("%s/testImage.png", tmpFileDepot)
-	fileOut, err := os.Create(destination)
-	if err != nil {
-		return fmt.Errorf("Could not create file destination '%s': %s", destination, err)
-	}
-	defer fileOut.Close()
-
-	_, err = io.Copy(fileOut, fileIn)
-	if err != nil {
-		return fmt.Errorf("Could not copy file: %s", err)
-	}
-
-	testUtils.Ls(tmpFileDepot)
-
-	return nil
-}
-
-func clearTestFileDepot() error {
-	testFileDepot := os.Getenv("FILE_DEPOT")
-
-	err := os.RemoveAll(testFileDepot)
-	if err != nil {
-		return fmt.Errorf("Failed to remove all files from Test File Depot: %s", err)
-	}
-
-	err = os.Mkdir(testFileDepot, os.ModePerm)
-	if err != nil {
-		return fmt.Errorf("Failed to readd Test File Depot: %s", err)
-	}
-
-	return nil
 }

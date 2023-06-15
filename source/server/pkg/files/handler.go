@@ -135,52 +135,8 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	w.Write(bytes)
 }
 
-func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, withDelete bool) error {
+func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithDelete bool) error {
 	errMsg := "Failed to update author with new imageName"
-	dir, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("failed to get working directory: %s", err)
-	}
-
-	fmt.Printf("Move tmp file to perm: cwd %s", dir)
-	entries, err := os.ReadDir("../")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, e := range entries {
-		fmt.Println(e.Name())
-	}
-
-	fmt.Println("------------------")
-
-	entries, err = os.ReadDir("../testUtils")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, e := range entries {
-		fmt.Println(e.Name())
-	}
-	fmt.Println("------------------")
-	entries, err = os.ReadDir("../testUtils/files")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, e := range entries {
-		fmt.Println(e.Name())
-	}
-	fmt.Println("------------------")
-	entries, err = os.ReadDir("../testUtils/files/tmp")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, e := range entries {
-		fmt.Println(e.Name())
-	}
-	fmt.Println("------------------")
 
 	tmpFile, err := os.Open(tmpFilePath)
 	if err != nil {
@@ -188,7 +144,6 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, withDel
 		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 
-	log.Println(filePath)
 	permFile, err := os.Create(filePath)
 	if err != nil {
 		tmpFile.Close()
@@ -203,7 +158,7 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, withDel
 		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 
-	if withDelete {
+	if isWithDelete {
 		err = os.Remove(tmpFilePath)
 		if err != nil {
 			log.Printf("Error: Failed to remove temp file: %s", err)
