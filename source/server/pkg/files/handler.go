@@ -143,6 +143,44 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, withDel
 	}
 
 	fmt.Printf("Move tmp file to perm: cwd %s", dir)
+	entries, err := os.ReadDir("../")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, e := range entries {
+		fmt.Println(e.Name())
+	}
+
+	fmt.Println("------------------")
+
+	entries, err = os.ReadDir("../testUtils")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, e := range entries {
+		fmt.Println(e.Name())
+	}
+	fmt.Println("------------------")
+	entries, err = os.ReadDir("../testUtils/files")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, e := range entries {
+		fmt.Println(e.Name())
+	}
+	fmt.Println("------------------")
+	entries, err = os.ReadDir("../testUtils/files/tmp")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, e := range entries {
+		fmt.Println(e.Name())
+	}
+	fmt.Println("------------------")
 
 	tmpFile, err := os.Open(tmpFilePath)
 	if err != nil {

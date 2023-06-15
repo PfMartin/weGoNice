@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -302,6 +303,37 @@ func prepareFile() error {
 	if err != nil {
 		return fmt.Errorf("Could not copy file: %s", err)
 	}
+
+	entries, err := os.ReadDir("../")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, e := range entries {
+		fmt.Println(e.Name())
+	}
+
+	fmt.Println("------------------")
+	entries, err = os.ReadDir("../")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, e := range entries {
+		fmt.Println(e.Name())
+	}
+
+	fmt.Println("------------------")
+	entries, err = os.ReadDir("../")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, e := range entries {
+		fmt.Println(e.Name())
+	}
+
+	fmt.Println("------------------")
 
 	return nil
 }
