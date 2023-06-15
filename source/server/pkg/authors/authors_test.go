@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -281,10 +280,11 @@ func TestDeleteAuthorByID(t *testing.T) {
 
 func prepareFile() error {
 	// Copy testfile to tmp file depot
+	tmpFileDepot := os.Getenv("TMP_FILE_DEPOT")
 	fileName := "test-image.png"
 
 	// Create path to test-image
-	filePath := fmt.Sprintf("../testUtils/files/%s", fileName)
+	filePath := fmt.Sprintf("%s/%s", tmpFileDepot, fileName)
 
 	fileIn, err := os.Open(filePath)
 	if err != nil {
@@ -304,36 +304,7 @@ func prepareFile() error {
 		return fmt.Errorf("Could not copy file: %s", err)
 	}
 
-	entries, err := os.ReadDir("../")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, e := range entries {
-		fmt.Println(e.Name())
-	}
-
-	fmt.Println("------------------")
-	entries, err = os.ReadDir("../")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, e := range entries {
-		fmt.Println(e.Name())
-	}
-
-	fmt.Println("------------------")
-	entries, err = os.ReadDir("../")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, e := range entries {
-		fmt.Println(e.Name())
-	}
-
-	fmt.Println("------------------")
+	testUtils.Ls(tmpFileDepot)
 
 	return nil
 }

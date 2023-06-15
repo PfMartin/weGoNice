@@ -43,5 +43,7 @@ jobs:
       - name: Run tests
         run: |
           cd ./source/server/pkg
+          mkdir pkg/testUtils/files/perm/
+          mkdir pkg/testUtils/files/temp/
           go test ./users
           go test ./authors
