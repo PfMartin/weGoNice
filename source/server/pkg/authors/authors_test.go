@@ -280,19 +280,16 @@ func TestDeleteAuthorByID(t *testing.T) {
 
 func prepareFile() error {
 	// Copy testfile to tmp file depot
+	testFilePath := "../testUtils/files/test-image.png"
 	tmpFileDepot := os.Getenv("TMP_FILE_DEPOT")
-	fileName := "test-image.png"
 
-	// Create path to test-image
-	filePath := fmt.Sprintf("%s/%s", tmpFileDepot, fileName)
-
-	fileIn, err := os.Open(filePath)
+	fileIn, err := os.Open(testFilePath)
 	if err != nil {
-		return fmt.Errorf("Could not open file in path '%s': %s", filePath, err)
+		return fmt.Errorf("Could not open file in path '%s': %s", testFilePath, err)
 	}
 	defer fileIn.Close()
 
-	destination := fmt.Sprintf("%s/%s", "../testUtils/files/tmp", "testImage.png")
+	destination := fmt.Sprintf("%s/testImage.png", tmpFileDepot)
 	fileOut, err := os.Create(destination)
 	if err != nil {
 		return fmt.Errorf("Could not create file destination '%s': %s", destination, err)
