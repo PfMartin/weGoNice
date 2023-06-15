@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -12,6 +11,7 @@ import (
 	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
+	"github.com/PfMartin/weGoNice/server/pkg/files"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
@@ -184,7 +184,10 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 		fileDepot := os.Getenv("FILE_DEPOT")
 		filePath := fmt.Sprintf("%s/%s", fileDepot, imageName)
-		err = h.MoveTmpFileToPerm(tmpFilePath, filePath)
+
+		fileHandler := files.NewHandler()
+
+		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -270,36 +273,4 @@ func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Deleted author")
-}
-
-func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string) error {
-	errMsg := "Failed to update author with new imageName"
-
-	tmpFile, err := os.Open(tmpFilePath)
-	if err != nil {
-		log.Printf("Error: Failed to open temporary file during file copy: %s", err)
-		return fmt.Errorf(errMsg)
-	}
-
-	permFile, err := os.Create(filePath)
-	if err != nil {
-		tmpFile.Close()
-		return fmt.Errorf(errMsg)
-	}
-	defer permFile.Close()
-
-	_, err = io.Copy(permFile, tmpFile)
-	tmpFile.Close()
-	if err != nil {
-		log.Printf("Error: Failed to copy temporary file to file: %s", err)
-		return fmt.Errorf(errMsg)
-	}
-
-	err = os.Remove(tmpFilePath)
-	if err != nil {
-		log.Printf("Error: Failed to remove temp file: %s", err)
-		return fmt.Errorf(errMsg)
-	}
-
-	return nil
 }

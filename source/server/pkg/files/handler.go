@@ -134,3 +134,37 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(bytes)
 }
+
+func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, withDelete bool) error {
+	errMsg := "Failed to update author with new imageName"
+
+	tmpFile, err := os.Open(tmpFilePath)
+	if err != nil {
+		log.Printf("Error: Failed to open temporary file during file copy: %s", err)
+		return fmt.Errorf(errMsg)
+	}
+
+	permFile, err := os.Create(filePath)
+	if err != nil {
+		tmpFile.Close()
+		return fmt.Errorf(errMsg)
+	}
+	defer permFile.Close()
+
+	_, err = io.Copy(permFile, tmpFile)
+	tmpFile.Close()
+	if err != nil {
+		log.Printf("Error: Failed to copy temporary file to file: %s", err)
+		return fmt.Errorf(errMsg)
+	}
+
+	if withDelete {
+		err = os.Remove(tmpFilePath)
+		if err != nil {
+			log.Printf("Error: Failed to remove temp file: %s", err)
+			return fmt.Errorf(errMsg)
+		}
+	}
+
+	return nil
+}

@@ -159,3 +159,26 @@ func TestServeImage(t *testing.T) {
 		t.Errorf("Error while removing the test image from file test dir: %s", err)
 	}
 }
+
+func TestMoveImage(t *testing.T) {
+	h := NewHandler()
+
+	dir, err := os.Getwd()
+	if err != nil {
+		t.Errorf("Failed to get working directory: %s", err)
+	}
+
+	testFilePath := path.Join(dir, "../testUtils/files/test-image.png")
+	tmpTestFilePath := path.Join(dir, "../testUtils/files/tmp/test-file.png")
+
+	tmpTestFile, err := os.Create(tmpTestFilePath)
+	if err != nil {
+		t.Errorf("Failed to create temporary testfile: %s", err)
+	}
+	defer tmpTestFile.Close()
+
+	err = h.MoveTmpFileToPerm(tmpTestFilePath, testFilePath, true)
+	if err != nil {
+		t.Errorf("Failed to prepare temp file: %s", err)
+	}
+}
