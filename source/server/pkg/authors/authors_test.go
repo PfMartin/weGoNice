@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"path"
 	"strings"
 	"testing"
 
@@ -146,6 +145,9 @@ func TestGetAuthorByID(t *testing.T) {
 }
 
 func TestCreateAuthor(t *testing.T) {
+	os.Setenv("FILE_DEPOT", "../testUtils/files/perm")
+	os.Setenv("TMP_FILE_DEPOT", "../testUtils/files/tmp")
+
 	tests := []testArgs{
 		{name: "with correct userID", hasMatchingUserID: true, expectedStatus: http.StatusCreated},
 	}
@@ -279,23 +281,13 @@ func TestDeleteAuthorByID(t *testing.T) {
 func prepareFile() error {
 	// Copy testfile to tmp file depot
 	fileName := "test-image.png"
-	os.Setenv("FILE_DEPOT", "../testUtils/files/perm")
-	os.Setenv("TMP_FILE_DEPOT", "../testUtils/files/tmp")
 
 	// Create path to test-image
-	dir, err := os.Getwd()
+	filePath := fmt.Sprintf("../testUtils/files/%s", fileName)
+
+	fileIn, err := os.Open(filePath)
 	if err != nil {
-		return fmt.Errorf("Failed to get working directory: %s", err)
-	}
-
-	filePath := fmt.Sprintf("%s/%s", "../testUtils/files", fileName)
-	path := path.Join(dir, filePath)
-
-	fmt.Printf("Prepare file: cwd: %s", path)
-
-	fileIn, err := os.Open(path)
-	if err != nil {
-		return fmt.Errorf("Could not open file in path '%s': %s", path, err)
+		return fmt.Errorf("Could not open file in path '%s': %s", filePath, err)
 	}
 	defer fileIn.Close()
 
@@ -317,19 +309,12 @@ func prepareFile() error {
 func clearTestFileDepot() error {
 	testFileDepot := os.Getenv("FILE_DEPOT")
 
-	dir, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("Failed to get working directory: %s", err)
-	}
-
-	path := path.Join(dir, testFileDepot)
-
-	err = os.RemoveAll(path)
+	err := os.RemoveAll(testFileDepot)
 	if err != nil {
 		return fmt.Errorf("Failed to remove all files from Test File Depot: %s", err)
 	}
 
-	err = os.Mkdir(path, os.ModePerm)
+	err = os.Mkdir(testFileDepot, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("Failed to readd Test File Depot: %s", err)
 	}
