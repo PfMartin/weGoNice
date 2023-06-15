@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path"
 	"strings"
 	"testing"
 
@@ -281,7 +282,14 @@ func prepareFile() error {
 	os.Setenv("FILE_DEPOT", "../testUtils/files/perm")
 	os.Setenv("TMP_FILE_DEPOT", "../testUtils/files/tmp")
 
-	path := fmt.Sprintf("%s/%s", "../testUtils/files", fileName)
+	// Create path to test-image
+	dir, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("Failed to get working directory: %s", err)
+	}
+
+	filePath := fmt.Sprintf("%s/%s", "../testUtils/files", fileName)
+	path := path.Join(dir, filePath)
 	fileIn, err := os.Open(path)
 	if err != nil {
 		return fmt.Errorf("Could not open file in path '%s': %s", path, err)
@@ -306,12 +314,19 @@ func prepareFile() error {
 func clearTestFileDepot() error {
 	testFileDepot := os.Getenv("FILE_DEPOT")
 
-	err := os.RemoveAll(testFileDepot)
+	dir, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("Failed to get working directory: %s", err)
+	}
+
+	path := path.Join(dir, testFileDepot)
+
+	err = os.RemoveAll(path)
 	if err != nil {
 		return fmt.Errorf("Failed to remove all files from Test File Depot: %s", err)
 	}
 
-	err = os.Mkdir(testFileDepot, os.ModePerm)
+	err = os.Mkdir(path, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("Failed to readd Test File Depot: %s", err)
 	}
