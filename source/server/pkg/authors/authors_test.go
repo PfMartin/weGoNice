@@ -149,6 +149,8 @@ func TestCreateAuthor(t *testing.T) {
 	os.Setenv("FILE_DEPOT", "../testUtils/files/perm")
 	os.Setenv("TMP_FILE_DEPOT", "../testUtils/files/tmp")
 
+	prepareFile()
+
 	tests := []testArgs{
 		{name: "with correct userID", hasMatchingUserID: true, expectedStatus: http.StatusCreated},
 	}
@@ -156,8 +158,6 @@ func TestCreateAuthor(t *testing.T) {
 	for _, tt := range tests {
 		DB := db.Init(false)
 		h := NewHandler(DB)
-
-		prepareFile()
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
@@ -292,7 +292,7 @@ func prepareFile() error {
 	}
 	defer fileIn.Close()
 
-	destination := fmt.Sprintf("%s/%s", os.Getenv("TMP_FILE_DEPOT"), "testImage.png")
+	destination := fmt.Sprintf("%s/%s", "../testUtils/files/tmp", "testImage.png")
 	fileOut, err := os.Create(destination)
 	if err != nil {
 		return fmt.Errorf("Could not create file destination '%s': %s", destination, err)
