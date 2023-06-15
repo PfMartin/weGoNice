@@ -189,9 +189,9 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
 		if err != nil {
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-
 	}
 
 	w.Header().Add("Content-Type", "application/json")

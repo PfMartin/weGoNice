@@ -141,13 +141,14 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, withDel
 	tmpFile, err := os.Open(tmpFilePath)
 	if err != nil {
 		log.Printf("Error: Failed to open temporary file during file copy: %s", err)
-		return fmt.Errorf(errMsg)
+		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 
+	log.Println(filePath)
 	permFile, err := os.Create(filePath)
 	if err != nil {
 		tmpFile.Close()
-		return fmt.Errorf(errMsg)
+		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 	defer permFile.Close()
 
@@ -155,14 +156,14 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, withDel
 	tmpFile.Close()
 	if err != nil {
 		log.Printf("Error: Failed to copy temporary file to file: %s", err)
-		return fmt.Errorf(errMsg)
+		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 
 	if withDelete {
 		err = os.Remove(tmpFilePath)
 		if err != nil {
 			log.Printf("Error: Failed to remove temp file: %s", err)
-			return fmt.Errorf(errMsg)
+			return fmt.Errorf("%s: %s", errMsg, err)
 		}
 	}
 

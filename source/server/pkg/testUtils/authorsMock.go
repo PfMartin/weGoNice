@@ -17,7 +17,7 @@ var TestAuthor = models.AuthorRequest{
 	Website:   "https://schnabularasa.at",
 	Instagram: "testAccount",
 	YouTube:   "testYouTube",
-	ImageName: "2023-02-05_anyID_testImage.png",
+	ImageName: "testImage.png",
 }
 
 var UpdateAuthor = models.AuthorRequest{
@@ -27,7 +27,7 @@ var UpdateAuthor = models.AuthorRequest{
 	Website:   "https://www.nikorittenau.com/",
 	Instagram: "rittenau",
 	YouTube:   "rittenau",
-	ImageName: "2023-02-05_anyID_testImage.png",
+	ImageName: "testImage.png",
 }
 
 var ExpectedUser = models.UserResponse{
