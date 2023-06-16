@@ -223,12 +223,15 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
 	}
 
-	currentDate := time.Now().Format("2006-01-02")
-	imageNameSlice := strings.Split(author.ImageName, ".")
-	iName := imageNameSlice[0]
-	iNameType := strings.ToLower(imageNameSlice[1])
+	imageName := author.ImageName
 
-	imageName := fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
+	if !strings.Contains(author.ImageName, id) {
+		fileNameSlice := strings.Split(author.ImageName, ".")
+		currentDate := time.Now().Format("2006-01-02")
+		iName := fileNameSlice[0]
+		iNameType := strings.ToLower(fileNameSlice[1])
+		imageName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
+	}
 
 	filter := bson.M{"_id": authorID}
 	update := bson.M{"$set": bson.M{

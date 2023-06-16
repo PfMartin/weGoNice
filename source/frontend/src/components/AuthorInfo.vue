@@ -88,38 +88,50 @@ const executeUpload = async () => {
 /* Handle User Input */
 const name = ref(props.initialData.name);
 const updateName = (newValue: string) => {
-  name.value = newValue;
-  emitInput();
+  if (newValue !== name.value) {
+    name.value = newValue;
+    emitInput();
+  }
 };
 
 const firstname = ref(props.initialData.firstname);
 const updateFirstname = (newValue: string): void => {
-  firstname.value = newValue;
-  emitInput();
+  if (newValue !== firstname.value) {
+    firstname.value = newValue;
+    emitInput();
+  }
 };
 
 const lastname = ref(props.initialData.lastname);
 const updateLastname = (newValue: string): void => {
-  lastname.value = newValue;
-  emitInput();
+  if (newValue !== lastname.value) {
+    lastname.value = newValue;
+    emitInput();
+  }
 };
 
 const website = ref(props.initialData.website);
 const updateWebsite = (newValue: string) => {
-  website.value = newValue;
-  emitInput();
+  if (newValue !== website.value) {
+    website.value = newValue;
+    emitInput();
+  }
 };
 
 const instagram = ref(props.initialData.instagram);
 const updateInstagram = (newValue: string) => {
-  instagram.value = newValue;
-  emitInput();
+  if (newValue !== instagram.value) {
+    instagram.value = newValue;
+    emitInput();
+  }
 };
 
 const youTube = ref(props.initialData.youTube);
 const updateYouTube = (newValue: string) => {
-  youTube.value = newValue;
-  emitInput();
+  if (newValue !== youTube.value) {
+    youTube.value = newValue;
+    emitInput();
+  }
 };
 
 const imageName = ref(props.initialData.imageName);
@@ -127,7 +139,7 @@ const imageName = ref(props.initialData.imageName);
 watch(fileName, () => {
   setTimeout(() => {
     updateImage();
-  }, 1000);
+  }, 200);
 });
 
 /* Validation */
@@ -275,7 +287,7 @@ onMounted(() => {
           @changed="updateName"
         />
         <TextInputField
-          headline="Firstname"
+          headline="First name"
           iconName="person"
           id="firstname"
           :initialValue="firstname"
@@ -283,7 +295,7 @@ onMounted(() => {
           @changed="updateFirstname"
         />
         <TextInputField
-          headline="Lastname"
+          headline="Last name"
           iconName="person"
           id="lastname"
           :initialValue="lastname"
