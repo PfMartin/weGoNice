@@ -31,6 +31,13 @@ const togglePictureOverlay = () => {
 /* Handle File Input */
 const fileInput = ref<HTMLInputElement | null>(null);
 const openUploadWindow = () => {
+  if (!isValid.value) {
+    notificationService.addNotification(
+      'error',
+      `Please make sure there aren't any errors in the input fields before you add an image.`
+    );
+    return;
+  }
   fileInput.value?.click();
 };
 
@@ -145,7 +152,7 @@ watch(fileName, () => {
 /* Validation */
 const validationService = new ValidationService();
 
-const nameError = ref('');
+const nameError = ref(validationService.validateAuthorName(name.value));
 const validateName = (): void => {
   nameError.value = validationService.validateAuthorName(name.value);
 };

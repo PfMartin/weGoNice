@@ -3,6 +3,7 @@ declare namespace Store {
     id?: number;
     headline: string;
     body: string;
+    type: 'error' | 'warning' | 'success';
   }
 
   interface State {

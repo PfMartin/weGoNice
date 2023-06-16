@@ -21,6 +21,7 @@ export default {
         id: state.notificationCounter,
         headline: notification.headline,
         body: notification.body,
+        type: notification.type,
       };
       state.notifications.push(newNotification);
     },
