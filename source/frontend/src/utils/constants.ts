@@ -16,3 +16,9 @@ export enum sortDirections {
   ASC,
   DESC,
 }
+
+export enum ButtonType {
+  Primary,
+  Delete,
+  Default,
+}

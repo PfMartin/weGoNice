@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { ButtonType } from '@/utils/constants';
 
 const props = defineProps<{
   buttonText: string;
   buttonIconName?: string;
-  isPrimary?: boolean;
+  buttonType?: ButtonType;
 }>();
 
 const emit = defineEmits<{
@@ -18,7 +19,8 @@ const onClick = () => {
 const buttonClass = computed(() => {
   return {
     button: true,
-    primary: props.isPrimary || false,
+    primary: props.buttonType === ButtonType.Primary,
+    delete: props.buttonType === ButtonType.Delete,
   };
 });
 </script>
@@ -50,6 +52,15 @@ const buttonClass = computed(() => {
 
     &:hover {
       background: $accent-hover-color;
+    }
+  }
+
+  &.delete {
+    background: $error-color;
+    color: $text-color;
+
+    &:hover {
+      background: $error-hover-color;
     }
   }
 

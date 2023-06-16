@@ -3,7 +3,7 @@ import { createAuthor } from '@/apis/weGoNice/authors';
 import NotificationService from '@/services/notification.service';
 import { useRouter } from 'vue-router';
 import AuthorInfo from '@/components/AuthorInfo.vue';
-import { OperationMode } from '@/utils/constants';
+import { ButtonType, OperationMode } from '@/utils/constants';
 import { ref } from 'vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 
@@ -62,12 +62,13 @@ const submit = async (): Promise<void> => {
     />
     <div class="buttons">
       <ButtonComponent
+        :buttonType="ButtonType.Delete"
         buttonText="Cancel"
         buttonIconName="close-circle"
         @on-click="cancel"
       />
       <ButtonComponent
-        isPrimary
+        :buttonType="ButtonType.Primary"
         buttonText="Save"
         buttonIconName="checkmark-done"
         @on-click="submit"

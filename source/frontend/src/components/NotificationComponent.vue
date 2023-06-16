@@ -74,6 +74,7 @@ onMounted((): void => {
 
   &.error {
     background: rgba($error-color, 0.8);
+    color: $text-color;
   }
 
   &.warning {
