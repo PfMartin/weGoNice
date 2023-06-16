@@ -269,7 +269,13 @@ onMounted(() => {
             @change="executeUpload"
           />
           <ion-icon name="create"></ion-icon>
-          <p>{{ fileName || 'No file chosen...' }}</p>
+          <p>
+            {{
+              fileName.length > 30
+                ? `${fileName.slice(0, 30)}...`
+                : fileName || 'No file chosen...'
+            }}
+          </p>
         </div>
       </Transition>
       <img v-if="imageName" :src="img" alt="Author Picture" />
@@ -358,17 +364,18 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: $bg-color-light;
+    background: $bg-color-mid;
     height: 330px;
 
     img {
       max-height: 100%;
+      border-radius: $border-radius;
     }
 
     .picture-overlay {
       position: absolute;
       z-index: 5;
-      background: #33333399;
+      background: rgba($bg-color-lighter, 0.6);
       height: 100%;
       width: 100%;
       border-radius: $border-radius;
@@ -386,11 +393,13 @@ onMounted(() => {
       ion-icon {
         opacity: 1;
         font-size: 3rem;
+        color: $bg-color-mid;
       }
     }
 
     ion-icon {
       font-size: 6rem;
+      color: $text-color;
       z-index: 1;
     }
   }
