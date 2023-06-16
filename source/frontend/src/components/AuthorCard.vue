@@ -53,7 +53,7 @@ onMounted(async () => {
 .author-card {
   background: $bg-color-mid;
   border-radius: $border-radius;
-  border: 1px solid $bg-color-mid;
+  border: 2px solid $bg-color-mid;
   color: $text-color;
   padding: 0.5rem;
   display: grid;
@@ -61,13 +61,14 @@ onMounted(async () => {
   grid-gap: 0.5rem;
   align-items: center;
   min-height: 100px;
-  transition: background-color 0.3s;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
+  // transition: border-color 0.3s;
   box-shadow: $shadow;
 
   &:hover {
     cursor: pointer;
-    background: $bg-color-dark;
+    background-color: $bg-color-dark;
+    border-color: $accent-color;
 
     .main {
       background: $bg-color-mid;
@@ -85,6 +86,7 @@ onMounted(async () => {
 
     img {
       height: 100px;
+      border-radius: $border-radius;
     }
 
     ion-icon {
