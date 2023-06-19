@@ -255,6 +255,9 @@ const updateImage = async (): Promise<void> => {
 
 onMounted(() => {
   updateImage();
+  if (props.mode === OperationMode.Create) {
+    document.getElementById('name')?.focus();
+  }
 });
 </script>
 
