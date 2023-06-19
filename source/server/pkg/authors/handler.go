@@ -217,6 +217,22 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	var existingAuthor models.AuthorDB
+	filter := bson.M{"_id": authorID}
+	err = coll.FindOne(context.TODO(), filter).Decode(&existingAuthor)
+	if err != nil {
+		log.Printf("Failed to find existing with ID %s: %s", authorID, err)
+		http.Error(w, "Error: Failed to find existing author with the provided ID", http.StatusBadRequest)
+	}
+
+	existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingAuthor.ImageName)
+	err = os.Remove(existingFilePath)
+	if err != nil {
+		log.Printf("Error: Failed to delete image with path '%s': %s\n", existingFilePath, err)
+	}
+
 	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
 		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
@@ -233,7 +249,7 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		imageName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
 	}
 
-	filter := bson.M{"_id": authorID}
+	filter = bson.M{"_id": authorID}
 	update := bson.M{"$set": bson.M{
 		"name":       author.Name,
 		"firstname":  author.Firstname,
@@ -246,7 +262,6 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		"modifiedAt": time.Now(),
 	}}
 
-	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	result, err := coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		log.Printf("Error: Failed to update author: %v", err)
