@@ -5,6 +5,7 @@ import AuthorCard from '@/components/AuthorCard.vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
 import { sortDirections } from '@/utils/constants';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 // Searching, sorting and filtering
 const selectedOption = ref('Name');
@@ -71,7 +72,11 @@ const isReady = computed((): boolean => !!authors.value.length);
       </div>
     </div>
 
-    <div class="authors" v-if="isReady" :style="`max-height: ${listHeight}px`">
+    <div
+      class="authors"
+      v-if="isReady && authors.length"
+      :style="`max-height: ${listHeight}px`"
+    >
       <template v-for="author in visibleAuthors" :key="author.name">
         <RouterLink
           :to="{
@@ -85,6 +90,7 @@ const isReady = computed((): boolean => !!authors.value.length);
         </RouterLink>
       </template>
     </div>
+    <SpinnerComponent v-else size="large" />
   </div>
 </template>
 

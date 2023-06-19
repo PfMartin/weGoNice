@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getImage } from '@/apis/weGoNice/files';
 import { onMounted, ref } from 'vue';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 const props = defineProps<{
   data: Authors.Author;
@@ -16,8 +17,9 @@ onMounted(async () => {
 <template>
   <div class="author-card">
     <div class="picture">
+      <ion-icon v-if="!data.imageName" name="person" />
       <img v-if="img" :src="img" />
-      <ion-icon v-else name="person" />
+      <SpinnerComponent size="small" v-else />
     </div>
     <div class="main">
       <header>

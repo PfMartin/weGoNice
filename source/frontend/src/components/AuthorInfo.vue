@@ -13,6 +13,7 @@ import {
 import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
 import { dateToString } from '@/utils/utility-functions';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 const props = defineProps<{
   initialData: Authors.Author;
@@ -289,7 +290,7 @@ onMounted(() => {
         </div>
       </Transition>
       <img v-if="imageName && img" :src="img" alt="Author Picture" />
-      <div v-else class="spinner"></div>
+      <SpinnerComponent v-else size="large" />
       <ion-icon v-if="!imageName" name="person" />
     </div>
     <div class="info">
@@ -383,17 +384,6 @@ onMounted(() => {
       border-radius: $border-radius;
     }
 
-    .spinner {
-      display: inline-block;
-      width: 50px;
-      height: 50px;
-      border: 4px solid $bg-color-dark;
-      border-radius: 50%;
-      border-top-color: $accent-color;
-      animation: spin 1s ease-in-out infinite;
-      -webkit-animation: spinner 1s ease-in-out infinite;
-    }
-
     .picture-overlay {
       position: absolute;
       z-index: 5;
@@ -452,16 +442,5 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-@keyframes spinner {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes spinner {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
 }
 </style>
