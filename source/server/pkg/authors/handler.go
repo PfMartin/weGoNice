@@ -269,8 +269,26 @@ func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filter := bson.M{"_id": authorID}
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	filter := bson.M{"_id": authorID}
+
+	var author models.AuthorDB
+	err = coll.FindOne(context.TODO(), filter).Decode(&author)
+	if err != nil {
+		log.Printf("Error: Failed to find author")
+		http.Error(w, "Failed to find author", http.StatusNotFound)
+		return
+	}
+
+	filePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), author.ImageName)
+
+	err = os.Remove(filePath)
+	if err != nil {
+		log.Printf("Error: Failed to remove image for author: %s", filePath)
+	}
+
+	coll = h.DB.Database(h.dbName).Collection(h.collection)
 	coll.DeleteOne(context.TODO(), filter)
 
 	w.Header().Add("Content-Type", "application/json")
