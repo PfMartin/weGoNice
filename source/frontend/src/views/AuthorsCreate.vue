@@ -61,18 +61,31 @@ const submit = async (): Promise<void> => {
       @on-change="setData"
     />
     <div class="buttons">
-      <ButtonComponent
-        :buttonType="ButtonType.Delete"
-        buttonText="Cancel"
-        buttonIconName="close-circle"
-        @on-click="cancel"
-      />
-      <ButtonComponent
-        :buttonType="ButtonType.Primary"
-        buttonText="Save"
-        buttonIconName="checkmark-done"
-        @on-click="submit"
-      />
+      <RouterLink
+        :to="{
+          name: 'AuthorsOverview',
+        }"
+      >
+        <ButtonComponent
+          :buttonType="ButtonType.Default"
+          buttonText=""
+          buttonIconName="arrow-back-outline"
+        />
+      </RouterLink>
+      <div class="control-buttons">
+        <ButtonComponent
+          :buttonType="ButtonType.Delete"
+          buttonText="Cancel"
+          buttonIconName="close-circle"
+          @on-click="cancel"
+        />
+        <ButtonComponent
+          :buttonType="ButtonType.Primary"
+          buttonText="Save"
+          buttonIconName="checkmark-done"
+          @on-click="submit"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -86,10 +99,14 @@ const submit = async (): Promise<void> => {
 
   .buttons {
     display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 1rem;
-    padding-top: 1rem;
+    justify-content: space-between;
+    padding: 1rem 0;
+
+    .control-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
   }
 }
 </style>

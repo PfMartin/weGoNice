@@ -289,9 +289,11 @@ onMounted(() => {
           </p>
         </div>
       </Transition>
-      <img v-if="imageName && img" :src="img" alt="Author Picture" />
-      <SpinnerComponent v-else size="large" />
+      <SpinnerComponent
+        v-if="imageName && mode === OperationMode.Edit && !img"
+      />
       <ion-icon v-if="!imageName" name="person" />
+      <img v-if="img" :src="img" alt="Author Picture" />
     </div>
     <div class="info">
       <div class="info-section">

@@ -54,6 +54,17 @@ const deleteAuthor = async () => {
     <AuthorInfo v-if="author" :mode="mode" :initialData="author" />
     <div v-else>spinner</div>
     <div class="buttons">
+      <RouterLink
+        :to="{
+          name: 'AuthorsOverview',
+        }"
+      >
+        <ButtonComponent
+          :buttonType="ButtonType.Default"
+          buttonText=""
+          buttonIconName="arrow-back-outline"
+        />
+      </RouterLink>
       <ButtonComponent
         :buttonType="ButtonType.Delete"
         buttonText="Delete"
@@ -81,10 +92,8 @@ const deleteAuthor = async () => {
 
   .buttons {
     display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 1rem;
-    padding-top: 1rem;
+    justify-content: space-between;
+    padding: 1rem 0;
   }
 }
 </style>
