@@ -23,6 +23,22 @@ func NewHandler() Handler {
 }
 
 func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
+	saveFile(w, r, false)
+}
+
+func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
+	serveFile(w, r, false)
+}
+
+func (h *Handler) SaveFileTmp(w http.ResponseWriter, r *http.Request) {
+	saveFile(w, r, true)
+}
+
+func (h *Handler) ServeFileTmp(w http.ResponseWriter, r *http.Request) {
+	serveFile(w, r, true)
+}
+
+func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	r.ParseMultipartForm(10 << 20)
 
 	file, fileHandler, err := r.FormFile("picture")
@@ -43,7 +59,14 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	nameString := name[0]
 	fileType := strings.ToLower(name[1])
 
-	fileDepot := os.Getenv("FILE_DEPOT")
+	fileDepot := os.Getenv("TMP_FILE_DEPOT")
+	fileName := fmt.Sprintf("%s.%s", nameString, fileType)
+	if !isTemporary {
+		fileDepot = os.Getenv("FILE_DEPOT")
+		id := mux.Vars(r)["id"]
+		currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
+		fileName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, nameString, fileType)
+	}
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
 		log.Printf("Directory '%s' doesn't existing. Creating directory", fileDepot)
@@ -53,10 +76,6 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	id := mux.Vars(r)["id"]
-	currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
-	fileName := fmt.Sprintf("%s-%s-%s.%s", currentDate, id, nameString, fileType)
 
 	filepath := fmt.Sprintf("%s/%s", fileDepot, fileName)
 
@@ -72,8 +91,12 @@ func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
-	fileDepot := os.Getenv("FILE_DEPOT")
+func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
+	fileDepot := os.Getenv("TMP_FILE_DEPOT")
+
+	if !isTemporary {
+		fileDepot = os.Getenv("FILE_DEPOT")
+	}
 	filename := mux.Vars(r)["filename"]
 
 	filePath := fmt.Sprintf("%s/%s", fileDepot, filename)
@@ -110,4 +133,38 @@ func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", filetype)
 	w.WriteHeader(http.StatusOK)
 	w.Write(bytes)
+}
+
+func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithDelete bool) error {
+	errMsg := "Failed to update author with new imageName"
+
+	tmpFile, err := os.Open(tmpFilePath)
+	if err != nil {
+		log.Printf("Error: Failed to open temporary file during file copy: %s", err)
+		return fmt.Errorf("%s: %s", errMsg, err)
+	}
+
+	permFile, err := os.Create(filePath)
+	if err != nil {
+		tmpFile.Close()
+		return fmt.Errorf("%s: %s", errMsg, err)
+	}
+	defer permFile.Close()
+
+	_, err = io.Copy(permFile, tmpFile)
+	tmpFile.Close()
+	if err != nil {
+		log.Printf("Error: Failed to copy temporary file to file: %s", err)
+		return fmt.Errorf("%s: %s", errMsg, err)
+	}
+
+	if isWithDelete {
+		err = os.Remove(tmpFilePath)
+		if err != nil {
+			log.Printf("Error: Failed to remove temp file: %s", err)
+			return fmt.Errorf("%s: %s", errMsg, err)
+		}
+	}
+
+	return nil
 }

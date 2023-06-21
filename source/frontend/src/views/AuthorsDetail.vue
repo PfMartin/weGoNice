@@ -7,6 +7,7 @@ import AuthorInfo from '@/components/AuthorInfo.vue';
 import { OperationMode } from '@/utils/constants';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import notificationService from '@/services/notification.service';
+import { ButtonType } from '@/utils/constants';
 
 const mode = OperationMode.Edit;
 
@@ -50,9 +51,27 @@ const deleteAuthor = async () => {
 
 <template>
   <div class="author-detail">
-    <ButtonComponent buttonText="Delete Author" @on-click="deleteAuthor" />
     <AuthorInfo v-if="author" :mode="mode" :initialData="author" />
     <div v-else>spinner</div>
+    <div class="buttons">
+      <RouterLink
+        :to="{
+          name: 'AuthorsOverview',
+        }"
+      >
+        <ButtonComponent
+          :buttonType="ButtonType.Default"
+          buttonText=""
+          buttonIconName="arrow-back-outline"
+        />
+      </RouterLink>
+      <ButtonComponent
+        :buttonType="ButtonType.Delete"
+        buttonText="Delete"
+        buttonIconName="close-circle"
+        @on-click="deleteAuthor"
+      />
+    </div>
     <RecipesList
       v-if="author"
       :author="author?.name || 'unknown'"
@@ -67,10 +86,14 @@ const deleteAuthor = async () => {
 @import '@/styles/colors.scss';
 
 .author-detail {
-  margin: 1rem;
-  margin-left: calc($nav-bar-width + 1rem);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  margin: 1rem 1rem 1rem calc($nav-bar-width + 1rem);
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+  }
 }
 </style>

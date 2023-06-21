@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
+	"github.com/PfMartin/weGoNice/server/pkg/files"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
@@ -144,6 +146,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		"website":    author.Website,
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
+		"imageName":  author.ImageName,
 		"userId":     userID,
 		"createdAt":  time.Now(),
 		"modifiedAt": time.Now(),
@@ -161,7 +164,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	if author.ImageName != "" {
 		// Set imageName after retrieving the author id
 		currentDate := time.Now().Format("2006-01-02")
-		imageName := fmt.Sprintf("%s_%s_%s", currentDate, authorID.Hex(), author.ImageName)
+		imageName := fmt.Sprintf("%s-%s-%s", currentDate, authorID.Hex(), author.ImageName)
 
 		filter = bson.M{"_id": authorID}
 		update := bson.M{"$set": bson.M{
@@ -174,6 +177,20 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Error: Failed to update author with new imageName: %v", err)
 			http.Error(w, "Failed to update author with new imageName", http.StatusInternalServerError)
 			return
+		}
+
+		tmpFileDepot := os.Getenv("TMP_FILE_DEPOT")
+		tmpFilePath := fmt.Sprintf("%s/%s", tmpFileDepot, author.ImageName)
+
+		fileDepot := os.Getenv("FILE_DEPOT")
+		filePath := fmt.Sprintf("%s/%s", fileDepot, imageName)
+
+		fileHandler := files.NewHandler()
+
+		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -200,20 +217,39 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	var existingAuthor models.AuthorDB
+	filter := bson.M{"_id": authorID}
+	err = coll.FindOne(context.TODO(), filter).Decode(&existingAuthor)
+	if err != nil {
+		log.Printf("Failed to find existing with ID %s: %s", authorID, err)
+		http.Error(w, "Error: Failed to find existing author with the provided ID", http.StatusBadRequest)
+	}
+
+	existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingAuthor.ImageName)
+	err = os.Remove(existingFilePath)
+	if err != nil {
+		log.Printf("Error: Failed to delete image with path '%s': %s\n", existingFilePath, err)
+	}
+
 	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
 		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
 	}
 
-	currentDate := time.Now().Format("2006-01-02")
-	imageNameSlice := strings.Split(author.ImageName, ".")
-	iName := imageNameSlice[0]
-	iNameType := strings.ToLower(imageNameSlice[1])
+	imageName := author.ImageName
 
-	imageName := fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
+	if !strings.Contains(author.ImageName, id) {
+		fileNameSlice := strings.Split(author.ImageName, ".")
+		currentDate := time.Now().Format("2006-01-02")
+		iName := fileNameSlice[0]
+		iNameType := strings.ToLower(fileNameSlice[1])
+		imageName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
+	}
 
-	filter := bson.M{"_id": authorID}
+	filter = bson.M{"_id": authorID}
 	update := bson.M{"$set": bson.M{
 		"name":       author.Name,
 		"firstname":  author.Firstname,
@@ -226,7 +262,6 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		"modifiedAt": time.Now(),
 	}}
 
-	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	result, err := coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		log.Printf("Error: Failed to update author: %v", err)
@@ -249,8 +284,26 @@ func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filter := bson.M{"_id": authorID}
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	filter := bson.M{"_id": authorID}
+
+	var author models.AuthorDB
+	err = coll.FindOne(context.TODO(), filter).Decode(&author)
+	if err != nil {
+		log.Printf("Error: Failed to find author")
+		http.Error(w, "Failed to find author", http.StatusNotFound)
+		return
+	}
+
+	filePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), author.ImageName)
+
+	err = os.Remove(filePath)
+	if err != nil {
+		log.Printf("Error: Failed to remove image for author: %s", filePath)
+	}
+
+	coll = h.DB.Database(h.dbName).Collection(h.collection)
 	coll.DeleteOne(context.TODO(), filter)
 
 	w.Header().Add("Content-Type", "application/json")

@@ -4,9 +4,16 @@ import { OperationMode } from '@/utils/constants';
 import TextInputField from '@/components/TextInputField.vue';
 import ValidationService from '@/services/validation.service';
 import { updateAuthorById } from '@/apis/weGoNice/authors';
-import { uploadFile, getImage } from '@/apis/weGoNice/files';
+import {
+  uploadFile,
+  getImage,
+  uploadFileTmp,
+  getImageTmp,
+} from '@/apis/weGoNice/files';
 import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
+import { dateToString } from '@/utils/utility-functions';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 const props = defineProps<{
   initialData: Authors.Author;
@@ -25,6 +32,13 @@ const togglePictureOverlay = () => {
 /* Handle File Input */
 const fileInput = ref<HTMLInputElement | null>(null);
 const openUploadWindow = () => {
+  if (!isValid.value) {
+    notificationService.addNotification(
+      'error',
+      `Please make sure there aren't any errors in the input fields before you add an image.`
+    );
+    return;
+  }
   fileInput.value?.click();
 };
 
@@ -35,13 +49,27 @@ const executeUpload = async () => {
   }
 
   const pathArray = fileInput.value?.value.split('\\') || [];
-  fileName.value = pathArray[pathArray.length - 1];
+  const fileNameArray = pathArray[pathArray.length - 1].split('.');
+  const fName = fileNameArray[0];
+  const fType = fileNameArray[1].toLowerCase();
+
+  fileName.value = `${fName}.${fType}`;
 
   const file =
     fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
 
   if (props.mode === OperationMode.Edit && file) {
     const res = await uploadFile(route.params.id, file);
+    if (res.status !== 200) {
+      notificationService.addNotification(
+        'error',
+        'Something went wrong while uploading the picture.'
+      );
+    }
+    emitInput();
+    return;
+  } else if (props.mode === OperationMode.Create && file) {
+    const res = await uploadFileTmp(file);
     if (res.status !== 200) {
       notificationService.addNotification(
         'error',
@@ -68,50 +96,64 @@ const executeUpload = async () => {
 /* Handle User Input */
 const name = ref(props.initialData.name);
 const updateName = (newValue: string) => {
-  name.value = newValue;
-  emitInput();
+  if (newValue !== name.value) {
+    name.value = newValue;
+    emitInput();
+  }
 };
 
 const firstname = ref(props.initialData.firstname);
 const updateFirstname = (newValue: string): void => {
-  firstname.value = newValue;
-  emitInput();
+  if (newValue !== firstname.value) {
+    firstname.value = newValue;
+    emitInput();
+  }
 };
 
 const lastname = ref(props.initialData.lastname);
 const updateLastname = (newValue: string): void => {
-  lastname.value = newValue;
-  emitInput();
+  if (newValue !== lastname.value) {
+    lastname.value = newValue;
+    emitInput();
+  }
 };
 
 const website = ref(props.initialData.website);
 const updateWebsite = (newValue: string) => {
-  website.value = newValue;
-  emitInput();
+  if (newValue !== website.value) {
+    website.value = newValue;
+    emitInput();
+  }
 };
 
 const instagram = ref(props.initialData.instagram);
 const updateInstagram = (newValue: string) => {
-  instagram.value = newValue;
-  emitInput();
+  if (newValue !== instagram.value) {
+    instagram.value = newValue;
+    emitInput();
+  }
 };
 
 const youTube = ref(props.initialData.youTube);
 const updateYouTube = (newValue: string) => {
-  youTube.value = newValue;
-  emitInput();
+  if (newValue !== youTube.value) {
+    youTube.value = newValue;
+    emitInput();
+  }
 };
 
 const imageName = ref(props.initialData.imageName);
 
 watch(fileName, () => {
-  updateImage();
+  setTimeout(() => {
+    updateImage();
+  }, 200);
 });
 
 /* Validation */
 const validationService = new ValidationService();
 
-const nameError = ref('');
+const nameError = ref(validationService.validateAuthorName(name.value));
 const validateName = (): void => {
   nameError.value = validationService.validateAuthorName(name.value);
 };
@@ -180,12 +222,43 @@ const emitInput = async (): Promise<void> => {
 
 const img = ref('');
 const updateImage = async (): Promise<void> => {
-  const url = await getImage(fileName.value);
+  let name = fileName.value;
+
+  const id = props.initialData.id || undefined;
+  const file =
+    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+
+  if (props.mode === OperationMode.Edit && id && file) {
+    const fileNameArray = name.split('.');
+    const fileType = fileNameArray[1].toLowerCase();
+
+    name = `${dateToString(new Date())}-${props.initialData.id}-${
+      fileNameArray[0]
+    }.${fileType}`;
+  } else if (props.mode === OperationMode.Create && file) {
+    const fileNameArray = name.split('.');
+    const fileType = fileNameArray[1].toLowerCase();
+
+    name = `${fileNameArray[0]}.${fileType}`;
+  }
+
+  let url!: string | WeGoNiceApi.RequestResponse;
+
+  if (props.mode === OperationMode.Create && file) {
+    url = await getImageTmp(name);
+  } else if (props.mode === OperationMode.Edit) {
+    url = await getImage(name);
+  }
+
   img.value = url as string;
+  imageName.value = name;
 };
 
 onMounted(() => {
   updateImage();
+  if (props.mode === OperationMode.Create) {
+    document.getElementById('name')?.focus();
+  }
 });
 </script>
 
@@ -207,12 +280,20 @@ onMounted(() => {
             @change="executeUpload"
           />
           <ion-icon name="create"></ion-icon>
-          <p>{{ fileName || 'No file chosen...' }}</p>
+          <p>
+            {{
+              fileName.length > 30
+                ? `${fileName.slice(0, 30)}...`
+                : fileName || 'No file chosen...'
+            }}
+          </p>
         </div>
       </Transition>
-      <!-- {{ imageName }} -->
-      <img v-if="imageName" :src="img" alt="Author Picture" />
+      <SpinnerComponent
+        v-if="imageName && mode === OperationMode.Edit && !img"
+      />
       <ion-icon v-if="!imageName" name="person" />
+      <img v-if="img" :src="img" alt="Author Picture" />
     </div>
     <div class="info">
       <div class="info-section">
@@ -226,7 +307,7 @@ onMounted(() => {
           @changed="updateName"
         />
         <TextInputField
-          headline="Firstname"
+          headline="First name"
           iconName="person"
           id="firstname"
           :initialValue="firstname"
@@ -234,7 +315,7 @@ onMounted(() => {
           @changed="updateFirstname"
         />
         <TextInputField
-          headline="Lastname"
+          headline="Last name"
           iconName="person"
           id="lastname"
           :initialValue="lastname"
@@ -297,17 +378,18 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: $bg-color-light;
+    background: $bg-color-mid;
     height: 330px;
 
     img {
       max-height: 100%;
+      border-radius: $border-radius;
     }
 
     .picture-overlay {
       position: absolute;
       z-index: 5;
-      background: #33333399;
+      background: rgba($bg-color-lighter, 0.6);
       height: 100%;
       width: 100%;
       border-radius: $border-radius;
@@ -325,11 +407,13 @@ onMounted(() => {
       ion-icon {
         opacity: 1;
         font-size: 3rem;
+        color: $bg-color-mid;
       }
     }
 
     ion-icon {
       font-size: 6rem;
+      color: $text-color;
       z-index: 1;
     }
   }

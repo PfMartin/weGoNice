@@ -1,6 +1,50 @@
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import NotificationService from '@/services/notification.service';
+import { computed } from '@vue/reactivity';
+
+const props = defineProps<{
+  config: Store.Notification;
+}>();
+
+const isVisible = ref(true);
+
+const iconName = computed((): string => {
+  let name = '';
+
+  switch (props.config.type) {
+    case 'success':
+      name = 'checkmark-done';
+      break;
+    case 'error':
+      name = 'alert-circle';
+      break;
+    default:
+      name = 'warning';
+  }
+
+  return name;
+});
+
+const notificationClass = computed(() => ['notification', props.config.type]);
+
+const closeNotification = (): void => {
+  isVisible.value = false;
+  setTimeout(() => {
+    NotificationService.removeNotification(props.config.id);
+  }, 200);
+};
+
+onMounted((): void => {
+  setTimeout(() => {
+    closeNotification();
+  }, 5000);
+});
+</script>
+
 <template>
   <Transition name="slide" appear>
-    <div class="notification" v-if="isVisible">
+    <div :class="notificationClass" v-if="isVisible">
       <div @click="closeNotification" class="close-button">
         <ion-icon name="close" />
       </div>
@@ -14,72 +58,43 @@
   </Transition>
 </template>
 
-<script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import NotificationService from '@/services/notification.service';
-import { computed } from '@vue/reactivity';
-
-const props = defineProps<{
-  config: Store.Notification;
-}>();
-
-onMounted((): void => {
-  setTimeout(() => {
-    closeNotification();
-  }, 5000);
-});
-
-const isVisible = ref(true);
-
-const iconName = computed((): string => {
-  let name = '';
-
-  switch (props.config.headline) {
-    case 'Success!':
-      name = 'checkmark-done';
-      break;
-    case 'Error!':
-      name = 'alert-circle';
-      break;
-    default:
-      name = 'warning';
-  }
-
-  return name;
-});
-
-const closeNotification = (): void => {
-  isVisible.value = false;
-  setTimeout(() => {
-    NotificationService.removeNotification(props.config.id);
-  }, 200);
-};
-</script>
-
 <style lang="scss" scoped>
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 .notification {
   position: relative;
-  background: $bg-color-notification;
-  border: 1px solid $border-color-notification;
+  border: 1px solid $bg-color-mid;
   border-radius: $border-radius;
-  color: $text-color;
   padding: 0.5rem 1rem;
   max-width: 400px;
   margin-top: 0.5rem;
+  color: $bg-color-mid;
   font-size: 1rem;
+
+  &.error {
+    background: rgba($error-color, 0.8);
+    color: $text-color;
+  }
+
+  &.warning {
+    background: rgba($warning-color, 0.8);
+  }
+
+  &.success {
+    background: rgba($accent-color, 0.8);
+  }
 
   .close-button {
     position: absolute;
     top: 0.2rem;
     right: 0.2rem;
     transition: color 0.2s;
+    color: $bg-color-mid;
 
     &:hover {
       cursor: pointer;
-      color: $accent-color;
+      color: $bg-color-dark;
     }
   }
 

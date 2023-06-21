@@ -20,6 +20,7 @@ class NotificationService {
     store.dispatch('notifications/pushNotification', {
       headline,
       body,
+      type,
     });
   };
 

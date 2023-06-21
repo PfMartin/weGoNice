@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 
@@ -142,6 +143,9 @@ func TestGetAuthorByID(t *testing.T) {
 }
 
 func TestCreateAuthor(t *testing.T) {
+	os.Setenv("FILE_DEPOT", "../testUtils/files/perm")
+	os.Setenv("TMP_FILE_DEPOT", "../testUtils/files/tmp")
+
 	tests := []testArgs{
 		{name: "with correct userID", hasMatchingUserID: true, expectedStatus: http.StatusCreated},
 	}
@@ -149,6 +153,8 @@ func TestCreateAuthor(t *testing.T) {
 	for _, tt := range tests {
 		DB := db.Init(false)
 		h := NewHandler(DB)
+
+		testUtils.PrepareFile()
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Fatalf("Could not clear database")
@@ -180,6 +186,8 @@ func TestCreateAuthor(t *testing.T) {
 		got := w.Code
 		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expectedStatus, got)
 	}
+
+	testUtils.ClearTestFileDepot()
 }
 
 func TestUpdateAuthorByID(t *testing.T) {

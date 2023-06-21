@@ -109,7 +109,7 @@ const labelClass = computed(() => ({
     }
 
     &:hover {
-      cursor: pointer;
+      cursor: text;
       background: $bg-color-mid;
       border: 1px solid $accent-color;
     }
