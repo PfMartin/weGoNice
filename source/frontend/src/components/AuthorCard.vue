@@ -64,7 +64,6 @@ onMounted(async () => {
   align-items: center;
   min-height: 100px;
   transition: all 0.3s;
-  // transition: border-color 0.3s;
   box-shadow: $shadow;
 
   &:hover {
