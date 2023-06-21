@@ -11,4 +11,5 @@ func RegisterRecipeRoutes(r *mux.Router, h Handler) {
 	usersR := r.PathPrefix("/recipes").Subrouter()
 
 	usersR.HandleFunc("", auth.CheckTokenHandler(h.GetAllRecipes)).Methods(http.MethodGet)
+	usersR.HandleFunc("", auth.CheckTokenHandler(h.CreateRecipe)).Methods(http.MethodPost)
 }

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -47,9 +48,10 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	var recipe models.RecipeRequest
 	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&recipe)
 	if err != nil {
-		log.Printf("Recipes Error: Failed to decode body: %v", err)
+		log.Printf("Error: Failed to decode body: %v", err)
 		http.Error(w, "Failed to decode body", http.StatusBadRequest)
 		return
 	}
@@ -61,18 +63,35 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userID, err := auth.GetUserIDFromCtx(r)
+	if err != nil {
+		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
+		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
+	}
+
+	data := bson.M{
+		"name":        recipe.Name,
+		"authorId":    recipe.AuthorID,
+		"time":        recipe.Time,
+		"category":    recipe.Category,
+		"ingredients": recipe.Ingredients,
+		"steps":       recipe.Steps,
+		"userId":      userID,
+		"createdAt":   time.Now(),
+		"modifiedAt":  time.Now(),
+	}
+
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
-	data := bson.D{{Key: "name", Value: recipe.Name}, {Key: "author", Value: recipe.AuthorID}, {Key: "time", Value: recipe.Time}, {Key: "category", Value: recipe.Category}, {Key: "ingredients", Value: recipe.Ingredients}, {Key: "steps", Value: recipe.Steps}, {Key: "userAdded", Value: recipe.UserId}, {Key: "createdAt", Value: time.Now()}, {Key: "modifiedAt", Value: time.Now()}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Recipes Error: Failed to insert data: %v", err)
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 	}
 
-	recipeId := cursor.InsertedID.(primitive.ObjectID)
+	recipeID := cursor.InsertedID.(primitive.ObjectID)
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(recipeId)
+	json.NewEncoder(w).Encode(recipeID)
 }
