@@ -13,7 +13,7 @@ type Recipe struct {
 	Ingredients []Ingredient   `bson:"ingredients" json:"ingredients"`
 	Steps       []Step         `bson:"steps" json:"steps"`
 	UserID      string         `bson:"userId" json:"userId"`
-	User        User           `bson:"user" json:"user"`
+	User        UserResponse   `bson:"user" json:"user"`
 	CreatedAt   time.Time      `bson:"createdAt" json:"createdAt"`
 	ModifiedAt  time.Time      `bson:"modifiedAt" json:"modifiedAt"`
 }

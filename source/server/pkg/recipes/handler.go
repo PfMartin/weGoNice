@@ -30,6 +30,12 @@ var projectStage = bson.D{
 	}},
 }
 
+var unsetStage = bson.D{
+	{Key: "$unset", Value: bson.A{
+		"user.password",
+	}},
+}
+
 type Handler struct {
 	DB         *mongo.Client
 	dbName     string
@@ -49,7 +55,7 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	sortingStage := bson.D{
 		{Key: "$sort", Value: bson.D{{Key: "name", Value: 1}}}}
 
-	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.AuthorLookup, utils.UserLookup, projectStage, sortingStage})
+	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.AuthorLookup, utils.UserLookup, projectStage, unsetStage, sortingStage})
 	if err != nil {
 		log.Printf("Error: Failed to find recipes: %s", err)
 		http.Error(w, "Failed to find authors", http.StatusNotFound)
