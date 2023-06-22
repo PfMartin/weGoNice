@@ -34,7 +34,7 @@ const url = "http://localhost:8080/recipes"
 
 type testArgs struct {
 	name           string
-	recipe         models.RecipeRequest
+	recipe         models.Recipe
 	expectedStatus int
 }
 

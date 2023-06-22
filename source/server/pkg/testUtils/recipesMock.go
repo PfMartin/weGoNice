@@ -4,7 +4,7 @@ import (
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 )
 
-var TestRecipeAll = models.RecipeRequest{
+var TestRecipeAll = models.Recipe{
 	Name:        "Test Recipe",
 	AuthorID:    "Test Author ID",
 	Time:        "45 min",
@@ -13,11 +13,11 @@ var TestRecipeAll = models.RecipeRequest{
 	Steps:       []models.Step{{Name: "Step1", Rank: 1}, {Name: "Step2", Rank: 2}, {Name: "Step3", Rank: 3}, {Name: "Step4", Rank: 4}},
 }
 
-var TestRecipeName = models.RecipeRequest{
+var TestRecipeName = models.Recipe{
 	Name: TestRecipeAll.Name,
 }
 
-var TestRecipeNoName = models.RecipeRequest{
+var TestRecipeNoName = models.Recipe{
 	AuthorID:    TestRecipeAll.AuthorID,
 	Time:        TestRecipeAll.Time,
 	Category:    TestRecipeAll.Time,

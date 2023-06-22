@@ -2,43 +2,33 @@ package models
 
 import "time"
 
-type RecipeRequest struct {
-	Name        string       `bson:"name"`
-	AuthorID    string       `bson:"authorId"`
-	Time        string       `bson:"time"`
-	TimeUnit    string       `bson:"timeUnit"`
-	Category    string       `bson:"category"`
-	Ingredients []Ingredient `bson:"ingredients"`
-	Steps       []Step       `bson:"steps"`
-	UserID      string       `bson:"userId"`
-}
-
-type RecipeResponse struct {
+type Recipe struct {
 	ID          string         `bson:"_id" json:"id"`
 	Name        string         `bson:"name" json:"name"`
+	AuthorID    string         `bson:"authorId" json:"authorId"`
 	Author      AuthorResponse `bson:"author" json:"author"`
 	Time        string         `bson:"time" json:"time"`
-	TimeUnit    string         `bson:"timeUnit"`
+	TimeUnit    string         `bson:"timeUnit" json:"timeUnit"`
 	Category    string         `bson:"category" json:"category"`
 	Ingredients []Ingredient   `bson:"ingredients" json:"ingredients"`
 	Steps       []Step         `bson:"steps" json:"steps"`
+	UserID      string         `bson:"userId" json:"userId"`
 	User        User           `bson:"user" json:"user"`
 	CreatedAt   time.Time      `bson:"createdAt" json:"createdAt"`
 	ModifiedAt  time.Time      `bson:"modifiedAt" json:"modifiedAt"`
 }
 
-type RecipeDB struct {
-	ID          string       `bson:"_id"`
-	Name        string       `bson:"name"`
-	AuthorID    string       `bson:"authorId"`
-	Time        string       `bson:"time"`
-	TimeUnit    string       `bson:"timeUnit"`
-	Category    string       `bson:"category"`
-	Ingredients []Ingredient `bson:"ingredients"`
-	Steps       []Step       `bson:"steps"`
-	UserID      string       `bson:"userId"`
-	CreatedAt   time.Time    `bson:"createdAt"`
-	ModifiedAt  time.Time    `bson:"modifiedAt"`
+func (r Recipe) WithID(id string) Recipe {
+	r.ID = id
+
+	return r
+}
+
+func (r Recipe) WithTimeStamps(createdAt time.Time, modifiedAt time.Time) Recipe {
+	r.CreatedAt = createdAt
+	r.ModifiedAt = modifiedAt
+
+	return r
 }
 
 type Ingredient struct {

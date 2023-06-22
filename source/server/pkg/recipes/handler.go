@@ -34,7 +34,7 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to find recipes", http.StatusNotFound)
 	}
 
-	var recipes []models.RecipeRequest
+	var recipes []models.Recipe
 	if err = cursor.All(context.TODO(), &recipes); err != nil {
 		log.Printf("Error: Failed to parse recipes, %v", err)
 		http.Error(w, "Failed to parse recipes", http.StatusInternalServerError)
@@ -46,7 +46,7 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
-	var recipe models.RecipeRequest
+	var recipe models.Recipe
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&recipe)
