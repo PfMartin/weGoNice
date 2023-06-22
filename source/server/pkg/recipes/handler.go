@@ -9,10 +9,26 @@ import (
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
+	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+var projectStage = bson.D{
+	{Key: "$project", Value: bson.D{
+		{Key: "name", Value: 1},
+		{Key: "time", Value: 1},
+		{Key: "timeUnit", Value: 1},
+		{Key: "category", Value: 1},
+		{Key: "ingredients", Value: 1},
+		{Key: "steps", Value: 1},
+		{Key: "createdAt", Value: 1},
+		{Key: "modifiedAt", Value: 1},
+		{Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}},
+		{Key: "author", Value: bson.D{{Key: "$first", Value: "$author"}}},
+	}},
+}
 
 type Handler struct {
 	DB         *mongo.Client
@@ -27,17 +43,23 @@ func NewHandler(db *mongo.Client) Handler {
 func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
-	filter := bson.D{}
-	cursor, err := coll.Find(context.TODO(), filter)
+	matchStage := bson.D{
+		{Key: "$match", Value: bson.D{{}}},
+	}
+	sortingStage := bson.D{
+		{Key: "$sort", Value: bson.D{{Key: "name", Value: 1}}}}
+
+	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.AuthorLookup, utils.UserLookup, projectStage, sortingStage})
 	if err != nil {
-		log.Printf("Error: Failed to find recipes: %v", err)
-		http.Error(w, "Failed to find recipes", http.StatusNotFound)
+		log.Printf("Error: Failed to find recipes: %s", err)
+		http.Error(w, "Failed to find authors", http.StatusNotFound)
 	}
 
 	var recipes []models.Recipe
 	if err = cursor.All(context.TODO(), &recipes); err != nil {
-		log.Printf("Error: Failed to parse recipes, %v", err)
+		log.Printf("Error: Failed to parse recipes, %s", err)
 		http.Error(w, "Failed to parse recipes", http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -69,9 +91,15 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
 	}
 
+	authorID, err := primitive.ObjectIDFromHex(recipe.AuthorID)
+	if err != nil {
+		log.Printf("Error: Failed to create ObjectID for author from request, %s", err)
+		http.Error(w, "Error: Failed to create ObjectID for author from request", http.StatusInternalServerError)
+	}
+
 	data := bson.M{
 		"name":        recipe.Name,
-		"authorId":    recipe.AuthorID,
+		"authorId":    authorID,
 		"time":        recipe.Time,
 		"category":    recipe.Category,
 		"ingredients": recipe.Ingredients,

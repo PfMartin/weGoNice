@@ -46,12 +46,12 @@ func NewHandler(db *mongo.Client) Handler {
 func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
-	matchStage := bson.D{{Key: "$match", Value: bson.D{
-		{},
-	}}}
-	sortingStage := bson.D{{Key: "$sort", Value: bson.D{
-		{Key: "name", Value: 1},
-	}}}
+	matchStage := bson.D{
+		{Key: "$match", Value: bson.D{{}}},
+	}
+	sortingStage := bson.D{
+		{Key: "$sort", Value: bson.D{{Key: "name", Value: 1}}},
+	}
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, projectStage, sortingStage})
 	if err != nil {
 		log.Printf("Error: Failed to find authors: %v", err)

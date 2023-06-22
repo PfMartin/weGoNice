@@ -10,3 +10,12 @@ var UserLookup = bson.D{
 		{Key: "as", Value: "user"}},
 	},
 }
+
+var AuthorLookup = bson.D{
+	{Key: "$lookup", Value: bson.D{
+		{Key: "from", Value: "authors"},
+		{Key: "localField", Value: "authorId"},
+		{Key: "foreignField", Value: "_id"},
+		{Key: "as", Value: "author"}},
+	},
+}
