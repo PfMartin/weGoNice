@@ -1,8 +1,9 @@
 name: Renovate
 on:
-  schedule:
-    # Runs on 08:05 every sunday
-    - cron: '5 8 * * 0'
+  [push]
+  # schedule:
+  # Runs on 08:05 every sunday
+  # - cron: '5 8 * * 0'
 jobs:
   renovate:
     runs-on: ubuntu-latest
