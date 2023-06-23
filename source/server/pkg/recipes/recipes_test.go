@@ -233,5 +233,57 @@ func TestDeleteRecipeByID(t *testing.T) {
 		got := w.Code
 		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedStatus, got)
 	}
+}
 
+func TestUpdateUserByID(t *testing.T) {
+	tests := []testArgs{
+		{name: "updates the recipe's name", expectedStatus: http.StatusOK},
+	}
+
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+
+		if err := testUtils.ClearDatabase(DB); err != nil {
+			t.Fatalf("Could not clear database")
+		}
+
+		insertedUserID, err := testUtils.CreateTestUser(DB)
+		if err != nil {
+			t.Errorf("User could not be created, %v", err)
+		}
+
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
+		if err != nil {
+			t.Fatalf("Author could not be created, %v", err)
+		}
+
+		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
+		if err != nil {
+			t.Fatalf("Recipe could not be created, %v", err)
+		}
+
+		newRecipe := testUtils.TestRecipeAll
+		newRecipe.Name = "Updated Name"
+		newRecipe.AuthorID = insertedAuthorID
+		newRecipe.UserID = insertedUserID
+
+		recipe, err := json.Marshal(newRecipe)
+
+		if err != nil {
+			t.Errorf("Failed to marshal recipe patch: %v", err)
+		}
+
+		req := httptest.NewRequest(http.MethodPut, url+"/"+insertedRecipeID, strings.NewReader(string(recipe)))
+		w := httptest.NewRecorder()
+
+		req = mux.SetURLVars(req, map[string]string{"id": insertedRecipeID})
+
+		context.Set(req, "userId", insertedUserID)
+
+		h.UpdateRecipeByID(w, req)
+
+		got := w.Code
+		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedStatus, got)
+	}
 }

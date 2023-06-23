@@ -165,6 +165,57 @@ func (h *Handler) GetRecipeByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(recipes[0])
 }
 
+func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
+	var recipe models.Recipe
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&recipe)
+	if err != nil {
+		log.Printf("Error: Failed to decode request body for recipe: %v", r.Body)
+		http.Error(w, "Failed to decode request body for recipe", http.StatusBadRequest)
+		return
+	}
+
+	id := mux.Vars(r)["id"]
+	recipeID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error: Failed to parse id to recipeID: %v", err)
+		http.Error(w, "Failed to parse id to recipeID", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := auth.GetUserIDFromCtx(r)
+	if err != nil {
+		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
+		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
+	}
+
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	filter := bson.M{"_id": recipeID}
+	update := bson.M{"$set": bson.M{
+		"name":        recipe.Name,
+		"authorId":    recipe.AuthorID,
+		"time":        recipe.Time,
+		"timeUnit":    recipe.TimeUnit,
+		"category":    recipe.Category,
+		"ingredients": recipe.Ingredients,
+		"steps":       recipe.Steps,
+		"userId":      userID,
+		"modifiedAt":  time.Now(),
+	}}
+
+	result, err := coll.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		log.Printf("Error: Failed to update recipe: %v", err)
+		http.Error(w, "Failed to update recipe", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
+}
+
 func (h *Handler) DeleteRecipeByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
