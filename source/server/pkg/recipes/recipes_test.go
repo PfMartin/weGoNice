@@ -12,6 +12,7 @@ import (
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
 	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -129,5 +130,65 @@ func TestCreateRecipe(t *testing.T) {
 		got := w.Code
 		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expectedStatus, got)
 	}
+}
 
+func TestGetRecipeByID(t *testing.T) {
+	tests := []testArgs{
+		{name: "get the correct recipe", expectedStatus: http.StatusOK, expectedRecipe: testUtils.TestRecipeAll},
+	}
+
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+
+		if err := testUtils.ClearDatabase(DB); err != nil {
+			t.Fatalf("Could not clear database")
+		}
+
+		insertedUserID, err := testUtils.CreateTestUser(DB)
+		if err != nil {
+			t.Errorf("User could not be created, %v", err)
+		}
+
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
+		if err != nil {
+			t.Fatalf("Author could not be created, %v", err)
+		}
+
+		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
+		if err != nil {
+			t.Fatalf("Recipe could not be created, %v", err)
+		}
+
+		req := httptest.NewRequest(http.MethodGet, url+"/"+insertedRecipeID, nil)
+		w := httptest.NewRecorder()
+
+		req = mux.SetURLVars(req, map[string]string{"id": insertedRecipeID})
+
+		context.Set(req, "userId", insertedUserID)
+
+		h.GetRecipeByID(w, req)
+
+		res := w.Result()
+
+		defer res.Body.Close()
+		data, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			t.Errorf("Failed to read body of response %v", err)
+		}
+
+		var recipeRes models.Recipe
+		err = json.Unmarshal(data, &recipeRes)
+		if err != nil {
+			t.Errorf("Failed to unmarshal response to recipe: %v", err)
+		}
+
+		tt.expectedRecipe.Author.ID = insertedAuthorID
+		tt.expectedRecipe.Author.UserID = insertedUserID
+		tt.expectedRecipe.ID = insertedRecipeID
+		tt.expectedRecipe.User.ID = insertedUserID
+
+		got := recipeRes
+		assert.Equal(t, tt.expectedRecipe, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedRecipe, got)
+	}
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -122,4 +123,44 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(recipeID)
+}
+
+func (h *Handler) GetRecipeByID(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+
+	recipeID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error: Failed to parse id to ObjectID: %v", err)
+		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
+		return
+	}
+
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	var recipes []models.Recipe
+	matchStage := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: recipeID}}}}
+	limitStage := bson.D{{Key: "$limit", Value: 1}}
+
+	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, utils.AuthorLookup, projectStage, limitStage})
+	if err != nil {
+		log.Printf("Error: Failed to find recipe")
+		http.Error(w, "Failed to find recipe", http.StatusNotFound)
+		return
+	}
+
+	if err = cursor.All(context.TODO(), &recipes); err != nil {
+		log.Printf("Error: Failed to parse recipes, %v", err)
+		http.Error(w, "Failed to parse recipes", http.StatusInternalServerError)
+		return
+	}
+
+	if len(recipes) < 1 {
+		log.Printf("Error: Failed to find recipe")
+		http.Error(w, "Failed to find recipe", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(recipes[0])
 }
