@@ -54,6 +54,20 @@ var ExpectedAuthor = models.AuthorResponse{
 	User:       ExpectedUser,
 }
 
+var ExpectedAuthorFlat = models.AuthorDB{
+	ID:         ExpectedAuthor.ID,
+	Name:       TestAuthor.Name,
+	Lastname:   TestAuthor.Lastname,
+	Firstname:  TestAuthor.Firstname,
+	Website:    TestAuthor.Website,
+	Instagram:  TestAuthor.Instagram,
+	YouTube:    TestAuthor.YouTube,
+	ImageName:  TestAuthor.ImageName,
+	CreatedAt:  testDate,
+	ModifiedAt: testDate,
+	UserID:     "will change",
+}
+
 func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 	coll := db.Database("weGoNice").Collection("authors")
 
@@ -83,5 +97,4 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 	userId := cursor.InsertedID.(primitive.ObjectID).Hex()
 
 	return userId, nil
-
 }

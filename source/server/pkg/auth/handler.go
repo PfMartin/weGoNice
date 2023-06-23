@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	gorillaContext "github.com/gorilla/context"
@@ -33,6 +34,7 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filter := bson.M{"email": login.Email}
+
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	var user models.User
@@ -104,7 +106,13 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := bson.D{{Key: "email", Value: user.Email}, {Key: "password", Value: hashedPassword}, {Key: "role", Value: "user"}}
+	data := bson.M{
+		"email":      user.Email,
+		"password":   hashedPassword,
+		"role":       "user",
+		"createdAt":  time.Now(),
+		"modifiedAt": time.Now(),
+	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Failed to insert data")
