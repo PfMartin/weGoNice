@@ -53,7 +53,7 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.AuthorLookup, utils.UserLookup, projectStage, sortingStage})
 	if err != nil {
 		log.Printf("Error: Failed to find recipes: %s", err)
-		http.Error(w, "Failed to find authors", http.StatusNotFound)
+		http.Error(w, "Failed to find recipes", http.StatusNotFound)
 	}
 
 	var recipes []models.Recipe
@@ -163,4 +163,24 @@ func (h *Handler) GetRecipeByID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(recipes[0])
+}
+
+func (h *Handler) DeleteRecipeByID(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+
+	recipeID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error: Failed to parse id to recipeID: %v", err)
+		http.Error(w, "Failed to parse id to recipeID", http.StatusBadRequest)
+		return
+	}
+
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+	filter := bson.M{"_id": recipeID}
+
+	coll.DeleteOne(context.TODO(), filter)
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("Deleted recipe")
 }

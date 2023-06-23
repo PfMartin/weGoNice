@@ -192,3 +192,46 @@ func TestGetRecipeByID(t *testing.T) {
 		assert.Equal(t, tt.expectedRecipe, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedRecipe, got)
 	}
 }
+
+func TestDeleteRecipeByID(t *testing.T) {
+	tests := []testArgs{
+		{name: "delete a recipe", expectedStatus: http.StatusOK},
+	}
+
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+
+		if err := testUtils.ClearDatabase(DB); err != nil {
+			t.Fatalf("Could not clear database")
+		}
+
+		insertedUserID, err := testUtils.CreateTestUser(DB)
+		if err != nil {
+			t.Errorf("User could not be created, %v", err)
+		}
+
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
+		if err != nil {
+			t.Fatalf("Author could not be created, %v", err)
+		}
+
+		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
+		if err != nil {
+			t.Fatalf("Recipe could not be created, %v", err)
+		}
+
+		req := httptest.NewRequest(http.MethodGet, url+"/"+insertedRecipeID, nil)
+		w := httptest.NewRecorder()
+
+		req = mux.SetURLVars(req, map[string]string{"id": insertedRecipeID})
+
+		context.Set(req, "userId", insertedUserID)
+
+		h.DeleteRecipeByID(w, req)
+
+		got := w.Code
+		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedStatus, got)
+	}
+
+}
