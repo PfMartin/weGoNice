@@ -33,9 +33,7 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filter := bson.M{
-		"email": login.Email,
-	}
+	filter := bson.M{"email": login.Email}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 

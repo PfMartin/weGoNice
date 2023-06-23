@@ -17,17 +17,17 @@ import (
 )
 
 var projectStage = bson.D{
-	{Key: "$project", Value: bson.D{
-		{Key: "name", Value: 1},
-		{Key: "time", Value: 1},
-		{Key: "timeUnit", Value: 1},
-		{Key: "category", Value: 1},
-		{Key: "ingredients", Value: 1},
-		{Key: "steps", Value: 1},
-		{Key: "createdAt", Value: 1},
-		{Key: "modifiedAt", Value: 1},
-		{Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}},
-		{Key: "author", Value: bson.D{{Key: "$first", Value: "$author"}}},
+	{Key: "$project", Value: bson.M{
+		"name":        1,
+		"time":        1,
+		"timeUnit":    1,
+		"category":    1,
+		"ingredients": 1,
+		"steps":       1,
+		"createdAt":   1,
+		"modifiedAt":  1,
+		"user":        bson.M{"$first": "$user"},
+		"author":      bson.M{"$first": "$author"},
 	}},
 }
 
@@ -44,16 +44,13 @@ func NewHandler(db *mongo.Client) Handler {
 func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
-	matchStage := bson.D{
-		{Key: "$match", Value: bson.D{{}}},
-	}
-	sortingStage := bson.D{
-		{Key: "$sort", Value: bson.D{{Key: "name", Value: 1}}}}
+	sortingStage := bson.D{{Key: "$sort", Value: bson.M{"name": 1}}}
 
-	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.AuthorLookup, utils.UserLookup, projectStage, sortingStage})
+	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{utils.AuthorLookup, utils.UserLookup, projectStage, sortingStage})
 	if err != nil {
 		log.Printf("Error: Failed to find recipes: %s", err)
 		http.Error(w, "Failed to find recipes", http.StatusNotFound)
+		return
 	}
 
 	var recipes []models.Recipe
@@ -90,12 +87,14 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
+		return
 	}
 
 	authorID, err := primitive.ObjectIDFromHex(recipe.AuthorID)
 	if err != nil {
 		log.Printf("Error: Failed to create ObjectID for author from request, %s", err)
 		http.Error(w, "Error: Failed to create ObjectID for author from request", http.StatusInternalServerError)
+		return
 	}
 
 	data := bson.M{
@@ -116,6 +115,7 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Recipes Error: Failed to insert data: %v", err)
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
+		return
 	}
 
 	recipeID := cursor.InsertedID.(primitive.ObjectID)
@@ -138,7 +138,7 @@ func (h *Handler) GetRecipeByID(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	var recipes []models.Recipe
-	matchStage := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: recipeID}}}}
+	matchStage := bson.D{{Key: "$match", Value: bson.M{"_id": recipeID}}}
 	limitStage := bson.D{{Key: "$limit", Value: 1}}
 
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, utils.AuthorLookup, projectStage, limitStage})
@@ -187,6 +187,7 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error: Failed to create ObjectID for user from request context, %v", err)
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
+		return
 	}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)

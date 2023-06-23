@@ -35,7 +35,7 @@ func TestGetAllRecipes(t *testing.T) {
 		h := NewHandler(DB)
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
-			t.Fatalf("Could not clear database")
+			t.Errorf("Could not clear database")
 		}
 
 		insertedUserID, err := testUtils.CreateTestUser(DB)
@@ -45,12 +45,12 @@ func TestGetAllRecipes(t *testing.T) {
 
 		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
 		if err != nil {
-			t.Fatalf("Author could not be created, %s", err)
+			t.Errorf("Author could not be created, %s", err)
 		}
 
 		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
 		if err != nil {
-			t.Fatalf("Recipe could not be created, %s", err)
+			t.Errorf("Recipe could not be created, %s", err)
 		}
 
 		req := httptest.NewRequest(http.MethodGet, url, nil)
@@ -98,7 +98,7 @@ func TestCreateRecipe(t *testing.T) {
 		h := NewHandler(DB)
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
-			t.Fatalf("Could not clear database")
+			t.Errorf("Could not clear database")
 		}
 
 		testUserID, err := testUtils.CreateTestUser(DB)
@@ -142,7 +142,7 @@ func TestGetRecipeByID(t *testing.T) {
 		h := NewHandler(DB)
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
-			t.Fatalf("Could not clear database")
+			t.Errorf("Could not clear database")
 		}
 
 		insertedUserID, err := testUtils.CreateTestUser(DB)
@@ -152,12 +152,12 @@ func TestGetRecipeByID(t *testing.T) {
 
 		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
 		if err != nil {
-			t.Fatalf("Author could not be created, %v", err)
+			t.Errorf("Author could not be created, %v", err)
 		}
 
 		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
 		if err != nil {
-			t.Fatalf("Recipe could not be created, %v", err)
+			t.Errorf("Recipe could not be created, %v", err)
 		}
 
 		req := httptest.NewRequest(http.MethodGet, url+"/"+insertedRecipeID, nil)
@@ -203,7 +203,7 @@ func TestDeleteRecipeByID(t *testing.T) {
 		h := NewHandler(DB)
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
-			t.Fatalf("Could not clear database")
+			t.Errorf("Could not clear database")
 		}
 
 		insertedUserID, err := testUtils.CreateTestUser(DB)
@@ -213,12 +213,12 @@ func TestDeleteRecipeByID(t *testing.T) {
 
 		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
 		if err != nil {
-			t.Fatalf("Author could not be created, %v", err)
+			t.Errorf("Author could not be created, %v", err)
 		}
 
 		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
 		if err != nil {
-			t.Fatalf("Recipe could not be created, %v", err)
+			t.Errorf("Recipe could not be created, %v", err)
 		}
 
 		req := httptest.NewRequest(http.MethodGet, url+"/"+insertedRecipeID, nil)
@@ -245,7 +245,7 @@ func TestUpdateUserByID(t *testing.T) {
 		h := NewHandler(DB)
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
-			t.Fatalf("Could not clear database")
+			t.Errorf("Could not clear database")
 		}
 
 		insertedUserID, err := testUtils.CreateTestUser(DB)
@@ -255,12 +255,12 @@ func TestUpdateUserByID(t *testing.T) {
 
 		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
 		if err != nil {
-			t.Fatalf("Author could not be created, %v", err)
+			t.Errorf("Author could not be created, %v", err)
 		}
 
 		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
 		if err != nil {
-			t.Fatalf("Recipe could not be created, %v", err)
+			t.Errorf("Recipe could not be created, %v", err)
 		}
 
 		newRecipe := testUtils.TestRecipeAll
