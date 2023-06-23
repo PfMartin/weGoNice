@@ -2,6 +2,7 @@ package recipes
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -14,28 +15,74 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO
-// func TestGetAllRecipes(t *testing.T) {
-// 	DB := db.Init(false)
-// 	h := NewHandler(DB)
-
-// 	req := httptest.NewRequest(http.MethodGet, url, nil)
-// 	w := httptest.NewRecorder()
-
-// 	h.GetAllRecipes(w, req)
-
-// 	expected := http.StatusOK
-// 	got := w.Code
-
-// 	assert.Equal(t, expected, got, "Test '%s' failed:\nExpected: %d | ", "get all", expected)
-// }
-
-const url = "http://localhost:8080/recipes"
-
 type testArgs struct {
 	name           string
 	recipe         models.Recipe
 	expectedStatus int
+	expectedRecipe models.Recipe
+}
+
+const url = "http://localhost:8080/recipes"
+
+func TestGetAllRecipes(t *testing.T) {
+	tests := []testArgs{
+		{name: "gets all recipes", expectedStatus: http.StatusOK, expectedRecipe: testUtils.TestRecipeAll},
+	}
+
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+
+		if err := testUtils.ClearDatabase(DB); err != nil {
+			t.Fatalf("Could not clear database")
+		}
+
+		insertedUserID, err := testUtils.CreateTestUser(DB)
+		if err != nil {
+			t.Errorf("User could not be created, %s", err)
+		}
+
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
+		if err != nil {
+			t.Fatalf("Author could not be created, %s", err)
+		}
+
+		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
+		if err != nil {
+			t.Fatalf("Recipe could not be created, %s", err)
+		}
+
+		req := httptest.NewRequest(http.MethodGet, url, nil)
+		w := httptest.NewRecorder()
+
+		context.Set(req, "userId", insertedUserID)
+
+		h.GetAllRecipes(w, req)
+
+		res := w.Result()
+		defer res.Body.Close()
+		data, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			t.Errorf("Failed to read body of response %s", err)
+		}
+
+		var recipeRes []models.Recipe
+		err = json.Unmarshal(data, &recipeRes)
+		if err != nil {
+			t.Errorf("Failed to unmarshal response to recipes: %s", err)
+		}
+
+		tt.expectedRecipe.ID = insertedRecipeID
+		tt.expectedRecipe.Author.ID = insertedAuthorID
+		tt.expectedRecipe.Author.UserID = insertedUserID
+		tt.expectedRecipe.User.ID = insertedUserID
+
+		expectedRecipes := []models.Recipe{tt.expectedRecipe}
+
+		got := recipeRes
+
+		assert.Equal(t, expectedRecipes, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, expectedRecipes, got)
+	}
 }
 
 func TestCreateRecipe(t *testing.T) {
