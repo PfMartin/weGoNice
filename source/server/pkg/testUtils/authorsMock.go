@@ -12,8 +12,8 @@ import (
 
 var TestAuthor = models.AuthorRequest{
 	Name:      "Schnabularasa",
-	Firstname: "Jelena",
-	Lastname:  "Schnabu",
+	FirstName: "Jelena",
+	LastName:  "Schnabu",
 	Website:   "https://schnabularasa.at",
 	Instagram: "testAccount",
 	YouTube:   "testYouTube",
@@ -22,8 +22,8 @@ var TestAuthor = models.AuthorRequest{
 
 var UpdateAuthor = models.AuthorRequest{
 	Name:      "Nico Rittenau",
-	Firstname: "Nico",
-	Lastname:  "Rittenau",
+	FirstName: "Nico",
+	LastName:  "Rittenau",
 	Website:   "https://www.nikorittenau.com/",
 	Instagram: "rittenau",
 	YouTube:   "rittenau",
@@ -32,8 +32,8 @@ var UpdateAuthor = models.AuthorRequest{
 
 var ExpectedUser = models.UserResponse{
 	ID:         "willChange",
-	Lastname:   TestUser.Lastname,
-	Firstname:  TestUser.Firstname,
+	LastName:   TestUser.LastName,
+	FirstName:  TestUser.FirstName,
 	Email:      TestUser.Email,
 	Role:       "user",
 	CreatedAt:  testDate,
@@ -43,8 +43,8 @@ var ExpectedUser = models.UserResponse{
 var ExpectedAuthor = models.AuthorResponse{
 	ID:         "willChange",
 	Name:       TestAuthor.Name,
-	Lastname:   TestAuthor.Lastname,
-	Firstname:  TestAuthor.Firstname,
+	LastName:   TestAuthor.LastName,
+	FirstName:  TestAuthor.FirstName,
 	Website:    TestAuthor.Website,
 	Instagram:  TestAuthor.Instagram,
 	YouTube:    TestAuthor.YouTube,
@@ -57,8 +57,8 @@ var ExpectedAuthor = models.AuthorResponse{
 var ExpectedAuthorFlat = models.AuthorDB{
 	ID:         ExpectedAuthor.ID,
 	Name:       TestAuthor.Name,
-	Lastname:   TestAuthor.Lastname,
-	Firstname:  TestAuthor.Firstname,
+	LastName:   TestAuthor.LastName,
+	FirstName:  TestAuthor.FirstName,
 	Website:    TestAuthor.Website,
 	Instagram:  TestAuthor.Instagram,
 	YouTube:    TestAuthor.YouTube,
@@ -78,8 +78,8 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 
 	data := bson.M{
 		"name":       TestAuthor.Name,
-		"lastName":   TestAuthor.Lastname,
-		"firstName":  TestAuthor.Firstname,
+		"lastName":   TestAuthor.LastName,
+		"firstName":  TestAuthor.FirstName,
 		"website":    TestAuthor.Website,
 		"instagram":  TestAuthor.Instagram,
 		"youTube":    TestAuthor.YouTube,

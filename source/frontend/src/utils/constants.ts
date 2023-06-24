@@ -1,6 +1,6 @@
 export const AUTHOR_SORTING_OPTIONS = [
-  'Firstname',
-  'Lastname',
+  'FirstName',
+  'LastName',
   'Name',
   'CreatedAt',
   'ModifiedAt',

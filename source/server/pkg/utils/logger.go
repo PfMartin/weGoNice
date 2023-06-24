@@ -14,5 +14,5 @@ func NewLogger() Logger {
 
 // TODO: Add logging to logfile
 func (l *Logger) LogEndpointHit(r *http.Request) {
-	log.Printf("%s request to '%s' without any user information", r.Method, r.URL.RequestURI())
+	log.Printf("%s request to '%s'", r.Method, r.URL.RequestURI())
 }
