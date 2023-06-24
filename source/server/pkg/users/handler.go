@@ -126,7 +126,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := bson.D{{Key: "lastname", Value: user.Lastname}, {Key: "firstname", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: hashedPassword}}
+	data := bson.D{{Key: "lastName", Value: user.Lastname}, {Key: "firstName", Value: user.Firstname}, {Key: "email", Value: user.Email}, {Key: "password", Value: hashedPassword}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		log.Printf("Error: Failed insert data: %v", err)
@@ -168,8 +168,8 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 
 	filter := bson.M{"_id": userID}
 	update := bson.M{"$set": bson.M{
-		"lastname":  user.Lastname,
-		"firstname": user.Firstname,
+		"lastName":  user.Lastname,
+		"firstName": user.Firstname,
 	}}
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	result, err := coll.UpdateOne(context.TODO(), filter, update)

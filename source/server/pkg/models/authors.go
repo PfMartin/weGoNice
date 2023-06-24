@@ -6,8 +6,8 @@ import (
 
 type AuthorRequest struct {
 	Name      string `bson:"name" `
-	Firstname string `bson:"firstname"`
-	Lastname  string `bson:"lastname"`
+	Firstname string `bson:"firstName"`
+	Lastname  string `bson:"lastName"`
 	Website   string `bson:"website"`
 	Instagram string `bson:"instagram"`
 	YouTube   string `bson:"youTube"`
@@ -17,8 +17,8 @@ type AuthorRequest struct {
 
 type AuthorResponse struct {
 	ID         string       `bson:"_id" json:"id"`
-	Firstname  string       `bson:"firstname" json:"firstname"`
-	Lastname   string       `bson:"lastname" json:"lastname"`
+	Firstname  string       `bson:"firstName" json:"firstName"`
+	Lastname   string       `bson:"lastName" json:"lastName"`
 	Name       string       `bson:"name" json:"name"`
 	Website    string       `bson:"website" json:"website"`
 	Instagram  string       `bson:"instagram" json:"instagram"`
@@ -31,8 +31,8 @@ type AuthorResponse struct {
 
 type AuthorDB struct {
 	ID         string    `bson:"_id" json:"id"`
-	Firstname  string    `bson:"firstname" json:"firstName"`
-	Lastname   string    `bson:"lastname" json:"lastName"`
+	Firstname  string    `bson:"firstName" json:"firstName"`
+	Lastname   string    `bson:"lastName" json:"lastName"`
 	Name       string    `bson:"name" json:"name"`
 	Website    string    `bson:"website" json:"website"`
 	Instagram  string    `bson:"instagram" json:"instagram"`

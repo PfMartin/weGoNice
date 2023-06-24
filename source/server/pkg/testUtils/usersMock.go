@@ -32,8 +32,8 @@ var TestLogin = models.Login{
 func CreateTestUser(db *mongo.Client) (string, error) {
 	coll := db.Database("weGoNice").Collection("users")
 	data := bson.M{
-		"lastname":   TestUser.Lastname,
-		"firstname":  TestUser.Firstname,
+		"lastName":   TestUser.Lastname,
+		"firstName":  TestUser.Firstname,
 		"email":      TestUser.Email,
 		"password":   TestUser.Password,
 		"role":       "user",

@@ -78,8 +78,8 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 
 	data := bson.M{
 		"name":       TestAuthor.Name,
-		"lastname":   TestAuthor.Lastname,
-		"firstname":  TestAuthor.Firstname,
+		"lastName":   TestAuthor.Lastname,
+		"firstName":  TestAuthor.Firstname,
 		"website":    TestAuthor.Website,
 		"instagram":  TestAuthor.Instagram,
 		"youTube":    TestAuthor.YouTube,

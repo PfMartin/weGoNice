@@ -82,8 +82,8 @@ const executeUpload = async () => {
 
   const body = {
     name: name.value,
-    firstname: firstname.value,
-    lastname: lastname.value,
+    firstName: firstName.value,
+    lastName: lastName.value,
     website: website.value,
     instagram: instagram.value,
     youTube: youTube.value,
@@ -102,18 +102,18 @@ const updateName = (newValue: string) => {
   }
 };
 
-const firstname = ref(props.initialData.firstname);
+const firstName = ref(props.initialData.firstName);
 const updateFirstname = (newValue: string): void => {
-  if (newValue !== firstname.value) {
-    firstname.value = newValue;
+  if (newValue !== firstName.value) {
+    firstName.value = newValue;
     emitInput();
   }
 };
 
-const lastname = ref(props.initialData.lastname);
+const lastName = ref(props.initialData.lastName);
 const updateLastname = (newValue: string): void => {
-  if (newValue !== lastname.value) {
-    lastname.value = newValue;
+  if (newValue !== lastName.value) {
+    lastName.value = newValue;
     emitInput();
   }
 };
@@ -196,8 +196,8 @@ const emitInput = async (): Promise<void> => {
 
   const body = {
     name: name.value,
-    firstname: firstname.value,
-    lastname: lastname.value,
+    firstName: firstName.value,
+    lastName: lastName.value,
     website: website.value,
     instagram: instagram.value,
     youTube: youTube.value,
@@ -309,17 +309,17 @@ onMounted(() => {
         <TextInputField
           headline="First name"
           iconName="person"
-          id="firstname"
-          :initialValue="firstname"
-          placeholder="Insert the author's firstname"
+          id="firstName"
+          :initialValue="firstName"
+          placeholder="Insert the author's first name"
           @changed="updateFirstname"
         />
         <TextInputField
           headline="Last name"
           iconName="person"
-          id="lastname"
-          :initialValue="lastname"
-          placeholder="Insert the author's lastname"
+          id="lastName"
+          :initialValue="lastName"
+          placeholder="Insert the author's last name"
           @changed="updateLastname"
         />
       </div>

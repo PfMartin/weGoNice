@@ -90,7 +90,9 @@ const isReady = computed((): boolean => !!authors.value.length);
         </RouterLink>
       </template>
     </div>
-    <SpinnerComponent v-else size="large" />
+    <div class="spinner-container" v-else>
+      <SpinnerComponent size="large" />
+    </div>
   </div>
 </template>
 
@@ -144,6 +146,12 @@ const isReady = computed((): boolean => !!authors.value.length);
     grid-gap: 1rem;
     overflow: auto;
     margin-right: 5px;
+  }
+
+  .spinner-container {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
   }
 }
 

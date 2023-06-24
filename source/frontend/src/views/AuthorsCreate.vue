@@ -11,8 +11,8 @@ const router = useRouter();
 
 const author = ref<Authors.Author>({
   name: '',
-  lastname: '',
-  firstname: '',
+  lastName: '',
+  firstName: '',
   website: '',
   youTube: '',
   instagram: '',
