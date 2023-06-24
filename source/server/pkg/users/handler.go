@@ -8,6 +8,7 @@ import (
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
+	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -18,13 +19,15 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
+	logger     utils.Logger
 }
 
 func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "users"}
+	return Handler{db, "weGoNice", "users", utils.NewLogger()}
 }
 
 func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	if !auth.IsAdminContextOk(r) {
 		http.Error(w, "Not authorized to view all users", http.StatusUnauthorized)
 		return
@@ -51,6 +54,7 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	userId, err := primitive.ObjectIDFromHex(id)
@@ -83,6 +87,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	if !auth.IsAdminContextOk(r) {
 		http.Error(w, "Not authorized to create user", http.StatusUnauthorized)
 		return
@@ -142,6 +147,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	userID, err := primitive.ObjectIDFromHex(id)
@@ -185,6 +191,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	userID, err := primitive.ObjectIDFromHex(id)

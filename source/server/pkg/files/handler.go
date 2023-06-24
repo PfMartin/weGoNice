@@ -12,29 +12,37 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
 )
 
 type Handler struct {
+	logger utils.Logger
 }
 
 func NewHandler() Handler {
-	return Handler{}
+	return Handler{
+		utils.NewLogger(),
+	}
 }
 
 func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	saveFile(w, r, false)
 }
 
 func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	serveFile(w, r, false)
 }
 
 func (h *Handler) SaveFileTmp(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	saveFile(w, r, true)
 }
 
 func (h *Handler) ServeFileTmp(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	serveFile(w, r, true)
 }
 
