@@ -6,7 +6,7 @@ module.exports = {
   platform: 'github',
   includeForks: true,
   dryRun: 'full',
-  repositories: ['PfMartin/weGoNice'],
+  repositories: [],
   packageRules: [
     {
       description: 'lockFileMaintenance',
