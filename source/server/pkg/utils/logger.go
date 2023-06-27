@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 type Logger struct {
@@ -14,5 +15,5 @@ func NewLogger() Logger {
 
 // TODO: Add logging to logfile
 func (l *Logger) LogEndpointHit(r *http.Request) {
-	log.Printf("%s request to '%s'", r.Method, r.URL.RequestURI())
+	log.Info().Str("requestMethod", r.Method).Str("requestUrl", r.URL.RequestURI()).Send()
 }

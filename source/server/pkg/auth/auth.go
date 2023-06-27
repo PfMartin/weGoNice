@@ -3,11 +3,12 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/dgrijalva/jwt-go"
 	gorillaCtx "github.com/gorilla/context"
@@ -99,8 +100,7 @@ func CheckTokenHandler(next http.HandlerFunc) http.HandlerFunc {
 			id, ok := claims["userId"].(string)
 			if !ok {
 				http.Error(w, "Unauthorized", http.StatusUnauthorized)
-				log.Println(id)
-				log.Println("Check token Handler Unauthorized")
+				log.Info().Str("id", id).Msg("Check token Handler Unauthorized")
 				return
 			}
 

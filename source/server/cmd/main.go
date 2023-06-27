@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/authors"
@@ -43,14 +44,14 @@ func main() {
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://localhost", "localhost"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
-	log.Printf("Starting api at http://%s\n", url)
-	log.Println(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r)))
+	log.Info().Str("url", url).Msg("Starting api")
+	log.Error().Err(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
 }
 
 func loadEnvFile() {
 	err := godotenv.Load("../.env")
 	if err != nil {
-		log.Printf(".env file not loaded. Using environment variables on machine.")
+		log.Error().Msg(".env file not loaded. Using environment variables on machine.")
 	}
 }
 
