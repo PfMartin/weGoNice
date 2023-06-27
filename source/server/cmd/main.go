@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rs/zerolog/log"
-
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/authors"
 	"github.com/PfMartin/weGoNice/server/pkg/db"
@@ -26,13 +24,13 @@ func main() {
 
 	DB := db.Init(true)
 
-	logger := logging.NewLogger()
+	logger := logging.Get()
 
-	userHandler := users.NewHandler(DB, logger)
-	authHandler := auth.NewHandler(DB, logger)
-	recipeHandler := recipes.NewHandler(DB, logger)
-	authorHandler := authors.NewHandler(DB, logger)
-	filesHandler := files.NewHandler(logger)
+	userHandler := users.NewHandler(DB)
+	authHandler := auth.NewHandler(DB)
+	recipeHandler := recipes.NewHandler(DB)
+	authorHandler := authors.NewHandler(DB)
+	filesHandler := files.NewHandler()
 
 	r := mux.NewRouter()
 	users.RegisterUserRoutes(r, userHandler)
@@ -47,14 +45,15 @@ func main() {
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://localhost", "localhost"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
-	log.Info().Str("url", url).Msg("Starting api")
-	log.Error().Err(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
+	logger.Info().Str("url", url).Msg("Starting api")
+	logger.Error().Err(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
 }
 
 func loadEnvFile() {
+	logger := logging.Get()
 	err := godotenv.Load("../.env")
 	if err != nil {
-		log.Error().Msg(".env file not loaded. Using environment variables on machine.")
+		logger.Error().Msg(".env file not loaded. Using environment variables on machine.")
 	}
 }
 

@@ -8,7 +8,6 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	gorillaContext "github.com/gorilla/context"
 	"go.mongodb.org/mongo-driver/bson"
@@ -20,15 +19,13 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
-	logger     logging.Logger
 }
 
-func NewHandler(db *mongo.Client, logger logging.Logger) Handler {
-	return Handler{db, "weGoNice", "users", logger}
+func NewHandler(db *mongo.Client) Handler {
+	return Handler{db, "weGoNice", "users"}
 }
 
 func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	var login models.Login
 
 	err := json.NewDecoder(r.Body).Decode(&login)
@@ -73,7 +70,6 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	var user models.User
 
 	decoder := json.NewDecoder(r.Body)
@@ -146,7 +142,6 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) getTokenByToken(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	userId, ok := gorillaContext.Get(r, "userId").(string)
 	if !ok {
 		http.Error(w, "Failed to check userId", http.StatusInternalServerError)

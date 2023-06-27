@@ -13,7 +13,6 @@ import (
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/files"
-	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
@@ -39,20 +38,17 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
-	logger     logging.Logger
 }
 
-func NewHandler(db *mongo.Client, logger logging.Logger) Handler {
+func NewHandler(db *mongo.Client) Handler {
 	return Handler{
 		db,
 		"weGoNice",
 		"authors",
-		logger,
 	}
 }
 
 func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	sortingStage := bson.D{
@@ -78,7 +74,6 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	authorID, err := primitive.ObjectIDFromHex(id)
@@ -112,7 +107,6 @@ func (h *Handler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	var author models.AuthorRequest
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
@@ -193,7 +187,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		fileDepot := os.Getenv("FILE_DEPOT")
 		filePath := fmt.Sprintf("%s/%s", fileDepot, imageName)
 
-		fileHandler := files.NewHandler(h.logger)
+		fileHandler := files.NewHandler()
 
 		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
 		if err != nil {
@@ -208,7 +202,6 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	var author models.AuthorRequest
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&author)
@@ -284,7 +277,6 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	authorID, err := primitive.ObjectIDFromHex(id)
