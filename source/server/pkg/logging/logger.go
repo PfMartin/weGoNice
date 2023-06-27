@@ -18,6 +18,7 @@ var once sync.Once
 var log zerolog.Logger
 
 func Get() zerolog.Logger {
+
 	once.Do(func() {
 		zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 		zerolog.TimeFieldFormat = time.RFC3339Nano
@@ -34,8 +35,8 @@ func Get() zerolog.Logger {
 
 		if os.Getenv("APP_ENV") != "development" {
 			fileLogger := &lumberjack.Logger{
-				Filename:   "wikipedia-demo.log",
-				MaxSize:    5, //
+				Filename:   os.Getenv("LOG_FILE"),
+				MaxSize:    5,
 				MaxBackups: 10,
 				MaxAge:     14,
 				Compress:   true,
