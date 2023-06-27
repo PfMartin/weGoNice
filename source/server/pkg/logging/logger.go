@@ -74,9 +74,10 @@ func LogRequest(next http.HandlerFunc) http.HandlerFunc {
 		start := time.Now()
 		l := Get()
 
-		l.Info().Str("method", r.Method).Str("url", r.URL.RequestURI()).Dur("elapsed_ms", time.Since(start)).Msg("incoming request")
+		defer func() {
+			l.Info().Str("method", r.Method).Str("url", r.URL.RequestURI()).Dur("elapsed_ms", time.Since(start)).Msg("incoming request")
+		}()
 
 		next(w, r)
-
 	})
 }
