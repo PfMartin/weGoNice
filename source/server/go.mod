@@ -7,7 +7,7 @@ require (
 	github.com/gorilla/context v1.1.1
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
-	github.com/joho/godotenv v1.4.0
+	github.com/joho/godotenv v1.5.1
 	github.com/rs/zerolog v1.29.1
 	github.com/stretchr/testify v1.7.0
 	go.mongodb.org/mongo-driver v1.10.0
