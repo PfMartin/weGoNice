@@ -35,13 +35,15 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
+	logger     utils.Logger
 }
 
 func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "recipes"}
+	return Handler{db, "weGoNice", "recipes", utils.NewLogger()}
 }
 
 func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	sortingStage := bson.D{{Key: "$sort", Value: bson.M{"name": 1}}}
@@ -66,6 +68,7 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	var recipe models.Recipe
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
@@ -126,6 +129,7 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetRecipeByID(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	recipeID, err := primitive.ObjectIDFromHex(id)
@@ -166,6 +170,7 @@ func (h *Handler) GetRecipeByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	var recipe models.Recipe
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&recipe)
@@ -218,6 +223,7 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteRecipeByID(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	recipeID, err := primitive.ObjectIDFromHex(id)

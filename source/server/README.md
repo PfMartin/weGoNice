@@ -45,13 +45,13 @@ curl -X GET \
 # Add one
 curl -X POST \
   -H "Content-type: application/json" \
-  -d '{"lastname": "Haberl", "firstname": "Lea", "email": "haberllea1911@gmail.com"}' \
+  -d '{"lastName": "Haberl", "firstName": "Lea", "email": "haberllea1911@gmail.com"}' \
   "http://localhost:8080/users"
 
 # Update one
 curl -X PUT \
   -H "Content-type: application/json" \
-  -d '{"lastname": "Pfatrisch"} ...' \
+  -d '{"lastName": "Pfatrisch"} ...' \
   "http://localhost:8080/users/2"
 
 # Delete by id

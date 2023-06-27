@@ -11,15 +11,15 @@ import (
 )
 
 var TestUser = models.User{
-	Lastname:  "Zarella",
-	Firstname: "Moe",
+	LastName:  "Zarella",
+	FirstName: "Moe",
 	Password:  "testing",
 	Email:     "moezarella@gmail.com",
 }
 
 var UpdateUser = models.User{
-	Lastname:  "Schluepper",
-	Firstname: "Rosa",
+	LastName:  "Schluepper",
+	FirstName: "Rosa",
 	Password:  "rosasSchluepper",
 	Email:     "rosaschluepper@weg.de",
 }
@@ -32,8 +32,8 @@ var TestLogin = models.Login{
 func CreateTestUser(db *mongo.Client) (string, error) {
 	coll := db.Database("weGoNice").Collection("users")
 	data := bson.M{
-		"lastname":   TestUser.Lastname,
-		"firstname":  TestUser.Firstname,
+		"lastName":   TestUser.LastName,
+		"firstName":  TestUser.FirstName,
 		"email":      TestUser.Email,
 		"password":   TestUser.Password,
 		"role":       "user",

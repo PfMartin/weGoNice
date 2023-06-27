@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
+	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	gorillaContext "github.com/gorilla/context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -18,13 +19,15 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
+	logger     utils.Logger
 }
 
 func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "users"}
+	return Handler{db, "weGoNice", "users", utils.NewLogger()}
 }
 
 func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	var login models.Login
 
 	err := json.NewDecoder(r.Body).Decode(&login)
@@ -68,6 +71,7 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	var user models.User
 
 	decoder := json.NewDecoder(r.Body)
@@ -139,6 +143,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) getTokenByToken(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	userId, ok := gorillaContext.Get(r, "userId").(string)
 	if !ok {
 		http.Error(w, "Failed to check userId", http.StatusInternalServerError)

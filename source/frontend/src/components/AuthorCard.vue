@@ -26,7 +26,7 @@ onMounted(async () => {
         <h3>{{ data.name || 'n/a' }}</h3>
       </header>
       <div class="body">
-        <p>{{ data.firstname || '' }} {{ data.lastname || '' }}</p>
+        <p>{{ data.firstName || '' }} {{ data.lastName || '' }}</p>
       </div>
       <footer class="footer">
         <div class="recipes-count">

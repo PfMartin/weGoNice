@@ -23,8 +23,8 @@ import (
 var projectStage = bson.D{
 	{Key: "$project", Value: bson.D{
 		{Key: "name", Value: 1},
-		{Key: "firstname", Value: 1},
-		{Key: "lastname", Value: 1},
+		{Key: "firstName", Value: 1},
+		{Key: "lastName", Value: 1},
 		{Key: "website", Value: 1},
 		{Key: "instagram", Value: 1},
 		{Key: "youTube", Value: 1},
@@ -37,13 +37,20 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
+	logger     utils.Logger
 }
 
 func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "authors"}
+	return Handler{
+		db,
+		"weGoNice",
+		"authors",
+		utils.NewLogger(),
+	}
 }
 
 func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 
 	sortingStage := bson.D{
@@ -69,6 +76,7 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	authorID, err := primitive.ObjectIDFromHex(id)
@@ -102,6 +110,7 @@ func (h *Handler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	var author models.AuthorRequest
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
@@ -138,8 +147,8 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	data := bson.M{
 		"name":       author.Name,
-		"firstname":  author.Firstname,
-		"lastname":   author.Lastname,
+		"firstName":  author.FirstName,
+		"lastName":   author.LastName,
 		"website":    author.Website,
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
@@ -197,6 +206,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	var author models.AuthorRequest
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&author)
@@ -249,8 +259,8 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 	filter = bson.M{"_id": authorID}
 	update := bson.M{"$set": bson.M{
 		"name":       author.Name,
-		"firstname":  author.Firstname,
-		"lastname":   author.Lastname,
+		"firstName":  author.FirstName,
+		"lastName":   author.LastName,
 		"website":    author.Website,
 		"instagram":  author.Instagram,
 		"youTube":    author.YouTube,
@@ -272,6 +282,7 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
+	h.logger.LogEndpointHit(r)
 	id := mux.Vars(r)["id"]
 
 	authorID, err := primitive.ObjectIDFromHex(id)
