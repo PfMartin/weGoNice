@@ -33,13 +33,13 @@ func ClearDatabase(db *mongo.Client) error {
 func CompareFileContent(file1 string, file2 string) bool {
 	f1, err := os.Open(file1)
 	if err != nil {
-		log.Err(err).Msg("Failed to open file1")
+		log.Error().Err(err).Msg("Failed to open file1")
 	}
 	defer f1.Close()
 
 	f2, err := os.Open(file2)
 	if err != nil {
-		log.Err(err).Msg("Failed to open file2")
+		log.Error().Err(err).Msg("Failed to open file2")
 	}
 	defer f2.Close()
 
@@ -58,7 +58,7 @@ func CompareFileContent(file1 string, file2 string) bool {
 			} else if err1 == io.EOF || err2 == io.EOF {
 				return false
 			} else {
-				log.Err(err1).Err(err2).Msg("Something went wrong, while comparing chunks")
+				log.Error().Err(err1).Err(err2).Msg("Something went wrong, while comparing chunks")
 				return false
 			}
 		}

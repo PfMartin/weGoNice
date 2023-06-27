@@ -74,7 +74,7 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 
 	objectID, err := primitive.ObjectIDFromHex(userID)
 	if err != nil {
-		log.Err(err).Msg("Failed to convert hex string to ObjectID")
+		log.Error().Err(err).Msg("Failed to convert hex string to ObjectID")
 	}
 
 	data := bson.M{
@@ -91,7 +91,7 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Err(err).Msg("Failed insert data")
+		log.Error().Err(err).Msg("Failed insert data")
 		return "", err
 	}
 

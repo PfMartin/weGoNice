@@ -37,14 +37,14 @@ func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	cursor, err := coll.Find(context.TODO(), bson.D{})
 	if err != nil {
-		log.Err(err).Msg("Failed to find users")
+		log.Error().Err(err).Msg("Failed to find users")
 		http.Error(w, "Failed to find users", http.StatusNotFound)
 		return
 	}
 
 	var users []models.User
 	if err = cursor.All(context.TODO(), &users); err != nil {
-		log.Err(err).Msg("Failed to parse users")
+		log.Error().Err(err).Msg("Failed to parse users")
 		http.Error(w, "Failed to parse users", http.StatusInternalServerError)
 		return
 	}
@@ -60,7 +60,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 
 	userId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Err(err).Msg("Failed to parse id to ObjectID")
+		log.Error().Err(err).Msg("Failed to parse id to ObjectID")
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
 		return
 	}
@@ -72,7 +72,7 @@ func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
-		log.Err(err).Msg("Failed to find a user")
+		log.Error().Err(err).Msg("Failed to find a user")
 		http.Error(w, "Failed to find user", http.StatusNotFound)
 		return
 	}
@@ -100,7 +100,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&user)
 
 	if err != nil {
-		log.Err(err).Msg("Failed to decode body")
+		log.Error().Err(err).Msg("Failed to decode body")
 		http.Error(w, "Failed to decode body", http.StatusBadRequest)
 		return
 	}
@@ -112,7 +112,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	filter := bson.D{{Key: "email", Value: user.Email}}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingUser)
 	if err == nil {
-		log.Err(err).Str("userEmail", user.Email).Msg("User already exists")
+		log.Error().Err(err).Str("userEmail", user.Email).Msg("User already exists")
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
 		msg := "User with email " + user.Email + " already exists."
@@ -127,7 +127,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	// Hash password and create new user
 	hashedPassword, err := auth.HashPassword(user.Password)
 	if err != nil {
-		log.Err(err).Msg("Failed to hash password")
+		log.Error().Err(err).Msg("Failed to hash password")
 		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 		return
 	}
@@ -135,7 +135,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	data := bson.D{{Key: "lastName", Value: user.LastName}, {Key: "firstName", Value: user.FirstName}, {Key: "email", Value: user.Email}, {Key: "password", Value: hashedPassword}}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Err(err).Msg("Failed insert data")
+		log.Error().Err(err).Msg("Failed insert data")
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 		return
 	}
@@ -153,7 +153,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Err(err).Msg("Failed to parse id to ObjectID")
+		log.Error().Err(err).Msg("Failed to parse id to ObjectID")
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusInternalServerError)
 		return
 	}
@@ -163,7 +163,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	decoder.DisallowUnknownFields()
 	err = decoder.Decode(&user)
 	if err != nil {
-		log.Err(err).Msg("Failed to decode request body for user")
+		log.Error().Err(err).Msg("Failed to decode request body for user")
 		http.Error(w, "Failed to decode request body for user", http.StatusBadRequest)
 		return
 	}
@@ -181,7 +181,7 @@ func (h *Handler) UpdateUserById(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	result, err := coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
-		log.Err(err).Msg("Failed to update user")
+		log.Error().Err(err).Msg("Failed to update user")
 		http.Error(w, "Failed to update user", http.StatusInternalServerError)
 		return
 	}
@@ -197,7 +197,7 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Err(err).Msg("Failed to parse id to ObjectID")
+		log.Error().Err(err).Msg("Failed to parse id to ObjectID")
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
 		return
 	}
@@ -209,7 +209,7 @@ func (h *Handler) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
-		log.Err(err).Msg("Failed to find user")
+		log.Error().Err(err).Msg("Failed to find user")
 		http.Error(w, "Failed to find user", http.StatusNotFound)
 		return
 	}

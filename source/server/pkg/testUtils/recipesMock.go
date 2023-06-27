@@ -41,12 +41,12 @@ func CreateTestRecipe(db *mongo.Client, userID string, authorID string) (string,
 
 	userObjectID, err := primitive.ObjectIDFromHex(userID)
 	if err != nil {
-		log.Err(err).Msg("Failed to convert hex string for userID to ObjectID")
+		log.Error().Err(err).Msg("Failed to convert hex string for userID to ObjectID")
 	}
 
 	authorObjectID, err := primitive.ObjectIDFromHex(authorID)
 	if err != nil {
-		log.Err(err).Msg("Failed to convert hex string for authorID to ObjectID")
+		log.Error().Err(err).Msg("Failed to convert hex string for authorID to ObjectID")
 	}
 
 	data := bson.M{
@@ -63,7 +63,7 @@ func CreateTestRecipe(db *mongo.Client, userID string, authorID string) (string,
 	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Err(err).Msg("Failed insert data")
+		log.Error().Err(err).Msg("Failed insert data")
 		return "", err
 	}
 

@@ -45,13 +45,13 @@ func main() {
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
 	log.Info().Str("url", url).Msg("Starting api")
-	log.Error().Err(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
+	log.Error().Error().Err(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
 }
 
 func loadEnvFile() {
 	err := godotenv.Load("../.env")
 	if err != nil {
-		log.Error().Msg(".env file not loaded. Using environment variables on machine.")
+		log.Error().Error().Msg(".env file not loaded. Using environment variables on machine.")
 	}
 }
 

@@ -59,14 +59,14 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	}
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{utils.UserLookup, projectStage, sortingStage})
 	if err != nil {
-		log.Err(err).Msg("Failed to find authors")
+		log.Error().Err(err).Msg("Failed to find authors")
 		http.Error(w, "Failed to find authors", http.StatusNotFound)
 		return
 	}
 
 	var authors []models.AuthorResponse
 	if err = cursor.All(context.TODO(), &authors); err != nil {
-		log.Err(err).Msg("Failed to parse authors, %v")
+		log.Error().Err(err).Msg("Failed to parse authors, %v")
 		http.Error(w, "Failed to parse authors", http.StatusInternalServerError)
 		return
 	}
@@ -82,7 +82,7 @@ func (h *Handler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
 
 	authorID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Err(err).Msg("Failed to parse id to ObjectID")
+		log.Error().Err(err).Msg("Failed to parse id to ObjectID")
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
 		return
 	}
@@ -94,13 +94,13 @@ func (h *Handler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
 	limitStage := bson.D{{Key: "$limit", Value: 1}}
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, projectStage, limitStage})
 	if err != nil {
-		log.Err(err).Msg("Failed to find author")
+		log.Error().Err(err).Msg("Failed to find author")
 		http.Error(w, "Failed to find author", http.StatusNotFound)
 		return
 	}
 
 	if err = cursor.All(context.TODO(), &authors); err != nil {
-		log.Err(err).Msg("Failed to parse authors, %v")
+		log.Error().Err(err).Msg("Failed to parse authors, %v")
 		http.Error(w, "Failed to parse authors", http.StatusInternalServerError)
 		return
 	}
@@ -117,7 +117,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&author)
 	if err != nil {
-		log.Err(err).Msg("Failed to decode body")
+		log.Error().Err(err).Msg("Failed to decode body")
 		http.Error(w, "Failed to decode body", http.StatusBadRequest)
 		return
 	}
@@ -128,7 +128,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	filter := bson.M{"name": author.Name}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingAuthor)
 	if err == nil {
-		log.Err(err).Str("authorName", author.Name).Msg("Author already exists")
+		log.Error().Err(err).Str("authorName", author.Name).Msg("Author already exists")
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
 		msg := "Author with name " + author.Name + " already exists."
@@ -142,7 +142,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
-		log.Err(err).Msg("Failed to create ObjectID for user from request context, %v")
+		log.Error().Err(err).Msg("Failed to create ObjectID for user from request context, %v")
 		http.Error(w, "Failed to create ObjectID for user from request context", http.StatusInternalServerError)
 	}
 
@@ -161,7 +161,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Err(err).Msg("Failed to insert data")
+		log.Error().Err(err).Msg("Failed to insert data")
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 		return
 	}
@@ -181,7 +181,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		coll = h.DB.Database(h.dbName).Collection(h.collection)
 		_, err = coll.UpdateOne(context.TODO(), filter, update)
 		if err != nil {
-			log.Err(err).Msg("Failed to update author with new imageName")
+			log.Error().Err(err).Msg("Failed to update author with new imageName")
 			http.Error(w, "Failed to update author with new imageName", http.StatusInternalServerError)
 			return
 		}
@@ -196,7 +196,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
 		if err != nil {
-			log.Err(err).Send()
+			log.Error().Err(err).Send()
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
@@ -212,7 +212,7 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&author)
 	if err != nil {
-		log.Err(err).Msg("Failed to decode request body for author")
+		log.Error().Err(err).Msg("Failed to decode request body for author")
 		http.Error(w, "Failed to decode request body for author", http.StatusBadRequest)
 		return
 	}
@@ -220,7 +220,7 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	authorID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Err(err).Msg("Failed to parse id to authorID")
+		log.Error().Err(err).Msg("Failed to parse id to authorID")
 		http.Error(w, "Failed to parse id to authorID", http.StatusBadRequest)
 		return
 	}
@@ -231,19 +231,19 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 	filter := bson.M{"_id": authorID}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingAuthor)
 	if err != nil {
-		log.Err(err).Str("authorID", id).Msg("Failed to find existing with ID")
+		log.Error().Err(err).Str("authorID", id).Msg("Failed to find existing with ID")
 		http.Error(w, "Failed to find existing author with the provided ID", http.StatusBadRequest)
 	}
 
 	existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingAuthor.ImageName)
 	err = os.Remove(existingFilePath)
 	if err != nil {
-		log.Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
+		log.Error().Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
 	}
 
 	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
-		log.Err(err).Msg("Failed to create ObjectID for user from request context")
+		log.Error().Err(err).Msg("Failed to create ObjectID for user from request context")
 		http.Error(w, "Failed to create ObjectID for user from request context", http.StatusInternalServerError)
 	}
 
@@ -272,7 +272,7 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 
 	result, err := coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
-		log.Err(err).Msg("Failed to update author")
+		log.Error().Err(err).Msg("Failed to update author")
 		http.Error(w, "Failed to update author", http.StatusInternalServerError)
 		return
 	}
@@ -288,7 +288,7 @@ func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 
 	authorID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Err(err).Msg("Failed to parse id to authorID")
+		log.Error().Err(err).Msg("Failed to parse id to authorID")
 		http.Error(w, "Failed to parse id to authorID", http.StatusBadRequest)
 		return
 	}
@@ -300,7 +300,7 @@ func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 	var author models.AuthorDB
 	err = coll.FindOne(context.TODO(), filter).Decode(&author)
 	if err != nil {
-		log.Err(err).Msg("Failed to find author")
+		log.Error().Err(err).Msg("Failed to find author")
 		http.Error(w, "Failed to find author", http.StatusNotFound)
 		return
 	}
@@ -309,7 +309,7 @@ func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 
 	err = os.Remove(filePath)
 	if err != nil {
-		log.Err(err).Str("filePath", filePath).Msg("Failed to remove image for author")
+		log.Error().Err(err).Str("filePath", filePath).Msg("Failed to remove image for author")
 	}
 
 	coll = h.DB.Database(h.dbName).Collection(h.collection)

@@ -10,7 +10,7 @@ import (
 func Ls(path string) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
-		log.Err(err)
+		log.Error().Err(err)
 	}
 
 	for _, e := range entries {

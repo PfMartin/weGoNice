@@ -43,7 +43,7 @@ func CreateTestUser(db *mongo.Client) (string, error) {
 	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Err(err).Msg("Failed insert data")
+		log.Error().Err(err).Msg("Failed insert data")
 		return "", err
 	}
 
