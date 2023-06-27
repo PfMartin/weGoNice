@@ -2,7 +2,8 @@ package testUtils
 
 import (
 	"context"
-	"log"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -42,7 +43,7 @@ func CreateTestUser(db *mongo.Client) (string, error) {
 	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Printf("Error: Failed insert data: %v", err)
+		log.Err(err).Msg("Failed insert data")
 		return "", err
 	}
 

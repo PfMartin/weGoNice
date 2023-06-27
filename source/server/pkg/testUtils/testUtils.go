@@ -5,9 +5,10 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -32,13 +33,13 @@ func ClearDatabase(db *mongo.Client) error {
 func CompareFileContent(file1 string, file2 string) bool {
 	f1, err := os.Open(file1)
 	if err != nil {
-		log.Printf("Error while opening file1: %s", err)
+		log.Err(err).Msg("Failed to open file1")
 	}
 	defer f1.Close()
 
 	f2, err := os.Open(file2)
 	if err != nil {
-		log.Printf("Error while opening file2: %s", err)
+		log.Err(err).Msg("Failed to open file2")
 	}
 	defer f2.Close()
 
@@ -57,14 +58,12 @@ func CompareFileContent(file1 string, file2 string) bool {
 			} else if err1 == io.EOF || err2 == io.EOF {
 				return false
 			} else {
-				log.Printf("Something went wrong, while comparing chunks: %s and %s", b1, b2)
+				log.Err(err1).Err(err2).Msg("Something went wrong, while comparing chunks")
 				return false
 			}
 		}
 
 		if !bytes.Equal(b1, b2) {
-			log.Println(b1)
-			log.Println(b2)
 			return false
 		}
 	}
@@ -91,7 +90,7 @@ func PrepareFile() error {
 
 	_, err = io.Copy(fileOut, fileIn)
 	if err != nil {
-		return fmt.Errorf("could not copy file: %s", err)
+		return fmt.Errorf("could not copy file")
 	}
 
 	return nil
@@ -102,12 +101,12 @@ func ClearTestFileDepot() error {
 
 	err := os.RemoveAll(testFileDepot)
 	if err != nil {
-		return fmt.Errorf("failed to remove all files from Test File Depot: %s", err)
+		return fmt.Errorf("failed to remove all files from Test File Depot")
 	}
 
 	err = os.Mkdir(testFileDepot, os.ModePerm)
 	if err != nil {
-		return fmt.Errorf("failed to readd Test File Depot: %s", err)
+		return fmt.Errorf("failed to readd Test File Depot")
 	}
 
 	return nil
