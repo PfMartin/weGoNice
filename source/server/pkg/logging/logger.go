@@ -2,6 +2,7 @@ package logging
 
 import (
 	"io"
+	"net/http"
 	"os"
 	"runtime/debug"
 	"strconv"
@@ -18,7 +19,6 @@ var once sync.Once
 var log zerolog.Logger
 
 func Get() zerolog.Logger {
-
 	once.Do(func() {
 		zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 		zerolog.TimeFieldFormat = time.RFC3339Nano
@@ -67,4 +67,16 @@ func Get() zerolog.Logger {
 	})
 
 	return log
+}
+
+func LogRequest(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		l := Get()
+
+		l.Info().Str("method", r.Method).Str("url", r.URL.RequestURI()).Dur("elapsed_ms", time.Since(start)).Msg("incoming request")
+
+		next(w, r)
+
+	})
 }
