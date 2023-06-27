@@ -6,43 +6,36 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/PfMartin/weGoNice/server/pkg/utils"
+	"github.com/rs/zerolog/log"
+
 	"github.com/gorilla/mux"
 )
 
 type Handler struct {
-	logger utils.Logger
 }
 
 func NewHandler() Handler {
-	return Handler{
-		utils.NewLogger(),
-	}
+	return Handler{}
 }
 
 func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	saveFile(w, r, false)
 }
 
 func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	serveFile(w, r, false)
 }
 
 func (h *Handler) SaveFileTmp(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	saveFile(w, r, true)
 }
 
 func (h *Handler) ServeFileTmp(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	serveFile(w, r, true)
 }
 
@@ -51,7 +44,7 @@ func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 
 	file, fileHandler, err := r.FormFile("picture")
 	if err != nil {
-		log.Printf("Error Retrieving the File %s", err)
+		log.Error().Err(err).Msg("Failed to retrieve the File")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -77,9 +70,9 @@ func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	}
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
-		log.Printf("Directory '%s' doesn't existing. Creating directory", fileDepot)
+		log.Error().Err(err).Str("directory", fileDepot).Msg("Directory doesn't existing. Creating directory")
 		if err := os.Mkdir(fileDepot, os.ModePerm); err != nil {
-			log.Printf("Error while creating directory for file depot: %s", err)
+			log.Error().Err(err).Msg("Error while creating directory for file depot")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -91,7 +84,7 @@ func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 
 	err = os.WriteFile(filepath, content, 0644)
 	if err != nil {
-		log.Printf("Error while writing the file: %s", err)
+		log.Error().Err(err).Msg("Error while writing the file")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -113,7 +106,7 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 
 	file, err := os.Open(filePath)
 	if err != nil {
-		log.Printf("Error: Failed to open file: %v", err)
+		log.Error().Err(err).Msg("Failed to open file")
 		http.Error(w, "Failed to open file", http.StatusInternalServerError)
 		return
 	}
@@ -121,7 +114,7 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 
 	fileInfo, err := file.Stat()
 	if err != nil {
-		log.Printf("Error: Failed to read stats of file: %v", err)
+		log.Error().Err(err).Msg("Failed to read stats of file")
 		http.Error(w, "Failed to read stats of file", http.StatusInternalServerError)
 		return
 	}
@@ -131,7 +124,7 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	buffer := bufio.NewReader(file)
 	_, err = buffer.Read(bytes)
 	if err != nil {
-		log.Printf("Error: Failed to read bytes to buffer: %v", err)
+		log.Error().Err(err).Msg("Failed to read bytes to buffer")
 		http.Error(w, "Failed to read bytes to buffer", http.StatusInternalServerError)
 		return
 	}
@@ -148,7 +141,7 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithD
 
 	tmpFile, err := os.Open(tmpFilePath)
 	if err != nil {
-		log.Printf("Error: Failed to open temporary file during file copy: %s", err)
+		log.Error().Err(err).Msg("Failed to open temporary file during file copy")
 		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 
@@ -162,14 +155,14 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithD
 	_, err = io.Copy(permFile, tmpFile)
 	tmpFile.Close()
 	if err != nil {
-		log.Printf("Error: Failed to copy temporary file to file: %s", err)
+		log.Error().Err(err).Msg("Failed to copy temporary file to file")
 		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 
 	if isWithDelete {
 		err = os.Remove(tmpFilePath)
 		if err != nil {
-			log.Printf("Error: Failed to remove temp file: %s", err)
+			log.Error().Err(err).Msg("Failed to remove temp file")
 			return fmt.Errorf("%s: %s", errMsg, err)
 		}
 	}

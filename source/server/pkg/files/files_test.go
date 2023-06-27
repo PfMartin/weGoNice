@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -15,6 +14,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
 	"github.com/gorilla/mux"
@@ -28,7 +29,7 @@ func TestUploadImage(t *testing.T) {
 	h := NewHandler()
 	err := godotenv.Load("../../.env")
 	if err != nil {
-		log.Printf(".env file not loaded. Using environment variables on machine.")
+		log.Info().Msg(".env file not loaded. Using environment variables on machine.")
 	}
 
 	// Create path to test-image

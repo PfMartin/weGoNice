@@ -2,7 +2,8 @@ package testUtils
 
 import (
 	"context"
-	"log"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -73,7 +74,7 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 
 	objectID, err := primitive.ObjectIDFromHex(userID)
 	if err != nil {
-		log.Printf("Error: Failed to convert hex string to ObjectID, %v", err)
+		log.Error().Err(err).Msg("Failed to convert hex string to ObjectID")
 	}
 
 	data := bson.M{
@@ -90,7 +91,7 @@ func CreateTestAuthor(db *mongo.Client, userID string) (string, error) {
 	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Printf("Error: Failed insert data: %v", err)
+		log.Error().Err(err).Msg("Failed insert data")
 		return "", err
 	}
 

@@ -3,12 +3,12 @@ package auth
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 
+	"github.com/rs/zerolog/log"
+
 	"github.com/PfMartin/weGoNice/server/pkg/models"
-	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	gorillaContext "github.com/gorilla/context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -19,15 +19,13 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
-	logger     utils.Logger
 }
 
 func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "users", utils.NewLogger()}
+	return Handler{db, "weGoNice", "users"}
 }
 
 func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	var login models.Login
 
 	err := json.NewDecoder(r.Body).Decode(&login)
@@ -43,19 +41,20 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
-		log.Printf("Error: Couldn't find a user with the provided email, %v", err)
+		log.Error().Err(err).Msg("Failed to find a user with the provided email")
 		http.Error(w, "Failed to find user with the provided email", http.StatusNotFound)
 		return
 	}
 
 	if err = checkPassword(login.Password, user.Password); err != nil {
-		log.Printf("Error: Password is not correct, %v", err)
+		log.Error().Err(err).Msg("Incorrect password")
 		http.Error(w, "Incorrect password", http.StatusNotAcceptable)
 		return
 	}
 
 	sessionToken, err := createToken(user.ID, false)
 	if err != nil {
+		log.Error().Err(err).Msg("Failed to create token")
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return
 	}
@@ -71,7 +70,6 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	var user models.User
 
 	decoder := json.NewDecoder(r.Body)
@@ -79,7 +77,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&user)
 
 	if err != nil {
-		log.Printf("Failed to decode body: %v", err)
+		log.Error().Err(err).Msg("Failed to decode body")
 		http.Error(w, "Failed to decode body", http.StatusBadRequest)
 		return
 	}
@@ -91,7 +89,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	filter := bson.D{{Key: "email", Value: user.Email}}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingUser)
 	if err == nil {
-		log.Printf("%s\n", err)
+		log.Error().Err(err).Str("email", user.Email).Msg("User with email already exists")
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
 		msg := "User with email " + user.Email + " already exists."
@@ -106,7 +104,8 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	// Hash password and create new user
 	hashedPassword, err := HashPassword(user.Password)
 	if err != nil {
-		log.Printf("Failed to hash password: %s", err)
+		log.Error().Err(err).Msg("Failed to hash password")
+		http.Error(w, "Failed to process password", http.StatusInternalServerError)
 		return
 	}
 
@@ -119,7 +118,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Printf("Failed to insert data")
+		log.Error().Err(err).Msg("Failed to insert data")
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 	}
 
@@ -127,7 +126,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 
 	sessionToken, err := createToken(userId, false)
 	if err != nil {
-		log.Printf("Failed to create token: %v", err)
+		log.Error().Err(err).Msg("Failed to create token")
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return
 	}
@@ -143,7 +142,6 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) getTokenByToken(w http.ResponseWriter, r *http.Request) {
-	h.logger.LogEndpointHit(r)
 	userId, ok := gorillaContext.Get(r, "userId").(string)
 	if !ok {
 		http.Error(w, "Failed to check userId", http.StatusInternalServerError)

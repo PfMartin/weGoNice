@@ -2,9 +2,10 @@ package db
 
 import (
 	"context"
-	"log"
 	"os"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -43,13 +44,13 @@ func Init(isProduction bool) *mongo.Client {
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	dbClient, err := mongo.Connect(ctx, clientOpts)
 	if err != nil {
-		log.Fatalf("An error occurred while connecting to the database: %v", err)
+		log.Fatal().Msg("An error occurred while connecting to the database")
 	}
 
 	if err = dbClient.Ping(ctx, readpref.Primary()); err != nil {
-		log.Fatalf("Failed to ping mongo db service: %v", err)
+		log.Fatal().Msg("Failed to ping mongo db service")
 	}
 
-	log.Println("Connected to database")
+	log.Info().Msg("Connected to database")
 	return dbClient
 }
