@@ -8,8 +8,8 @@ import (
 
 	"github.com/rs/zerolog/log"
 
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
-	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	gorillaContext "github.com/gorilla/context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -20,11 +20,11 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
-	logger     utils.Logger
+	logger     logging.Logger
 }
 
-func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "users", utils.NewLogger()}
+func NewHandler(db *mongo.Client, logger logging.Logger) Handler {
+	return Handler{db, "weGoNice", "users", logger}
 }
 
 func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {

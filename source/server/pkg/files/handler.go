@@ -13,17 +13,17 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/PfMartin/weGoNice/server/pkg/utils"
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/gorilla/mux"
 )
 
 type Handler struct {
-	logger utils.Logger
+	logger logging.Logger
 }
 
-func NewHandler() Handler {
+func NewHandler(logger logging.Logger) Handler {
 	return Handler{
-		utils.NewLogger(),
+		logger,
 	}
 }
 

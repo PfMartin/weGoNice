@@ -10,6 +10,7 @@ import (
 	"github.com/PfMartin/weGoNice/server/pkg/authors"
 	"github.com/PfMartin/weGoNice/server/pkg/db"
 	"github.com/PfMartin/weGoNice/server/pkg/files"
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/recipes"
 	"github.com/PfMartin/weGoNice/server/pkg/users"
 	"github.com/joho/godotenv"
@@ -25,11 +26,13 @@ func main() {
 
 	DB := db.Init(true)
 
-	userHandler := users.NewHandler(DB)
-	authHandler := auth.NewHandler(DB)
-	recipeHandler := recipes.NewHandler(DB)
-	authorHandler := authors.NewHandler(DB)
-	filesHandler := files.NewHandler()
+	logger := logging.NewLogger()
+
+	userHandler := users.NewHandler(DB, logger)
+	authHandler := auth.NewHandler(DB, logger)
+	recipeHandler := recipes.NewHandler(DB, logger)
+	authorHandler := authors.NewHandler(DB, logger)
+	filesHandler := files.NewHandler(logger)
 
 	r := mux.NewRouter()
 	users.RegisterUserRoutes(r, userHandler)

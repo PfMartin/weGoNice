@@ -13,6 +13,7 @@ import (
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/files"
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
@@ -38,15 +39,15 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
-	logger     utils.Logger
+	logger     logging.Logger
 }
 
-func NewHandler(db *mongo.Client) Handler {
+func NewHandler(db *mongo.Client, logger logging.Logger) Handler {
 	return Handler{
 		db,
 		"weGoNice",
 		"authors",
-		utils.NewLogger(),
+		logger,
 	}
 }
 
@@ -192,7 +193,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		fileDepot := os.Getenv("FILE_DEPOT")
 		filePath := fmt.Sprintf("%s/%s", fileDepot, imageName)
 
-		fileHandler := files.NewHandler()
+		fileHandler := files.NewHandler(h.logger)
 
 		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
 		if err != nil {

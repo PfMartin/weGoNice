@@ -9,6 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
@@ -36,11 +37,11 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
-	logger     utils.Logger
+	logger     logging.Logger
 }
 
-func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "recipes", utils.NewLogger()}
+func NewHandler(db *mongo.Client, logger logging.Logger) Handler {
+	return Handler{db, "weGoNice", "recipes", logger}
 }
 
 func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
