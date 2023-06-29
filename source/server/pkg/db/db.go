@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/rs/zerolog/log"
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -13,6 +13,8 @@ import (
 )
 
 func Init(isProduction bool) *mongo.Client {
+	logger := logging.Get()
+
 	creds := map[string]string{
 		"AuthSource": os.Getenv("DATABASE_NAME"),
 		"Username":   os.Getenv("DATABASE_USERNAME"),
@@ -44,13 +46,13 @@ func Init(isProduction bool) *mongo.Client {
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	dbClient, err := mongo.Connect(ctx, clientOpts)
 	if err != nil {
-		log.Fatal().Msg("An error occurred while connecting to the database")
+		logger.Fatal().Msg("An error occurred while connecting to the database")
 	}
 
 	if err = dbClient.Ping(ctx, readpref.Primary()); err != nil {
-		log.Fatal().Msg("Failed to ping mongo db service")
+		logger.Fatal().Msg("Failed to ping mongo db service")
 	}
 
-	log.Info().Msg("Connected to database")
+	logger.Info().Msg("Connected to database")
 	return dbClient
 }

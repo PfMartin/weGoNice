@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog"
 
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	gorillaContext "github.com/gorilla/context"
 	"go.mongodb.org/mongo-driver/bson"
@@ -19,10 +20,11 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
+	logger     zerolog.Logger
 }
 
 func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "users"}
+	return Handler{db, "weGoNice", "users", logging.Get()}
 }
 
 func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
@@ -41,20 +43,20 @@ func (h *Handler) loginUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err = coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to find a user with the provided email")
+		h.logger.Error().Err(err).Msg("Failed to find a user with the provided email")
 		http.Error(w, "Failed to find user with the provided email", http.StatusNotFound)
 		return
 	}
 
 	if err = checkPassword(login.Password, user.Password); err != nil {
-		log.Error().Err(err).Msg("Incorrect password")
+		h.logger.Error().Err(err).Msg("Incorrect password")
 		http.Error(w, "Incorrect password", http.StatusNotAcceptable)
 		return
 	}
 
 	sessionToken, err := createToken(user.ID, false)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to create token")
+		h.logger.Error().Err(err).Msg("Failed to create token")
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return
 	}
@@ -77,7 +79,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&user)
 
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to decode body")
+		h.logger.Error().Err(err).Msg("Failed to decode body")
 		http.Error(w, "Failed to decode body", http.StatusBadRequest)
 		return
 	}
@@ -89,7 +91,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	filter := bson.D{{Key: "email", Value: user.Email}}
 	err = coll.FindOne(context.TODO(), filter).Decode(&existingUser)
 	if err == nil {
-		log.Error().Err(err).Str("email", user.Email).Msg("User with email already exists")
+		h.logger.Error().Err(err).Str("email", user.Email).Msg("User with email already exists")
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotAcceptable)
 		msg := "User with email " + user.Email + " already exists."
@@ -104,7 +106,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	// Hash password and create new user
 	hashedPassword, err := HashPassword(user.Password)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to hash password")
+		h.logger.Error().Err(err).Msg("Failed to hash password")
 		http.Error(w, "Failed to process password", http.StatusInternalServerError)
 		return
 	}
@@ -118,7 +120,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to insert data")
+		h.logger.Error().Err(err).Msg("Failed to insert data")
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 	}
 
@@ -126,7 +128,7 @@ func (h *Handler) registerUser(w http.ResponseWriter, r *http.Request) {
 
 	sessionToken, err := createToken(userId, false)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to create token")
+		h.logger.Error().Err(err).Msg("Failed to create token")
 		http.Error(w, "Failed to create token", http.StatusInternalServerError)
 		return
 	}

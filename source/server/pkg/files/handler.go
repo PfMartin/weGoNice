@@ -66,7 +66,7 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 	name := strings.Split(fileHandler.Filename, ".")
 
 	if err := validateFileExtension(name[1]); err != nil {
-		h.logger.Err(err).Send()
+		h.logger.Error().Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
