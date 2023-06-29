@@ -14,6 +14,7 @@ import { useRoute } from 'vue-router';
 import notificationService from '@/services/notification.service';
 import { dateToString } from '@/utils/utility-functions';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
+import { checkFileTypeValid } from '@/utils/validation';
 
 const props = defineProps<{
   initialData: Authors.Author;
@@ -52,6 +53,14 @@ const executeUpload = async () => {
   const fileNameArray = pathArray[pathArray.length - 1].split('.');
   const fName = fileNameArray[0];
   const fType = fileNameArray[1].toLowerCase();
+
+  if (!checkFileTypeValid(fType)) {
+    notificationService.addNotification(
+      'error',
+      `Please select a '.png' file or a '.jpg' file`
+    );
+    return;
+  }
 
   fileName.value = `${fName}.${fType}`;
 
