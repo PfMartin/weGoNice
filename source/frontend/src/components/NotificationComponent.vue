@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import NotificationService from '@/services/notification.service';
-import { computed } from '@vue/reactivity';
 
 const props = defineProps<{
   config: Store.Notification;
