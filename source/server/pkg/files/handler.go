@@ -188,7 +188,7 @@ func validateFileExtension(fileExtension string) error {
 	lowerExtension := strings.ToLower(fileExtension)
 	possibleExtensions := []string{"jpg", "png"}
 
-	if lowerExtension != possibleExtensions[0] || lowerExtension != possibleExtensions[1] {
+	if lowerExtension != possibleExtensions[0] && lowerExtension != possibleExtensions[1] {
 		return fmt.Errorf("image must be '.%s' or '.%s'", possibleExtensions[0], possibleExtensions[1])
 	}
 
