@@ -54,11 +54,9 @@ const executeUpload = async () => {
   const fName = fileNameArray[0];
   const fType = fileNameArray[1].toLowerCase();
 
-  if (!checkFileTypeValid(fType)) {
-    notificationService.addNotification(
-      'error',
-      `Please select a '.png' file or a '.jpg' file`
-    );
+  const validationErr = checkFileTypeValid(fType);
+  if (validationErr) {
+    notificationService.addNotification('error', validationErr);
     return;
   }
 

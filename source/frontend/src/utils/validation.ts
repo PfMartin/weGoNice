@@ -1,8 +1,8 @@
-export const checkFileTypeValid = (fileType: string): boolean => {
+export const checkFileTypeValid = (fileType: string): string => {
   const allowedTypes = ['png', 'jpg'];
   if (!allowedTypes.includes(fileType)) {
-    return false;
+    return `Please select a '.png' file or a '.jpg' file`;
   }
 
-  return true;
+  return '';
 };
