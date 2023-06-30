@@ -23,73 +23,87 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type testArgs struct {
+	name               string
+	testFileName       string
+	expectedCode       int
+	isSameFileExpected bool
+}
+
 const url = "http://localhost:8080/files"
 
 func TestUploadImage(t *testing.T) {
-	h := NewHandler()
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Info().Msg(".env file not loaded. Using environment variables on machine.")
+	tests := []testArgs{
+		{name: "with acceptable file extension", testFileName: "test-image.png", expectedCode: http.StatusOK, isSameFileExpected: true},
+		{name: "with inacceptable file extension", testFileName: "test.txt", expectedCode: http.StatusInternalServerError, isSameFileExpected: false},
 	}
 
-	// Create path to test-image
-	dir, err := os.Getwd()
-	if err != nil {
-		t.Errorf("Failed to get working directory: %s", err)
-	}
+	for _, tt := range tests {
 
-	fileName := "test-image.png"
+		h := NewHandler()
+		err := godotenv.Load("../../.env")
+		if err != nil {
+			log.Info().Msg(".env file not loaded. Using environment variables on machine.")
+		}
 
-	name := fmt.Sprintf("../testUtils/files/%s", fileName)
-	path := path.Join(dir, name)
+		// Create path to test-image
+		dir, err := os.Getwd()
+		if err != nil {
+			t.Errorf("Failed to get working directory: %s", err)
+		}
 
-	// Open file and create multipart FormFile
-	testFile, err := os.Open(path)
-	if err != nil {
-		t.Errorf("Could not open file with path '%s': %s", path, err)
-	}
-	defer testFile.Close()
+		name := fmt.Sprintf("../testUtils/files/%s", tt.testFileName)
+		path := path.Join(dir, name)
 
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-	part, err := writer.CreateFormFile("picture", filepath.Base(testFile.Name()))
-	if err != nil {
-		t.Errorf("Failed to create FormFile from file named '%s': %s", testFile.Name(), err)
-	}
+		// Open file and create multipart FormFile
+		testFile, err := os.Open(path)
+		if err != nil {
+			t.Errorf("Could not open file with path '%s': %s", path, err)
+		}
+		defer testFile.Close()
 
-	io.Copy(part, testFile)
-	writer.Close()
+		body := &bytes.Buffer{}
+		writer := multipart.NewWriter(body)
+		part, err := writer.CreateFormFile("picture", filepath.Base(testFile.Name()))
+		if err != nil {
+			t.Errorf("Failed to create FormFile from file named '%s': %s", testFile.Name(), err)
+		}
 
-	// Create Request
-	authorId := "111"
-	req := httptest.NewRequest(http.MethodPost, url+"/"+authorId, body)
-	req.Header.Add("Content-Type", writer.FormDataContentType())
-	req = mux.SetURLVars(req, map[string]string{"id": authorId})
+		io.Copy(part, testFile)
+		writer.Close()
 
-	w := httptest.NewRecorder()
+		// Create Request
+		authorId := "111"
+		req := httptest.NewRequest(http.MethodPost, url+"/"+authorId, body)
+		req.Header.Add("Content-Type", writer.FormDataContentType())
+		req = mux.SetURLVars(req, map[string]string{"id": authorId})
 
-	h.SaveFile(w, req)
+		w := httptest.NewRecorder()
 
-	got := w.Code
-	expectedCode := http.StatusOK
+		h.SaveFile(w, req)
 
-	assert.Equal(t, expectedCode, got, "Test failed:\nExpected: %d | Got: %d", expectedCode, got)
+		got := w.Code
 
-	currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
-	depotDir := os.Getenv("FILE_DEPOT")
+		assert.Equal(t, tt.expectedCode, got, "Test failed:\nExpected: %d | Got: %d", tt.expectedCode, got)
 
-	fileNameSlice := strings.Split(fileName, ".")
-	fName := fileNameSlice[0]
-	fType := fileNameSlice[1]
+		if tt.isSameFileExpected {
 
-	depotFilePath := fmt.Sprintf("%s/%s-%s-%s.%s", depotDir, currentDate, authorId, fName, fType)
-	isSameFile := testUtils.CompareFileContent(depotFilePath, fmt.Sprintf("../testUtils/files/%s", fileName))
-	expectIsSameFile := true
+			currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
+			depotDir := os.Getenv("FILE_DEPOT")
 
-	assert.Equal(t, expectIsSameFile, isSameFile, "Test failed:\nExpected: %b | Got: %b", expectIsSameFile, isSameFile)
+			fileNameSlice := strings.Split(tt.testFileName, ".")
+			fName := fileNameSlice[0]
+			fType := fileNameSlice[1]
 
-	if err := os.Remove(depotFilePath); err != nil {
-		t.Errorf("Error while removing the test image: %s", err)
+			depotFilePath := fmt.Sprintf("%s/%s-%s-%s.%s", depotDir, currentDate, authorId, fName, fType)
+			isSameFile := testUtils.CompareFileContent(depotFilePath, fmt.Sprintf("../testUtils/files/%s", tt.testFileName))
+
+			assert.Equal(t, tt.isSameFileExpected, isSameFile, "Test failed:\nExpected: %b | Got: %b", tt.isSameFileExpected, isSameFile)
+
+			if err := os.Remove(depotFilePath); err != nil {
+				t.Errorf("Error while removing the test image: %s", err)
+			}
+		}
 	}
 }
 

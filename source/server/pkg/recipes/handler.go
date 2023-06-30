@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
 	"github.com/gorilla/mux"
@@ -36,10 +37,11 @@ type Handler struct {
 	DB         *mongo.Client
 	dbName     string
 	collection string
+	logger     zerolog.Logger
 }
 
 func NewHandler(db *mongo.Client) Handler {
-	return Handler{db, "weGoNice", "recipes"}
+	return Handler{db, "weGoNice", "recipes", logging.Get()}
 }
 
 func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
@@ -49,14 +51,14 @@ func (h *Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{utils.AuthorLookup, utils.UserLookup, projectStage, sortingStage})
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to find recipes")
+		h.logger.Error().Err(err).Msg("Failed to find recipes")
 		http.Error(w, "Failed to find recipes", http.StatusNotFound)
 		return
 	}
 
 	var recipes []models.Recipe
 	if err = cursor.All(context.TODO(), &recipes); err != nil {
-		log.Error().Err(err).Msg("Failed to parse recipes")
+		h.logger.Error().Err(err).Msg("Failed to parse recipes")
 		http.Error(w, "Failed to parse recipes", http.StatusInternalServerError)
 		return
 	}
@@ -72,28 +74,28 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&recipe)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to decode body")
+		h.logger.Error().Err(err).Msg("Failed to decode body")
 		http.Error(w, "Failed to decode body", http.StatusBadRequest)
 		return
 	}
 
 	// Check if name for the recipe is provided
 	if recipe.Name == "" {
-		log.Printf("Recipes Error: No recipe name provided")
+		h.logger.Printf("Recipes Error: No recipe name provided")
 		http.Error(w, "No recipe name provided", http.StatusNotAcceptable)
 		return
 	}
 
 	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to create ObjectID for user from request context")
+		h.logger.Error().Err(err).Msg("Failed to create ObjectID for user from request context")
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
 		return
 	}
 
 	authorID, err := primitive.ObjectIDFromHex(recipe.AuthorID)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to create ObjectID for author from request")
+		h.logger.Error().Err(err).Msg("Failed to create ObjectID for author from request")
 		http.Error(w, "Error: Failed to create ObjectID for author from request", http.StatusInternalServerError)
 		return
 	}
@@ -114,7 +116,7 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 
 	cursor, err := coll.InsertOne(context.TODO(), data)
 	if err != nil {
-		log.Printf("Recipes Error: Failed to insert data")
+		h.logger.Printf("Recipes Error: Failed to insert data")
 		http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 		return
 	}
@@ -131,7 +133,7 @@ func (h *Handler) GetRecipeByID(w http.ResponseWriter, r *http.Request) {
 
 	recipeID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to parse id to ObjectID")
+		h.logger.Error().Err(err).Msg("Failed to parse id to ObjectID")
 		http.Error(w, "Failed to parse id to ObjectID", http.StatusBadRequest)
 		return
 	}
@@ -144,19 +146,19 @@ func (h *Handler) GetRecipeByID(w http.ResponseWriter, r *http.Request) {
 
 	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{matchStage, utils.UserLookup, utils.AuthorLookup, projectStage, limitStage})
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to find recipe")
+		h.logger.Error().Err(err).Msg("Failed to find recipe")
 		http.Error(w, "Failed to find recipe", http.StatusNotFound)
 		return
 	}
 
 	if err = cursor.All(context.TODO(), &recipes); err != nil {
-		log.Error().Err(err).Msg("Failed to parse recipes")
+		h.logger.Error().Err(err).Msg("Failed to parse recipes")
 		http.Error(w, "Failed to parse recipes", http.StatusInternalServerError)
 		return
 	}
 
 	if len(recipes) < 1 {
-		log.Error().Err(err).Msg("Failed to find recipe")
+		h.logger.Error().Err(err).Msg("Failed to find recipe")
 		http.Error(w, "Failed to find recipe", http.StatusNotFound)
 		return
 	}
@@ -171,7 +173,7 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&recipe)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to decode request body for recipe")
+		h.logger.Error().Err(err).Msg("Failed to decode request body for recipe")
 		http.Error(w, "Failed to decode request body for recipe", http.StatusBadRequest)
 		return
 	}
@@ -179,14 +181,14 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	recipeID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to parse id to recipeID")
+		h.logger.Error().Err(err).Msg("Failed to parse id to recipeID")
 		http.Error(w, "Failed to parse id to recipeID", http.StatusBadRequest)
 		return
 	}
 
 	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to create ObjectID for user from request context")
+		h.logger.Error().Err(err).Msg("Failed to create ObjectID for user from request context")
 		http.Error(w, "Error: Failed to create ObjectID for user from request context", http.StatusInternalServerError)
 		return
 	}
@@ -208,7 +210,7 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 
 	result, err := coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to update recipe")
+		h.logger.Error().Err(err).Msg("Failed to update recipe")
 		http.Error(w, "Failed to update recipe", http.StatusInternalServerError)
 		return
 	}
@@ -223,7 +225,7 @@ func (h *Handler) DeleteRecipeByID(w http.ResponseWriter, r *http.Request) {
 
 	recipeID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to parse id to recipeID")
+		h.logger.Error().Err(err).Msg("Failed to parse id to recipeID")
 		http.Error(w, "Failed to parse id to recipeID", http.StatusBadRequest)
 		return
 	}

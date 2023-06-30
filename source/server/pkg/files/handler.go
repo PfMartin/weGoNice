@@ -11,35 +11,42 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PfMartin/weGoNice/server/pkg/logging"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
 	"github.com/gorilla/mux"
 )
 
 type Handler struct {
+	logger zerolog.Logger
 }
 
 func NewHandler() Handler {
-	return Handler{}
+	logger := logging.Get()
+
+	return Handler{
+		logger,
+	}
 }
 
 func (h *Handler) SaveFile(w http.ResponseWriter, r *http.Request) {
-	saveFile(w, r, false)
+	h.saveFile(w, r, false)
 }
 
 func (h *Handler) ServeFile(w http.ResponseWriter, r *http.Request) {
-	serveFile(w, r, false)
+	h.serveFile(w, r, false)
 }
 
 func (h *Handler) SaveFileTmp(w http.ResponseWriter, r *http.Request) {
-	saveFile(w, r, true)
+	h.saveFile(w, r, true)
 }
 
 func (h *Handler) ServeFileTmp(w http.ResponseWriter, r *http.Request) {
-	serveFile(w, r, true)
+	h.serveFile(w, r, true)
 }
 
-func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
+func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	r.ParseMultipartForm(10 << 20)
 
 	file, fileHandler, err := r.FormFile("picture")
@@ -57,6 +64,13 @@ func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	buf.Reset()
 
 	name := strings.Split(fileHandler.Filename, ".")
+
+	if err := validateFileExtension(name[1]); err != nil {
+		h.logger.Error().Err(err).Send()
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	nameString := name[0]
 	fileType := strings.ToLower(name[1])
 
@@ -70,9 +84,9 @@ func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	}
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
-		log.Error().Err(err).Str("directory", fileDepot).Msg("Directory doesn't existing. Creating directory")
+		h.logger.Error().Err(err).Str("directory", fileDepot).Msg("Directory doesn't existing. Creating directory")
 		if err := os.Mkdir(fileDepot, os.ModePerm); err != nil {
-			log.Error().Err(err).Msg("Error while creating directory for file depot")
+			h.logger.Error().Err(err).Msg("Error while creating directory for file depot")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -84,7 +98,7 @@ func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 
 	err = os.WriteFile(filepath, content, 0644)
 	if err != nil {
-		log.Error().Err(err).Msg("Error while writing the file")
+		h.logger.Error().Err(err).Msg("Error while writing the file")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -92,7 +106,7 @@ func saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
+func (h *Handler) serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	fileDepot := os.Getenv("TMP_FILE_DEPOT")
 
 	if !isTemporary {
@@ -106,7 +120,7 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 
 	file, err := os.Open(filePath)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to open file")
+		h.logger.Error().Err(err).Msg("Failed to open file")
 		http.Error(w, "Failed to open file", http.StatusInternalServerError)
 		return
 	}
@@ -114,7 +128,7 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 
 	fileInfo, err := file.Stat()
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to read stats of file")
+		h.logger.Error().Err(err).Msg("Failed to read stats of file")
 		http.Error(w, "Failed to read stats of file", http.StatusInternalServerError)
 		return
 	}
@@ -124,7 +138,7 @@ func serveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	buffer := bufio.NewReader(file)
 	_, err = buffer.Read(bytes)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to read bytes to buffer")
+		h.logger.Error().Err(err).Msg("Failed to read bytes to buffer")
 		http.Error(w, "Failed to read bytes to buffer", http.StatusInternalServerError)
 		return
 	}
@@ -141,7 +155,7 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithD
 
 	tmpFile, err := os.Open(tmpFilePath)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to open temporary file during file copy")
+		h.logger.Error().Err(err).Msg("Failed to open temporary file during file copy")
 		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 
@@ -155,16 +169,27 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithD
 	_, err = io.Copy(permFile, tmpFile)
 	tmpFile.Close()
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to copy temporary file to file")
+		h.logger.Error().Err(err).Msg("Failed to copy temporary file to file")
 		return fmt.Errorf("%s: %s", errMsg, err)
 	}
 
 	if isWithDelete {
 		err = os.Remove(tmpFilePath)
 		if err != nil {
-			log.Error().Err(err).Msg("Failed to remove temp file")
+			h.logger.Error().Err(err).Msg("Failed to remove temp file")
 			return fmt.Errorf("%s: %s", errMsg, err)
 		}
+	}
+
+	return nil
+}
+
+func validateFileExtension(fileExtension string) error {
+	lowerExtension := strings.ToLower(fileExtension)
+	possibleExtensions := []string{"jpg", "png"}
+
+	if lowerExtension != possibleExtensions[0] && lowerExtension != possibleExtensions[1] {
+		return fmt.Errorf("image must be '.%s' or '.%s'", possibleExtensions[0], possibleExtensions[1])
 	}
 
 	return nil
