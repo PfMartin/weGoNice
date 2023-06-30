@@ -80,7 +80,7 @@ const isReady = computed((): boolean => !!authors.value.length);
       <template v-for="author in visibleAuthors" :key="author.name">
         <RouterLink
           :to="{
-            name: 'AuthorDetail',
+            name: 'AuthorsDetail',
             params: {
               id: author.id,
             },

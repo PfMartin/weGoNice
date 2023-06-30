@@ -1,28 +1,28 @@
 export default [
   {
     path: 'overview',
-    name: 'AuthorsOverview',
+    name: 'RecipesOverview',
     component: () =>
       import(
-        /* webpackChunkName: "authorsOverview" */ '@/views/AuthorsOverview.vue'
+        /* webpackChunkName: "recipesOverview" */ '@/views/RecipesOverview.vue'
       ),
     meta: { requiresAuth: true },
   },
   {
     path: 'create',
-    name: 'AuthorsCreate',
+    name: 'RecipesCreate',
     component: () =>
       import(
-        /* webpackChunkName: "authorsCreate" */ '@/views/AuthorsCreate.vue'
+        /* webpackChunkName: "recipesCreate" */ '@/views/RecipesCreate.vue'
       ),
     meta: { requiresAuth: true },
   },
   {
     path: ':id',
-    name: 'AuthorsDetail',
+    name: 'RecipesDetail',
     component: () =>
       import(
-        /* webpackChunkName: "authorsDetail" */ '@/views/AuthorsDetail.vue'
+        /* webpackChunkName: "recipesDetail" */ '@/views/RecipesDetail.vue'
       ),
     meta: { requiresAuth: true },
   },

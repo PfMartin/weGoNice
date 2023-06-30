@@ -2,11 +2,12 @@
 import HeaderBar from '@/components/HeaderBar.vue';
 import { getAllRecipes } from '@/apis/weGoNice';
 import { useStore } from 'vuex';
+import router from '@/router';
 
 const headerConfig = {
   pageTitle: 'Recipes',
-  buttonIconName: 'add',
-  buttonText: 'Add Recipe',
+  buttonIconName: 'create',
+  buttonText: 'New Recipe',
 };
 
 const onSearchInput = (searchValue: string): void => {
@@ -22,18 +23,22 @@ const getRecipes = async (): Promise<void> => {
 getRecipes();
 
 const createRecipe = (): void => {
-  console.log('createRecipe');
+  router.push({ name: 'RecipesCreate' });
 };
 </script>
 
 <template>
-  <body>
-    <HeaderBar
-      :config="headerConfig"
-      @search-input="onSearchInput"
-      @button-click="createRecipe"
-    />
-  </body>
+  <div class="recipes-overview">
+    <body>
+      <HeaderBar
+        :config="headerConfig"
+        @search-input="onSearchInput"
+        @button-click="createRecipe"
+      />
+
+      <RouterView />
+    </body>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>
