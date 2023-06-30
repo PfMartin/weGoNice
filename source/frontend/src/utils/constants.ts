@@ -22,3 +22,8 @@ export enum ButtonType {
   Delete,
   Default,
 }
+
+export enum PrepTimeType {
+  Hours,
+  Minutes,
+}
