@@ -14,6 +14,7 @@ const headerConfig = {
 const onSearchInput = (searchValue: string): void => {
   console.log(searchValue);
 };
+
 const createAuthor = (): void => {
   router.push({ name: 'AuthorsCreate' });
 };
@@ -33,54 +34,4 @@ const createAuthor = (): void => {
   </div>
 </template>
 
-<style scoped lang="scss">
-@import '@/styles/outline.scss';
-@import '@/styles/colors.scss';
-
-body {
-  .list-control {
-    margin-left: $nav-bar-width;
-    padding: 1rem 2rem;
-
-    h1 {
-      padding: 0;
-      margin: 0;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-
-      .sorting {
-        display: flex;
-        margin-right: 1rem;
-        .sort-direction {
-          margin-left: 0.2rem;
-          font-size: 1.5rem;
-          color: $bg-color-mid;
-          display: flex;
-          align-items: center;
-
-          &:hover {
-            cursor: pointer;
-            color: $bg-color-dark;
-          }
-        }
-      }
-
-      .filter-switches {
-        display: flex;
-        gap: 0.5rem;
-      }
-    }
-  }
-  .authors {
-    margin-left: $nav-bar-width;
-    padding: 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 1rem;
-  }
-}
-</style>
+<style scoped lang="scss"></style>
