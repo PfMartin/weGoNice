@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import HeaderBar from '@/components/HeaderBar.vue';
-import { getAllRecipes } from '@/apis/weGoNice';
-import { useStore } from 'vuex';
-import router from '@/router';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const headerConfig = {
   pageTitle: 'Recipes',
@@ -10,19 +10,12 @@ const headerConfig = {
   buttonText: 'New Recipe',
 };
 
+// Searching, sorting and filtering
 const onSearchInput = (searchValue: string): void => {
   console.log(searchValue);
 };
 
-const store = useStore();
-const getRecipes = async (): Promise<void> => {
-  const res = await getAllRecipes(store.getters['auth/sessionToken']);
-  console.log(res);
-};
-
-getRecipes();
-
-const createRecipe = (): void => {
+const pushRecipesCreate = (): void => {
   router.push({ name: 'RecipesCreate' });
 };
 </script>
@@ -33,7 +26,7 @@ const createRecipe = (): void => {
       <HeaderBar
         :config="headerConfig"
         @search-input="onSearchInput"
-        @button-click="createRecipe"
+        @button-click="pushRecipesCreate"
       />
 
       <RouterView />

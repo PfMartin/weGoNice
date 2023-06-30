@@ -15,7 +15,7 @@ const onSearchInput = (searchValue: string): void => {
   console.log(searchValue);
 };
 
-const createAuthor = (): void => {
+const pushAuthorsCreate = (): void => {
   router.push({ name: 'AuthorsCreate' });
 };
 </script>
@@ -26,7 +26,7 @@ const createAuthor = (): void => {
       <HeaderBar
         :config="headerConfig"
         @search-input="onSearchInput"
-        @button-click="createAuthor"
+        @button-click="pushAuthorsCreate"
       />
 
       <RouterView />
