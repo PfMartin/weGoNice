@@ -8,6 +8,7 @@ const props = defineProps<{
   initialValue: string;
   placeholder: string;
   inputError?: string;
+  isDark?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -21,6 +22,7 @@ const inputClass = computed(() => ({
   ['value-input']: true,
   inactive: isInactive,
   hasError: props.inputError,
+  dark: props.isDark,
 }));
 
 const labelClass = computed(() => ({
@@ -93,8 +95,8 @@ const labelClass = computed(() => ({
     font-size: 1.2rem;
     font-weight: bold;
     color: $text-color;
-    background: $bg-color-dark;
-    border: 1px solid $bg-color-dark;
+    background: $bg-color-mid;
+    border: 1px solid $bg-color-mid;
     padding: 8px 8px;
     border-radius: $border-radius;
     transition:
@@ -110,16 +112,29 @@ const labelClass = computed(() => ({
       font-weight: normal;
     }
 
+    &.dark {
+      background: $bg-color-dark;
+      border-color: $bg-color-dark;
+
+      &:hover {
+        background: $bg-color-mid;
+      }
+
+      &:focus {
+        background: $bg-color-mid;
+      }
+    }
+
     &:hover {
       cursor: text;
-      background: $bg-color-mid;
+      background: $bg-color-dark;
       border: 1px solid $accent-color;
     }
 
     &:focus {
       border: 1px solid $accent-color;
       outline: none;
-      background: $bg-color-mid;
+      background: $bg-color-dark;
     }
   }
 }
