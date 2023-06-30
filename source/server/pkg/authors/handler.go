@@ -232,10 +232,11 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to find existing author with the provided ID", http.StatusBadRequest)
 	}
 
-	existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingAuthor.ImageName)
-	err = os.Remove(existingFilePath)
-	if err != nil {
-		h.logger.Error().Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
+	if existingAuthor.ImageName != author.ImageName {
+		existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingAuthor.ImageName)
+		if err = os.Remove(existingFilePath); err != nil {
+			h.logger.Error().Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
+		}
 	}
 
 	userID, err := auth.GetUserIDFromCtx(r)
