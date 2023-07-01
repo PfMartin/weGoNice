@@ -6,6 +6,7 @@ const props = defineProps<{
   iconName?: string;
   label: string;
   id: string;
+  width: string;
 }>();
 const emit = defineEmits<{
   (e: 'select-option', option: string): void;
@@ -32,6 +33,8 @@ const selectedClass = computed(() => ({
   active: isDropdownVisible.value,
 }));
 
+const widthStyle = computed(() => `width: ${props.width}`);
+
 // Option selection
 const selectOptions = computed((): string[] =>
   props.options.filter((option) => option !== props.selectedOption)
@@ -51,7 +54,7 @@ const selectOption = (option: string): void => {
       </div>
     </label>
     <div :id="id" class="dropdown">
-      <div :class="selectedClass" @click="toggleDropdown">
+      <div :class="selectedClass" :style="widthStyle" @click="toggleDropdown">
         <span class="selected-item">{{ selectedOption }}</span>
         <ion-icon name="chevron-down" />
       </div>
@@ -104,7 +107,6 @@ const selectOption = (option: string): void => {
       align-items: center;
       justify-content: space-between;
       color: $text-color;
-      min-width: 300px;
       padding: 0.5rem;
       border: 1px solid $bg-color-dark;
       border-radius: $border-radius;
@@ -143,7 +145,8 @@ const selectOption = (option: string): void => {
       background: $bg-color-mid;
       color: $text-color;
       border-radius: $border-radius;
-      overflow: hidden;
+      overflow: auto;
+      max-height: 200px;
 
       li {
         padding: 0.5rem 1rem;

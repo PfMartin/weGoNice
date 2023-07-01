@@ -66,6 +66,7 @@ const isReady = computed((): boolean => !!authors.value.length);
               id="authorSortBy"
               label="Sort By"
               iconName="list"
+              width="300px"
             />
           </div>
           <span @click="toggleSortDirection" class="sort-direction"

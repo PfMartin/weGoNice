@@ -76,6 +76,7 @@ onMounted(() => {
                 "
                 id="prepTimeHours"
                 label="Hours"
+                width="50px"
               />
               <DropdownInput
                 :options="PREP_TIME_MINUTES_OPTIONS"
@@ -85,6 +86,7 @@ onMounted(() => {
                 "
                 id="prepTimeMinutes"
                 label="Minutes"
+                width="50px"
               />
             </div>
           </div>
@@ -97,6 +99,7 @@ onMounted(() => {
                 @select-option="selectAuthor"
                 id="author"
                 label="Author"
+                width="300px"
               />
             </div>
           </div>
