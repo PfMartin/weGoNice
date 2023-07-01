@@ -126,13 +126,17 @@ onMounted(() => {
     padding: 1rem;
 
     .recipe-header {
-      background: $bg-color-dark;
-      border-radius: $border-radius;
-      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
 
       .info-section {
+        background: $bg-color-dark;
+        border-radius: $border-radius;
+        padding: 1rem;
         display: flex;
         gap: 2rem;
+        padding-right: 2rem;
 
         p.label {
           display: flex;

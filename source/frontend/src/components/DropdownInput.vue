@@ -148,6 +148,19 @@ const selectOption = (option: string): void => {
       overflow: auto;
       max-height: 200px;
 
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $bg-color-mid;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $accent-color;
+        border-radius: $border-radius;
+      }
+
       li {
         padding: 0.5rem 1rem;
 
