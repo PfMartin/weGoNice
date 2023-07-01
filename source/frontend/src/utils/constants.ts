@@ -23,6 +23,12 @@ export const PREP_TIME_MINUTES_OPTIONS = [
   '55',
 ];
 export const CATEGORY_OPTIONS = ['Breakfast', 'Drink', 'Desert', 'Main'];
+export enum AmountUnit {
+  G = 'g',
+  Ml = 'ml',
+  L = 'l',
+  Pc = 'pc',
+}
 
 export enum OperationMode {
   Create,

@@ -6,6 +6,7 @@ import {
   PREP_TIME_HOURS_OPTIONS,
   PREP_TIME_MINUTES_OPTIONS,
   CATEGORY_OPTIONS,
+  AmountUnit,
 } from '@/utils/constants';
 import { onMounted, ref } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
@@ -44,6 +45,8 @@ const category = ref(categories[0]);
 const selectCategory = (val: string) => {
   category.value = val;
 };
+
+const ingredients = ref<Recipes.Ingredient[]>([]);
 
 onMounted(() => {
   if (props.mode === OperationMode.Create) {
@@ -108,7 +111,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="category">
-            <p class="label"><ion-icon name="person" />&nbsp;Category</p>
+            <p class="label"><ion-icon name="color-filter" />&nbsp;Category</p>
             <div class="inputs">
               <DropdownInput
                 :options="categories"
@@ -121,6 +124,38 @@ onMounted(() => {
           </div>
         </div>
       </div>
+
+      <div class="ingredients">
+        <TextInputField
+          headline="Ingredient"
+          iconName="book"
+          id="ingredient"
+          :initialValue="recipeName"
+          placeholder="Insert the ingredient's title"
+          :inputError="recipeNameError"
+          @changed="updateRecipeName"
+          isDark
+        />
+        <TextInputField
+          headline="Amount"
+          iconName="bag-handle"
+          id="amount"
+          :initialValue="recipeName"
+          placeholder="Insert the ingredient's amount"
+          :inputError="recipeNameError"
+          @changed="updateRecipeName"
+          isDark
+        />
+        <DropdownInput
+          :options="Object.values(AmountUnit)"
+          :selectedOption="category"
+          @select-option="selectCategory"
+          id="amountUnit"
+          width="50px"
+        />
+      </div>
+
+      <div class="steps"></div>
     </div>
   </div>
 </template>
@@ -165,6 +200,11 @@ onMounted(() => {
           display: flex;
         }
       }
+    }
+
+    .ingredients {
+      display: flex;
+      align-items: center;
     }
   }
 }

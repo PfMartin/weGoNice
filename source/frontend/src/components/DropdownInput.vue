@@ -111,6 +111,7 @@ const selectOption = (option: string): void => {
       border: 1px solid $bg-color-dark;
       border-radius: $border-radius;
       transition: all 0.2s;
+      font-size: 1.2rem;
 
       ion-icon {
         color: $text-color;
