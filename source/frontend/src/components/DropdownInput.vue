@@ -170,6 +170,6 @@ const selectOption = (option: string): void => {
 
 .expand-enter-from,
 .expand-leave-to {
-  max-height: 0px;
+  max-height: 0px !important;
 }
 </style>
