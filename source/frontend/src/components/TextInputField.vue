@@ -2,13 +2,15 @@
 import { ref, computed } from 'vue';
 
 const props = defineProps<{
-  headline: string;
-  iconName: string;
+  headline?: string;
+  iconName?: string;
   id: string;
   initialValue: string;
   placeholder: string;
   inputError?: string;
+  width?: string;
   isDark?: boolean;
+  withErrorHandling?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -28,13 +30,15 @@ const inputClass = computed(() => ({
 const labelClass = computed(() => ({
   label: true,
 }));
+
+const widthStyle = computed(() => `width: ${props.width}`);
 </script>
 
 <template>
-  <div class="text-input-field">
-    <label :for="props.id" :class="labelClass">
+  <div class="text-input-field" :style="widthStyle">
+    <label v-if="headline" :for="props.id" :class="labelClass">
       <div class="label-text">
-        <ion-icon v-if="props.iconName" :name="props.iconName" />&nbsp;
+        <ion-icon v-if="iconName" :name="props.iconName" />&nbsp;
         <span>{{ props.headline }}</span>
       </div>
     </label>
@@ -45,10 +49,12 @@ const labelClass = computed(() => ({
       v-model="inputValue"
       @blur="emit('changed', inputValue)"
     />
-    <Transition name="fade" mode="out-in">
-      <small v-if="props.inputError">{{ props.inputError }}</small>
-      <small v-else></small>
-    </Transition>
+    <template v-if="withErrorHandling">
+      <Transition name="fade" mode="out-in">
+        <small v-if="props.inputError">{{ props.inputError }}</small>
+        <small v-else></small>
+      </Transition>
+    </template>
   </div>
 </template>
 
@@ -58,8 +64,10 @@ const labelClass = computed(() => ({
 .text-input-field {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 5px;
   width: 100%;
+
   label {
     margin: 0;
     padding: 0;

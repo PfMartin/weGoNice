@@ -313,6 +313,7 @@ onMounted(() => {
           :inputError="nameError"
           @changed="updateName"
           isDark
+          withErrorHandling
         />
         <TextInputField
           headline="First name"
@@ -322,6 +323,7 @@ onMounted(() => {
           placeholder="Insert the author's first name"
           @changed="updateFirstname"
           isDark
+          withErrorHandling
         />
         <TextInputField
           headline="Last name"
@@ -331,6 +333,7 @@ onMounted(() => {
           placeholder="Insert the author's last name"
           @changed="updateLastname"
           isDark
+          withErrorHandling
         />
       </div>
       <div class="info-section">
@@ -343,6 +346,7 @@ onMounted(() => {
           placeholder="Insert author's website URL"
           @changed="updateWebsite"
           isDark
+          withErrorHandling
         />
         <TextInputField
           headline="Instagram"
@@ -353,6 +357,7 @@ onMounted(() => {
           :inputError="instagramError"
           @changed="updateInstagram"
           isDark
+          withErrorHandling
         />
         <TextInputField
           headline="YouTube"
@@ -363,6 +368,7 @@ onMounted(() => {
           :inputError="youTubeError"
           @changed="updateYouTube"
           isDark
+          withErrorHandling
         />
       </div>
     </div>

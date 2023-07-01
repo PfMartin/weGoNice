@@ -127,23 +127,19 @@ onMounted(() => {
 
       <div class="ingredients">
         <TextInputField
-          headline="Ingredient"
-          iconName="book"
           id="ingredient"
           :initialValue="recipeName"
           placeholder="Insert the ingredient's title"
-          :inputError="recipeNameError"
           @changed="updateRecipeName"
+          width="300px"
           isDark
         />
         <TextInputField
-          headline="Amount"
-          iconName="bag-handle"
           id="amount"
           :initialValue="recipeName"
           placeholder="Insert the ingredient's amount"
-          :inputError="recipeNameError"
           @changed="updateRecipeName"
+          width="50px"
           isDark
         />
         <DropdownInput
@@ -205,6 +201,7 @@ onMounted(() => {
     .ingredients {
       display: flex;
       align-items: center;
+      gap: 1.5rem;
     }
   }
 }
