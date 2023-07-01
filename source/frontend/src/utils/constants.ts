@@ -22,6 +22,7 @@ export const PREP_TIME_MINUTES_OPTIONS = [
   '50',
   '55',
 ];
+export const CATEGORY_OPTIONS = ['Breakfast', 'Drink', 'Desert', 'Main'];
 
 export enum OperationMode {
   Create,

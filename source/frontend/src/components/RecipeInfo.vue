@@ -5,6 +5,7 @@ import {
   PrepTimeType,
   PREP_TIME_HOURS_OPTIONS,
   PREP_TIME_MINUTES_OPTIONS,
+  CATEGORY_OPTIONS,
 } from '@/utils/constants';
 import { onMounted, ref } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
@@ -16,7 +17,7 @@ const props = defineProps<{
 const recipeName = ref('');
 const recipeNameError = ref('');
 const updateRecipeName = (newRecipeName: string) => {
-  console.warn(newRecipeName);
+  recipeName.value = newRecipeName;
 };
 
 const prepTimeHours = ref(0);
@@ -36,6 +37,12 @@ const authors = ['Hello', 'There'];
 const author = ref(authors[0]);
 const selectAuthor = (val: string) => {
   author.value = val;
+};
+
+const categories = CATEGORY_OPTIONS;
+const category = ref(categories[0]);
+const selectCategory = (val: string) => {
+  category.value = val;
 };
 
 onMounted(() => {
@@ -63,14 +70,12 @@ onMounted(() => {
         </div>
         <div class="info-section">
           <div class="prep-time">
-            <p class="label">
-              <ion-icon name="time"></ion-icon>&nbsp;Preparation Time
-            </p>
+            <p class="label"><ion-icon name="time" />&nbsp;Preparation Time</p>
 
             <div class="inputs">
               <DropdownInput
                 :options="PREP_TIME_HOURS_OPTIONS"
-                :selectedOption="prepTimeHours.toString()"
+                :selectedOption="`${prepTimeHours}`"
                 @select-option="
                   (val) => selectPrepTime(PrepTimeType.Hours, val)
                 "
@@ -80,7 +85,7 @@ onMounted(() => {
               />
               <DropdownInput
                 :options="PREP_TIME_MINUTES_OPTIONS"
-                :selectedOption="prepTimeMinutes.toString()"
+                :selectedOption="`${prepTimeMinutes}`"
                 @select-option="
                   (val) => selectPrepTime(PrepTimeType.Minutes, val)
                 "
@@ -91,14 +96,25 @@ onMounted(() => {
             </div>
           </div>
           <div class="author">
-            <p class="label"><ion-icon name="person"></ion-icon>&nbsp;Author</p>
+            <p class="label"><ion-icon name="person" />&nbsp;Author</p>
             <div class="inputs">
               <DropdownInput
                 :options="authors"
                 :selectedOption="author"
                 @select-option="selectAuthor"
                 id="author"
-                label="Author"
+                width="400px"
+              />
+            </div>
+          </div>
+          <div class="category">
+            <p class="label"><ion-icon name="person" />&nbsp;Category</p>
+            <div class="inputs">
+              <DropdownInput
+                :options="categories"
+                :selectedOption="category"
+                @select-option="selectCategory"
+                id="category"
                 width="300px"
               />
             </div>
@@ -116,7 +132,6 @@ onMounted(() => {
 .recipe-info {
   background: $bg-color-mid;
   border-radius: $border-radius;
-  padding: 1rem;
   box-shadow: $shadow;
   display: flex;
 
@@ -135,8 +150,10 @@ onMounted(() => {
         border-radius: $border-radius;
         padding: 1rem;
         display: flex;
-        gap: 2rem;
+        gap: 3rem;
         padding-right: 2rem;
+        flex-wrap: wrap;
+        justify-content: space-between;
 
         p.label {
           display: flex;

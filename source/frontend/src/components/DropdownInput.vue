@@ -4,7 +4,7 @@ const props = defineProps<{
   options: string[];
   selectedOption: string;
   iconName?: string;
-  label: string;
+  label?: string;
   id: string;
   width: string;
 }>();
@@ -47,7 +47,7 @@ const selectOption = (option: string): void => {
 
 <template>
   <div class="dropdown-input" @blur="collapseDropdown" :ref="id" :tabindex="-1">
-    <label :for="id" @click="toggleDropdown"
+    <label v-if="label" :for="id" @click="toggleDropdown"
       ><div class="label-text">
         <ion-icon v-if="iconName" :name="iconName" /> &nbsp;
         <span>{{ label }}:</span>
