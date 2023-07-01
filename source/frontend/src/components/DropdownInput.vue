@@ -27,6 +27,11 @@ const collapseDropdown = (): void => {
   isDropdownVisible.value = false;
 };
 
+const selectedClass = computed(() => ({
+  selected: true,
+  active: isDropdownVisible.value,
+}));
+
 // Option selection
 const selectOptions = computed((): string[] =>
   props.options.filter((option) => option !== props.selectedOption)
@@ -42,11 +47,11 @@ const selectOption = (option: string): void => {
     <label :for="id" @click="toggleDropdown"
       ><div class="label-text">
         <ion-icon v-if="iconName" :name="iconName" /> &nbsp;
-        <span>{{ label }}</span>
+        <span>{{ label }}:</span>
       </div>
     </label>
     <div :id="id" class="dropdown">
-      <div class="selected" @click="toggleDropdown">
+      <div :class="selectedClass" @click="toggleDropdown">
         <span class="selected-item">{{ selectedOption }}</span>
         <ion-icon name="chevron-down" />
       </div>
@@ -66,8 +71,8 @@ const selectOption = (option: string): void => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/outline.scss';
-@import '../styles/colors.scss';
+@import '@/styles/outline.scss';
+@import '@/styles/colors.scss';
 
 .dropdown-input {
   display: flex;
@@ -94,23 +99,36 @@ const selectOption = (option: string): void => {
     margin: 0.5rem 0;
 
     .selected {
-      background: $bg-color-mid;
+      background: $bg-color-dark;
       display: flex;
       align-items: center;
       justify-content: space-between;
       color: $text-color;
       min-width: 300px;
       padding: 0.5rem;
+      border: 1px solid $bg-color-dark;
       border-radius: $border-radius;
-      transition: background-color 0.2s;
+      transition: all 0.2s;
 
       ion-icon {
         color: $text-color;
+        transition: all 0.2s;
       }
 
-      &:hover {
+      &:hover,
+      &.active {
         cursor: pointer;
-        background: $bg-color-dark;
+        background: $bg-color-mid;
+        border-color: $accent-color;
+
+        ion-icon {
+          color: $accent-color;
+        }
+      }
+      &.active {
+        ion-icon {
+          transform: rotate(180deg);
+        }
       }
     }
 
@@ -118,7 +136,7 @@ const selectOption = (option: string): void => {
       width: 100%;
       position: absolute;
       z-index: 5;
-      top: 20px;
+      top: 25px;
       list-style: none;
       text-decoration: none;
       padding: 0;
