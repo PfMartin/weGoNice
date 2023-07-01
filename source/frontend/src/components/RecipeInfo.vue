@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import TextInputField from '@/components/TextInputField.vue';
-import { OperationMode, PrepTimeType } from '@/utils/constants';
+import {
+  OperationMode,
+  PrepTimeType,
+  PREP_TIME_HOURS_OPTIONS,
+  PREP_TIME_MINUTES_OPTIONS,
+} from '@/utils/constants';
 import { onMounted, ref } from 'vue';
+import DropdownInput from '@/components/DropdownInput.vue';
 
 const props = defineProps<{
   mode: OperationMode;
@@ -13,19 +19,23 @@ const updateRecipeName = (newRecipeName: string) => {
   console.warn(newRecipeName);
 };
 
-const prepTimeHours = ref('');
-const prepTimeMinutes = ref('');
-const prepTimeHoursError = ref('');
-const prepTimeMinutesError = ref('');
-const updatePrepTime = (prepTimeType: PrepTimeType, value: string) => {
+const prepTimeHours = ref(0);
+const prepTimeMinutes = ref(0);
+const selectPrepTime = (prepTimeType: PrepTimeType, value: string) => {
   switch (prepTimeType) {
     case PrepTimeType.Hours:
-      console.warn('hours: ', value);
+      prepTimeHours.value = Number(value);
       break;
     case PrepTimeType.Minutes:
-      console.warn('minutes: ', value);
+      prepTimeMinutes.value = Number(value);
       break;
   }
+};
+
+const authors = ['Hello', 'There'];
+const author = ref(authors[0]);
+const selectAuthor = (val: string) => {
+  author.value = val;
 };
 
 onMounted(() => {
@@ -38,36 +48,59 @@ onMounted(() => {
 <template>
   <div class="recipe-info">
     <div class="info">
-      <div class="info-section">
-        <TextInputField
-          headline="Recipe name"
-          iconName="book"
-          id="recipeName"
-          :initialValue="recipeName"
-          placeholder="Insert the recipe's name"
-          :inputError="recipeNameError"
-          @changed="updateRecipeName"
-        />
-      </div>
-      <div class="info-section">
-        <TextInputField
-          headline="Hours of preparation"
-          iconName="time"
-          id="prepTimeHours"
-          :initialValue="prepTimeHours"
-          placeholder="Insert hours of preparation"
-          :inputError="prepTimeHoursError"
-          @changed="(value) => updatePrepTime(PrepTimeType.Hours, value)"
-        />
-        <TextInputField
-          headline="Minutes of preparation"
-          iconName="time"
-          id="prepTimeMinutes"
-          :initialValue="prepTimeMinutes"
-          placeholder="Insert minutes of preparation"
-          :inputError="prepTimeMinutesError"
-          @changed="(value) => updatePrepTime(PrepTimeType.Minutes, value)"
-        />
+      <div class="recipe-header">
+        <div class="info-section">
+          <TextInputField
+            headline="Recipe name"
+            iconName="book"
+            id="recipeName"
+            :initialValue="recipeName"
+            placeholder="Insert the recipe's name"
+            :inputError="recipeNameError"
+            @changed="updateRecipeName"
+            isDark
+          />
+        </div>
+        <div class="info-section">
+          <div class="prep-time">
+            <p class="label">
+              <ion-icon name="time"></ion-icon>&nbsp;Preparation Time
+            </p>
+
+            <div class="inputs">
+              <DropdownInput
+                :options="PREP_TIME_HOURS_OPTIONS"
+                :selectedOption="prepTimeHours.toString()"
+                @select-option="
+                  (val) => selectPrepTime(PrepTimeType.Hours, val)
+                "
+                id="prepTimeHours"
+                label="Hours"
+              />
+              <DropdownInput
+                :options="PREP_TIME_MINUTES_OPTIONS"
+                :selectedOption="prepTimeMinutes.toString()"
+                @select-option="
+                  (val) => selectPrepTime(PrepTimeType.Minutes, val)
+                "
+                id="prepTimeMinutes"
+                label="Minutes"
+              />
+            </div>
+          </div>
+          <div class="author">
+            <p class="label"><ion-icon name="person"></ion-icon>&nbsp;Author</p>
+            <div class="inputs">
+              <DropdownInput
+                :options="authors"
+                :selectedOption="author"
+                @select-option="selectAuthor"
+                id="author"
+                label="Author"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -89,9 +122,25 @@ onMounted(() => {
     color: $text-color;
     padding: 1rem;
 
-    .info-section {
-      display: flex;
-      gap: 2rem;
+    .recipe-header {
+      background: $bg-color-dark;
+      border-radius: $border-radius;
+      padding: 1rem;
+
+      .info-section {
+        display: flex;
+        gap: 2rem;
+
+        p.label {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+        }
+
+        .inputs {
+          display: flex;
+        }
+      }
     }
   }
 }

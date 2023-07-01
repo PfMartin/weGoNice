@@ -1,40 +1,11 @@
-<template>
-  <div
-    class="dropdown-input"
-    @blur="collapseDropdown"
-    ref="dropdown"
-    :tabindex="-1"
-  >
-    <label for="dropdown" @click="toggleDropdown"
-      ><div class="label-text">
-        <ion-icon name="list" /> &nbsp; <span>Sort By</span>
-      </div>
-    </label>
-    <div id="dropdown" class="dropdown">
-      <div class="selected" @click="toggleDropdown">
-        <span class="selected-item">{{ selectedOption }}</span>
-        <ion-icon name="chevron-down" />
-      </div>
-      <Transition name="expand">
-        <ul v-if="isDropdownVisible" class="dropdown-content">
-          <li
-            v-for="option in selectOptions"
-            :key="option"
-            @click="selectOption(option)"
-          >
-            {{ option }}
-          </li>
-        </ul>
-      </Transition>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue';
 const props = defineProps<{
   options: string[];
   selectedOption: string;
+  iconName?: string;
+  label: string;
+  id: string;
 }>();
 const emit = defineEmits<{
   (e: 'select-option', option: string): void;
@@ -65,6 +36,34 @@ const selectOption = (option: string): void => {
   collapseDropdown();
 };
 </script>
+
+<template>
+  <div class="dropdown-input" @blur="collapseDropdown" :ref="id" :tabindex="-1">
+    <label :for="id" @click="toggleDropdown"
+      ><div class="label-text">
+        <ion-icon v-if="iconName" :name="iconName" /> &nbsp;
+        <span>{{ label }}</span>
+      </div>
+    </label>
+    <div :id="id" class="dropdown">
+      <div class="selected" @click="toggleDropdown">
+        <span class="selected-item">{{ selectedOption }}</span>
+        <ion-icon name="chevron-down" />
+      </div>
+      <Transition name="expand">
+        <ul v-if="isDropdownVisible" class="dropdown-content">
+          <li
+            v-for="option in selectOptions"
+            :key="option"
+            @click="selectOption(option)"
+          >
+            {{ option }}
+          </li>
+        </ul>
+      </Transition>
+    </div>
+  </div>
+</template>
 
 <style scoped lang="scss">
 @import '../styles/outline.scss';

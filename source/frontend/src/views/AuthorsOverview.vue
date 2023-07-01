@@ -63,6 +63,9 @@ const isReady = computed((): boolean => !!authors.value.length);
               :options="AUTHOR_SORTING_OPTIONS"
               :selectedOption="selectedOption"
               @select-option="setSelectedOption"
+              id="authorSortBy"
+              label="Sort By"
+              iconName="list"
             />
           </div>
           <span @click="toggleSortDirection" class="sort-direction"
