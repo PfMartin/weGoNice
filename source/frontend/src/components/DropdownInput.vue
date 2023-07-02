@@ -7,6 +7,7 @@ const props = defineProps<{
   label?: string;
   id: string;
   width: string;
+  isDark?: boolean;
 }>();
 const emit = defineEmits<{
   (e: 'select-option', option: string): void;
@@ -31,6 +32,7 @@ const collapseDropdown = (): void => {
 const selectedClass = computed(() => ({
   selected: true,
   active: isDropdownVisible.value,
+  dark: props.isDark,
 }));
 
 const widthStyle = computed(() => `width: ${props.width}`);
@@ -99,16 +101,15 @@ const selectOption = (option: string): void => {
 
   .dropdown {
     position: relative;
-    margin: 0.5rem 0;
 
     .selected {
-      background: $bg-color-dark;
+      background: $bg-color-mid;
       display: flex;
       align-items: center;
       justify-content: space-between;
       color: $text-color;
       padding: 0.5rem;
-      border: 1px solid $bg-color-dark;
+      border: 1px solid $bg-color-mid;
       border-radius: $border-radius;
       transition: all 0.2s;
       font-size: 1.2rem;
@@ -121,13 +122,25 @@ const selectOption = (option: string): void => {
       &:hover,
       &.active {
         cursor: pointer;
-        background: $bg-color-mid;
+        background: $bg-color-dark;
         border-color: $accent-color;
 
         ion-icon {
           color: $accent-color;
         }
       }
+
+      &.dark {
+        background-color: $bg-color-dark;
+        border-color: $bg-color-dark;
+
+        &:hover,
+        &.active {
+          background-color: $bg-color-mid;
+          border-color: $accent-color;
+        }
+      }
+
       &.active {
         ion-icon {
           transform: rotate(180deg);

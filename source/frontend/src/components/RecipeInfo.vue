@@ -60,6 +60,7 @@ onMounted(() => {
     <div class="info">
       <div class="recipe-header">
         <div class="info-section">
+          <h2>Recipe Details</h2>
           <TextInputField
             headline="Recipe name"
             iconName="book"
@@ -70,8 +71,6 @@ onMounted(() => {
             @changed="updateRecipeName"
             isDark
           />
-        </div>
-        <div class="info-section">
           <div class="prep-time">
             <p class="label"><ion-icon name="time" />&nbsp;Preparation Time</p>
 
@@ -85,6 +84,7 @@ onMounted(() => {
                 id="prepTimeHours"
                 label="Hours"
                 width="50px"
+                isDark
               />
               <DropdownInput
                 :options="PREP_TIME_MINUTES_OPTIONS"
@@ -95,6 +95,7 @@ onMounted(() => {
                 id="prepTimeMinutes"
                 label="Minutes"
                 width="50px"
+                isDark
               />
             </div>
           </div>
@@ -107,6 +108,7 @@ onMounted(() => {
                 @select-option="selectAuthor"
                 id="author"
                 width="400px"
+                isDark
               />
             </div>
           </div>
@@ -119,36 +121,52 @@ onMounted(() => {
                 @select-option="selectCategory"
                 id="category"
                 width="300px"
+                isDark
               />
             </div>
           </div>
         </div>
       </div>
 
-      <div class="ingredients">
-        <TextInputField
-          id="ingredient"
-          :initialValue="recipeName"
-          placeholder="Insert the ingredient's title"
-          @changed="updateRecipeName"
-          width="300px"
-          isDark
-        />
-        <TextInputField
-          id="amount"
-          :initialValue="recipeName"
-          placeholder="Insert the ingredient's amount"
-          @changed="updateRecipeName"
-          width="50px"
-          isDark
-        />
-        <DropdownInput
-          :options="Object.values(AmountUnit)"
-          :selectedOption="category"
-          @select-option="selectCategory"
-          id="amountUnit"
-          width="50px"
-        />
+      <div class="array-container">
+        <h2>Ingredients</h2>
+        <div class="ingredient">
+          <TextInputField
+            id="ingredient"
+            :initialValue="recipeName"
+            placeholder="Insert the ingredient's title"
+            @changed="updateRecipeName"
+            width="300px"
+          />
+          <TextInputField
+            id="amount"
+            :initialValue="recipeName"
+            placeholder="Insert the ingredient's amount"
+            @changed="updateRecipeName"
+            width="50px"
+          />
+          <DropdownInput
+            :options="Object.values(AmountUnit)"
+            :selectedOption="category"
+            @select-option="selectCategory"
+            id="amountUnit"
+            width="50px"
+          />
+        </div>
+      </div>
+
+      <div class="array-container">
+        <h2>Steps</h2>
+        <div class="prep-step">
+          <h4>1.</h4>
+          <TextInputField
+            id="ingredient"
+            :initialValue="recipeName"
+            placeholder="Insert the ingredient's title"
+            @changed="updateRecipeName"
+            width="90%"
+          />
+        </div>
       </div>
 
       <div class="steps"></div>
@@ -166,6 +184,12 @@ onMounted(() => {
   box-shadow: $shadow;
   display: flex;
 
+  h2 {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 0.5rem;
+  }
+
   .info {
     width: 100%;
     color: $text-color;
@@ -175,33 +199,51 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       gap: 1rem;
+    }
+    .info-section {
+      background: $bg-color-dark;
+      border-radius: $border-radius;
+      padding: 1rem;
+      display: flex;
+      gap: 1rem;
+      padding-right: 2rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
 
-      .info-section {
-        background: $bg-color-dark;
-        border-radius: $border-radius;
-        padding: 1rem;
+      p.label {
         display: flex;
-        gap: 3rem;
-        padding-right: 2rem;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        align-items: center;
+        justify-content: flex-start;
+      }
 
-        p.label {
-          display: flex;
-          align-items: center;
-          justify-content: flex-start;
-        }
-
-        .inputs {
-          display: flex;
-        }
+      .inputs {
+        display: flex;
       }
     }
 
-    .ingredients {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
+    .array-container {
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: $border-radius;
+      background-color: $bg-color-dark;
+
+      .ingredient {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .prep-step {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        h4 {
+          padding: 0;
+          margin: 0;
+        }
+      }
     }
   }
 }
