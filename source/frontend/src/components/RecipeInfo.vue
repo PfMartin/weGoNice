@@ -131,6 +131,10 @@ onMounted(() => {
       <div class="array-container">
         <h2>Ingredients</h2>
         <div class="ingredient">
+          <div class="reorder">
+            <ion-icon name="reorder-four"></ion-icon>
+          </div>
+
           <TextInputField
             id="ingredient"
             :initialValue="recipeName"
@@ -158,6 +162,9 @@ onMounted(() => {
       <div class="array-container">
         <h2>Steps</h2>
         <div class="prep-step">
+          <div class="reorder">
+            <ion-icon name="reorder-four"></ion-icon>
+          </div>
           <h4>1.</h4>
           <TextInputField
             id="ingredient"
@@ -226,6 +233,17 @@ onMounted(() => {
       margin-top: 1rem;
       border-radius: $border-radius;
       background-color: $bg-color-dark;
+
+      .reorder {
+        font-size: 1.5rem;
+        color: $text-color;
+        transition: color 0.2s;
+
+        &:hover {
+          cursor: grab;
+          color: $accent-color;
+        }
+      }
 
       .ingredient {
         display: flex;
