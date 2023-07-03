@@ -6,6 +6,7 @@ declare namespace Recipes {
   }
 
   interface Ingredient {
+    rank: number;
     title: string;
     amount: number;
     unit: AmountUnit;

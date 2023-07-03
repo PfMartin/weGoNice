@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TextInputField from '@/components/TextInputField.vue';
+import IngredientsEditor from '@/components/IngredientsEditor.vue';
 import {
   OperationMode,
   PrepTimeType,
@@ -128,36 +129,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="array-container">
-        <h2>Ingredients</h2>
-        <div class="ingredient">
-          <div class="reorder">
-            <ion-icon name="reorder-four"></ion-icon>
-          </div>
-
-          <TextInputField
-            id="ingredient"
-            :initialValue="recipeName"
-            placeholder="Insert the ingredient's title"
-            @changed="updateRecipeName"
-            width="300px"
-          />
-          <TextInputField
-            id="amount"
-            :initialValue="recipeName"
-            placeholder="Insert the ingredient's amount"
-            @changed="updateRecipeName"
-            width="50px"
-          />
-          <DropdownInput
-            :options="Object.values(AmountUnit)"
-            :selectedOption="category"
-            @select-option="selectCategory"
-            id="amountUnit"
-            width="50px"
-          />
-        </div>
-      </div>
+      <IngredientsEditor :initialIngredients="ingredients" />
 
       <div class="array-container">
         <h2>Steps</h2>
@@ -243,13 +215,6 @@ onMounted(() => {
           cursor: grab;
           color: $accent-color;
         }
-      }
-
-      .ingredient {
-        display: flex;
-        gap: 1.5rem;
-        justify-content: flex-start;
-        align-items: center;
       }
 
       .prep-step {
