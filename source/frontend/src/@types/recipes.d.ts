@@ -11,4 +11,9 @@ declare namespace Recipes {
     amount: number;
     unit: AmountUnit;
   }
+
+  interface PrepStep {
+    rank: number;
+    title: string;
+  }
 }

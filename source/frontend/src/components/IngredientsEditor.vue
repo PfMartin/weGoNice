@@ -40,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="array-container">
+  <div class="ingredients-editor">
     <h2>Ingredients</h2>
     <div v-for="(i, idx) in ingredients" class="ingredient" :key="idx">
       <div class="reorder">
@@ -76,7 +76,7 @@ onMounted(() => {
 @import '@/styles/colors.scss';
 @import '@/styles/outline.scss';
 
-.array-container {
+.ingredients-editor {
   padding: 1rem;
   margin-top: 1rem;
   border-radius: $border-radius;

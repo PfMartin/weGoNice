@@ -11,6 +11,7 @@ import {
 } from '@/utils/constants';
 import { onMounted, ref } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
+import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
 
 const props = defineProps<{
   mode: OperationMode;
@@ -48,6 +49,7 @@ const selectCategory = (val: string) => {
 };
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
+const steps = ref<Recipes.PrepStep[]>([]);
 
 onMounted(() => {
   if (props.mode === OperationMode.Create) {
@@ -131,22 +133,7 @@ onMounted(() => {
 
       <IngredientsEditor :initialIngredients="ingredients" />
 
-      <div class="array-container">
-        <h2>Steps</h2>
-        <div class="prep-step">
-          <div class="reorder">
-            <ion-icon name="reorder-four"></ion-icon>
-          </div>
-          <h4>1.</h4>
-          <TextInputField
-            id="ingredient"
-            :initialValue="recipeName"
-            placeholder="Insert the ingredient's title"
-            @changed="updateRecipeName"
-            width="90%"
-          />
-        </div>
-      </div>
+      <PrepStepsEditor :initialSteps="steps" />
 
       <div class="steps"></div>
     </div>
@@ -197,35 +184,6 @@ onMounted(() => {
 
       .inputs {
         display: flex;
-      }
-    }
-
-    .array-container {
-      padding: 1rem;
-      margin-top: 1rem;
-      border-radius: $border-radius;
-      background-color: $bg-color-dark;
-
-      .reorder {
-        font-size: 1.5rem;
-        color: $text-color;
-        transition: color 0.2s;
-
-        &:hover {
-          cursor: grab;
-          color: $accent-color;
-        }
-      }
-
-      .prep-step {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-
-        h4 {
-          padding: 0;
-          margin: 0;
-        }
       }
     }
   }
