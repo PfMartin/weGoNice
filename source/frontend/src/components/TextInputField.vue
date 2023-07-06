@@ -97,7 +97,9 @@ const labelClass = computed(() => ({
     border: 1px solid $bg-color-dark;
     padding: 8px 8px;
     border-radius: $border-radius;
-    transition: background, border 0.2s;
+    transition:
+      background,
+      border 0.2s;
 
     &.hasError {
       border: 1px solid $accent-color;
