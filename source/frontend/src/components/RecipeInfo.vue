@@ -49,11 +49,47 @@ const selectCategory = (val: string) => {
 };
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
+
+const defaultIngredient = {
+  rank: ingredients.value.length + 1,
+  title: '',
+  amount: 0,
+  unit: AmountUnit.G,
+};
+
+const insertIngredientAt = (index: number): void => {
+  if (index < 0) {
+    ingredients.value.push(defaultIngredient);
+    console.warn(ingredients.value);
+    return;
+  }
+
+  const { title, amount, unit } = defaultIngredient;
+
+  const newIngredient = {
+    rank: index + 1,
+    title,
+    amount,
+    unit,
+  };
+
+  if (index >= 0) {
+    ingredients.value.splice(2, 0, newIngredient);
+  }
+};
+
 const steps = ref<Recipes.PrepStep[]>([]);
 
 onMounted(() => {
   if (props.mode === OperationMode.Create) {
     document.getElementById('recipeName')?.focus();
+  } else {
+    // TODO: Get Recipe
+    // TODO: Load recipe values to refs
+  }
+
+  if (!ingredients.value.length) {
+    insertIngredientAt(-1);
   }
 });
 </script>
@@ -131,7 +167,10 @@ onMounted(() => {
         </div>
       </div>
 
-      <IngredientsEditor :initialIngredients="ingredients" />
+      <IngredientsEditor
+        :initialIngredients="ingredients"
+        @add-ingredient="insertIngredientAt"
+      />
 
       <PrepStepsEditor :initialSteps="steps" />
 

@@ -8,6 +8,10 @@ const props = defineProps<{
   initialIngredients: Recipes.Ingredient[];
 }>();
 
+const emit = defineEmits<{
+  (e: 'add-ingredient', index: number): void;
+}>();
+
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
 const updateTitle = (title: string, idx: number): void => {
@@ -23,18 +27,15 @@ const selectUnit = (unit: string, idx: number): void => {
   ingredients.value[idx].unit = unit;
 };
 
+// index of ingredient + 1 for inserting after
+// index of ingredient for inserting before
+// 0 for inserting at beginning
+// -1 for pushing to array
+const addIngredient = (index: number): void => {
+  emit('add-ingredient', index);
+};
+
 onMounted(() => {
-  if (props.initialIngredients.length < 1) {
-    ingredients.value = [
-      {
-        rank: 1,
-        title: '',
-        amount: 0,
-        unit: AmountUnit.G,
-      },
-    ];
-    return;
-  }
   ingredients.value = props.initialIngredients;
 });
 </script>
@@ -69,6 +70,11 @@ onMounted(() => {
         width="50px"
       />
     </div>
+    <div class="add-container">
+      <div class="add-button" @click="addIngredient(-1)">
+        <ion-icon name="add" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -82,9 +88,14 @@ onMounted(() => {
   border-radius: $border-radius;
   background-color: $bg-color-dark;
 
+  h2 {
+    margin: 0 0 0.5rem 0;
+    padding: 0;
+  }
+
   .reorder {
     font-size: 1.5rem;
-    color: $text-color;
+    color: $bg-color-mid;
     transition: color 0.2s;
 
     &:hover {
@@ -108,6 +119,30 @@ onMounted(() => {
     h4 {
       padding: 0;
       margin: 0;
+    }
+  }
+
+  .add-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .add-button {
+      padding: 0.3rem 0.4rem;
+      background-color: $bg-color-mid;
+      border: 1px solid $bg-color-mid;
+      border-radius: 5px;
+      font-size: 1.3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s;
+
+      &:hover {
+        color: $accent-color;
+        border-color: $accent-color;
+        cursor: pointer;
+      }
     }
   }
 }

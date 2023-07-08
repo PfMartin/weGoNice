@@ -55,9 +55,14 @@ onMounted(() => {
   border-radius: $border-radius;
   background-color: $bg-color-dark;
 
+  h2 {
+    margin: 0 0 0.5rem 0;
+    padding: 0;
+  }
+
   .reorder {
     font-size: 1.5rem;
-    color: $text-color;
+    color: $bg-color-mid;
     transition: color 0.2s;
 
     &:hover {
