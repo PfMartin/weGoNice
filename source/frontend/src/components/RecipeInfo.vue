@@ -50,38 +50,7 @@ const selectCategory = (val: string) => {
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
-const insertIngredientAt = (index: number): void => {
-  if (index < 0) {
-    ingredients.value.push(defaultIngredient.value);
-    return;
-  }
-
-  const { title, amount, unit } = defaultIngredient.value;
-
-  const newIngredient = {
-    rank: index + 1,
-    title,
-    amount,
-    unit,
-  };
-
-  if (index >= 0) {
-    ingredients.value.splice(2, 0, newIngredient);
-  }
-};
-
-const removeIngredientAt = (index: number): void => {
-  ingredients.value.splice(index, 1);
-};
-
 const steps = ref<Recipes.PrepStep[]>([]);
-
-const defaultIngredient = computed(() => ({
-  rank: ingredients.value.length + 1,
-  title: '',
-  amount: 0,
-  unit: AmountUnit.G,
-}));
 
 onMounted(() => {
   if (props.mode === OperationMode.Create) {
@@ -92,7 +61,12 @@ onMounted(() => {
   }
 
   if (!ingredients.value.length) {
-    insertIngredientAt(-1);
+    ingredients.value.push({
+      rank: 1,
+      title: '',
+      amount: 0,
+      unit: AmountUnit.G,
+    });
   }
 });
 </script>
@@ -170,11 +144,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <IngredientsEditor
-        :initialIngredients="ingredients"
-        @add-ingredient="insertIngredientAt"
-        @remove-ingredient="removeIngredientAt"
-      />
+      <IngredientsEditor :initialIngredients="ingredients" />
 
       <PrepStepsEditor :initialSteps="steps" />
 

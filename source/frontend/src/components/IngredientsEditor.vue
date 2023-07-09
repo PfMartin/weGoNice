@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { AmountUnit } from '@/utils/constants';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import TextInputField from '@/components/TextInputField.vue';
 
@@ -32,13 +32,36 @@ const selectUnit = (unit: string, idx: number): void => {
 // index of ingredient for inserting before
 // 0 for inserting at beginning
 // -1 for pushing to array
-const addIngredient = (index: number): void => {
-  emit('add-ingredient', index);
+const insertIngredientAt = (index: number): void => {
+  if (index < 0) {
+    ingredients.value.push(defaultIngredient.value);
+    return;
+  }
+
+  const { title, amount, unit } = defaultIngredient.value;
+
+  const newIngredient = {
+    rank: index + 1,
+    title,
+    amount,
+    unit,
+  };
+
+  if (index >= 0) {
+    ingredients.value.splice(2, 0, newIngredient);
+  }
 };
 
-const removeIngredient = (index: number): void => {
-  emit('remove-ingredient', index);
+const removeIngredientAt = (index: number): void => {
+  ingredients.value.splice(index, 1);
 };
+
+const defaultIngredient = computed(() => ({
+  rank: ingredients.value.length + 1,
+  title: '',
+  amount: 0,
+  unit: AmountUnit.G,
+}));
 
 onMounted(() => {
   ingredients.value = props.initialIngredients;
@@ -53,7 +76,7 @@ onMounted(() => {
       class="ingredient-container"
       :key="idx"
     >
-      <div class="add-divider" @click="addIngredient(idx)">
+      <div class="add-divider" @click="insertIngredientAt(idx)">
         <div class="divider"></div>
         <ion-icon name="add"></ion-icon>
         <div class="divider"></div>
@@ -85,13 +108,13 @@ onMounted(() => {
           id="amountUnit"
           width="50px"
         />
-        <div class="delete" @click="removeIngredient(idx)">
+        <div class="delete" @click="removeIngredientAt(idx)">
           <ion-icon name="trash"></ion-icon>
         </div>
       </div>
     </div>
     <div class="add-container">
-      <div class="add-button" @click="addIngredient(-1)">
+      <div class="add-button" @click="insertIngredientAt(-1)">
         <ion-icon name="add" />
       </div>
     </div>
