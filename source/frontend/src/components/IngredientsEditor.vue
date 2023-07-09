@@ -43,32 +43,44 @@ onMounted(() => {
 <template>
   <div class="ingredients-editor">
     <h2>Ingredients</h2>
-    <div v-for="(i, idx) in ingredients" class="ingredient" :key="idx">
-      <div class="reorder">
-        <ion-icon name="reorder-four"></ion-icon>
+    <div
+      v-for="(i, idx) in ingredients"
+      class="ingredient-container"
+      :key="idx"
+    >
+      <div class="add-divider" @click="addIngredient(idx)">
+        <div class="divider"></div>
+        <ion-icon name="add"></ion-icon>
+        <div class="divider"></div>
       </div>
 
-      <TextInputField
-        id="ingredient"
-        :initialValue="i.title"
-        placeholder="Insert the ingredient's title"
-        @changed="(title) => updateTitle(title, idx)"
-        width="300px"
-      />
-      <TextInputField
-        id="amount"
-        :initialValue="`${i.amount}`"
-        placeholder="Insert the ingredient's amount"
-        @changed="(amount) => updateAmount(amount, idx)"
-        width="50px"
-      />
-      <DropdownInput
-        :options="Object.values(AmountUnit)"
-        :selectedOption="i.unit"
-        @select-option="(unit) => selectUnit(unit, idx)"
-        id="amountUnit"
-        width="50px"
-      />
+      <div class="ingredient">
+        <div class="reorder">
+          <ion-icon name="reorder-four"></ion-icon>
+        </div>
+
+        <TextInputField
+          id="ingredient"
+          :initialValue="i.title"
+          placeholder="Insert the ingredient's title"
+          @changed="(title) => updateTitle(title, idx)"
+          width="300px"
+        />
+        <TextInputField
+          id="amount"
+          :initialValue="`${i.amount}`"
+          placeholder="Insert the ingredient's amount"
+          @changed="(amount) => updateAmount(amount, idx)"
+          width="50px"
+        />
+        <DropdownInput
+          :options="Object.values(AmountUnit)"
+          :selectedOption="i.unit"
+          @select-option="(unit) => selectUnit(unit, idx)"
+          id="amountUnit"
+          width="50px"
+        />
+      </div>
     </div>
     <div class="add-container">
       <div class="add-button" @click="addIngredient(-1)">
@@ -87,6 +99,9 @@ onMounted(() => {
   margin-top: 1rem;
   border-radius: $border-radius;
   background-color: $bg-color-dark;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 
   h2 {
     margin: 0 0 0.5rem 0;
@@ -104,21 +119,53 @@ onMounted(() => {
     }
   }
 
-  .ingredient {
+  .ingredient-container {
     display: flex;
-    gap: 1.5rem;
-    justify-content: flex-start;
+    justify-content: center;
+    flex-direction: column;
     align-items: center;
-  }
 
-  .prep-step {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    .add-divider {
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-    h4 {
-      padding: 0;
-      margin: 0;
+      .divider {
+        height: 1px;
+        width: 10rem;
+        background-color: $bg-color-mid;
+        transition: background-color 0.2s;
+      }
+
+      ion-icon {
+        padding: 1px;
+        color: $bg-color-dark;
+        font-size: 1.2rem;
+        background-color: $bg-color-mid;
+        border-radius: $border-radius;
+        margin: 0 0.5rem;
+        transition: color 0.2s;
+      }
+
+      &:hover {
+        cursor: pointer;
+
+        .divider {
+          background-color: $accent-color;
+        }
+
+        ion-icon {
+          color: $accent-color;
+        }
+      }
+    }
+
+    .ingredient {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: flex-start;
+      align-items: center;
     }
   }
 
