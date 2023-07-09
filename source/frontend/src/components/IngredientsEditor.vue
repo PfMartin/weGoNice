@@ -10,6 +10,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'add-ingredient', index: number): void;
+  (e: 'remove-ingredient', index: number): void;
 }>();
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
@@ -33,6 +34,10 @@ const selectUnit = (unit: string, idx: number): void => {
 // -1 for pushing to array
 const addIngredient = (index: number): void => {
   emit('add-ingredient', index);
+};
+
+const removeIngredient = (index: number): void => {
+  emit('remove-ingredient', index);
 };
 
 onMounted(() => {
@@ -80,6 +85,9 @@ onMounted(() => {
           id="amountUnit"
           width="50px"
         />
+        <div class="delete" @click="removeIngredient(idx)">
+          <ion-icon name="trash"></ion-icon>
+        </div>
       </div>
     </div>
     <div class="add-container">
@@ -116,6 +124,17 @@ onMounted(() => {
     &:hover {
       cursor: grab;
       color: $accent-color;
+    }
+  }
+
+  .delete {
+    font-size: 1.2rem;
+    color: $bg-color-mid;
+    transition: color 0.2s;
+
+    &:hover {
+      cursor: pointer;
+      color: $error-hover-color;
     }
   }
 

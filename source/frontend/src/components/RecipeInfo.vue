@@ -9,7 +9,7 @@ import {
   CATEGORY_OPTIONS,
   AmountUnit,
 } from '@/utils/constants';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
 
@@ -50,21 +50,13 @@ const selectCategory = (val: string) => {
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
-const defaultIngredient = {
-  rank: ingredients.value.length + 1,
-  title: '',
-  amount: 0,
-  unit: AmountUnit.G,
-};
-
 const insertIngredientAt = (index: number): void => {
   if (index < 0) {
-    ingredients.value.push(defaultIngredient);
-    console.warn(ingredients.value);
+    ingredients.value.push(defaultIngredient.value);
     return;
   }
 
-  const { title, amount, unit } = defaultIngredient;
+  const { title, amount, unit } = defaultIngredient.value;
 
   const newIngredient = {
     rank: index + 1,
@@ -78,7 +70,18 @@ const insertIngredientAt = (index: number): void => {
   }
 };
 
+const removeIngredientAt = (index: number): void => {
+  ingredients.value.splice(index, 1);
+};
+
 const steps = ref<Recipes.PrepStep[]>([]);
+
+const defaultIngredient = computed(() => ({
+  rank: ingredients.value.length + 1,
+  title: '',
+  amount: 0,
+  unit: AmountUnit.G,
+}));
 
 onMounted(() => {
   if (props.mode === OperationMode.Create) {
@@ -170,6 +173,7 @@ onMounted(() => {
       <IngredientsEditor
         :initialIngredients="ingredients"
         @add-ingredient="insertIngredientAt"
+        @remove-ingredient="removeIngredientAt"
       />
 
       <PrepStepsEditor :initialSteps="steps" />
