@@ -8,6 +8,8 @@ const props = defineProps<{
   initialIngredients: Recipes.Ingredient[];
 }>();
 
+/* Manage Values */
+
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
 const updateTitle = (title: string, idx: number): void => {
@@ -23,12 +25,13 @@ const selectUnit = (unit: string, idx: number): void => {
   ingredients.value[idx].unit = unit;
 };
 
+/* Adding and Removing*/
+
 // index of ingredient + 1 for inserting after
 // index of ingredient for inserting before
 // 0 for inserting at beginning
 // -1 for pushing to array
 const insertIngredientAt = (idx: number): void => {
-  console.warn(idx);
   if (idx < 0) {
     ingredients.value.push(defaultIngredient.value);
   } else {
@@ -65,6 +68,15 @@ const defaultIngredient = computed(() => ({
   unit: AmountUnit.G,
 }));
 
+/* Drag and Drop */
+const startDrag = (event: DragEvent, idx: number) => {
+  if (event.dataTransfer) {
+    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('index', `${idx}`);
+  }
+};
+
 onMounted(() => {
   ingredients.value = props.initialIngredients;
 });
@@ -77,7 +89,11 @@ onMounted(() => {
       v-for="(i, idx) in ingredients"
       class="ingredient-container"
       :key="idx"
+      :draggable="true"
+      @dragstart="startDrag($event, idx)"
     >
+      <div class="drop-zone"></div>
+
       <div class="add-divider" @click="insertIngredientAt(idx)">
         <div class="divider"></div>
         <ion-icon name="add"></ion-icon>
@@ -169,6 +185,12 @@ onMounted(() => {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+
+    .drop-zone {
+      width: 100%;
+      height: 15px;
+      background-color: $text-color;
+    }
 
     .add-divider {
       margin-bottom: 0.5rem;
