@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps<{
   headline?: string;
@@ -16,6 +16,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'changed', value: string): void;
 }>();
+
+watch(
+  () => props.initialValue,
+  (newValue) => {
+    inputValue.value = newValue;
+  }
+);
 
 const inputValue = ref(props.initialValue);
 

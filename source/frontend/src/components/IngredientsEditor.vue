@@ -8,14 +8,10 @@ const props = defineProps<{
   initialIngredients: Recipes.Ingredient[];
 }>();
 
-const emit = defineEmits<{
-  (e: 'add-ingredient', index: number): void;
-  (e: 'remove-ingredient', index: number): void;
-}>();
-
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
 const updateTitle = (title: string, idx: number): void => {
+  console.log('updateTitle');
   ingredients.value[idx].title = title;
 };
 
@@ -52,8 +48,11 @@ const insertIngredientAt = (index: number): void => {
   }
 };
 
-const removeIngredientAt = (index: number): void => {
-  ingredients.value.splice(index, 1);
+const removeIngredientAt = (title: string): void => {
+  ingredients.value = ingredients.value.filter((i) => i.title !== title);
+  ingredients.value.forEach((i) => {
+    console.log(i);
+  });
 };
 
 const defaultIngredient = computed(() => ({
@@ -101,6 +100,7 @@ onMounted(() => {
           @changed="(amount) => updateAmount(amount, idx)"
           width="50px"
         />
+
         <DropdownInput
           :options="Object.values(AmountUnit)"
           :selectedOption="i.unit"
@@ -108,7 +108,7 @@ onMounted(() => {
           id="amountUnit"
           width="50px"
         />
-        <div class="delete" @click="removeIngredientAt(idx)">
+        <div class="delete" @click="removeIngredientAt(i.title)">
           <ion-icon name="trash"></ion-icon>
         </div>
       </div>
