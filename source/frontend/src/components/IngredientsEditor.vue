@@ -31,23 +31,31 @@ const insertIngredientAt = (idx: number): void => {
   console.warn(idx);
   if (idx < 0) {
     ingredients.value.push(defaultIngredient.value);
-    return;
+  } else {
+    const { title, amount, unit } = defaultIngredient.value;
+
+    const newIngredient = {
+      rank: idx + 1,
+      title,
+      amount,
+      unit,
+    };
+
+    ingredients.value.splice(idx, 0, newIngredient);
   }
 
-  const { title, amount, unit } = defaultIngredient.value;
-
-  const newIngredient = {
-    rank: idx + 1,
-    title,
-    amount,
-    unit,
-  };
-
-  ingredients.value.splice(idx, 0, newIngredient);
+  updateRanks();
+  console.log(ingredients.value);
 };
 
 const removeIngredientAt = (idx: number): void => {
   ingredients.value.splice(idx, 1);
+  updateRanks();
+  console.log(ingredients.value);
+};
+
+const updateRanks = (): void => {
+  ingredients.value.map((i, idx) => (i.rank = idx + 1));
 };
 
 const defaultIngredient = computed(() => ({
