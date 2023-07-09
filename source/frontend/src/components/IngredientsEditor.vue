@@ -11,7 +11,6 @@ const props = defineProps<{
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
 const updateTitle = (title: string, idx: number): void => {
-  console.log('updateTitle');
   ingredients.value[idx].title = title;
 };
 
@@ -29,6 +28,7 @@ const selectUnit = (unit: string, idx: number): void => {
 // 0 for inserting at beginning
 // -1 for pushing to array
 const insertIngredientAt = (index: number): void => {
+  console.warn(index);
   if (index < 0) {
     ingredients.value.push(defaultIngredient.value);
     return;
@@ -43,16 +43,11 @@ const insertIngredientAt = (index: number): void => {
     unit,
   };
 
-  if (index >= 0) {
-    ingredients.value.splice(2, 0, newIngredient);
-  }
+  ingredients.value.splice(index, 0, newIngredient);
 };
 
 const removeIngredientAt = (title: string): void => {
   ingredients.value = ingredients.value.filter((i) => i.title !== title);
-  ingredients.value.forEach((i) => {
-    console.log(i);
-  });
 };
 
 const defaultIngredient = computed(() => ({
