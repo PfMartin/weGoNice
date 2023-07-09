@@ -27,9 +27,9 @@ const selectUnit = (unit: string, idx: number): void => {
 // index of ingredient for inserting before
 // 0 for inserting at beginning
 // -1 for pushing to array
-const insertIngredientAt = (index: number): void => {
-  console.warn(index);
-  if (index < 0) {
+const insertIngredientAt = (idx: number): void => {
+  console.warn(idx);
+  if (idx < 0) {
     ingredients.value.push(defaultIngredient.value);
     return;
   }
@@ -37,17 +37,17 @@ const insertIngredientAt = (index: number): void => {
   const { title, amount, unit } = defaultIngredient.value;
 
   const newIngredient = {
-    rank: index + 1,
+    rank: idx + 1,
     title,
     amount,
     unit,
   };
 
-  ingredients.value.splice(index, 0, newIngredient);
+  ingredients.value.splice(idx, 0, newIngredient);
 };
 
-const removeIngredientAt = (title: string): void => {
-  ingredients.value = ingredients.value.filter((i) => i.title !== title);
+const removeIngredientAt = (idx: number): void => {
+  ingredients.value.splice(idx, 1);
 };
 
 const defaultIngredient = computed(() => ({
@@ -103,7 +103,7 @@ onMounted(() => {
           id="amountUnit"
           width="50px"
         />
-        <div class="delete" @click="removeIngredientAt(i.title)">
+        <div class="delete" @click="removeIngredientAt(idx)">
           <ion-icon name="trash"></ion-icon>
         </div>
       </div>
