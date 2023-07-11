@@ -48,13 +48,11 @@ const insertIngredientAt = (idx: number): void => {
   }
 
   updateRanks();
-  console.log(ingredients.value);
 };
 
 const removeIngredientAt = (idx: number): void => {
   ingredients.value.splice(idx, 1);
   updateRanks();
-  console.log(ingredients.value);
 };
 
 const updateRanks = (): void => {
@@ -69,6 +67,7 @@ const defaultIngredient = computed(() => ({
 }));
 
 /* Drag and Drop */
+
 const isDragActive = ref(false);
 
 const startDrag = (event: DragEvent, idx: number) => {
@@ -90,13 +89,21 @@ const hideDropZones = () => {
 };
 
 const onDrop = (event: DragEvent, idx: number) => {
-  console.warn('dropped');
+  const prevIndex = Number(event.dataTransfer?.getData('index'));
+  const ingredient = ingredients.value.splice(prevIndex, 1);
+
+  if (idx > 0) {
+    ingredients.value.push(ingredient[0]);
+  } else {
+    ingredients.value.splice(idx, 0, ingredient[0]);
+  }
   isDragActive.value = false;
+  updateRanks();
+  console.warn(ingredients.value);
 };
 
 const onDragEnter = (event: DragEvent) => {
   event.preventDefault();
-  console.warn('drag enter');
 };
 
 onMounted(() => {
@@ -161,6 +168,13 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <div
+      v-if="isDragActive"
+      class="drop-zone"
+      @drop="onDrop($event, -1)"
+      @dragover.prevent
+      @dragenter="onDragEnter"
+    ></div>
     <div class="add-container">
       <div class="add-button" @click="insertIngredientAt(-1)">
         <ion-icon name="add" />
@@ -209,22 +223,22 @@ onMounted(() => {
     }
   }
 
+  .drop-zone {
+    width: 100%;
+    height: 1.5rem;
+    background-color: $accent-color;
+    margin-bottom: 0.5rem;
+
+    &:hover {
+      background-color: $accent-color;
+    }
+  }
+
   .ingredient-container {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-
-    .drop-zone {
-      width: 100%;
-      height: 1.5rem;
-      background-color: $accent-color;
-      margin-bottom: 0.5rem;
-
-      &:hover {
-        background-color: $accent-color;
-      }
-    }
 
     .add-divider {
       margin-bottom: 0.5rem;
