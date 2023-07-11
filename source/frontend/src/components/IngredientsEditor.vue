@@ -69,12 +69,34 @@ const defaultIngredient = computed(() => ({
 }));
 
 /* Drag and Drop */
+const isDragActive = ref(false);
+
 const startDrag = (event: DragEvent, idx: number) => {
   if (event.dataTransfer) {
     event.dataTransfer.dropEffect = 'move';
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('index', `${idx}`);
   }
+
+  // The dragged element is displayed as the last representation itself before starting to drag
+  // setTimeout makes drop zones appear after the drag started. Therefore, the dropzone for the dragged element is not shown
+  setTimeout(() => {
+    isDragActive.value = true;
+  }, 100);
+};
+
+const hideDropZones = () => {
+  isDragActive.value = false;
+};
+
+const onDrop = (event: DragEvent, idx: number) => {
+  console.warn('dropped');
+  isDragActive.value = false;
+};
+
+const onDragEnter = (event: DragEvent) => {
+  event.preventDefault();
+  console.warn('drag enter');
 };
 
 onMounted(() => {
@@ -91,8 +113,15 @@ onMounted(() => {
       :key="idx"
       :draggable="true"
       @dragstart="startDrag($event, idx)"
+      @dragend="hideDropZones"
     >
-      <div class="drop-zone"></div>
+      <div
+        v-if="isDragActive"
+        class="drop-zone"
+        @drop="onDrop($event, idx)"
+        @dragover.prevent
+        @dragenter="onDragEnter"
+      ></div>
 
       <div class="add-divider" @click="insertIngredientAt(idx)">
         <div class="divider"></div>
@@ -190,6 +219,10 @@ onMounted(() => {
       width: 100%;
       height: 15px;
       background-color: $text-color;
+
+      &:hover {
+        background-color: $accent-color;
+      }
     }
 
     .add-divider {
