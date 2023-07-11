@@ -92,7 +92,7 @@ const onDrop = (event: DragEvent, idx: number) => {
   const prevIndex = Number(event.dataTransfer?.getData('index'));
   const ingredient = ingredients.value.splice(prevIndex, 1);
 
-  if (idx > 0) {
+  if (idx < 0) {
     ingredients.value.push(ingredient[0]);
   } else {
     ingredients.value.splice(idx, 0, ingredient[0]);
@@ -140,20 +140,13 @@ onMounted(() => {
         <div class="reorder">
           <ion-icon name="reorder-four"></ion-icon>
         </div>
-
-        <TextInputField
-          id="ingredient"
-          :initialValue="i.title"
-          placeholder="Insert the ingredient's title"
-          @changed="(title) => updateTitle(title, idx)"
-          width="300px"
-        />
         <TextInputField
           id="amount"
           :initialValue="`${i.amount}`"
           placeholder="Insert the ingredient's amount"
           @changed="(amount) => updateAmount(amount, idx)"
-          width="50px"
+          width="3rem"
+          :isDark="i.amount !== 0"
         />
 
         <DropdownInput
@@ -161,7 +154,17 @@ onMounted(() => {
           :selectedOption="i.unit"
           @select-option="(unit) => selectUnit(unit, idx)"
           id="amountUnit"
-          width="50px"
+          width="2.5rem"
+          isDark
+        />
+
+        <TextInputField
+          id="ingredient"
+          :initialValue="i.title"
+          placeholder="Insert the ingredient's title"
+          @changed="(title) => updateTitle(title, idx)"
+          width="300px"
+          :isDark="i.title !== ''"
         />
         <div class="delete" @click="removeIngredientAt(idx)">
           <ion-icon name="trash"></ion-icon>
