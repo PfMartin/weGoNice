@@ -122,19 +122,21 @@ onMounted(() => {
       @dragstart="startDrag($event, idx)"
       @dragend="hideDropZones"
     >
-      <div
-        v-if="isDragActive"
-        class="drop-zone"
-        @drop="onDrop($event, idx)"
-        @dragover.prevent
-        @dragenter="onDragEnter"
-      ></div>
+      <Transition name="fade" mode="out-in">
+        <div
+          v-if="isDragActive"
+          class="drop-zone"
+          @drop="onDrop($event, idx)"
+          @dragover.prevent
+          @dragenter="onDragEnter"
+        ></div>
 
-      <div v-else class="add-divider" @click="insertIngredientAt(idx)">
-        <div class="divider"></div>
-        <ion-icon name="add"></ion-icon>
-        <div class="divider"></div>
-      </div>
+        <div v-else class="add-divider" @click="insertIngredientAt(idx)">
+          <div class="divider"></div>
+          <ion-icon name="add"></ion-icon>
+          <div class="divider"></div>
+        </div>
+      </Transition>
 
       <div class="ingredient">
         <div class="reorder">
@@ -171,18 +173,22 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div
-      v-if="isDragActive"
-      class="drop-zone"
-      @drop="onDrop($event, -1)"
-      @dragover.prevent
-      @dragenter="onDragEnter"
-    ></div>
-    <div class="add-container">
-      <div class="add-button" @click="insertIngredientAt(-1)">
-        <ion-icon name="add" />
+
+    <Transition name="fade" mode="out-in">
+      <div
+        v-if="isDragActive"
+        class="drop-zone"
+        @drop="onDrop($event, -1)"
+        @dragover.prevent
+        @dragenter="onDragEnter"
+      ></div>
+
+      <div v-else class="add-container">
+        <div class="add-button" @click="insertIngredientAt(-1)">
+          <ion-icon name="add" />
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -310,5 +316,15 @@ onMounted(() => {
       }
     }
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
