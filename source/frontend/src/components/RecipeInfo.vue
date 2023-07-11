@@ -85,7 +85,7 @@ onMounted(() => {
             placeholder="Insert the recipe's name"
             :inputError="recipeNameError"
             @changed="updateRecipeName"
-            isDark
+            :isDark="recipeName !== ''"
           />
           <div class="prep-time">
             <p class="label"><ion-icon name="time" />&nbsp;Preparation Time</p>
@@ -100,7 +100,7 @@ onMounted(() => {
                 id="prepTimeHours"
                 label="Hours"
                 width="50px"
-                isDark
+                :isDark="prepTimeHours !== 0"
               />
               <DropdownInput
                 :options="PREP_TIME_MINUTES_OPTIONS"
@@ -111,7 +111,7 @@ onMounted(() => {
                 id="prepTimeMinutes"
                 label="Minutes"
                 width="50px"
-                isDark
+                :isDark="prepTimeHours !== 0"
               />
             </div>
           </div>
@@ -124,7 +124,7 @@ onMounted(() => {
                 @select-option="selectAuthor"
                 id="author"
                 width="400px"
-                isDark
+                :isDark="author !== ''"
               />
             </div>
           </div>
@@ -137,7 +137,7 @@ onMounted(() => {
                 @select-option="selectCategory"
                 id="category"
                 width="300px"
-                isDark
+                :isDark="category !== ''"
               />
             </div>
           </div>
