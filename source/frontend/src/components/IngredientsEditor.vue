@@ -123,7 +123,7 @@ onMounted(() => {
         @dragenter="onDragEnter"
       ></div>
 
-      <div class="add-divider" @click="insertIngredientAt(idx)">
+      <div v-else class="add-divider" @click="insertIngredientAt(idx)">
         <div class="divider"></div>
         <ion-icon name="add"></ion-icon>
         <div class="divider"></div>
@@ -217,8 +217,9 @@ onMounted(() => {
 
     .drop-zone {
       width: 100%;
-      height: 15px;
-      background-color: $text-color;
+      height: 1.5rem;
+      background-color: $accent-color;
+      margin-bottom: 0.5rem;
 
       &:hover {
         background-color: $accent-color;
