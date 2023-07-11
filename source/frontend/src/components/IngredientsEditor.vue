@@ -99,11 +99,23 @@ const onDrop = (event: DragEvent, idx: number) => {
   }
   isDragActive.value = false;
   updateRanks();
-  console.warn(ingredients.value);
 };
 
-const onDragEnter = (event: DragEvent) => {
+const hoveredDropZone = ref<number | null>(null);
+
+const onDragEnter = (event: any) => {
   event.preventDefault();
+
+  const dropZoneId = event.toElement.id.split('zone').reverse()[0];
+  hoveredDropZone.value = Number(dropZoneId);
+};
+
+const onDragLeave = (event: any) => {
+  hoveredDropZone.value = null;
+};
+
+const getHoveredClass = (idx: number): string => {
+  return hoveredDropZone.value === idx ? 'drop-zone-active' : '';
 };
 
 onMounted(() => {
@@ -126,9 +138,12 @@ onMounted(() => {
         <div
           v-if="isDragActive"
           class="drop-zone"
+          :class="getHoveredClass(idx)"
           @drop="onDrop($event, idx)"
           @dragover.prevent
           @dragenter="onDragEnter"
+          @drageleave="onDragLeave"
+          :id="`drop-zone${idx}`"
         ></div>
 
         <div v-else class="add-divider" @click="insertIngredientAt(idx)">
@@ -179,9 +194,12 @@ onMounted(() => {
         <div
           v-if="isDragActive"
           class="drop-zone"
+          :class="getHoveredClass(-1)"
           @drop="onDrop($event, -1)"
           @dragover.prevent
           @dragenter="onDragEnter"
+          @dragleave="onDragLeave"
+          id="drop-zone-1"
         ></div>
 
         <div v-else class="add-divider" @click="insertIngredientAt(-1)">
@@ -215,10 +233,12 @@ onMounted(() => {
   .drop-zone {
     width: 100%;
     height: 1.5rem;
-    background-color: $accent-color;
+    background-color: $bg-color-mid;
     margin-bottom: 0.5rem;
+    transition: background-color 0.2s;
 
-    &:hover {
+    &.drop-zone-active {
+      transition: background-color 0.2s;
       background-color: $accent-color;
     }
   }
