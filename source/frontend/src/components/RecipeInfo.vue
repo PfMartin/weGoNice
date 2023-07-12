@@ -50,7 +50,7 @@ const selectCategory = (val: string) => {
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
-const steps = ref<Recipes.PrepStep[]>([]);
+const prepSteps = ref<Recipes.PrepStep[]>([]);
 
 onMounted(() => {
   if (props.mode === OperationMode.Create) {
@@ -66,6 +66,13 @@ onMounted(() => {
       title: '',
       amount: 0,
       unit: AmountUnit.G,
+    });
+  }
+
+  if (!prepSteps.value.length) {
+    prepSteps.value.push({
+      rank: 1,
+      title: '',
     });
   }
 });
@@ -146,7 +153,7 @@ onMounted(() => {
 
       <IngredientsEditor :initialIngredients="ingredients" />
 
-      <PrepStepsEditor :initialSteps="steps" />
+      <PrepStepsEditor :initialSteps="prepSteps" />
 
       <div class="steps"></div>
     </div>
