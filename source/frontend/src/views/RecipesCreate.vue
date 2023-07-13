@@ -13,10 +13,5 @@ import { OperationMode } from '@/utils/constants';
   margin: 1rem 1rem 1rem calc($nav-bar-width + 1rem);
   display: flex;
   justify-content: center;
-
-  .buttons {
-    .control-buttons {
-    }
-  }
 }
 </style>

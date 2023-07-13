@@ -1,4 +1,9 @@
-import { url, headers, handleError, addAuthorization } from './utils';
+import {
+  url,
+  headers,
+  handleError,
+  addAuthorization,
+} from '@/apis/weGoNice/utils';
 import axios from 'axios';
 
 export const createAuthor = async (

@@ -13,8 +13,10 @@ import {
 import { onMounted, ref, computed } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
-import ButtonComponent from './ButtonComponent.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 import { useRouter } from 'vue-router';
+import { createRecipe } from '@/apis/weGoNice/recipes';
+import { getAllAuthors } from '@/apis/weGoNice/authors';
 
 const router = useRouter();
 
@@ -41,10 +43,11 @@ const selectPrepTime = (prepTimeType: PrepTimeType, value: string) => {
   }
 };
 
-const authors = ['Hello', 'There'];
-const author = ref(authors[0]);
+const authors = ref<Authors.Author[]>([]);
+const authorOptions = ref<string[]>([]);
+const selectedAuthor = ref('');
 const selectAuthor = (val: string) => {
-  author.value = val;
+  selectedAuthor.value = val;
 };
 
 const categories = CATEGORY_OPTIONS;
@@ -62,16 +65,50 @@ const cancel = (): void => {
 };
 
 const submit = async (): Promise<void> => {
-  console.warn('submit');
+  const authorToSave = authors.value.find(
+    (a) =>
+      a.name === selectedAuthor.value ||
+      `${a.firstName} ${a.lastName}` === selectedAuthor.value
+  );
+
+  //TODO: Validate inputs
+  // - No authorID
+  // - No Title
+  // - No Category
+  // - No Time
+
+  if (authorToSave) {
+    const body = {
+      name: recipeName.value,
+      authorId: authorToSave.id,
+      timeHours: prepTimeHours.value,
+      timeMinutes: prepTimeMinutes.value,
+      category: category.value,
+      ingredients: ingredients.value,
+      steps: prepSteps.value,
+    };
+
+    const res = await createRecipe(body);
+  }
 };
 
-onMounted(() => {
+const getAuthors = async (): Promise<void> => {
+  authors.value = (await getAllAuthors()) || [];
+
+  authorOptions.value = authors.value.map(
+    (a) => a.name || `${a.firstName} ${a.lastName}`
+  );
+};
+
+onMounted(async () => {
   if (props.mode === OperationMode.Create) {
     document.getElementById('recipeName')?.focus();
   } else {
     // TODO: Get Recipe
     // TODO: Load recipe values to refs
   }
+
+  await getAuthors();
 
   if (!ingredients.value.length) {
     ingredients.value.push({
@@ -139,12 +176,12 @@ onMounted(() => {
             <p class="label"><ion-icon name="person" />&nbsp;Author</p>
             <div class="inputs">
               <DropdownInput
-                :options="authors"
-                :selectedOption="author"
+                :options="authorOptions"
+                :selectedOption="selectedAuthor || 'Select an author...'"
                 @select-option="selectAuthor"
                 id="author"
                 width="400px"
-                :isDark="author !== ''"
+                :isDark="selectedAuthor !== ''"
               />
             </div>
           </div>

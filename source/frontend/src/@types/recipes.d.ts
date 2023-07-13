@@ -2,7 +2,10 @@ declare namespace Recipes {
   import { AmountUnit } from '@/utils/constants';
 
   interface Recipe {
-    title: string;
+    name: string;
+    authorId: string;
+    timeHours: number;
+    timeMinutes: number;
   }
 
   interface Ingredient {
