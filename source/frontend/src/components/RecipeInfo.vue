@@ -8,10 +8,15 @@ import {
   PREP_TIME_MINUTES_OPTIONS,
   CATEGORY_OPTIONS,
   AmountUnit,
+  ButtonType,
 } from '@/utils/constants';
 import { onMounted, ref, computed } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
+import ButtonComponent from './ButtonComponent.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps<{
   mode: OperationMode;
@@ -44,13 +49,21 @@ const selectAuthor = (val: string) => {
 
 const categories = CATEGORY_OPTIONS;
 const category = ref(categories[0]);
-const selectCategory = (val: string) => {
+const selectCategory = (val: string): void => {
   category.value = val;
 };
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
 const prepSteps = ref<Recipes.PrepStep[]>([]);
+
+const cancel = (): void => {
+  router.push({ name: 'RecipesOverview' });
+};
+
+const submit = async (): Promise<void> => {
+  console.warn('submit');
+};
 
 onMounted(() => {
   if (props.mode === OperationMode.Create) {
@@ -155,7 +168,34 @@ onMounted(() => {
 
       <PrepStepsEditor :initialSteps="prepSteps" />
 
-      <div class="steps"></div>
+      <div class="buttons">
+        <RouterLink
+          :to="{
+            name: 'RecipesOverview',
+          }"
+        >
+          <ButtonComponent
+            :buttonType="ButtonType.Default"
+            buttonText=""
+            buttonIconName="arrow-back-outline"
+          />
+        </RouterLink>
+
+        <div class="control-buttons">
+          <ButtonComponent
+            :buttonType="ButtonType.Delete"
+            buttonText="Cancel"
+            buttonIconName="close-circle"
+            @on-click="cancel"
+          />
+          <ButtonComponent
+            :buttonType="ButtonType.Primary"
+            buttonText="Save"
+            buttonIconName="checkmark-done"
+            @on-click="submit"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -169,6 +209,7 @@ onMounted(() => {
   border-radius: $border-radius;
   box-shadow: $shadow;
   display: flex;
+  max-width: 1200px;
 
   h2 {
     padding: 0;
@@ -204,6 +245,18 @@ onMounted(() => {
 
       .inputs {
         display: flex;
+      }
+    }
+
+    .buttons {
+      margin: 1rem 0;
+      display: flex;
+      justify-content: space-between;
+
+      .control-buttons {
+        display: flex;
+        justify-content: 'flex-end';
+        gap: 1rem;
       }
     }
   }
