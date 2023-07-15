@@ -130,6 +130,7 @@ const widthStyle = computed(() => `width: ${props.width}`);
     transition:
       background,
       border 0.2s;
+    font-family: Monserrat, sans-serif;
 
     &.hasError {
       border: 1px solid $accent-color;
