@@ -15,8 +15,8 @@ var TestRecipeAll = models.Recipe{
 	Name:        "Test Recipe",
 	Author:      ExpectedAuthorFlat,
 	User:        ExpectedUser,
-	Time:        "45",
-	TimeUnit:    "Minute",
+	TimeMinutes: 45,
+	TimeHours:   1,
 	Category:    "main",
 	Ingredients: []models.Ingredient{{Name: "Ingredient1", Amount: "5"}, {Name: "Ingredient2", Amount: "10 ml"}, {Name: "Ingredient3", Amount: "15"}},
 	Steps:       []models.Step{{Name: "Step1", Rank: 1}, {Name: "Step2", Rank: 2}, {Name: "Step3", Rank: 3}, {Name: "Step4", Rank: 4}},
@@ -30,8 +30,8 @@ var TestRecipeName = models.Recipe{
 
 var TestRecipeNoName = models.Recipe{
 	AuthorID:    TestRecipeAll.AuthorID,
-	Time:        TestRecipeAll.Time,
-	Category:    TestRecipeAll.Time,
+	TimeMinutes: TestRecipeAll.TimeMinutes,
+	TimeHours:   TestRecipeAll.TimeHours,
 	Ingredients: TestRecipeAll.Ingredients,
 	Steps:       TestRecipeAll.Steps,
 }
@@ -52,8 +52,8 @@ func CreateTestRecipe(db *mongo.Client, userID string, authorID string) (string,
 	data := bson.M{
 		"name":        TestRecipeAll.Name,
 		"authorId":    authorObjectID,
-		"time":        TestRecipeAll.Time,
-		"timeUnit":    TestRecipeAll.TimeUnit,
+		"timeHours":   TestRecipeAll.TimeHours,
+		"timeMinutes": TestRecipeAll.TimeMinutes,
 		"category":    TestRecipeAll.Category,
 		"ingredients": TestRecipeAll.Ingredients,
 		"steps":       TestRecipeAll.Steps,

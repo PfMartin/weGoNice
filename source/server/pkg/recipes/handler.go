@@ -21,8 +21,8 @@ import (
 var projectStage = bson.D{
 	{Key: "$project", Value: bson.M{
 		"name":        1,
-		"time":        1,
-		"timeUnit":    1,
+		"timeHours":   1,
+		"timeMinutes": 1,
 		"category":    1,
 		"ingredients": 1,
 		"steps":       1,
@@ -103,7 +103,8 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	data := bson.M{
 		"name":        recipe.Name,
 		"authorId":    authorID,
-		"time":        recipe.Time,
+		"timeHours":   recipe.TimeHours,
+		"timeMinutes": recipe.TimeMinutes,
 		"category":    recipe.Category,
 		"ingredients": recipe.Ingredients,
 		"steps":       recipe.Steps,
@@ -199,8 +200,8 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 	update := bson.M{"$set": bson.M{
 		"name":        recipe.Name,
 		"authorId":    recipe.AuthorID,
-		"time":        recipe.Time,
-		"timeUnit":    recipe.TimeUnit,
+		"timeHours":   recipe.TimeHours,
+		"timeMinutes": recipe.TimeMinutes,
 		"category":    recipe.Category,
 		"ingredients": recipe.Ingredients,
 		"steps":       recipe.Steps,
