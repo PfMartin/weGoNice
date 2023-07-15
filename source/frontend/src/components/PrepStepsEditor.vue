@@ -139,6 +139,7 @@ onMounted(() => {
 
         <TextInputField
           id="step"
+          :isArea="true"
           :initialValue="s.title"
           placeholder="Insert a description for the preparation step"
           @changed="(title) => updateTitle(title, idx)"
@@ -207,6 +208,7 @@ onMounted(() => {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 0.5rem;
 
     .step {
       display: flex;

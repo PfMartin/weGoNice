@@ -11,6 +11,7 @@ const props = defineProps<{
   width?: string;
   isDark?: boolean;
   withErrorHandling?: boolean;
+  isArea?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -50,12 +51,21 @@ const widthStyle = computed(() => `width: ${props.width}`);
       </div>
     </label>
     <input
+      v-if="!props.isArea"
       :id="props.id"
       :placeholder="props.placeholder"
       :class="inputClass"
       v-model="inputValue"
       @blur="emit('changed', inputValue)"
     />
+    <textarea
+      v-else
+      :id="props.id"
+      :placeholder="props.placeholder"
+      :class="inputClass"
+      v-model="inputValue"
+      @blur="emit('changed', inputValue)"
+    ></textarea>
     <template v-if="withErrorHandling">
       <Transition name="fade" mode="out-in">
         <small v-if="props.inputError">{{ props.inputError }}</small>
@@ -103,6 +113,9 @@ const widthStyle = computed(() => `width: ${props.width}`);
     }
   }
 
+  textarea {
+    resize: vertical;
+  }
   .value-input {
     width: 100%;
     margin: 0;
@@ -125,6 +138,7 @@ const widthStyle = computed(() => `width: ${props.width}`);
     &::placeholder {
       font-size: 1rem;
       font-weight: normal;
+      font-family: Monserrat, sans-serif;
     }
 
     &.dark {
