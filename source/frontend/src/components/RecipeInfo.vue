@@ -80,13 +80,13 @@ const submit = async (): Promise<void> => {
     recipeTitle.value
   );
 
-  console.warn(recipeTitleError.value);
-
   //TODO: Validate inputs
   // - No authorID
   // - No Title
   // - No Category
   // - No Time
+
+  console.warn(isValid.value);
 
   if (authorToSave) {
     const body = {
@@ -111,7 +111,12 @@ const getAuthors = async (): Promise<void> => {
   );
 };
 
-const isValid = computed(() => !recipeTitleError.value);
+const isValid = computed(
+  () =>
+    !recipeTitleError.value &&
+    !ingredients.value.some((i) => i.error) &&
+    !prepSteps.value.some((s) => s.error)
+);
 
 onMounted(async () => {
   if (props.mode === OperationMode.Create) {
@@ -129,6 +134,7 @@ onMounted(async () => {
       title: '',
       amount: 0,
       unit: AmountUnit.G,
+      error: validationService.validateRecipeTitle(''),
     });
   }
 
@@ -136,6 +142,7 @@ onMounted(async () => {
     prepSteps.value.push({
       rank: 1,
       title: '',
+      error: validationService.validatePrepStepTitle(''),
     });
   }
 });

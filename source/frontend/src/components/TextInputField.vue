@@ -100,7 +100,7 @@ const widthStyle = computed(() => `width: ${props.width}`);
   small {
     display: block;
     min-height: 1rem;
-    color: $accent-color;
+    color: $error-color;
 
     &.fade-enter-active,
     &.fade-leave-active {
@@ -133,7 +133,7 @@ const widthStyle = computed(() => `width: ${props.width}`);
     font-family: Monserrat, sans-serif;
 
     &.hasError {
-      border: 1px solid $accent-color;
+      border: 1px solid $error-color;
     }
 
     &::placeholder {

@@ -19,5 +19,6 @@ declare namespace Recipes {
   interface PrepStep {
     rank: number;
     title: string;
+    error?: string;
   }
 }

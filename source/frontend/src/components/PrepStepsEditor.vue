@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import TextInputField from '@/components/TextInputField.vue';
+import ValidationService from '@/services/validation.service';
 import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
   initialSteps: Recipes.PrepStep[];
 }>();
 
+const validationService = new ValidationService();
+
 const steps = ref<Recipes.PrepStep[]>([]);
+
+const formError = computed(() =>
+  steps.value.some((step) => step.error)
+    ? 'Please provide a description for each step in the list'
+    : ''
+);
 
 const updateTitle = (title: string, idx: number): void => {
   steps.value[idx].title = title;
+  steps.value[idx].error = validationService.validatePrepStepTitle(title);
 };
 
 const insertStepAt = (idx: number): void => {
@@ -102,7 +112,10 @@ onMounted(() => {
 
 <template>
   <div class="steps-editor">
-    <h2>Steps</h2>
+    <div class="header">
+      <h2>Steps</h2>
+      <p v-if="formError"><ion-icon name="alert-circle" />{{ formError }}</p>
+    </div>
     <div
       v-for="(s, idx) in steps"
       class="step-container"
@@ -185,9 +198,23 @@ onMounted(() => {
   border-radius: $border-radius;
   background-color: $bg-color-dark;
 
-  h2 {
-    margin: 0 0 0.5rem 0;
-    padding: 0;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0 0 0.5rem 0;
+      padding: 0;
+    }
+
+    p {
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      color: $error-color;
+    }
   }
 
   .drop-zone {
