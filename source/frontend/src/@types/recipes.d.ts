@@ -13,13 +13,13 @@ declare namespace Recipes {
 
   interface Ingredient {
     rank: number;
-    title: string;
+    name: string;
     amount: number;
     unit: AmountUnit;
   }
 
   interface PrepStep {
     rank: number;
-    title: string;
+    name: string;
   }
 }

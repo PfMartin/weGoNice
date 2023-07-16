@@ -16,8 +16,8 @@ const emit = defineEmits<{
 /* Manage Values */
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
-const updateTitle = (title: string, idx: number): void => {
-  ingredients.value[idx].title = title;
+const updateTitle = (name: string, idx: number): void => {
+  ingredients.value[idx].name = name;
 
   emit('publish-ingredients');
 };
@@ -45,11 +45,11 @@ const insertIngredientAt = (idx: number): void => {
   if (idx < 0) {
     ingredients.value.push(defaultIngredient.value);
   } else {
-    const { title, amount, unit } = defaultIngredient.value;
+    const { name, amount, unit } = defaultIngredient.value;
 
     const newIngredient = {
       rank: idx + 1,
-      title,
+      name,
       amount,
       unit,
     };
@@ -75,7 +75,7 @@ const updateRanks = (): void => {
 
 const defaultIngredient = computed(() => ({
   rank: ingredients.value.length + 1,
-  title: '',
+  name: '',
   amount: 0,
   unit: AmountUnit.G,
 }));
@@ -144,7 +144,7 @@ onMounted(() => {
     <div class="header">
       <h2>Ingredients</h2>
       <p v-if="hasError">
-        <ion-icon name="alert-circle" />Please provide a title for each
+        <ion-icon name="alert-circle" />Please provide a name for each
         ingredient in the list
       </p>
     </div>
@@ -201,11 +201,11 @@ onMounted(() => {
         <TextInputField
           id="ingredient"
           type="text"
-          :initialValue="i.title"
-          placeholder="Insert the ingredient's title"
-          @changed="(title) => updateTitle(title, idx)"
+          :initialValue="i.name"
+          placeholder="Insert the ingredient's name"
+          @changed="(name) => updateTitle(name, idx)"
           width="300px"
-          :isDark="i.title !== ''"
+          :isDark="i.name !== ''"
         />
         <div class="delete" @click="removeIngredientAt(idx)">
           <ion-icon name="trash"></ion-icon>

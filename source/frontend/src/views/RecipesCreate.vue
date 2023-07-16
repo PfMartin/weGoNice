@@ -34,16 +34,35 @@ const submit = async (): Promise<void> => {
     return;
   }
 
-  const res = await createRecipe(recipe.value);
+  const { status, data } = await createRecipe(recipe.value);
 
-  router.push({ name: 'RecipesOverview' });
+  switch (status) {
+    case 201:
+      notificationService.addNotification(
+        'success',
+        `Recipe '${recipe.value.name}' has successfully been added`
+      );
+      router.push({ name: 'RecipesOverview' });
+      break;
+    case 406:
+      notificationService.addNotification(
+        'error',
+        `There already is a recipe with the name '${recipe.value.name}'`
+      );
+      break;
+    default:
+      notificationService.addNotification(
+        'error',
+        `The recipe could not be saved: ${data.msg}`
+      );
+  }
 };
 
 const hasIngredientsError = computed(() =>
-  recipe.value.ingredients.some((i) => !i.title)
+  recipe.value.ingredients.some((i) => !i.name)
 );
 
-const hasStepsError = computed(() => recipe.value.steps.some((s) => !s.title));
+const hasStepsError = computed(() => recipe.value.steps.some((s) => !s.name));
 
 const hasTitle = computed(() => recipe.value.name);
 

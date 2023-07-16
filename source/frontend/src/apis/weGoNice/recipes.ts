@@ -4,6 +4,7 @@ import {
   handleError,
   addAuthorization,
 } from '@/apis/weGoNice/utils';
+import axios from 'axios';
 
 export const createRecipe = async (
   body: Recipes.Recipe
@@ -11,14 +12,11 @@ export const createRecipe = async (
   headers.Authorization = addAuthorization();
 
   try {
-    console.warn(body);
+    const res = await axios.post(`${url}/recipes`, body, {
+      headers,
+    });
 
-    return {
-      status: 200,
-      data: {
-        test: 'test',
-      },
-    };
+    return res;
   } catch (error) {
     return handleError(error);
   }

@@ -34,7 +34,7 @@ func (r Recipe) WithTimeStamps(createdAt time.Time, modifiedAt time.Time) Recipe
 type Ingredient struct {
 	Rank   int    `bson:"rank" json:"rank"`
 	Name   string `bson:"name" json:"name"`
-	Amount string `bson:"amount" json:"amount"`
+	Amount int    `bson:"amount" json:"amount"`
 	Unit   string `bson:"unit" json:"unit"`
 }
 

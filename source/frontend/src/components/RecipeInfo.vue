@@ -117,7 +117,7 @@ onMounted(async () => {
   if (!ingredients.value.length) {
     ingredients.value.push({
       rank: 1,
-      title: '',
+      name: '',
       amount: 0,
       unit: AmountUnit.G,
     });
@@ -126,7 +126,7 @@ onMounted(async () => {
   if (!prepSteps.value.length) {
     prepSteps.value.push({
       rank: 1,
-      title: '',
+      name: '',
     });
   }
 });

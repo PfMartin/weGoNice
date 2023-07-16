@@ -14,8 +14,8 @@ const emit = defineEmits<{
 
 const steps = ref<Recipes.PrepStep[]>([]);
 
-const updateTitle = (title: string, idx: number): void => {
-  steps.value[idx].title = title;
+const updateTitle = (name: string, idx: number): void => {
+  steps.value[idx].name = name;
 
   emit('publish-steps');
 };
@@ -24,11 +24,11 @@ const insertStepAt = (idx: number): void => {
   if (idx < 0) {
     steps.value.push(defaultStep.value);
   } else {
-    const { title } = defaultStep.value;
+    const { name } = defaultStep.value;
 
     const newStep = {
       rank: idx + 1,
-      title,
+      name,
     };
 
     steps.value.splice(idx, 0, newStep);
@@ -41,7 +41,7 @@ const insertStepAt = (idx: number): void => {
 
 const defaultStep = computed(() => ({
   rank: steps.value.length + 1,
-  title: '',
+  name: '',
 }));
 
 const removeStepAt = (idx: number): void => {
@@ -161,9 +161,9 @@ onMounted(() => {
           id="step"
           type="textarea"
           :isArea="true"
-          :initialValue="s.title"
+          :initialValue="s.name"
           placeholder="Insert a description for the preparation step"
-          @changed="(title) => updateTitle(title, idx)"
+          @changed="(name) => updateTitle(name, idx)"
           width="90%"
         />
 
