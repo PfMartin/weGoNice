@@ -12,7 +12,6 @@ import {
 import { onMounted, ref } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
-import { useRouter } from 'vue-router';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
 

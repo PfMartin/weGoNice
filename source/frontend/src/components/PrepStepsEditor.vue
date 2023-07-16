@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import TextInputField from '@/components/TextInputField.vue';
-import ValidationService from '@/services/validation.service';
 import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
@@ -101,7 +100,7 @@ const onDragEnter = (event: any) => {
   hoveredDropZone.value = Number(dropZoneId);
 };
 
-const onDragLeave = (event: any) => {
+const onDragLeave = () => {
   hoveredDropZone.value = null;
 };
 

@@ -126,7 +126,7 @@ const onDragEnter = (event: any) => {
   hoveredDropZone.value = Number(dropZoneId);
 };
 
-const onDragLeave = (_: any) => {
+const onDragLeave = () => {
   hoveredDropZone.value = null;
 };
 
