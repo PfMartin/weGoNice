@@ -23,7 +23,6 @@ const updateTitle = (name: string, idx: number): void => {
 };
 
 const updateAmount = (amount: string, idx: number): void => {
-  // TODO: Validation for number
   ingredients.value[idx].amount = Number(amount);
 
   emit('publish-ingredients');
