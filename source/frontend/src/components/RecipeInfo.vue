@@ -17,17 +17,22 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
 import { useRouter } from 'vue-router';
 import { createRecipe } from '@/apis/weGoNice/recipes';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
+import ValidationService from '@/services/validation.service';
 
 const router = useRouter();
+const validationService = new ValidationService();
 
 const props = defineProps<{
   mode: OperationMode;
 }>();
 
-const recipeName = ref('');
-const recipeNameError = ref('');
-const updateRecipeName = (newRecipeName: string) => {
-  recipeName.value = newRecipeName;
+const recipeTitle = ref('');
+const recipeTitleError = ref('');
+const updaterecipeTitle = (newrecipeTitle: string) => {
+  recipeTitle.value = newrecipeTitle;
+  recipeTitleError.value = validationService.validateRecipeTitle(
+    recipeTitle.value
+  );
 };
 
 const prepTimeHours = ref(0);
@@ -71,6 +76,12 @@ const submit = async (): Promise<void> => {
       `${a.firstName} ${a.lastName}` === selectedAuthor.value
   );
 
+  recipeTitleError.value = validationService.validateRecipeTitle(
+    recipeTitle.value
+  );
+
+  console.warn(recipeTitleError.value);
+
   //TODO: Validate inputs
   // - No authorID
   // - No Title
@@ -79,7 +90,7 @@ const submit = async (): Promise<void> => {
 
   if (authorToSave) {
     const body = {
-      name: recipeName.value,
+      name: recipeTitle.value,
       authorId: authorToSave.id,
       timeHours: prepTimeHours.value,
       timeMinutes: prepTimeMinutes.value,
@@ -100,9 +111,11 @@ const getAuthors = async (): Promise<void> => {
   );
 };
 
+const isValid = computed(() => !recipeTitleError.value);
+
 onMounted(async () => {
   if (props.mode === OperationMode.Create) {
-    document.getElementById('recipeName')?.focus();
+    document.getElementById('recipeTitle')?.focus();
   } else {
     // TODO: Get Recipe
     // TODO: Load recipe values to refs
@@ -137,12 +150,13 @@ onMounted(async () => {
           <TextInputField
             headline="Recipe name"
             iconName="book"
-            id="recipeName"
-            :initialValue="recipeName"
+            id="recipeTitle"
+            :initialValue="recipeTitle"
             placeholder="Insert the recipe's name"
-            :inputError="recipeNameError"
-            @changed="updateRecipeName"
-            :isDark="recipeName !== ''"
+            :inputError="recipeTitleError"
+            @changed="updaterecipeTitle"
+            :isDark="recipeTitle !== ''"
+            :withErrorHandling="true"
           />
           <div class="prep-time">
             <p class="label"><ion-icon name="time" />&nbsp;Preparation Time</p>

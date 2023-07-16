@@ -42,4 +42,16 @@ export default class ValidationService {
 
   public validateImageUrl = (url: string): string =>
     url && !url.includes('https://') ? 'Please provide a valid URL' : '';
+
+  public validateRecipeTitle = (title: string): string =>
+    title ? '' : 'Please provide a title for the recipe';
+
+  public validateRecipeAuthor = (author: Authors.Author) =>
+    author ? '' : 'Please select an author';
+
+  public validateIngredientTitle = (title: string) =>
+    title ? '' : 'Please provide a title for the ingredient';
+
+  public validatePrepStepTitle = (title: string) =>
+    title ? '' : 'Please provide a description for the preparation step';
 }
