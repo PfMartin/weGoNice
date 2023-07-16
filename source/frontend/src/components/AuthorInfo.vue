@@ -308,26 +308,35 @@ onMounted(() => {
           headline="Name"
           iconName="person"
           id="name"
+          type="text"
           :initialValue="name"
           placeholder="Insert the author's name"
           :inputError="nameError"
           @changed="updateName"
+          isDark
+          withErrorHandling
         />
         <TextInputField
           headline="First name"
           iconName="person"
           id="firstName"
+          type="text"
           :initialValue="firstName"
           placeholder="Insert the author's first name"
           @changed="updateFirstname"
+          isDark
+          withErrorHandling
         />
         <TextInputField
           headline="Last name"
           iconName="person"
           id="lastName"
+          type="text"
           :initialValue="lastName"
           placeholder="Insert the author's last name"
           @changed="updateLastname"
+          isDark
+          withErrorHandling
         />
       </div>
       <div class="info-section">
@@ -335,28 +344,37 @@ onMounted(() => {
           headline="Website"
           iconName="earth"
           id="website"
+          type="text"
           :initialValue="website"
           :inputError="websiteError"
           placeholder="Insert author's website URL"
           @changed="updateWebsite"
+          isDark
+          withErrorHandling
         />
         <TextInputField
           headline="Instagram"
           iconName="logo-instagram"
           id="instagram"
+          type="text"
           :initialValue="instagram"
           placeholder="Insert the author's Instagram URL"
           :inputError="instagramError"
           @changed="updateInstagram"
+          isDark
+          withErrorHandling
         />
         <TextInputField
           headline="YouTube"
           iconName="logo-youtube"
           id="youtube"
+          type="text"
           :initialValue="youTube"
           placeholder="Insert the author's YouTube URL"
           :inputError="youTubeError"
           @changed="updateYouTube"
+          isDark
+          withErrorHandling
         />
       </div>
     </div>

@@ -3,6 +3,7 @@ import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import { isAuthenticated } from '@/auth';
 import authorsRoutes from '@/router/authors-routes';
+import recipesRoutes from '@/router/recipes-routes';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,8 +30,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/recipes',
     name: 'Recipes',
     meta: { requiresAuth: true },
+    redirect: { name: 'RecipesOverview' },
     component: () =>
       import(/* webpackChunkName: "recipes" */ '@/views/RecipesView.vue'),
+    children: recipesRoutes,
   },
   {
     path: '/authors',

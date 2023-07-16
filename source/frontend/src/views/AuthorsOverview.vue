@@ -63,6 +63,10 @@ const isReady = computed((): boolean => !!authors.value.length);
               :options="AUTHOR_SORTING_OPTIONS"
               :selectedOption="selectedOption"
               @select-option="setSelectedOption"
+              id="authorSortBy"
+              label="Sort By"
+              iconName="list"
+              width="300px"
             />
           </div>
           <span @click="toggleSortDirection" class="sort-direction"
@@ -80,7 +84,7 @@ const isReady = computed((): boolean => !!authors.value.length);
       <template v-for="author in visibleAuthors" :key="author.name">
         <RouterLink
           :to="{
-            name: 'AuthorDetail',
+            name: 'AuthorsDetail',
             params: {
               id: author.id,
             },
