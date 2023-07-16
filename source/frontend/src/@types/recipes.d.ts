@@ -13,6 +13,7 @@ declare namespace Recipes {
     title: string;
     amount: number;
     unit: AmountUnit;
+    error?: string;
   }
 
   interface PrepStep {

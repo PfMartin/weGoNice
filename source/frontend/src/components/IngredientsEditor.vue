@@ -3,17 +3,27 @@ import { AmountUnit } from '@/utils/constants';
 import { onMounted, ref, computed } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import TextInputField from '@/components/TextInputField.vue';
+import ValidationService from '@/services/validation.service';
 
 const props = defineProps<{
   initialIngredients: Recipes.Ingredient[];
 }>();
 
-/* Manage Values */
+const validationService = new ValidationService();
 
+/* Manage Values */
 const ingredients = ref<Recipes.Ingredient[]>([]);
+
+const formError = computed(() =>
+  ingredients.value.some((ingredient) => ingredient.error)
+    ? 'Please provide a title for each ingredient in the list'
+    : ''
+);
 
 const updateTitle = (title: string, idx: number): void => {
   ingredients.value[idx].title = title;
+  ingredients.value[idx].error =
+    validationService.validateIngredientTitle(title);
 };
 
 const updateAmount = (amount: string, idx: number): void => {
@@ -110,7 +120,7 @@ const onDragEnter = (event: any) => {
   hoveredDropZone.value = Number(dropZoneId);
 };
 
-const onDragLeave = (event: any) => {
+const onDragLeave = (_: any) => {
   hoveredDropZone.value = null;
 };
 
@@ -125,7 +135,10 @@ onMounted(() => {
 
 <template>
   <div class="ingredients-editor">
-    <h2>Ingredients</h2>
+    <div class="header">
+      <h2>Ingredients</h2>
+      <p v-if="formError"><ion-icon name="alert-circle" />{{ formError }}</p>
+    </div>
     <div
       v-for="(i, idx) in ingredients"
       class="ingredient-container"
@@ -225,9 +238,23 @@ onMounted(() => {
   flex-direction: column;
   gap: 0.5rem;
 
-  h2 {
-    margin: 0 0 0.5rem 0;
-    padding: 0;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0 0 0.5rem 0;
+      padding: 0;
+    }
+
+    p {
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      color: $error-color;
+    }
   }
 
   .drop-zone {
