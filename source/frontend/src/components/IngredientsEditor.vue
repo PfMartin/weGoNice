@@ -172,6 +172,7 @@ onMounted(() => {
         </div>
         <TextInputField
           id="amount"
+          type="number"
           :initialValue="`${i.amount}`"
           placeholder="Insert the ingredient's amount"
           @changed="(amount) => updateAmount(amount, idx)"
@@ -190,6 +191,7 @@ onMounted(() => {
 
         <TextInputField
           id="ingredient"
+          type="text"
           :initialValue="i.title"
           placeholder="Insert the ingredient's title"
           @changed="(title) => updateTitle(title, idx)"

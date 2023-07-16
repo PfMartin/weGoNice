@@ -119,14 +119,15 @@ const isValid = computed(
 );
 
 onMounted(async () => {
+  await getAuthors();
+
   if (props.mode === OperationMode.Create) {
     document.getElementById('recipeTitle')?.focus();
+    selectedAuthor.value = authorOptions.value[0];
   } else {
     // TODO: Get Recipe
     // TODO: Load recipe values to refs
   }
-
-  await getAuthors();
 
   if (!ingredients.value.length) {
     ingredients.value.push({
@@ -156,6 +157,7 @@ onMounted(async () => {
           <h2>Recipe Details</h2>
           <TextInputField
             headline="Recipe name"
+            type="text"
             iconName="book"
             id="recipeTitle"
             :initialValue="recipeTitle"
@@ -198,7 +200,7 @@ onMounted(async () => {
             <div class="inputs">
               <DropdownInput
                 :options="authorOptions"
-                :selectedOption="selectedAuthor || 'Select an author...'"
+                :selectedOption="selectedAuthor"
                 @select-option="selectAuthor"
                 id="author"
                 width="400px"

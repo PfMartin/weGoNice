@@ -152,6 +152,7 @@ onMounted(() => {
 
         <TextInputField
           id="step"
+          type="textarea"
           :isArea="true"
           :initialValue="s.title"
           placeholder="Insert a description for the preparation step"

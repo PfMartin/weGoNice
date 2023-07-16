@@ -11,7 +11,7 @@ const props = defineProps<{
   width?: string;
   isDark?: boolean;
   withErrorHandling?: boolean;
-  isArea?: boolean;
+  type: 'text' | 'number' | 'textarea';
 }>();
 
 const emit = defineEmits<{
@@ -35,6 +35,10 @@ const inputClass = computed(() => ({
   dark: props.isDark,
 }));
 
+const emitInput = () => {
+  emit('changed', inputValue.value);
+};
+
 const labelClass = computed(() => ({
   label: true,
 }));
@@ -51,20 +55,21 @@ const widthStyle = computed(() => `width: ${props.width}`);
       </div>
     </label>
     <input
-      v-if="!props.isArea"
+      v-if="type === 'text' || type === 'number'"
+      :type="type"
       :id="props.id"
       :placeholder="props.placeholder"
       :class="inputClass"
       v-model="inputValue"
-      @blur="emit('changed', inputValue)"
+      @blur="emitInput"
     />
     <textarea
-      v-else
+      v-else-if="type === 'textarea'"
       :id="props.id"
       :placeholder="props.placeholder"
       :class="inputClass"
       v-model="inputValue"
-      @blur="emit('changed', inputValue)"
+      @blur="emitInput"
     ></textarea>
     <template v-if="withErrorHandling">
       <Transition name="fade" mode="out-in">
@@ -116,6 +121,7 @@ const widthStyle = computed(() => `width: ${props.width}`);
   textarea {
     resize: vertical;
   }
+
   .value-input {
     width: 100%;
     margin: 0;
@@ -167,5 +173,11 @@ const widthStyle = computed(() => `width: ${props.width}`);
       background: $bg-color-dark;
     }
   }
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>
