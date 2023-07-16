@@ -51,3 +51,4 @@ jobs:
           cd ./source/server/pkg
           go test ./users
           go test ./authors
+          go test ./recipes

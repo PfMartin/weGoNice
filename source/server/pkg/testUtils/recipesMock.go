@@ -18,7 +18,7 @@ var TestRecipeAll = models.Recipe{
 	TimeMinutes: 45,
 	TimeHours:   1,
 	Category:    "main",
-	Ingredients: []models.Ingredient{{Rank: 1, Name: "Ingredient1", Amount: "5", Unit: "g"}, {Rank: 2, Name: "Ingredient2", Amount: "10", Unit: "ml"}, {Rank: 3, Name: "Ingredient3", Amount: "15", Unit: "l"}},
+	Ingredients: []models.Ingredient{{Rank: 1, Name: "Ingredient1", Amount: 5, Unit: "g"}, {Rank: 2, Name: "Ingredient2", Amount: 10, Unit: "ml"}, {Rank: 3, Name: "Ingredient3", Amount: 15, Unit: "l"}},
 	Steps:       []models.Step{{Name: "Step1", Rank: 1}, {Name: "Step2", Rank: 2}, {Name: "Step3", Rank: 3}, {Name: "Step4", Rank: 4}},
 	CreatedAt:   testDate,
 	ModifiedAt:  testDate,
