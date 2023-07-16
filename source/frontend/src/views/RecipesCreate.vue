@@ -5,6 +5,8 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { ButtonType } from '@/utils/constants';
 import ButtonComponent from '@/components/ButtonComponent.vue';
+import { createRecipe } from '@/apis/weGoNice/recipes';
+import notificationService from '@/services/notification.service';
 
 const router = useRouter();
 
@@ -22,7 +24,18 @@ const setData = (r: Recipes.Recipe): void => {
   recipe.value = r;
 };
 
-const submit = (): void => {
+const submit = async (): Promise<void> => {
+  if (!hasTitle.value || hasStepsError.value || hasIngredientsError.value) {
+    notificationService.addNotification(
+      'error',
+      'Please provide all the information required for creating a recipe'
+    );
+
+    return;
+  }
+
+  const res = await createRecipe(recipe.value);
+
   router.push({ name: 'RecipesOverview' });
 };
 
@@ -31,6 +44,8 @@ const hasIngredientsError = computed(() =>
 );
 
 const hasStepsError = computed(() => recipe.value.steps.some((s) => !s.title));
+
+const hasTitle = computed(() => recipe.value.name);
 
 const cancel = (): void => {
   router.push({ name: 'RecipesOverview' });
