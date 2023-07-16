@@ -6,6 +6,9 @@ declare namespace Recipes {
     authorId: string;
     timeHours: number;
     timeMinutes: number;
+    category: string;
+    ingredients: Ingredient[];
+    steps: PrepStep[];
   }
 
   interface Ingredient {
@@ -13,12 +16,10 @@ declare namespace Recipes {
     title: string;
     amount: number;
     unit: AmountUnit;
-    error?: string;
   }
 
   interface PrepStep {
     rank: number;
     title: string;
-    error?: string;
   }
 }

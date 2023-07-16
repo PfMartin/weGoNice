@@ -5,21 +5,19 @@ import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
   initialSteps: Recipes.PrepStep[];
+  hasError: boolean;
 }>();
 
-const validationService = new ValidationService();
+const emit = defineEmits<{
+  (e: 'publish-steps'): void;
+}>();
 
 const steps = ref<Recipes.PrepStep[]>([]);
 
-const formError = computed(() =>
-  steps.value.some((step) => step.error)
-    ? 'Please provide a description for each step in the list'
-    : ''
-);
-
 const updateTitle = (title: string, idx: number): void => {
   steps.value[idx].title = title;
-  steps.value[idx].error = validationService.validatePrepStepTitle(title);
+
+  emit('publish-steps');
 };
 
 const insertStepAt = (idx: number): void => {
@@ -37,6 +35,8 @@ const insertStepAt = (idx: number): void => {
   }
 
   updateRanks();
+
+  emit('publish-steps');
 };
 
 const defaultStep = computed(() => ({
@@ -47,6 +47,8 @@ const defaultStep = computed(() => ({
 const removeStepAt = (idx: number): void => {
   steps.value.splice(idx, 1);
   updateRanks();
+
+  emit('publish-steps');
 };
 
 const updateRanks = (): void => {
@@ -86,6 +88,8 @@ const onDrop = (event: DragEvent, idx: number) => {
   }
   isDragActive.value = false;
   updateRanks();
+
+  emit('publish-steps');
 };
 
 const hoveredDropZone = ref<number | null>(null);
@@ -114,7 +118,10 @@ onMounted(() => {
   <div class="steps-editor">
     <div class="header">
       <h2>Steps</h2>
-      <p v-if="formError"><ion-icon name="alert-circle" />{{ formError }}</p>
+      <p v-if="hasError">
+        <ion-icon name="alert-circle" />Please provide a description for each
+        step in the list
+      </p>
     </div>
     <div
       v-for="(s, idx) in steps"

@@ -8,22 +8,24 @@ import {
   PREP_TIME_MINUTES_OPTIONS,
   CATEGORY_OPTIONS,
   AmountUnit,
-  ButtonType,
 } from '@/utils/constants';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
-import ButtonComponent from '@/components/ButtonComponent.vue';
 import { useRouter } from 'vue-router';
-import { createRecipe } from '@/apis/weGoNice/recipes';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
 
-const router = useRouter();
 const validationService = new ValidationService();
 
 const props = defineProps<{
   mode: OperationMode;
+  hasIngredientsError: boolean;
+  hasStepsError: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'on-change', body: Recipes.Recipe): void;
 }>();
 
 const recipeTitle = ref('');
@@ -33,6 +35,8 @@ const updaterecipeTitle = (newrecipeTitle: string) => {
   recipeTitleError.value = validationService.validateRecipeTitle(
     recipeTitle.value
   );
+
+  publishBody();
 };
 
 const prepTimeHours = ref(0);
@@ -46,6 +50,8 @@ const selectPrepTime = (prepTimeType: PrepTimeType, value: string) => {
       prepTimeMinutes.value = Number(value);
       break;
   }
+
+  publishBody();
 };
 
 const authors = ref<Authors.Author[]>([]);
@@ -53,54 +59,40 @@ const authorOptions = ref<string[]>([]);
 const selectedAuthor = ref('');
 const selectAuthor = (val: string) => {
   selectedAuthor.value = val;
+
+  publishBody();
 };
 
 const categories = CATEGORY_OPTIONS;
 const category = ref(categories[0]);
 const selectCategory = (val: string): void => {
   category.value = val;
+
+  publishBody();
 };
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
 const prepSteps = ref<Recipes.PrepStep[]>([]);
 
-const cancel = (): void => {
-  router.push({ name: 'RecipesOverview' });
-};
-
-const submit = async (): Promise<void> => {
+const publishBody = (): void => {
   const authorToSave = authors.value.find(
     (a) =>
       a.name === selectedAuthor.value ||
       `${a.firstName} ${a.lastName}` === selectedAuthor.value
   );
 
-  recipeTitleError.value = validationService.validateRecipeTitle(
-    recipeTitle.value
-  );
+  const body = {
+    name: recipeTitle.value,
+    authorId: authorToSave?.id || '',
+    timeHours: prepTimeHours.value,
+    timeMinutes: prepTimeMinutes.value,
+    category: category.value,
+    ingredients: ingredients.value,
+    steps: prepSteps.value,
+  };
 
-  //TODO: Validate inputs
-  // - No authorID
-  // - No Title
-  // - No Category
-  // - No Time
-
-  console.warn(isValid.value);
-
-  if (authorToSave) {
-    const body = {
-      name: recipeTitle.value,
-      authorId: authorToSave.id,
-      timeHours: prepTimeHours.value,
-      timeMinutes: prepTimeMinutes.value,
-      category: category.value,
-      ingredients: ingredients.value,
-      steps: prepSteps.value,
-    };
-
-    const res = await createRecipe(body);
-  }
+  emit('on-change', body);
 };
 
 const getAuthors = async (): Promise<void> => {
@@ -110,13 +102,6 @@ const getAuthors = async (): Promise<void> => {
     (a) => a.name || `${a.firstName} ${a.lastName}`
   );
 };
-
-const isValid = computed(
-  () =>
-    !recipeTitleError.value &&
-    !ingredients.value.some((i) => i.error) &&
-    !prepSteps.value.some((s) => s.error)
-);
 
 onMounted(async () => {
   await getAuthors();
@@ -135,7 +120,6 @@ onMounted(async () => {
       title: '',
       amount: 0,
       unit: AmountUnit.G,
-      error: validationService.validateRecipeTitle(''),
     });
   }
 
@@ -143,7 +127,6 @@ onMounted(async () => {
     prepSteps.value.push({
       rank: 1,
       title: '',
-      error: validationService.validatePrepStepTitle(''),
     });
   }
 });
@@ -224,38 +207,17 @@ onMounted(async () => {
         </div>
       </div>
 
-      <IngredientsEditor :initialIngredients="ingredients" />
+      <IngredientsEditor
+        :initialIngredients="ingredients"
+        @publish-ingredients="publishBody"
+        :hasError="hasIngredientsError"
+      />
 
-      <PrepStepsEditor :initialSteps="prepSteps" />
-
-      <div class="buttons">
-        <RouterLink
-          :to="{
-            name: 'RecipesOverview',
-          }"
-        >
-          <ButtonComponent
-            :buttonType="ButtonType.Default"
-            buttonText=""
-            buttonIconName="arrow-back-outline"
-          />
-        </RouterLink>
-
-        <div class="control-buttons">
-          <ButtonComponent
-            :buttonType="ButtonType.Delete"
-            buttonText="Cancel"
-            buttonIconName="close-circle"
-            @on-click="cancel"
-          />
-          <ButtonComponent
-            :buttonType="ButtonType.Primary"
-            buttonText="Save"
-            buttonIconName="checkmark-done"
-            @on-click="submit"
-          />
-        </div>
-      </div>
+      <PrepStepsEditor
+        :initialSteps="prepSteps"
+        @publish-steps="publishBody"
+        :hasError="hasStepsError"
+      />
     </div>
   </div>
 </template>
@@ -305,18 +267,6 @@ onMounted(async () => {
 
       .inputs {
         display: flex;
-      }
-    }
-
-    .buttons {
-      margin: 1rem 0;
-      display: flex;
-      justify-content: space-between;
-
-      .control-buttons {
-        display: flex;
-        justify-content: 'flex-end';
-        gap: 1rem;
       }
     }
   }

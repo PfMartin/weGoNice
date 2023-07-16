@@ -3,36 +3,36 @@ import { AmountUnit } from '@/utils/constants';
 import { onMounted, ref, computed } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import TextInputField from '@/components/TextInputField.vue';
-import ValidationService from '@/services/validation.service';
 
 const props = defineProps<{
   initialIngredients: Recipes.Ingredient[];
+  hasError: boolean;
 }>();
 
-const validationService = new ValidationService();
+const emit = defineEmits<{
+  (e: 'publish-ingredients'): void;
+}>();
 
 /* Manage Values */
 const ingredients = ref<Recipes.Ingredient[]>([]);
 
-const formError = computed(() =>
-  ingredients.value.some((ingredient) => ingredient.error)
-    ? 'Please provide a title for each ingredient in the list'
-    : ''
-);
-
 const updateTitle = (title: string, idx: number): void => {
   ingredients.value[idx].title = title;
-  ingredients.value[idx].error =
-    validationService.validateIngredientTitle(title);
+
+  emit('publish-ingredients');
 };
 
 const updateAmount = (amount: string, idx: number): void => {
   // TODO: Validation for number
   ingredients.value[idx].amount = Number(amount);
+
+  emit('publish-ingredients');
 };
 
 const selectUnit = (unit: string, idx: number): void => {
   ingredients.value[idx].unit = unit;
+
+  emit('publish-ingredients');
 };
 
 /* Adding and Removing*/
@@ -58,11 +58,15 @@ const insertIngredientAt = (idx: number): void => {
   }
 
   updateRanks();
+
+  emit('publish-ingredients');
 };
 
 const removeIngredientAt = (idx: number): void => {
   ingredients.value.splice(idx, 1);
   updateRanks();
+
+  emit('publish-ingredients');
 };
 
 const updateRanks = (): void => {
@@ -109,6 +113,8 @@ const onDrop = (event: DragEvent, idx: number) => {
   }
   isDragActive.value = false;
   updateRanks();
+
+  emit('publish-ingredients');
 };
 
 const hoveredDropZone = ref<number | null>(null);
@@ -137,7 +143,10 @@ onMounted(() => {
   <div class="ingredients-editor">
     <div class="header">
       <h2>Ingredients</h2>
-      <p v-if="formError"><ion-icon name="alert-circle" />{{ formError }}</p>
+      <p v-if="hasError">
+        <ion-icon name="alert-circle" />Please provide a title for each
+        ingredient in the list
+      </p>
     </div>
     <div
       v-for="(i, idx) in ingredients"
