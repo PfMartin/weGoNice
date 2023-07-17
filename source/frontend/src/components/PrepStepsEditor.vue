@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import TextInputField from '@/components/TextInputField.vue';
 import { computed, onMounted, ref } from 'vue';
+import RankingList from '@/components/RankingList.vue';
 
 const props = defineProps<{
   initialSteps: Recipes.PrepStep[];
@@ -104,9 +105,12 @@ const onDragLeave = () => {
   hoveredDropZone.value = null;
 };
 
-const getHoveredClass = (idx: number): string => {
-  return hoveredDropZone.value === idx ? 'drop-zone-active' : '';
-};
+const getHoveredClass = (idx: number): string =>
+  hoveredDropZone.value === idx ? 'drop-zone-active' : '';
+
+const formError = computed(() =>
+  props.hasError ? 'Please provide a description for each step in the list' : ''
+);
 
 onMounted(() => {
   steps.value = props.initialSteps;
@@ -115,89 +119,73 @@ onMounted(() => {
 
 <template>
   <div class="steps-editor">
-    <div class="header">
-      <h2>Steps</h2>
-      <p v-if="hasError">
-        <ion-icon name="alert-circle" />Please provide a description for each
-        step in the list
-      </p>
-    </div>
-    <div
-      v-for="(s, idx) in steps"
-      class="step-container"
-      :draggable="true"
-      @dragstart="startDrag($event, idx)"
-      @dragend="hideDropZones"
-      :key="idx"
+    <RankingList
+      title="Steps"
+      :formError="formError"
+      :isDragActive="isDragActive"
+      @on-drop="(e) => onDrop(e, -1)"
+      @insert="insertStepAt(-1)"
     >
-      <Transition name="fade" mode="out-in">
+      <template v-slot:elements>
         <div
-          v-if="isDragActive"
-          class="drop-zone"
-          :class="getHoveredClass(idx)"
-          @drop="onDrop($event, idx)"
-          @dragover.prevent
-          @dragenter="onDragEnter"
-          @drageleave="onDragLeave"
-          :id="`drop-zone${idx}`"
-        ></div>
+          v-for="(s, idx) in steps"
+          class="step-container"
+          :draggable="true"
+          @dragstart="startDrag($event, idx)"
+          @dragend="hideDropZones"
+          :key="idx"
+        >
+          <Transition name="fade" mode="out-in">
+            <div
+              v-if="isDragActive"
+              class="drop-zone"
+              :class="getHoveredClass(idx)"
+              @drop="onDrop($event, idx)"
+              @dragover.prevent
+              @dragenter="onDragEnter"
+              @drageleave="onDragLeave"
+              :id="`drop-zone${idx}`"
+            ></div>
 
-        <div v-else class="add-divider" @click="insertStepAt(idx)">
-          <div class="divider"></div>
-          <ion-icon name="add"></ion-icon>
-          <div class="divider"></div>
+            <div v-else class="add-divider" @click="insertStepAt(idx)">
+              <div class="divider"></div>
+              <ion-icon name="add"></ion-icon>
+              <div class="divider"></div>
+            </div>
+          </Transition>
+
+          <div class="step">
+            <div class="reorder">
+              <ion-icon name="reorder-four"></ion-icon>
+            </div>
+
+            <h4>{{ s.rank }}.</h4>
+
+            <TextInputField
+              id="step"
+              type="textarea"
+              :isArea="true"
+              :initialValue="s.name"
+              placeholder="Insert a description for the preparation step"
+              @changed="(name) => updateTitle(name, idx)"
+              width="90%"
+            />
+
+            <div class="delete" @click="removeStepAt(idx)">
+              <ion-icon name="trash"></ion-icon>
+            </div>
+          </div>
         </div>
-      </Transition>
-
-      <div class="step">
-        <div class="reorder">
-          <ion-icon name="reorder-four"></ion-icon>
-        </div>
-
-        <h4>{{ s.rank }}.</h4>
-
-        <TextInputField
-          id="step"
-          type="textarea"
-          :isArea="true"
-          :initialValue="s.name"
-          placeholder="Insert a description for the preparation step"
-          @changed="(name) => updateTitle(name, idx)"
-          width="90%"
-        />
-
-        <div class="delete" @click="removeStepAt(idx)">
-          <ion-icon name="trash"></ion-icon>
-        </div>
-      </div>
-    </div>
-
-    <div class="end-container">
-      <Transition name="fade" mode="out-in">
-        <div
-          v-if="isDragActive"
-          class="drop-zone"
-          :class="getHoveredClass(-1)"
-          @drop="onDrop($event, -1)"
-          @dragover.prevent
-          @dragenter="onDragEnter"
-          @dragleave="onDragLeave"
-          id="drop-zone-1"
-        ></div>
-
-        <div v-else class="add-divider" @click="insertStepAt(-1)">
-          <div class="divider"></div>
-          <ion-icon name="add"></ion-icon>
-          <div class="divider"></div>
-        </div>
-      </Transition>
-    </div>
+      </template>
+    </RankingList>
   </div>
 </template>
 
 <style scoped lang="scss">
 @import '@/styles/outline.scss';
 @import '@/styles/colors.scss';
+@import '@/styles/drop-zone.scss';
+@import '@/styles/add-divider.scss';
 
 .steps-editor {
   padding: 1rem;
@@ -221,19 +209,6 @@ onMounted(() => {
       display: flex;
       gap: 0.5rem;
       color: $error-color;
-    }
-  }
-
-  .drop-zone {
-    width: 100%;
-    height: 1.5rem;
-    background-color: $bg-color-mid;
-    margin-bottom: 0.5rem;
-    transition: background-color 0.2s;
-
-    &.drop-zone-active {
-      transition: background-color 0.2s;
-      background-color: $accent-color;
     }
   }
 
@@ -271,42 +246,6 @@ onMounted(() => {
           cursor: pointer;
           color: $error-hover-color;
         }
-      }
-    }
-  }
-
-  .add-divider {
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .divider {
-      height: 1px;
-      width: 10rem;
-      background-color: $bg-color-mid;
-      transition: background-color 0.2s;
-    }
-
-    ion-icon {
-      padding: 1px;
-      color: $bg-color-dark;
-      font-size: 1.2rem;
-      background-color: $bg-color-mid;
-      border-radius: $border-radius;
-      margin: 0 0.5rem;
-      transition: color 0.2s;
-    }
-
-    &:hover {
-      cursor: pointer;
-
-      .divider {
-        background-color: $accent-color;
-      }
-
-      ion-icon {
-        color: $accent-color;
       }
     }
   }
