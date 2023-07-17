@@ -85,6 +85,7 @@ const onDragLeave = (): void => {
     }
 
     p {
+      display: block;
       padding: 0;
       margin: 0;
       display: flex;
