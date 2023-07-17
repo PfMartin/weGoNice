@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import TextInputField from '@/components/TextInputField.vue';
 import { computed, onMounted, ref } from 'vue';
+import RankingList from '@/components/RankingList.vue';
 
 const props = defineProps<{
   initialSteps: Recipes.PrepStep[];
@@ -115,83 +116,67 @@ onMounted(() => {
 
 <template>
   <div class="steps-editor">
-    <div class="header">
-      <h2>Steps</h2>
-      <p v-if="hasError">
-        <ion-icon name="alert-circle" />Please provide a description for each
-        step in the list
-      </p>
-    </div>
-    <div
-      v-for="(s, idx) in steps"
-      class="step-container"
-      :draggable="true"
-      @dragstart="startDrag($event, idx)"
-      @dragend="hideDropZones"
-      :key="idx"
+    <RankingList
+      title="Steps"
+      :formError="
+        hasError ? 'Please provide a description for each step in the list' : ''
+      "
+      :isDragActive="isDragActive"
+      @on-drop="(e) => onDrop(e, -1)"
+      @insert="insertStepAt(-1)"
     >
-      <Transition name="fade" mode="out-in">
+      <template v-slot:elements>
         <div
-          v-if="isDragActive"
-          class="drop-zone"
-          :class="getHoveredClass(idx)"
-          @drop="onDrop($event, idx)"
-          @dragover.prevent
-          @dragenter="onDragEnter"
-          @drageleave="onDragLeave"
-          :id="`drop-zone${idx}`"
-        ></div>
+          v-for="(s, idx) in steps"
+          class="step-container"
+          :draggable="true"
+          @dragstart="startDrag($event, idx)"
+          @dragend="hideDropZones"
+          :key="idx"
+        >
+          <Transition name="fade" mode="out-in">
+            <div
+              v-if="isDragActive"
+              class="drop-zone"
+              :class="getHoveredClass(idx)"
+              @drop="onDrop($event, idx)"
+              @dragover.prevent
+              @dragenter="onDragEnter"
+              @drageleave="onDragLeave"
+              :id="`drop-zone${idx}`"
+            ></div>
 
-        <div v-else class="add-divider" @click="insertStepAt(idx)">
-          <div class="divider"></div>
-          <ion-icon name="add"></ion-icon>
-          <div class="divider"></div>
+            <div v-else class="add-divider" @click="insertStepAt(idx)">
+              <div class="divider"></div>
+              <ion-icon name="add"></ion-icon>
+              <div class="divider"></div>
+            </div>
+          </Transition>
+
+          <div class="step">
+            <div class="reorder">
+              <ion-icon name="reorder-four"></ion-icon>
+            </div>
+
+            <h4>{{ s.rank }}.</h4>
+
+            <TextInputField
+              id="step"
+              type="textarea"
+              :isArea="true"
+              :initialValue="s.name"
+              placeholder="Insert a description for the preparation step"
+              @changed="(name) => updateTitle(name, idx)"
+              width="90%"
+            />
+
+            <div class="delete" @click="removeStepAt(idx)">
+              <ion-icon name="trash"></ion-icon>
+            </div>
+          </div>
         </div>
-      </Transition>
-
-      <div class="step">
-        <div class="reorder">
-          <ion-icon name="reorder-four"></ion-icon>
-        </div>
-
-        <h4>{{ s.rank }}.</h4>
-
-        <TextInputField
-          id="step"
-          type="textarea"
-          :isArea="true"
-          :initialValue="s.name"
-          placeholder="Insert a description for the preparation step"
-          @changed="(name) => updateTitle(name, idx)"
-          width="90%"
-        />
-
-        <div class="delete" @click="removeStepAt(idx)">
-          <ion-icon name="trash"></ion-icon>
-        </div>
-      </div>
-    </div>
-
-    <div class="end-container">
-      <Transition name="fade" mode="out-in">
-        <div
-          v-if="isDragActive"
-          class="drop-zone"
-          :class="getHoveredClass(-1)"
-          @drop="onDrop($event, -1)"
-          @dragover.prevent
-          @dragenter="onDragEnter"
-          @dragleave="onDragLeave"
-          id="drop-zone-1"
-        ></div>
-
-        <div v-else class="add-divider" @click="insertStepAt(-1)">
-          <div class="divider"></div>
-          <ion-icon name="add"></ion-icon>
-          <div class="divider"></div>
-        </div>
-      </Transition>
-    </div>
+      </template>
+    </RankingList>
   </div>
 </template>
 

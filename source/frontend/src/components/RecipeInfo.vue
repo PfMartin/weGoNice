@@ -91,6 +91,7 @@ const publishBody = (): void => {
     steps: prepSteps.value,
   };
 
+  console.warn(body);
   emit('on-change', body);
 };
 

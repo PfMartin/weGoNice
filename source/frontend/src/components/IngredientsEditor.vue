@@ -3,6 +3,7 @@ import { AmountUnit } from '@/utils/constants';
 import { onMounted, ref, computed } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import TextInputField from '@/components/TextInputField.vue';
+import RankingList from '@/components/RankingList.vue';
 
 const props = defineProps<{
   initialIngredients: Recipes.Ingredient[];
@@ -129,9 +130,8 @@ const onDragLeave = () => {
   hoveredDropZone.value = null;
 };
 
-const getHoveredClass = (idx: number): string => {
-  return hoveredDropZone.value === idx ? 'drop-zone-active' : '';
-};
+const getHoveredClass = (idx: number): string =>
+  hoveredDropZone.value === idx ? 'drop-zone-active' : '';
 
 onMounted(() => {
   ingredients.value = props.initialIngredients;
@@ -140,98 +140,82 @@ onMounted(() => {
 
 <template>
   <div class="ingredients-editor">
-    <div class="header">
-      <h2>Ingredients</h2>
-      <p v-if="hasError">
-        <ion-icon name="alert-circle" />Please provide a name for each
-        ingredient in the list
-      </p>
-    </div>
-    <div
-      v-for="(i, idx) in ingredients"
-      class="ingredient-container"
-      :key="idx"
-      :draggable="true"
-      @dragstart="startDrag($event, idx)"
-      @dragend="hideDropZones"
+    <RankingList
+      title="Ingredients"
+      :formError="
+        hasError ? 'Please provide a name for each ingredient in the list' : ''
+      "
+      :isDragActive="isDragActive"
+      @on-drop="(e) => onDrop(e, -1)"
+      @insert="insertIngredientAt(-1)"
     >
-      <Transition name="fade" mode="out-in">
+      <template v-slot:elements>
         <div
-          v-if="isDragActive"
-          class="drop-zone"
-          :class="getHoveredClass(idx)"
-          @drop="onDrop($event, idx)"
-          @dragover.prevent
-          @dragenter="onDragEnter"
-          @drageleave="onDragLeave"
-          :id="`drop-zone${idx}`"
-        ></div>
+          v-for="(i, idx) in ingredients"
+          class="ingredient-container"
+          :key="idx"
+          :draggable="true"
+          @dragstart="startDrag($event, idx)"
+          @dragend="hideDropZones"
+        >
+          <Transition name="fade" mode="out-in">
+            <div
+              v-if="isDragActive"
+              class="drop-zone"
+              :class="getHoveredClass(idx)"
+              @drop="onDrop($event, idx)"
+              @dragover.prevent
+              @dragenter="onDragEnter"
+              @drageleave="onDragLeave"
+              :id="`drop-zone${idx}`"
+            ></div>
 
-        <div v-else class="add-divider" @click="insertIngredientAt(idx)">
-          <div class="divider"></div>
-          <ion-icon name="add"></ion-icon>
-          <div class="divider"></div>
+            <div v-else class="add-divider" @click="insertIngredientAt(idx)">
+              <div class="divider"></div>
+              <ion-icon name="add"></ion-icon>
+              <div class="divider"></div>
+            </div>
+          </Transition>
+
+          <div class="ingredient">
+            <div class="reorder">
+              <ion-icon name="reorder-four"></ion-icon>
+            </div>
+            <TextInputField
+              id="amount"
+              type="number"
+              :initialValue="`${i.amount}`"
+              placeholder="Insert the ingredient's amount"
+              @changed="(amount) => updateAmount(amount, idx)"
+              width="3rem"
+              :isDark="i.amount !== 0"
+            />
+
+            <DropdownInput
+              :options="Object.values(AmountUnit)"
+              :selectedOption="i.unit"
+              @select-option="(unit) => selectUnit(unit, idx)"
+              id="amountUnit"
+              width="2.5rem"
+              isDark
+            />
+
+            <TextInputField
+              id="ingredient"
+              type="text"
+              :initialValue="i.name"
+              placeholder="Insert the ingredient's name"
+              @changed="(name) => updateTitle(name, idx)"
+              width="300px"
+              :isDark="i.name !== ''"
+            />
+            <div class="delete" @click="removeIngredientAt(idx)">
+              <ion-icon name="trash"></ion-icon>
+            </div>
+          </div>
         </div>
-      </Transition>
-
-      <div class="ingredient">
-        <div class="reorder">
-          <ion-icon name="reorder-four"></ion-icon>
-        </div>
-        <TextInputField
-          id="amount"
-          type="number"
-          :initialValue="`${i.amount}`"
-          placeholder="Insert the ingredient's amount"
-          @changed="(amount) => updateAmount(amount, idx)"
-          width="3rem"
-          :isDark="i.amount !== 0"
-        />
-
-        <DropdownInput
-          :options="Object.values(AmountUnit)"
-          :selectedOption="i.unit"
-          @select-option="(unit) => selectUnit(unit, idx)"
-          id="amountUnit"
-          width="2.5rem"
-          isDark
-        />
-
-        <TextInputField
-          id="ingredient"
-          type="text"
-          :initialValue="i.name"
-          placeholder="Insert the ingredient's name"
-          @changed="(name) => updateTitle(name, idx)"
-          width="300px"
-          :isDark="i.name !== ''"
-        />
-        <div class="delete" @click="removeIngredientAt(idx)">
-          <ion-icon name="trash"></ion-icon>
-        </div>
-      </div>
-    </div>
-
-    <div class="end-container">
-      <Transition name="fade" mode="out-in">
-        <div
-          v-if="isDragActive"
-          class="drop-zone"
-          :class="getHoveredClass(-1)"
-          @drop="onDrop($event, -1)"
-          @dragover.prevent
-          @dragenter="onDragEnter"
-          @dragleave="onDragLeave"
-          id="drop-zone-1"
-        ></div>
-
-        <div v-else class="add-divider" @click="insertIngredientAt(-1)">
-          <div class="divider"></div>
-          <ion-icon name="add"></ion-icon>
-          <div class="divider"></div>
-        </div>
-      </Transition>
-    </div>
+      </template>
+    </RankingList>
   </div>
 </template>
 
