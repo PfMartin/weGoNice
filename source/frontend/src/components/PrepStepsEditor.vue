@@ -105,9 +105,12 @@ const onDragLeave = () => {
   hoveredDropZone.value = null;
 };
 
-const getHoveredClass = (idx: number): string => {
-  return hoveredDropZone.value === idx ? 'drop-zone-active' : '';
-};
+const getHoveredClass = (idx: number): string =>
+  hoveredDropZone.value === idx ? 'drop-zone-active' : '';
+
+const formError = computed(() =>
+  props.hasError ? 'Please provide a description for each step in the list' : ''
+);
 
 onMounted(() => {
   steps.value = props.initialSteps;
@@ -118,9 +121,7 @@ onMounted(() => {
   <div class="steps-editor">
     <RankingList
       title="Steps"
-      :formError="
-        hasError ? 'Please provide a description for each step in the list' : ''
-      "
+      :formError="formError"
       :isDragActive="isDragActive"
       @on-drop="(e) => onDrop(e, -1)"
       @insert="insertStepAt(-1)"

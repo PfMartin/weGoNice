@@ -133,6 +133,10 @@ const onDragLeave = () => {
 const getHoveredClass = (idx: number): string =>
   hoveredDropZone.value === idx ? 'drop-zone-active' : '';
 
+const formError = computed(() =>
+  props.hasError ? 'Please provide a name for each ingredient in the list' : ''
+);
+
 onMounted(() => {
   ingredients.value = props.initialIngredients;
 });
@@ -142,9 +146,7 @@ onMounted(() => {
   <div class="ingredients-editor">
     <RankingList
       title="Ingredients"
-      :formError="
-        hasError ? 'Please provide a name for each ingredient in the list' : ''
-      "
+      :formError="formError"
       :isDragActive="isDragActive"
       @on-drop="(e) => onDrop(e, -1)"
       @insert="insertIngredientAt(-1)"
