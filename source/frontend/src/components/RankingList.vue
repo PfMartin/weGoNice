@@ -65,6 +65,8 @@ const onDragLeave = (): void => {
 <style scoped lang="scss">
 @import '@/styles/outline.scss';
 @import '@/styles/colors.scss';
+@import '@/styles/add-divider.scss';
+@import '@/styles/drop-zone.scss';
 
 .ranking-list {
   padding: 1rem;
@@ -95,55 +97,6 @@ const onDragLeave = (): void => {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  .drop-zone {
-    width: 100%;
-    height: 1.5rem;
-    background-color: $bg-color-mid;
-    margin-bottom: 0.5rem;
-    transition: background-color 0.2s;
-
-    &.drop-zone-active {
-      transition: background-color 0.2s;
-      background-color: $accent-color;
-    }
-  }
-
-  .add-divider {
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .divider {
-      height: 1px;
-      width: 10rem;
-      background-color: $bg-color-mid;
-      transition: background-color 0.2s;
-    }
-
-    ion-icon {
-      padding: 1px;
-      color: $bg-color-dark;
-      font-size: 1.2rem;
-      background-color: $bg-color-mid;
-      border-radius: $border-radius;
-      margin: 0 0.5rem;
-      transition: color 0.2s;
-    }
-
-    &:hover {
-      cursor: pointer;
-
-      .divider {
-        background-color: $accent-color;
-      }
-
-      ion-icon {
-        color: $accent-color;
-      }
-    }
   }
 
   .end-container {
