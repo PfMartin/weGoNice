@@ -21,3 +21,17 @@ export const createRecipe = async (
     return handleError(error);
   }
 };
+
+export const getAllRecipes = async () => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.get(`${url}/recipes`, {
+      headers,
+    });
+
+    return res.data;
+  } catch (error) {
+    return handleError(error);
+  }
+};

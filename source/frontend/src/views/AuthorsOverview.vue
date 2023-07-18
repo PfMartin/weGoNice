@@ -3,8 +3,7 @@ import { onMounted, ref, computed } from 'vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
 import DropdownInput from '@/components/DropdownInput.vue';
-import { AUTHOR_SORTING_OPTIONS } from '@/utils/constants';
-import { sortDirections } from '@/utils/constants';
+import { AUTHOR_SORTING_OPTIONS, SortDirections } from '@/utils/constants';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 // Searching, sorting and filtering
@@ -13,16 +12,16 @@ const setSelectedOption = (option: string): void => {
   selectedOption.value = option;
   sortAuthors();
 };
-const sortDirection = ref(sortDirections.ASC);
+const sortDirection = ref(SortDirections.ASC);
 const toggleSortDirection = (): void => {
   sortDirection.value =
-    sortDirection.value === sortDirections.ASC
-      ? sortDirections.DESC
-      : sortDirections.ASC;
+    sortDirection.value === SortDirections.ASC
+      ? SortDirections.DESC
+      : SortDirections.ASC;
   sortAuthors();
 };
 const sortDirectionIcon = computed((): string =>
-  sortDirection.value === sortDirections.ASC ? 'arrow-down' : 'arrow-up'
+  sortDirection.value === SortDirections.ASC ? 'arrow-down' : 'arrow-up'
 );
 const sortAuthors = (): void => {
   const sortKey: string =
@@ -31,9 +30,9 @@ const sortAuthors = (): void => {
 
   authors.value = authors.value.sort((a: Authors.Author, b: Authors.Author) => {
     if (a[sortKey] < b[sortKey]) {
-      return sortDirection.value === sortDirections.ASC ? -1 : 1;
+      return sortDirection.value === SortDirections.ASC ? -1 : 1;
     }
-    return sortDirection.value === sortDirections.ASC ? 1 : -1;
+    return sortDirection.value === SortDirections.ASC ? 1 : -1;
   });
 };
 const visibleAuthors = ref<Authors.Author[]>([]);
@@ -76,11 +75,7 @@ const isReady = computed((): boolean => !!authors.value.length);
       </div>
     </div>
 
-    <div
-      class="authors"
-      v-if="isReady && authors.length"
-      :style="`max-height: ${listHeight}px`"
-    >
+    <div class="authors" v-if="isReady" :style="`max-height: ${listHeight}px`">
       <template v-for="author in visibleAuthors" :key="author.name">
         <RouterLink
           :to="{
