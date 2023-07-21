@@ -1,18 +1,50 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue';
+
+const props = defineProps<{
   data: Recipes.Recipe;
 }>();
+
+const prepTime = computed(() => {
+  const timeHours = props.data.timeHours;
+  const hourText = timeHours ? `${timeHours}h ` : '';
+
+  const timeMinutes = props.data.timeMinutes;
+  const minuteText = `${timeMinutes || 0}min`;
+
+  return `${hourText}${minuteText}`;
+});
+
+const authorName = computed(() => {
+  const { name, firstName, lastName } = props.data.author;
+
+  return name ? name : `${firstName} ${lastName}`;
+});
 </script>
 
 <template>
   <div class="recipe-card">
     <div class="picture">
       <!-- v-if="!data.imageName" -->
-      <ion-icon name="person" />
+      <ion-icon name="image" />
       <!-- <img v-if="img" :src="img" /> -->
       <!-- <SpinnerComponent size="small" v-else /> -->
     </div>
-    <div class="main"></div>
+    <div class="main">
+      <h3>{{ data.name || 'n/a' }}</h3>
+      <div class="prep-time">
+        <ion-icon name="stopwatch" />
+        <p>{{ prepTime }}</p>
+      </div>
+      <div class="prep-time">
+        <ion-icon name="person" />
+        <p>{{ authorName }}</p>
+      </div>
+      <div class="prep-time">
+        <ion-icon name="fast-food" />
+        <p>{{ data.category }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -28,8 +60,9 @@ defineProps<{
   color: $text-color;
   padding: 0.5rem;
   width: 200px;
-  // display: grid;
   justify-content: center;
+  transition: all 0.3s;
+  box-shadow: $shadow;
 
   &:hover {
     cursor: pointer;
@@ -69,10 +102,23 @@ defineProps<{
     padding: 0.5rem;
     border-radius: $border-radius;
     transition: background-color 0.3s;
+    flex-direction: column;
+    gap: 0.2rem;
 
     h3 {
       padding: 0;
-      margin: 0;
+      margin: 0.5rem 0;
+    }
+
+    .prep-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
     }
   }
 }

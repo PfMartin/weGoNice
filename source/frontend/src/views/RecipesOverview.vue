@@ -134,7 +134,7 @@ onMounted(async () => {
   .recipes {
     margin: 2rem 0;
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
   }
 }
 </style>
