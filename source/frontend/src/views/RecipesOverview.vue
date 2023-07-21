@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from 'vue';
 import { getAllRecipes } from '@/apis/weGoNice/recipes';
 import { RECIPE_SORTING_OPTIONS, SortDirections } from '@/utils/constants';
 import DropdownInput from '@/components/DropdownInput.vue';
+import RecipeCard from '@/components/RecipeCard.vue';
 
 const selectedOption = ref('Name');
 const setSelectedOption = (option: string): void => {
@@ -75,17 +76,14 @@ onMounted(async () => {
           /></span>
         </div>
       </div>
+    </div>
 
-      <div
-        class="recipes"
-        v-if="isReady"
-        :style="`max-height: ${listHeight}px`"
-      >
-        <template v-for="recipe in visibleRecipes" :key="recipe.name">
-          <!-- RECIPE CARD -->
-          {{ recipe.name }}
-        </template>
-      </div>
+    <div class="recipes" v-if="isReady" :style="`max-height: ${listHeight}px`">
+      <RecipeCard
+        v-for="recipe in visibleRecipes"
+        :key="recipe.name"
+        :data="recipe"
+      />
     </div>
   </div>
 </template>
@@ -95,9 +93,10 @@ onMounted(async () => {
 @import '@/styles/colors.scss';
 .recipes-overview {
   margin-left: $nav-bar-width;
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
 
   .list-control {
+    padding: 0 1rem;
     h1 {
       padding: 0;
       margin: 0;
@@ -130,6 +129,12 @@ onMounted(async () => {
         gap: 0.5rem;
       }
     }
+  }
+
+  .recipes {
+    margin: 2rem 0;
+    display: flex;
+    gap: 2rem;
   }
 }
 </style>
