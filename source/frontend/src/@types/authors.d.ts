@@ -1,6 +1,6 @@
 declare namespace Authors {
-  interface Author extends Record<string, string> {
-    [id: string | undefined]: string;
+  interface Author {
+    id?: string;
     [name: string]: string;
     [lastName: string]: string;
     [firstName: string]: string;
