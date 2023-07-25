@@ -2,14 +2,14 @@
 import { onMounted, ref, computed } from 'vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import AuthorCard from '@/components/AuthorCard.vue';
-import DropdownInput from '@/components/DropdownInput.vue';
 import { AUTHOR_SORTING_OPTIONS, SortDirections } from '@/utils/constants';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
+import OverviewControl from '@/components/OverviewControl.vue';
 
 // Searching, sorting and filtering
-const selectedOption = ref('Name');
-const setSelectedOption = (option: string): void => {
-  selectedOption.value = option;
+const selectedSortingKey = ref('Name');
+const setSortingKey = (option: string): void => {
+  selectedSortingKey.value = option;
   sortAuthors();
 };
 const sortDirection = ref(SortDirections.ASC);
@@ -25,8 +25,8 @@ const sortDirectionIcon = computed((): string =>
 );
 const sortAuthors = (): void => {
   const sortKey: string =
-    selectedOption.value.charAt(0).toLowerCase() +
-    selectedOption.value.slice(1);
+    selectedSortingKey.value.charAt(0).toLowerCase() +
+    selectedSortingKey.value.slice(1);
 
   authors.value = authors.value.sort((a: Authors.Author, b: Authors.Author) => {
     if (a[sortKey] < b[sortKey]) {
@@ -54,26 +54,13 @@ const isReady = computed((): boolean => !!authors.value.length);
 
 <template>
   <div class="author-overview">
-    <div class="list-control">
-      <div class="controls">
-        <div class="sorting">
-          <div class="dropdown-container">
-            <DropdownInput
-              :options="AUTHOR_SORTING_OPTIONS"
-              :selectedOption="selectedOption"
-              @select-option="setSelectedOption"
-              id="authorSortBy"
-              label="Sort By"
-              iconName="list"
-              width="300px"
-            />
-          </div>
-          <span @click="toggleSortDirection" class="sort-direction"
-            ><ion-icon :name="sortDirectionIcon"
-          /></span>
-        </div>
-      </div>
-    </div>
+    <OverviewControl
+      :sortingKeys="AUTHOR_SORTING_OPTIONS"
+      :selectedSortingKey="selectedSortingKey"
+      :sortingDirection="sortDirection"
+      @set-sorting-key="setSortingKey"
+      @toggle-sorting-direction="toggleSortDirection"
+    />
 
     <div class="authors" v-if="isReady" :style="`max-height: ${listHeight}px`">
       <template v-for="author in visibleAuthors" :key="author.name">
@@ -100,46 +87,10 @@ const isReady = computed((): boolean => !!authors.value.length);
 @import '@/styles/colors.scss';
 
 .author-overview {
-  .list-control {
-    margin-left: $nav-bar-width;
-    padding: 1rem 2rem;
-
-    h1 {
-      padding: 0;
-      margin: 0;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-
-      .sorting {
-        display: flex;
-        margin-right: 1rem;
-        .sort-direction {
-          margin-left: 0.2rem;
-          font-size: 1.5rem;
-          color: $bg-color-mid;
-          display: flex;
-          align-items: center;
-
-          &:hover {
-            cursor: pointer;
-            color: $bg-color-dark;
-          }
-        }
-      }
-
-      .filter-switches {
-        display: flex;
-        gap: 0.5rem;
-      }
-    }
-  }
+  margin-left: $nav-bar-width;
+  padding: 1rem 1rem;
   .authors {
-    margin-left: $nav-bar-width;
-    padding: 1rem;
+    margin: 2rem 0;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 1rem;

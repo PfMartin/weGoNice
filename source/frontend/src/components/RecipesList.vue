@@ -11,7 +11,7 @@ defineProps<{
   <div class="recipes-list">
     <h1>Recipes by {{ author }}</h1>
     <div class="recipes">
-      <RecipeCard v-for="recipe in data" :data="recipe" :key="recipe.title" />
+      <RecipeCard v-for="recipe in data" :data="recipe" :key="recipe.name" />
     </div>
   </div>
 </template>

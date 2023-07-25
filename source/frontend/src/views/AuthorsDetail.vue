@@ -21,12 +21,12 @@ const init = async () => {
   author.value = res;
 };
 
-const recipeData: Recipes.Recipe[] = [
-  {
-    title: 'First Recipe',
-  },
-  { title: 'Second Recipe' },
-];
+// const recipeData: Recipes.Recipe[] = [
+//   {
+//     title: 'First Recipe',
+//   },
+//   { title: 'Second Recipe' },
+// ];
 
 init();
 
@@ -72,12 +72,12 @@ const deleteAuthor = async () => {
         @on-click="deleteAuthor"
       />
     </div>
-    <RecipesList
+    <!-- <RecipesList
       v-if="author"
       :author="author?.name || 'unknown'"
       :data="recipeData"
     />
-    <div v-else>spinner</div>
+    <div v-else>spinner</div> -->
   </div>
 </template>
 
