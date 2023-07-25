@@ -4,8 +4,8 @@ import { SortDirections } from '@/utils/constants';
 import { computed } from 'vue';
 
 const props = defineProps<{
-  sortingOptions: string[];
-  selectedOption: string;
+  sortingKeys: string[];
+  selectedSortingKey: string;
   sortingDirection: SortDirections;
 }>();
 
@@ -25,8 +25,8 @@ const sortDirectionIcon = computed((): string =>
       <div class="sorting">
         <div class="dropdown-container">
           <DropdownInput
-            :options="sortingOptions"
-            :selectedOption="selectedOption"
+            :options="sortingKeys"
+            :selectedOption="selectedSortingKey"
             @select-option="(key) => emit('set-sorting-key', key)"
             id="recipeSortBy"
             label="Sort By"

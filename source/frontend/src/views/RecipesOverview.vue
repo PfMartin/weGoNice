@@ -2,13 +2,12 @@
 import { onMounted, ref, computed } from 'vue';
 import { getAllRecipes } from '@/apis/weGoNice/recipes';
 import { RECIPE_SORTING_OPTIONS, SortDirections } from '@/utils/constants';
-import DropdownInput from '@/components/DropdownInput.vue';
 import RecipeCard from '@/components/RecipeCard.vue';
 import OverviewControl from '@/components/OverviewControl.vue';
 
-const selectedSortingOption = ref('Name');
-const setSelectedOption = (option: string): void => {
-  selectedSortingOption.value = option;
+const selectedSortingKey = ref('Name');
+const setSortingKey = (key: string): void => {
+  selectedSortingKey.value = key;
   sortRecipes();
 };
 
@@ -23,11 +22,11 @@ const toggleSortDirection = (): void => {
 
 const sortRecipes = (): void => {
   const sortKey: string =
-    selectedSortingOption.value.charAt(0).toLowerCase() +
-    selectedSortingOption.value.slice(1);
+    selectedSortingKey.value.charAt(0).toLowerCase() +
+    selectedSortingKey.value.slice(1);
 
   recipes.value = recipes.value.sort((a: any, b: any) => {
-    switch (selectedSortingOption.value) {
+    switch (selectedSortingKey.value) {
       case 'Author':
         if (a.author.name && b.author.name) {
           if (a.author.name < b.author.name) {
@@ -87,10 +86,10 @@ onMounted(async () => {
 <template>
   <div class="recipes-overview">
     <OverviewControl
-      :sortingOptions="RECIPE_SORTING_OPTIONS"
-      :selectedOption="selectedSortingOption"
+      :sortingKeys="RECIPE_SORTING_OPTIONS"
+      :selectedSortingKey="selectedSortingKey"
       :sortingDirection="sortDirection"
-      @set-sorting-key="setSelectedOption"
+      @set-sorting-key="setSortingKey"
       @toggle-sorting-direction="toggleSortDirection"
     />
 
