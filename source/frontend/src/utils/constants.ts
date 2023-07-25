@@ -7,6 +7,8 @@ export const AUTHOR_SORTING_OPTIONS = [
   'Amount of Recipes', // Still has to be implemented
 ];
 
+export const RECIPE_SORTING_OPTIONS = ['Name', 'Category', 'Author', 'Time'];
+
 export const PREP_TIME_HOURS_OPTIONS = ['0', '1', '2', '3', '4', '5', '6', '7'];
 export const PREP_TIME_MINUTES_OPTIONS = [
   '0',
@@ -35,7 +37,7 @@ export enum OperationMode {
   Edit,
 }
 
-export enum sortDirections {
+export enum SortDirections {
   ASC,
   DESC,
 }
