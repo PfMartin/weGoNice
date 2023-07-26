@@ -52,7 +52,7 @@ export const getAuthorById = async (id: string | string[]) => {
 export const updateAuthorById = async (
   id: string | string[],
   body: Authors.Author
-) => {
+): Promise<WeGoNiceApi.RequestResponse> => {
   headers.Authorization = addAuthorization();
 
   try {
