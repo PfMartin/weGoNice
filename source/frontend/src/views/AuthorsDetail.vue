@@ -8,6 +8,7 @@ import { OperationMode } from '@/utils/constants';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import notificationService from '@/services/notification.service';
 import { ButtonType } from '@/utils/constants';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 const mode = OperationMode.Edit;
 
@@ -52,7 +53,7 @@ const deleteAuthor = async () => {
 <template>
   <div class="author-detail">
     <AuthorInfo v-if="author" :mode="mode" :initialData="author" />
-    <div v-else>spinner</div>
+    <SpinnerComponent v-else />
     <div class="buttons">
       <RouterLink
         :to="{

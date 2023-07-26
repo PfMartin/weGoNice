@@ -21,6 +21,7 @@ const props = defineProps<{
   mode: OperationMode;
   hasIngredientsError: boolean;
   hasStepsError: boolean;
+  initialData?: Recipes.Recipe;
 }>();
 
 const emit = defineEmits<{
@@ -63,9 +64,9 @@ const selectAuthor = (val: string) => {
 };
 
 const categories = CATEGORY_OPTIONS;
-const category = ref(categories[0]);
+const recipeCategory = ref(categories[0]);
 const selectCategory = (val: string): void => {
-  category.value = val;
+  recipeCategory.value = val;
 
   publishBody();
 };
@@ -86,7 +87,7 @@ const publishBody = (): void => {
     authorId: authorToSave?.id || '',
     timeHours: prepTimeHours.value,
     timeMinutes: prepTimeMinutes.value,
-    category: category.value,
+    category: recipeCategory.value,
     ingredients: ingredients.value,
     steps: prepSteps.value,
   };
@@ -102,6 +103,33 @@ const getAuthors = async (): Promise<void> => {
   );
 };
 
+const populateWithInitialData = (): void => {
+  if (props.initialData) {
+    recipeTitle.value = props.initialData.name;
+    prepTimeHours.value = props.initialData.timeHours;
+    prepTimeMinutes.value = props.initialData.timeHours;
+    recipeCategory.value = props.initialData.category;
+
+    const recipeAuthor = props.initialData.author;
+    if (recipeAuthor) {
+      selectedAuthor.value =
+        authorOptions.value.find(
+          (a) =>
+            a === recipeAuthor.name ||
+            a === `${recipeAuthor.firstName} ${recipeAuthor.lastName}`
+        ) || 'n/a';
+    }
+
+    props.initialData.ingredients.forEach((i) => {
+      ingredients.value.push(i);
+    });
+
+    props.initialData.steps.forEach((s) => {
+      prepSteps.value.push(s);
+    });
+  }
+};
+
 onMounted(async () => {
   await getAuthors();
 
@@ -109,8 +137,7 @@ onMounted(async () => {
     document.getElementById('recipeTitle')?.focus();
     selectedAuthor.value = authorOptions.value[0];
   } else {
-    // TODO: Get Recipe
-    // TODO: Load recipe values to refs
+    populateWithInitialData();
   }
 
   if (!ingredients.value.length) {
@@ -195,11 +222,11 @@ onMounted(async () => {
             <div class="inputs">
               <DropdownInput
                 :options="categories"
-                :selectedOption="category"
+                :selectedOption="recipeCategory"
                 @select-option="selectCategory"
                 id="category"
                 width="300px"
-                :isDark="category !== ''"
+                :isDark="recipeCategory !== ''"
               />
             </div>
           </div>
