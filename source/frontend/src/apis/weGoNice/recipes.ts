@@ -56,6 +56,9 @@ export const deleteRecipeById = async (id: string | string[]) => {
     const res = await axios.delete(`${url}/recipes/${id}`, {
       headers,
     });
+
+    console.log(res);
+
     return res;
   } catch (error) {
     return handleError(error);

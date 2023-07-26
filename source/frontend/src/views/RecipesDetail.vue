@@ -6,6 +6,9 @@ import notificationService from '@/services/notification.service';
 import { ref } from 'vue';
 import RecipeInfo from '@/components/RecipeInfo.vue';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
+import { ButtonType } from '@/utils/constants';
+import router from '@/router';
 
 const mode = OperationMode.Edit;
 const route = useRoute();
@@ -29,7 +32,7 @@ const deleteRecipe = async () => {
   if (res.status !== 200) {
     notificationService.addNotification(
       'error',
-      'Something wen wrong while deleting the author'
+      'Something wen wrong while deleting the recipe'
     );
     return;
   }
@@ -38,6 +41,7 @@ const deleteRecipe = async () => {
     'success',
     `Successfully deleted ${recipe.value?.name}`
   );
+  router.push({ name: 'RecipesOverview' });
 };
 
 init();
@@ -55,6 +59,25 @@ init();
         :initialData="recipe"
       />
       <SpinnerComponent v-else />
+      <div class="buttons">
+        <RouterLink
+          :to="{
+            name: 'RecipesOverview',
+          }"
+        >
+          <ButtonComponent
+            :buttonType="ButtonType.Default"
+            buttonText=""
+            buttonIconName="arrow-back-outline"
+          />
+        </RouterLink>
+        <ButtonComponent
+          :buttonType="ButtonType.Delete"
+          buttonText="Delete"
+          buttonIconName="close-circle"
+          @on-click="deleteRecipe"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -65,5 +88,11 @@ init();
   margin: 1rem 1rem 1rem calc($nav-bar-width + 1rem);
   display: flex;
   justify-content: center;
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+  }
 }
 </style>
