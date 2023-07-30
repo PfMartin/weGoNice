@@ -118,7 +118,7 @@ const populateWithInitialData = (): void => {
   if (props.initialData) {
     recipeTitle.value = props.initialData.name;
     prepTimeHours.value = props.initialData.timeHours;
-    prepTimeMinutes.value = props.initialData.timeHours;
+    prepTimeMinutes.value = props.initialData.timeMinutes;
     recipeCategory.value = props.initialData.category;
 
     const recipeAuthor = props.initialData.author;
