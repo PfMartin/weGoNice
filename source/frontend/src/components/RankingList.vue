@@ -69,7 +69,6 @@ const onDragLeave = (): void => {
 @import '@/styles/drop-zone.scss';
 
 .ranking-list {
-  padding: 1rem;
   margin-top: 1rem;
   border-radius: $border-radius;
   background-color: $bg-color-dark;
@@ -82,6 +81,7 @@ const onDragLeave = (): void => {
     h2 {
       margin: 0 0 0.5rem 0;
       padding: 0;
+      margin: 0;
     }
 
     p {

@@ -84,7 +84,7 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 	}
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
-		h.logger.Error().Err(err).Str("directory", fileDepot).Msg("Directory doesn't existing. Creating directory")
+		h.logger.Error().Err(err).Str("directory", fileDepot).Msg("Directory doesn't exist. Creating directory")
 		if err := os.Mkdir(fileDepot, os.ModePerm); err != nil {
 			h.logger.Error().Err(err).Msg("Error while creating directory for file depot")
 			w.WriteHeader(http.StatusInternalServerError)

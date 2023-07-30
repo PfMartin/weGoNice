@@ -83,6 +83,25 @@ const updatePrepSteps = (recipeSteps: Recipes.PrepStep[]): void => {
   publishBody();
 };
 
+const imageName = ref('');
+/* Handle File Input */
+const fileInput = ref<HTMLInputElement | null>(null);
+const openUploadWindow = (): void => {
+  fileInput.value?.click();
+};
+
+const fileName = ref('');
+const executeUpload = async () => {
+  console.log('execute upload');
+};
+
+const hasPictureOverlay = ref(false);
+const togglePictureOverlay = () => {
+  hasPictureOverlay.value = !hasPictureOverlay.value;
+};
+
+const img = ref('');
+
 const publishBody = (): void => {
   const authorToSave = authors.value.find(
     (a) =>
@@ -168,10 +187,40 @@ onMounted(async () => {
 
 <template>
   <div class="recipe-info">
+    <div
+      class="picture"
+      @click="openUploadWindow"
+      @mouseenter="togglePictureOverlay"
+      @mouseleave="togglePictureOverlay"
+    >
+      <Transition name="fade">
+        <div v-show="hasPictureOverlay" class="picture-overlay">
+          <input
+            type="file"
+            name="picture"
+            id="fileInput"
+            ref="fileInput"
+            @change="executeUpload"
+          />
+          <ion-icon name="create"></ion-icon>
+          <p>
+            {{
+              fileName.length > 30
+                ? `${fileName.slice(0, 30)}...`
+                : fileName || 'No file chosen...'
+            }}
+          </p>
+        </div>
+      </Transition>
+      <SpinnerComponent
+        v-if="imageName && mode === OperationMode.Edit && !img"
+      />
+      <ion-icon name="image" />
+      <!-- <img v-if="img" :src="img" alt="Recipe Picture" /> -->
+    </div>
     <div class="info">
       <div class="recipe-header">
         <div class="info-section">
-          <h2>Recipe Details</h2>
           <TextInputField
             headline="Recipe name"
             type="text"
@@ -265,16 +314,64 @@ onMounted(async () => {
   border-radius: $border-radius;
   box-shadow: $shadow;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   max-width: 1200px;
 
-  h2 {
-    padding: 0;
-    margin: 0;
-    margin-bottom: 0.5rem;
+  .picture {
+    position: relative;
+    border-radius: $border-radius;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 400px;
+    max-height: 400px;
+    width: 600px;
+    margin: 1rem 1rem 0 1rem;
+    background-color: $bg-color-dark;
+
+    img {
+      max-height: 100%;
+      border-radius: $border-radius;
+      margin-top: 1rem;
+    }
+
+    .picture-overlay {
+      position: absolute;
+      z-index: 5;
+      background: rgba($bg-color-lighter, 0.6);
+      height: 100%;
+      width: 100%;
+      border-radius: $border-radius;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: pointer;
+
+      input {
+        position: fixed;
+        left: 100vw;
+      }
+
+      ion-icon {
+        opacity: 1;
+        font-size: 3rem;
+        color: $bg-color-mid;
+      }
+    }
+
+    ion-icon {
+      font-size: 6rem;
+      color: $text-color;
+      z-index: 1;
+    }
   }
 
   .info {
-    width: 100%;
     color: $text-color;
     padding: 1rem;
 
@@ -304,5 +401,15 @@ onMounted(async () => {
       }
     }
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
