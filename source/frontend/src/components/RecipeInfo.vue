@@ -16,6 +16,7 @@ import { getAllAuthors } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
 import { checkFileTypeValid } from '@/utils/validation';
 import NotificationService from '@/services/notification.service';
+import { uploadFile, uploadFileTmp } from '@/apis/weGoNice/files';
 
 const validationService = new ValidationService();
 
@@ -112,8 +113,20 @@ const executeUpload = async () => {
 
   if (props.mode === OperationMode.Edit && file) {
     console.warn('upload to permanent');
+
+    publishBody();
+    return;
   } else if (props.mode === OperationMode.Create && file) {
-    console.warn('upload to temp');
+    const res = await uploadFileTmp(file);
+    if (res.status !== 200) {
+      NotificationService.addNotification(
+        'error',
+        `Something went wrong while uploading the picture: Status ${res.status}`
+      );
+      return;
+    }
+
+    publishBody();
   }
 };
 
@@ -139,6 +152,7 @@ const publishBody = (): void => {
     category: recipeCategory.value,
     ingredients: ingredients.value,
     steps: prepSteps.value,
+    fileName: fileName.value,
   };
 
   emit('on-change', body);
