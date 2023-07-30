@@ -3,12 +3,15 @@ package recipes
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/rs/zerolog"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
+	"github.com/PfMartin/weGoNice/server/pkg/files"
 	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
@@ -111,6 +114,7 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		"userId":      userID,
 		"createdAt":   time.Now(),
 		"modifiedAt":  time.Now(),
+		"imageName":   recipe.ImageName,
 	}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
@@ -123,6 +127,39 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	recipeID := cursor.InsertedID.(primitive.ObjectID)
+
+	if recipe.ImageName != "" {
+		// Set image name after retrieving the recipe id
+		currentDate := time.Now().Format("2006-01-02")
+		imageName := fmt.Sprintf("%s-%s-%s", currentDate, recipeID.Hex(), recipe.ImageName)
+
+		filter := bson.M{"_id": recipeID}
+		update := bson.M{"$set": bson.M{
+			"imageName": imageName,
+		}}
+
+		coll = h.DB.Database(h.dbName).Collection(h.collection)
+		_, err = coll.UpdateOne(context.TODO(), filter, update)
+		if err != nil {
+			h.logger.Error().Err(err).Msg("Failed to update recipe with new imageName")
+			http.Error(w, "Failed to update recipe with new imageName", http.StatusInternalServerError)
+			return
+		}
+
+		tmpFileDepot := os.Getenv("TMP_FILE_DEPOT")
+		tmpFilePath := fmt.Sprintf("%s/%s", tmpFileDepot, recipe.ImageName)
+
+		fileDepot := os.Getenv("FILE_DEPOT")
+		filePath := fmt.Sprintf("%s/%s", fileDepot, imageName)
+
+		fileHandler := files.NewHandler()
+
+		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
+		if err != nil {
+			h.logger.Error().Err(err).Send()
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

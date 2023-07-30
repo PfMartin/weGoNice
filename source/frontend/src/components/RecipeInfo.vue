@@ -152,7 +152,7 @@ const publishBody = (): void => {
     category: recipeCategory.value,
     ingredients: ingredients.value,
     steps: prepSteps.value,
-    fileName: fileName.value,
+    imageName: fileName.value,
   };
 
   emit('on-change', body);

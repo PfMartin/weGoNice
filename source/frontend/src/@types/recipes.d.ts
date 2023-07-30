@@ -11,7 +11,7 @@ declare namespace Recipes {
     category: string;
     ingredients: Ingredient[];
     steps: PrepStep[];
-    fileName: string;
+    imageName: string;
   }
 
   interface Ingredient {

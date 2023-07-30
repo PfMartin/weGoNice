@@ -12,6 +12,7 @@ type Recipe struct {
 	Category    string       `bson:"category" json:"category"`
 	Ingredients []Ingredient `bson:"ingredients" json:"ingredients"`
 	Steps       []Step       `bson:"steps" json:"steps"`
+	ImageName   string       `bson:"imageName" json:"imageName"`
 	UserID      string       `bson:"userId" json:"userId"`
 	User        UserResponse `bson:"user" json:"user"`
 	CreatedAt   time.Time    `bson:"createdAt" json:"createdAt"`
