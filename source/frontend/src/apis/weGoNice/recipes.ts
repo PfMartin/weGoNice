@@ -49,6 +49,22 @@ export const getRecipeById = async (id: string | string[]) => {
   }
 };
 
+export const updateRecipeById = async (
+  id: string,
+  body: Recipes.Recipe
+): Promise<WeGoNiceApi.RequestResponse> => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.put(`${url}/recipes/${id}`, body, {
+      headers,
+    });
+    return res;
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 export const deleteRecipeById = async (id: string | string[]) => {
   headers.Authorization = addAuthorization();
 

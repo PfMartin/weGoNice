@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { OperationMode } from '@/utils/constants';
 import { useRoute } from 'vue-router';
-import { getRecipeById, deleteRecipeById } from '@/apis/weGoNice/recipes';
-import notificationService from '@/services/notification.service';
+import {
+  getRecipeById,
+  deleteRecipeById,
+  updateRecipeById,
+} from '@/apis/weGoNice/recipes';
+import NotificationService from '@/services/notification.service';
 import { ref } from 'vue';
 import RecipeInfo from '@/components/RecipeInfo.vue';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
@@ -22,22 +26,33 @@ const init = async () => {
 const hasIngredientsError = ref(false);
 const hasStepsError = ref(false);
 
-const setData = (data: Recipes.Recipe) => {
-  console.log(data);
+const updateRecipe = async (data: Recipes.Recipe) => {
+  const id = recipe.value?.id;
+
+  if (id) {
+    const res = await updateRecipeById(id, data);
+
+    if (res.status !== 200) {
+      NotificationService.addNotification(
+        'error',
+        `Something went wrong while updating the recipe: Status ${res.status}`
+      );
+    }
+  }
 };
 
 const deleteRecipe = async () => {
   const res = await deleteRecipeById(route.params.id);
 
   if (res.status !== 200) {
-    notificationService.addNotification(
+    NotificationService.addNotification(
       'error',
-      'Something wen wrong while deleting the recipe'
+      `Something went wrong while deleting the recipe: Status ${res.status}`
     );
     return;
   }
 
-  notificationService.addNotification(
+  NotificationService.addNotification(
     'success',
     `Successfully deleted ${recipe.value?.name}`
   );
@@ -53,7 +68,7 @@ init();
       <RecipeInfo
         v-if="recipe"
         :mode="mode"
-        @on-change="setData"
+        @on-change="updateRecipe"
         :hasIngredientsError="hasIngredientsError"
         :hasStepsError="hasStepsError"
         :initialData="recipe"

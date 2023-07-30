@@ -30,7 +30,7 @@ const emit = defineEmits<{
 
 const recipeTitle = ref('');
 const recipeTitleError = ref('');
-const updaterecipeTitle = (newrecipeTitle: string) => {
+const updateRecipeTitle = (newrecipeTitle: string) => {
   recipeTitle.value = newrecipeTitle;
   recipeTitleError.value = validationService.validateRecipeTitle(
     recipeTitle.value
@@ -82,17 +82,23 @@ const publishBody = (): void => {
       `${a.firstName} ${a.lastName}` === selectedAuthor.value
   );
 
-  const body = {
-    name: recipeTitle.value,
-    authorId: authorToSave?.id || '',
-    timeHours: prepTimeHours.value,
-    timeMinutes: prepTimeMinutes.value,
-    category: recipeCategory.value,
-    ingredients: ingredients.value,
-    steps: prepSteps.value,
-  };
+  if (
+    !recipeTitleError.value &&
+    !props.hasIngredientsError &&
+    !props.hasStepsError
+  ) {
+    const body = {
+      name: recipeTitle.value,
+      authorId: authorToSave?.id || '',
+      timeHours: prepTimeHours.value,
+      timeMinutes: prepTimeMinutes.value,
+      category: recipeCategory.value,
+      ingredients: ingredients.value,
+      steps: prepSteps.value,
+    };
 
-  emit('on-change', body);
+    emit('on-change', body);
+  }
 };
 
 const getAuthors = async (): Promise<void> => {
@@ -172,7 +178,7 @@ onMounted(async () => {
             :initialValue="recipeTitle"
             placeholder="Insert the recipe's name"
             :inputError="recipeTitleError"
-            @changed="updaterecipeTitle"
+            @changed="updateRecipeTitle"
             :isDark="recipeTitle !== ''"
             :withErrorHandling="true"
           />
