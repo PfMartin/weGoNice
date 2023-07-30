@@ -14,6 +14,8 @@ import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
+import { checkFileTypeValid } from '@/utils/validation';
+import NotificationService from '@/services/notification.service';
 
 const validationService = new ValidationService();
 
@@ -92,7 +94,27 @@ const openUploadWindow = (): void => {
 
 const fileName = ref('');
 const executeUpload = async () => {
-  console.log('execute upload');
+  const pathArray = fileInput.value?.value.split('\\') || [];
+  const fileNameArray = pathArray[pathArray.length - 1].split('.');
+  const fName = fileNameArray[0];
+  const fType = fileNameArray[1].toLowerCase();
+
+  const validationErr = checkFileTypeValid(fType);
+  if (validationErr) {
+    NotificationService.addNotification('error', validationErr);
+    return;
+  }
+
+  fileName.value = `${fName}.${fType}`;
+
+  const file =
+    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+
+  if (props.mode === OperationMode.Edit && file) {
+    console.warn('upload to permanent');
+  } else if (props.mode === OperationMode.Create && file) {
+    console.warn('upload to temp');
+  }
 };
 
 const hasPictureOverlay = ref(false);
