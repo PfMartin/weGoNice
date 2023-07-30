@@ -32,7 +32,7 @@ const updateRecipe = async (data: Recipes.Recipe) => {
 
   const id = recipe.value?.id;
 
-  if (hasIngredientsError.value || hasStepsError || !id) {
+  if (hasIngredientsError.value || hasStepsError.value || !id) {
     return;
   }
 
@@ -69,7 +69,7 @@ const validateIngredients = (data: Recipes.Recipe) => {
 };
 
 const validateSteps = (data: Recipes.Recipe) => {
-  hasStepsError.value = data.steps.some((s) => (s.name = ''));
+  hasStepsError.value = data.steps.some((s) => s.name === '');
 };
 
 init();

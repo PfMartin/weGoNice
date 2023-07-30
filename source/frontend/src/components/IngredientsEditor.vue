@@ -11,7 +11,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'publish-ingredients'): void;
+  (e: 'publish-ingredients', ingredients: Recipes.Ingredient[]): void;
 }>();
 
 /* Manage Values */
@@ -20,19 +20,23 @@ const ingredients = ref<Recipes.Ingredient[]>([]);
 const updateTitle = (name: string, idx: number): void => {
   ingredients.value[idx].name = name;
 
-  emit('publish-ingredients');
+  publishIngredients();
 };
 
 const updateAmount = (amount: string, idx: number): void => {
   ingredients.value[idx].amount = Number(amount);
 
-  emit('publish-ingredients');
+  publishIngredients();
 };
 
 const selectUnit = (unit: string, idx: number): void => {
   ingredients.value[idx].unit = unit;
 
-  emit('publish-ingredients');
+  publishIngredients();
+};
+
+const publishIngredients = (): void => {
+  emit('publish-ingredients', ingredients.value);
 };
 
 /* Adding and Removing*/
@@ -59,14 +63,14 @@ const insertIngredientAt = (idx: number): void => {
 
   updateRanks();
 
-  emit('publish-ingredients');
+  publishIngredients();
 };
 
 const removeIngredientAt = (idx: number): void => {
   ingredients.value.splice(idx, 1);
   updateRanks();
 
-  emit('publish-ingredients');
+  publishIngredients();
 };
 
 const updateRanks = (): void => {
@@ -114,7 +118,7 @@ const onDrop = (event: DragEvent, idx: number) => {
   isDragActive.value = false;
   updateRanks();
 
-  emit('publish-ingredients');
+  publishIngredients();
 };
 
 const hoveredDropZone = ref<number | null>(null);

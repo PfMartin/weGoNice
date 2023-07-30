@@ -72,8 +72,19 @@ const selectCategory = (val: string): void => {
 };
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
+const updateIngredients = (recipeIngredients: Recipes.Ingredient[]) => {
+  ingredients.value = recipeIngredients;
+
+  publishBody();
+};
 
 const prepSteps = ref<Recipes.PrepStep[]>([]);
+const updatePrepSteps = (recipeSteps: Recipes.PrepStep[]): void => {
+  console.log('update');
+  prepSteps.value = recipeSteps;
+
+  publishBody();
+};
 
 const publishBody = (): void => {
   const authorToSave = authors.value.find(
@@ -82,23 +93,17 @@ const publishBody = (): void => {
       `${a.firstName} ${a.lastName}` === selectedAuthor.value
   );
 
-  if (
-    !recipeTitleError.value &&
-    !props.hasIngredientsError &&
-    !props.hasStepsError
-  ) {
-    const body = {
-      name: recipeTitle.value,
-      authorId: authorToSave?.id || '',
-      timeHours: prepTimeHours.value,
-      timeMinutes: prepTimeMinutes.value,
-      category: recipeCategory.value,
-      ingredients: ingredients.value,
-      steps: prepSteps.value,
-    };
+  const body = {
+    name: recipeTitle.value,
+    authorId: authorToSave?.id || '',
+    timeHours: prepTimeHours.value,
+    timeMinutes: prepTimeMinutes.value,
+    category: recipeCategory.value,
+    ingredients: ingredients.value,
+    steps: prepSteps.value,
+  };
 
-    emit('on-change', body);
-  }
+  emit('on-change', body);
 };
 
 const getAuthors = async (): Promise<void> => {
@@ -241,13 +246,13 @@ onMounted(async () => {
 
       <IngredientsEditor
         :initialIngredients="ingredients"
-        @publish-ingredients="publishBody"
+        @publish-ingredients="updateIngredients"
         :hasError="hasIngredientsError"
       />
 
       <PrepStepsEditor
         :initialSteps="prepSteps"
-        @publish-steps="publishBody"
+        @publish-steps="updatePrepSteps"
         :hasError="hasStepsError"
       />
     </div>
