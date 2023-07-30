@@ -27,17 +27,22 @@ const hasIngredientsError = ref(false);
 const hasStepsError = ref(false);
 
 const updateRecipe = async (data: Recipes.Recipe) => {
+  validateIngredients(data);
+  validateSteps(data);
+
   const id = recipe.value?.id;
 
-  if (id) {
-    const res = await updateRecipeById(id, data);
+  if (hasIngredientsError.value || hasStepsError || !id) {
+    return;
+  }
 
-    if (res.status !== 200) {
-      NotificationService.addNotification(
-        'error',
-        `Something went wrong while updating the recipe: Status ${res.status}`
-      );
-    }
+  const res = await updateRecipeById(id, data);
+
+  if (res.status !== 200) {
+    NotificationService.addNotification(
+      'error',
+      `Something went wrong while updating the recipe: Status ${res.status}`
+    );
   }
 };
 
@@ -57,6 +62,14 @@ const deleteRecipe = async () => {
     `Successfully deleted ${recipe.value?.name}`
   );
   router.push({ name: 'RecipesOverview' });
+};
+
+const validateIngredients = (data: Recipes.Recipe) => {
+  hasIngredientsError.value = data.ingredients.some((i) => i.name === '');
+};
+
+const validateSteps = (data: Recipes.Recipe) => {
+  hasStepsError.value = data.steps.some((s) => (s.name = ''));
 };
 
 init();
