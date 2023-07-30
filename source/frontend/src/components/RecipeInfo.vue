@@ -19,8 +19,6 @@ const validationService = new ValidationService();
 
 const props = defineProps<{
   mode: OperationMode;
-  hasIngredientsError: boolean;
-  hasStepsError: boolean;
   initialData?: Recipes.Recipe;
 }>();
 
@@ -246,13 +244,13 @@ onMounted(async () => {
       <IngredientsEditor
         :initialIngredients="ingredients"
         @publish-ingredients="updateIngredients"
-        :hasError="hasIngredientsError"
+        :hasError="false"
       />
 
       <PrepStepsEditor
         :initialSteps="prepSteps"
         @publish-steps="updatePrepSteps"
-        :hasError="hasStepsError"
+        :hasError="false"
       />
     </div>
   </div>

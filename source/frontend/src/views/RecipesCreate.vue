@@ -25,7 +25,7 @@ const setData = (r: Recipes.Recipe): void => {
 };
 
 const submit = async (): Promise<void> => {
-  if (!hasTitle.value || hasStepsError.value || hasIngredientsError.value) {
+  if (!hasTitle.value) {
     notificationService.addNotification(
       'error',
       'Please provide all the information required for creating a recipe'
@@ -58,12 +58,6 @@ const submit = async (): Promise<void> => {
   }
 };
 
-const hasIngredientsError = computed(() =>
-  recipe.value.ingredients.some((i) => !i.name)
-);
-
-const hasStepsError = computed(() => recipe.value.steps.some((s) => !s.name));
-
 const hasTitle = computed(() => recipe.value.name);
 
 const cancel = (): void => {
@@ -74,12 +68,7 @@ const cancel = (): void => {
 <template>
   <div class="recipes-create">
     <div class="container">
-      <RecipeInfo
-        :mode="OperationMode.Create"
-        @on-change="setData"
-        :hasIngredientsError="hasIngredientsError"
-        :hasStepsError="hasStepsError"
-      />
+      <RecipeInfo :mode="OperationMode.Create" @on-change="setData" />
       <div class="buttons">
         <RouterLink
           :to="{
