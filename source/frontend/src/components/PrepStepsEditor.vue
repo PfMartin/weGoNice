@@ -9,7 +9,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'publish-steps'): void;
+  (e: 'publish-steps', steps: Recipes.PrepStep[]): void;
 }>();
 
 const steps = ref<Recipes.PrepStep[]>([]);
@@ -17,7 +17,7 @@ const steps = ref<Recipes.PrepStep[]>([]);
 const updateTitle = (name: string, idx: number): void => {
   steps.value[idx].name = name;
 
-  emit('publish-steps');
+  publishSteps();
 };
 
 const insertStepAt = (idx: number): void => {
@@ -36,7 +36,7 @@ const insertStepAt = (idx: number): void => {
 
   updateRanks();
 
-  emit('publish-steps');
+  publishSteps();
 };
 
 const defaultStep = computed(() => ({
@@ -48,7 +48,7 @@ const removeStepAt = (idx: number): void => {
   steps.value.splice(idx, 1);
   updateRanks();
 
-  emit('publish-steps');
+  publishSteps();
 };
 
 const updateRanks = (): void => {
@@ -89,7 +89,11 @@ const onDrop = (event: DragEvent, idx: number) => {
   isDragActive.value = false;
   updateRanks();
 
-  emit('publish-steps');
+  publishSteps();
+};
+
+const publishSteps = (): void => {
+  emit('publish-steps', steps.value);
 };
 
 const hoveredDropZone = ref<number | null>(null);

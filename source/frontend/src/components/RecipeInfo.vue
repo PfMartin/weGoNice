@@ -19,8 +19,7 @@ const validationService = new ValidationService();
 
 const props = defineProps<{
   mode: OperationMode;
-  hasIngredientsError: boolean;
-  hasStepsError: boolean;
+  initialData?: Recipes.Recipe;
 }>();
 
 const emit = defineEmits<{
@@ -29,7 +28,7 @@ const emit = defineEmits<{
 
 const recipeTitle = ref('');
 const recipeTitleError = ref('');
-const updaterecipeTitle = (newrecipeTitle: string) => {
+const updateRecipeTitle = (newrecipeTitle: string) => {
   recipeTitle.value = newrecipeTitle;
   recipeTitleError.value = validationService.validateRecipeTitle(
     recipeTitle.value
@@ -63,16 +62,26 @@ const selectAuthor = (val: string) => {
 };
 
 const categories = CATEGORY_OPTIONS;
-const category = ref(categories[0]);
+const recipeCategory = ref(categories[0]);
 const selectCategory = (val: string): void => {
-  category.value = val;
+  recipeCategory.value = val;
 
   publishBody();
 };
 
 const ingredients = ref<Recipes.Ingredient[]>([]);
+const updateIngredients = (recipeIngredients: Recipes.Ingredient[]) => {
+  ingredients.value = recipeIngredients;
+
+  publishBody();
+};
 
 const prepSteps = ref<Recipes.PrepStep[]>([]);
+const updatePrepSteps = (recipeSteps: Recipes.PrepStep[]): void => {
+  prepSteps.value = recipeSteps;
+
+  publishBody();
+};
 
 const publishBody = (): void => {
   const authorToSave = authors.value.find(
@@ -86,7 +95,7 @@ const publishBody = (): void => {
     authorId: authorToSave?.id || '',
     timeHours: prepTimeHours.value,
     timeMinutes: prepTimeMinutes.value,
-    category: category.value,
+    category: recipeCategory.value,
     ingredients: ingredients.value,
     steps: prepSteps.value,
   };
@@ -102,6 +111,33 @@ const getAuthors = async (): Promise<void> => {
   );
 };
 
+const populateWithInitialData = (): void => {
+  if (props.initialData) {
+    recipeTitle.value = props.initialData.name;
+    prepTimeHours.value = props.initialData.timeHours;
+    prepTimeMinutes.value = props.initialData.timeMinutes;
+    recipeCategory.value = props.initialData.category;
+
+    const recipeAuthor = props.initialData.author;
+    if (recipeAuthor) {
+      selectedAuthor.value =
+        authorOptions.value.find(
+          (a) =>
+            a === recipeAuthor.name ||
+            a === `${recipeAuthor.firstName} ${recipeAuthor.lastName}`
+        ) || 'n/a';
+    }
+
+    props.initialData.ingredients.forEach((i) => {
+      ingredients.value.push(i);
+    });
+
+    props.initialData.steps.forEach((s) => {
+      prepSteps.value.push(s);
+    });
+  }
+};
+
 onMounted(async () => {
   await getAuthors();
 
@@ -109,8 +145,7 @@ onMounted(async () => {
     document.getElementById('recipeTitle')?.focus();
     selectedAuthor.value = authorOptions.value[0];
   } else {
-    // TODO: Get Recipe
-    // TODO: Load recipe values to refs
+    populateWithInitialData();
   }
 
   if (!ingredients.value.length) {
@@ -145,7 +180,7 @@ onMounted(async () => {
             :initialValue="recipeTitle"
             placeholder="Insert the recipe's name"
             :inputError="recipeTitleError"
-            @changed="updaterecipeTitle"
+            @changed="updateRecipeTitle"
             :isDark="recipeTitle !== ''"
             :withErrorHandling="true"
           />
@@ -195,11 +230,11 @@ onMounted(async () => {
             <div class="inputs">
               <DropdownInput
                 :options="categories"
-                :selectedOption="category"
+                :selectedOption="recipeCategory"
                 @select-option="selectCategory"
                 id="category"
                 width="300px"
-                :isDark="category !== ''"
+                :isDark="recipeCategory !== ''"
               />
             </div>
           </div>
@@ -208,14 +243,14 @@ onMounted(async () => {
 
       <IngredientsEditor
         :initialIngredients="ingredients"
-        @publish-ingredients="publishBody"
-        :hasError="hasIngredientsError"
+        @publish-ingredients="updateIngredients"
+        :hasError="false"
       />
 
       <PrepStepsEditor
         :initialSteps="prepSteps"
-        @publish-steps="publishBody"
-        :hasError="hasStepsError"
+        @publish-steps="updatePrepSteps"
+        :hasError="false"
       />
     </div>
   </div>

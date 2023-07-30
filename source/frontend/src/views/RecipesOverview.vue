@@ -79,8 +79,6 @@ onMounted(async () => {
   computeListHeight();
   addEventListener('resize', computeListHeight);
 });
-
-// TODO: MAKE A SEPARATE COMPONENT FROM list-control
 </script>
 
 <template>
@@ -120,6 +118,7 @@ onMounted(async () => {
   .recipes {
     margin: 2rem 0;
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
   }
 }
