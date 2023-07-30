@@ -73,8 +73,6 @@ export const deleteRecipeById = async (id: string | string[]) => {
       headers,
     });
 
-    console.log(res);
-
     return res;
   } catch (error) {
     return handleError(error);

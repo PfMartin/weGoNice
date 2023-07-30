@@ -118,7 +118,6 @@ const formError = computed(() =>
 
 onMounted(() => {
   steps.value = props.initialSteps;
-  console.warn(steps.value);
 });
 </script>
 
