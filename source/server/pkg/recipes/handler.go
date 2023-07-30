@@ -194,12 +194,21 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	authorID, err := primitive.ObjectIDFromHex(recipe.AuthorID)
+	if err != nil {
+		h.logger.Error().Err(err).Msg("Failed to create ObjectID for author from request")
+		http.Error(w, "Error: Failed to create ObjectID for author from request", http.StatusInternalServerError)
+		return
+	}
+
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	h.logger.Info().Msgf("AUTHOR ID: %s", recipe.AuthorID)
 
 	filter := bson.M{"_id": recipeID}
 	update := bson.M{"$set": bson.M{
 		"name":        recipe.Name,
-		"authorId":    recipe.AuthorID,
+		"authorId":    authorID,
 		"timeHours":   recipe.TimeHours,
 		"timeMinutes": recipe.TimeMinutes,
 		"category":    recipe.Category,

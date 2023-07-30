@@ -80,7 +80,6 @@ const updateIngredients = (recipeIngredients: Recipes.Ingredient[]) => {
 
 const prepSteps = ref<Recipes.PrepStep[]>([]);
 const updatePrepSteps = (recipeSteps: Recipes.PrepStep[]): void => {
-  console.log('update');
   prepSteps.value = recipeSteps;
 
   publishBody();
