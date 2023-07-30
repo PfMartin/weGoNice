@@ -16,9 +16,18 @@ const prepTime = computed(() => {
 });
 
 const authorName = computed(() => {
+  if (!props.data.author) {
+    return 'n/a';
+  }
+
   const { name, firstName, lastName } = props.data.author;
 
-  return name ? name : `${firstName} ${lastName}`;
+  const displayedName = name ? name : `${firstName} ${lastName}`;
+  const charLimit = 20;
+
+  return displayedName.length > charLimit
+    ? `${displayedName.slice(0, charLimit)}...`
+    : displayedName;
 });
 </script>
 
@@ -108,6 +117,8 @@ const authorName = computed(() => {
     h3 {
       padding: 0;
       margin: 0.5rem 0;
+      height: 45px;
+      overflow: hidden;
     }
 
     .prep-time {
