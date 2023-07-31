@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 
@@ -87,6 +88,9 @@ func TestGetAllRecipes(t *testing.T) {
 }
 
 func TestCreateRecipe(t *testing.T) {
+	os.Setenv("FILE_DEPOT", "../testUtils/files/perm")
+	os.Setenv("TMP_FILE_DEPOT", "../testUtils/files/tmp")
+
 	tests := []testArgs{
 		{name: "all fields", recipe: testUtils.TestRecipeAll, expectedStatus: http.StatusCreated},
 		{name: "name only", recipe: testUtils.TestRecipeName, expectedStatus: http.StatusCreated},
@@ -96,6 +100,8 @@ func TestCreateRecipe(t *testing.T) {
 	for _, tt := range tests {
 		DB := db.Init(false)
 		h := NewHandler(DB)
+
+		testUtils.PrepareFile()
 
 		if err := testUtils.ClearDatabase(DB); err != nil {
 			t.Errorf("Could not clear database")
@@ -235,7 +241,7 @@ func TestDeleteRecipeByID(t *testing.T) {
 	}
 }
 
-func TestUpdateUserByID(t *testing.T) {
+func TestUpdateRecipeByID(t *testing.T) {
 	tests := []testArgs{
 		{name: "updates the recipe's name", expectedStatus: http.StatusOK},
 	}
