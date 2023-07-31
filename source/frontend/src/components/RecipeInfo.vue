@@ -108,27 +108,28 @@ const updateImage = async () => {
   let url!: string | WeGoNiceApi.RequestResponse;
 
   const id = props.initialData?.id;
-  const file =
-    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+  const file = fileInput.value?.files?.length
+    ? fileInput.value?.files[0]
+    : null;
 
   let f = '';
 
   if (props.mode === OperationMode.Edit && id) {
-    const [fName, typeExtension] = fileName.value.split('.');
-    const fType = typeExtension.toLowerCase();
+    if (file) {
+      const [fName, typeExtension] = fileName.value.split('.');
+      const fType = typeExtension.toLowerCase();
 
-    f = `${dateToString(new Date())}-${props.initialData.id}-${fName}.${fType}`;
+      f = `${dateToString(new Date())}-${
+        props.initialData.id
+      }-${fName}.${fType}`;
+    }
 
-    imageName.value = f;
-
-    console.warn('trying to get image', props.initialData?.imageName);
     url = await getImage(f);
   } else if (props.mode === OperationMode.Create && file) {
     const [fName, typeExtension] = fileName.value.split('.');
     const fType = typeExtension.toLowerCase();
 
     f = `${fName}.${fType}`;
-    console.log(f);
     url = await getImageTmp(f);
   }
 
@@ -177,9 +178,12 @@ const executeUpload = async () => {
       );
     }
 
+    console.warn(fileName.value);
+
     publishBody();
     return;
   } else if (props.mode === OperationMode.Create && file) {
+    console.log('upload', fileName.value);
     const res = await uploadFileTmp(file);
     if (res.status !== 200) {
       NotificationService.addNotification(
@@ -231,6 +235,7 @@ const getAuthors = async (): Promise<void> => {
 
 const populateWithInitialData = (): void => {
   if (props.initialData) {
+    console.warn(props.initialData);
     recipeTitle.value = props.initialData.name;
     prepTimeHours.value = props.initialData.timeHours;
     prepTimeMinutes.value = props.initialData.timeMinutes;
@@ -253,6 +258,8 @@ const populateWithInitialData = (): void => {
     props.initialData.steps.forEach((s) => {
       prepSteps.value.push(s);
     });
+
+    fileName.value = props.initialData.imageName;
   }
 };
 

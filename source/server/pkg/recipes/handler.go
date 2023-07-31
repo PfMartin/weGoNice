@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -31,6 +32,7 @@ var projectStage = bson.D{
 		"steps":       1,
 		"createdAt":   1,
 		"modifiedAt":  1,
+		"imageName":   1,
 		"user":        bson.M{"$first": "$user"},
 		"author":      bson.M{"$first": "$author"},
 	}},
@@ -224,6 +226,24 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	var existingRecipe models.Recipe
+	filter := bson.M{"_id": recipeID}
+	err = coll.FindOne(context.TODO(), filter).Decode(&existingRecipe)
+	if err != nil {
+		h.logger.Error().Err(err).Str("recipeID", id).Msg("Failed to find existing recipe with ID")
+		http.Error(w, "Failed to find existing recipe with the provided ID", http.StatusBadRequest)
+	}
+
+	if existingRecipe.ImageName != recipe.ImageName {
+		fmt.Println("___________________DELETE")
+		existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingRecipe.ImageName)
+		if err = os.Remove(existingFilePath); err != nil {
+			h.logger.Error().Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
+		}
+	}
+
 	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Failed to create ObjectID for user from request context")
@@ -238,11 +258,20 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	coll := h.DB.Database(h.dbName).Collection(h.collection)
+	imageName := recipe.ImageName
+	if !strings.Contains(recipe.ImageName, id) {
+		fileNameSlice := strings.Split(recipe.ImageName, ".")
+		currentDate := time.Now().Format("2006-01-02")
+		iName := fileNameSlice[0]
+		iNameType := strings.ToLower(fileNameSlice[1])
+		imageName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
+	}
 
-	h.logger.Info().Msgf("AUTHOR ID: %s", recipe.AuthorID)
+	fmt.Println("========")
+	fmt.Printf("%s\n", imageName)
+	fmt.Println("========")
 
-	filter := bson.M{"_id": recipeID}
+	filter = bson.M{"_id": recipeID}
 	update := bson.M{"$set": bson.M{
 		"name":        recipe.Name,
 		"authorId":    authorID,
@@ -251,6 +280,7 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 		"category":    recipe.Category,
 		"ingredients": recipe.Ingredients,
 		"steps":       recipe.Steps,
+		"imageName":   imageName,
 		"userId":      userID,
 		"modifiedAt":  time.Now(),
 	}}

@@ -73,6 +73,7 @@ const executeUpload = async () => {
         'Something went wrong while uploading the picture.'
       );
     }
+    console.log(fileName.value);
     emitInput();
     return;
   } else if (props.mode === OperationMode.Create && file) {
