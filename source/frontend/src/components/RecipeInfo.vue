@@ -112,11 +112,9 @@ const updateImage = async () => {
     ? fileInput.value?.files[0]
     : null;
 
-  let f = '';
+  let f = props.initialData?.imageName || '';
 
   if (props.mode === OperationMode.Edit && id) {
-    f = props.initialData?.imageName || '';
-
     if (file) {
       const [fName, typeExtension] = fileName.value.split('.');
       const fType = typeExtension.toLowerCase();
