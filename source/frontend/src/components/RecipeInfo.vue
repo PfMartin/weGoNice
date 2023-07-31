@@ -113,7 +113,7 @@ const updateImage = async () => {
 
   let f = '';
 
-  if (props.mode === OperationMode.Edit && id && file) {
+  if (props.mode === OperationMode.Edit && id) {
     const [fName, typeExtension] = fileName.value.split('.');
     const fType = typeExtension.toLowerCase();
 
@@ -121,6 +121,7 @@ const updateImage = async () => {
 
     imageName.value = f;
 
+    console.warn('trying to get image', props.initialData?.imageName);
     url = await getImage(f);
   } else if (props.mode === OperationMode.Create && file) {
     const [fName, typeExtension] = fileName.value.split('.');
@@ -163,7 +164,18 @@ const executeUpload = async () => {
     fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
 
   if (props.mode === OperationMode.Edit && file) {
-    
+    const id = props.initialData?.id;
+    if (!id) {
+      return;
+    }
+
+    const res = await uploadFile(id, file);
+    if (res.status !== 200) {
+      NotificationService.addNotification(
+        'error',
+        'Something went wrong while uploading the picture.'
+      );
+    }
 
     publishBody();
     return;
