@@ -9,14 +9,25 @@ import {
   CATEGORY_OPTIONS,
   AmountUnit,
 } from '@/utils/constants';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
 import { checkFileTypeValid } from '@/utils/validation';
 import NotificationService from '@/services/notification.service';
-import { uploadFile, uploadFileTmp } from '@/apis/weGoNice/files';
+import {
+  getImage,
+  getImageTmp,
+  uploadFile,
+  uploadFileTmp,
+} from '@/apis/weGoNice/files';
+import { dateToString } from '@/utils/utility-functions';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
+
+const timeout = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
 const validationService = new ValidationService();
 
@@ -93,8 +104,48 @@ const openUploadWindow = (): void => {
   fileInput.value?.click();
 };
 
+const updateImage = async () => {
+  let url!: string | WeGoNiceApi.RequestResponse;
+
+  const id = props.initialData?.id;
+  const file =
+    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+
+  let f = '';
+
+  if (props.mode === OperationMode.Edit && id && file) {
+    const [fName, typeExtension] = fileName.value.split('.');
+    const fType = typeExtension.toLowerCase();
+
+    f = `${dateToString(new Date())}-${props.initialData.id}-${fName}.${fType}`;
+
+    imageName.value = f;
+
+    url = await getImage(f);
+  } else if (props.mode === OperationMode.Create && file) {
+    const [fName, typeExtension] = fileName.value.split('.');
+    const fType = typeExtension.toLowerCase();
+
+    f = `${fName}.${fType}`;
+    console.log(f);
+    url = await getImageTmp(f);
+  }
+
+  imageName.value = f;
+  img.value = url as string;
+  isFileLoading.value = false;
+};
+
 const fileName = ref('');
+watch(fileName, async () => {
+  await timeout(200);
+  await updateImage();
+});
+
+const isFileLoading = ref(false);
 const executeUpload = async () => {
+  isFileLoading.value = true;
+
   const pathArray = fileInput.value?.value.split('\\') || [];
   const fileNameArray = pathArray[pathArray.length - 1].split('.');
   const fName = fileNameArray[0];
@@ -112,7 +163,7 @@ const executeUpload = async () => {
     fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
 
   if (props.mode === OperationMode.Edit && file) {
-    console.warn('upload to permanent');
+    
 
     publishBody();
     return;
@@ -218,6 +269,7 @@ onMounted(async () => {
       name: '',
     });
   }
+  await updateImage();
 });
 </script>
 
@@ -248,11 +300,9 @@ onMounted(async () => {
           </p>
         </div>
       </Transition>
-      <SpinnerComponent
-        v-if="imageName && mode === OperationMode.Edit && !img"
-      />
-      <ion-icon name="image" />
-      <!-- <img v-if="img" :src="img" alt="Recipe Picture" /> -->
+      <SpinnerComponent v-if="isFileLoading" />
+      <ion-icon v-else-if="!fileName && !img" name="image" />
+      <img v-else-if="fileName && img" :src="img" alt="Recipe Picture" />
     </div>
     <div class="info">
       <div class="recipe-header">
@@ -370,9 +420,8 @@ onMounted(async () => {
     background-color: $bg-color-dark;
 
     img {
-      max-height: 100%;
+      max-height: 400px;
       border-radius: $border-radius;
-      margin-top: 1rem;
     }
 
     .picture-overlay {

@@ -231,7 +231,7 @@ const img = ref('');
 const updateImage = async (): Promise<void> => {
   let name = fileName.value;
 
-  const id = props.initialData.id || undefined;
+  const id = props.initialData?.id;
   const file =
     fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
 
