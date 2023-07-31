@@ -124,7 +124,8 @@ const updateImage = async () => {
       }-${fName}.${fType}`;
     }
 
-    url = await getImage(f);
+    console.warn('updateImage');
+    url = await getImage(fileName.value);
   } else if (props.mode === OperationMode.Create && file) {
     const [fName, typeExtension] = fileName.value.split('.');
     const fType = typeExtension.toLowerCase();
@@ -139,9 +140,11 @@ const updateImage = async () => {
 };
 
 const fileName = ref('');
-watch(fileName, async () => {
-  await timeout(200);
-  await updateImage();
+watch(fileName, async (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    await timeout(200);
+    await updateImage();
+  }
 });
 
 const isFileLoading = ref(false);
@@ -288,7 +291,6 @@ onMounted(async () => {
       name: '',
     });
   }
-  await updateImage();
 });
 </script>
 
