@@ -237,7 +237,6 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if existingRecipe.ImageName != recipe.ImageName {
-		fmt.Println("___________________DELETE")
 		existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingRecipe.ImageName)
 		if err = os.Remove(existingFilePath); err != nil {
 			h.logger.Error().Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
@@ -266,10 +265,6 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 		iNameType := strings.ToLower(fileNameSlice[1])
 		imageName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
 	}
-
-	fmt.Println("========")
-	fmt.Printf("%s\n", imageName)
-	fmt.Println("========")
 
 	filter = bson.M{"_id": recipeID}
 	update := bson.M{"$set": bson.M{

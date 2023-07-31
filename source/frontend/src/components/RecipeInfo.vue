@@ -115,6 +115,8 @@ const updateImage = async () => {
   let f = '';
 
   if (props.mode === OperationMode.Edit && id) {
+    f = props.initialData?.imageName || '';
+
     if (file) {
       const [fName, typeExtension] = fileName.value.split('.');
       const fType = typeExtension.toLowerCase();
@@ -124,8 +126,9 @@ const updateImage = async () => {
       }-${fName}.${fType}`;
     }
 
-    console.warn('updateImage');
-    url = await getImage(fileName.value);
+    console.log('Getting Image: ', f);
+
+    url = await getImage(f);
   } else if (props.mode === OperationMode.Create && file) {
     const [fName, typeExtension] = fileName.value.split('.');
     const fType = typeExtension.toLowerCase();
@@ -273,6 +276,7 @@ onMounted(async () => {
     document.getElementById('recipeTitle')?.focus();
     selectedAuthor.value = authorOptions.value[0];
   } else {
+    isFileLoading.value = true;
     populateWithInitialData();
   }
 
