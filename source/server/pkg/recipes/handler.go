@@ -305,6 +305,21 @@ func (h *Handler) DeleteRecipeByID(w http.ResponseWriter, r *http.Request) {
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	filter := bson.M{"_id": recipeID}
 
+	var recipe models.Recipe
+	err = coll.FindOne(context.TODO(), filter).Decode(&recipe)
+	if err != nil {
+		h.logger.Error().Err(err).Msg("Failed to find recipe")
+		http.Error(w, "Failed to find recipe", http.StatusNotFound)
+		return
+	}
+
+	filePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), recipe.ImageName)
+
+	err = os.Remove(filePath)
+	if err != nil {
+		h.logger.Error().Err(err).Str("filePath", filePath).Msg("Failed to remove image for author")
+	}
+
 	coll.DeleteOne(context.TODO(), filter)
 
 	w.Header().Add("Content-Type", "application/json")
