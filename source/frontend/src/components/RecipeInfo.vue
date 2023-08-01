@@ -97,8 +97,9 @@ const updatePrepSteps = (recipeSteps: Recipes.PrepStep[]): void => {
   publishBody();
 };
 
-const imageName = ref('');
 /* Handle File Input */
+const imgSrc = ref('');
+const imageName = ref('');
 const fileInput = ref<HTMLInputElement | null>(null);
 const openUploadWindow = (): void => {
   fileInput.value?.click();
@@ -108,40 +109,40 @@ const updateImage = async () => {
   let url!: string | WeGoNiceApi.RequestResponse;
 
   const id = props.initialData?.id;
-  const file = fileInput.value?.files?.length
+  const fileToUpload = fileInput.value?.files?.length
     ? fileInput.value?.files[0]
     : null;
 
-  let f = props.initialData?.imageName || '';
+  let recipeImageName = props.initialData?.imageName || '';
 
   if (props.mode === OperationMode.Edit && id) {
-    if (file) {
-      const [fName, typeExtension] = fileName.value.split('.');
+    if (fileToUpload) {
+      const [fName, typeExtension] = uploadFileName.value.split('.');
       const fType = typeExtension.toLowerCase();
 
-      f = `${dateToString(new Date())}-${
+      recipeImageName = `${dateToString(new Date())}-${
         props.initialData.id
       }-${fName}.${fType}`;
     }
 
-    console.log('Getting Image: ', f);
+    console.log('Getting Image: ', recipeImageName);
 
-    url = await getImage(f);
-  } else if (props.mode === OperationMode.Create && file) {
-    const [fName, typeExtension] = fileName.value.split('.');
+    url = await getImage(recipeImageName);
+  } else if (props.mode === OperationMode.Create && fileToUpload) {
+    const [fName, typeExtension] = uploadFileName.value.split('.');
     const fType = typeExtension.toLowerCase();
 
-    f = `${fName}.${fType}`;
-    url = await getImageTmp(f);
+    recipeImageName = `${fName}.${fType}`;
+    url = await getImageTmp(recipeImageName);
   }
 
-  imageName.value = f;
-  img.value = url as string;
+  imageName.value = recipeImageName;
+  imgSrc.value = url as string;
   isFileLoading.value = false;
 };
 
-const fileName = ref('');
-watch(fileName, async (newValue, oldValue) => {
+const uploadFileName = ref('');
+watch(uploadFileName, async (newValue, oldValue) => {
   if (newValue !== oldValue) {
     await timeout(200);
     await updateImage();
@@ -153,9 +154,9 @@ const executeUpload = async () => {
   isFileLoading.value = true;
 
   const pathArray = fileInput.value?.value.split('\\') || [];
-  const fileNameArray = pathArray[pathArray.length - 1].split('.');
-  const fName = fileNameArray[0];
-  const fType = fileNameArray[1].toLowerCase();
+  const uploadFileNameArray = pathArray[pathArray.length - 1].split('.');
+  const fName = uploadFileNameArray[0];
+  const fType = uploadFileNameArray[1].toLowerCase();
 
   const validationErr = checkFileTypeValid(fType);
   if (validationErr) {
@@ -163,18 +164,19 @@ const executeUpload = async () => {
     return;
   }
 
-  fileName.value = `${fName}.${fType}`;
+  uploadFileName.value = `${fName}.${fType}`;
 
-  const file =
-    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+  const fileToUpload =
+    fileInput.value && fileInput.value.files?.length
+      ? fileInput.value?.files[0]
+      : null;
 
-  if (props.mode === OperationMode.Edit && file) {
-    const id = props.initialData?.id;
-    if (!id) {
-      return;
-    }
-
-    const res = await uploadFile(id, file);
+  if (
+    props.mode === OperationMode.Edit &&
+    fileToUpload &&
+    props.initialData?.id
+  ) {
+    const res = await uploadFile(props.initialData?.id, fileToUpload);
     if (res.status !== 200) {
       NotificationService.addNotification(
         'error',
@@ -182,13 +184,10 @@ const executeUpload = async () => {
       );
     }
 
-    console.warn(fileName.value);
-
     publishBody();
     return;
-  } else if (props.mode === OperationMode.Create && file) {
-    console.log('upload', fileName.value);
-    const res = await uploadFileTmp(file);
+  } else if (props.mode === OperationMode.Create && fileToUpload) {
+    const res = await uploadFileTmp(fileToUpload);
     if (res.status !== 200) {
       NotificationService.addNotification(
         'error',
@@ -206,8 +205,6 @@ const togglePictureOverlay = () => {
   hasPictureOverlay.value = !hasPictureOverlay.value;
 };
 
-const img = ref('');
-
 const publishBody = (): void => {
   const authorToSave = authors.value.find(
     (a) =>
@@ -223,7 +220,7 @@ const publishBody = (): void => {
     category: recipeCategory.value,
     ingredients: ingredients.value,
     steps: prepSteps.value,
-    imageName: fileName.value,
+    imageName: uploadFileName.value,
   };
 
   emit('on-change', body);
@@ -239,7 +236,6 @@ const getAuthors = async (): Promise<void> => {
 
 const populateWithInitialData = (): void => {
   if (props.initialData) {
-    console.warn(props.initialData);
     recipeTitle.value = props.initialData.name;
     prepTimeHours.value = props.initialData.timeHours;
     prepTimeMinutes.value = props.initialData.timeMinutes;
@@ -263,7 +259,27 @@ const populateWithInitialData = (): void => {
       prepSteps.value.push(s);
     });
 
-    fileName.value = props.initialData.imageName;
+    uploadFileName.value = props.initialData.imageName;
+  }
+};
+
+const populateIngredientsEditor = (): void => {
+  if (!ingredients.value.length) {
+    ingredients.value.push({
+      rank: 1,
+      name: '',
+      amount: 0,
+      unit: AmountUnit.G,
+    });
+  }
+};
+
+const populateStepsEditor = (): void => {
+  if (!prepSteps.value.length) {
+    prepSteps.value.push({
+      rank: 1,
+      name: '',
+    });
   }
 };
 
@@ -278,21 +294,8 @@ onMounted(async () => {
     populateWithInitialData();
   }
 
-  if (!ingredients.value.length) {
-    ingredients.value.push({
-      rank: 1,
-      name: '',
-      amount: 0,
-      unit: AmountUnit.G,
-    });
-  }
-
-  if (!prepSteps.value.length) {
-    prepSteps.value.push({
-      rank: 1,
-      name: '',
-    });
-  }
+  populateIngredientsEditor();
+  populateStepsEditor();
 });
 </script>
 
@@ -316,16 +319,20 @@ onMounted(async () => {
           <ion-icon name="create"></ion-icon>
           <p>
             {{
-              fileName.length > 30
-                ? `${fileName.slice(0, 30)}...`
-                : fileName || 'No file chosen...'
+              uploadFileName.length > 30
+                ? `${uploadFileName.slice(0, 30)}...`
+                : uploadFileName || 'No file chosen...'
             }}
           </p>
         </div>
       </Transition>
       <SpinnerComponent v-if="isFileLoading" />
-      <ion-icon v-else-if="!fileName && !img" name="image" />
-      <img v-else-if="fileName && img" :src="img" alt="Recipe Picture" />
+      <ion-icon v-else-if="!uploadFileName && !imgSrc" name="image" />
+      <img
+        v-else-if="uploadFileName && imgSrc"
+        :src="imgSrc"
+        alt="Recipe Picture"
+      />
     </div>
     <div class="info">
       <div class="recipe-header">
