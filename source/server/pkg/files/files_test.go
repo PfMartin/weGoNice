@@ -31,6 +31,7 @@ type testArgs struct {
 }
 
 const url = "http://localhost:8080/files"
+const tmpFilesUrl = "http://localhost:8080/tmp_files"
 
 func TestUploadImage(t *testing.T) {
 	tests := []testArgs{
@@ -196,4 +197,43 @@ func TestMoveImage(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to prepare temp file: %s", err)
 	}
+}
+
+func TestRemoveTmpFile(t *testing.T) {
+	fileName := "test-temp-image.png"
+
+	dir, err := os.Getwd()
+	if err != nil {
+		t.Errorf("Failed to get working directory: %s", err)
+	}
+	os.Setenv("TMP_FILE_DEPOT", "../testUtils/files/tmp")
+
+	srcFilePath := path.Join(dir, "../testUtils/files/test-image.png")
+	srcFile, err := os.Open(srcFilePath)
+	if err != nil {
+		t.Errorf("Failed to open the source file, while preparing the files for the test.")
+	}
+	defer srcFile.Close()
+
+	destPath := path.Join(dir, fmt.Sprintf("../testUtils/files/tmp/%s", fileName))
+	destFile, err := os.Create(destPath)
+	if err != nil {
+		t.Errorf("Failed to create tmp file for testing")
+	}
+	defer destFile.Close()
+
+	_, err = io.Copy(destFile, srcFile)
+	if err != nil {
+		t.Errorf("Failed to copy the file")
+	}
+
+	req := httptest.NewRequest(http.MethodDelete, tmpFilesUrl+"/"+fileName, nil)
+	req = mux.SetURLVars(req, map[string]string{"filename": fileName})
+
+	w := httptest.NewRecorder()
+
+	h := NewHandler()
+	h.RemoveFileTmp(w, req)
+
+	assert.Equal(t, w.Code, 200)
 }

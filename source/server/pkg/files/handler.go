@@ -53,7 +53,7 @@ func (h *Handler) RemoveFileTmp(w http.ResponseWriter, r *http.Request) {
 	filePath := fmt.Sprintf("%s/%s", fileDepot, filename)
 
 	if err := os.Remove(filePath); err != nil {
-		h.logger.Error().Err(err).Str("filePath", filePath).Msg("Failed to delete image with path")
+		h.logger.Error().Err(err).Str("filePath", filePath).Msgf("Failed to delete image with path %s", filePath)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
