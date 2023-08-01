@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { getImage } from '@/apis/weGoNice/files';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
   data: Recipes.Recipe;
@@ -29,15 +30,20 @@ const authorName = computed(() => {
     ? `${displayedName.slice(0, charLimit)}...`
     : displayedName;
 });
+
+const img = ref('');
+onMounted(async () => {
+  const res = await getImage(props.data.imageName);
+  img.value = res as string;
+});
 </script>
 
 <template>
   <div class="recipe-card">
     <div class="picture">
-      <!-- v-if="!data.imageName" -->
-      <ion-icon name="image" />
-      <!-- <img v-if="img" :src="img" /> -->
-      <!-- <SpinnerComponent size="small" v-else /> -->
+      <ion-icon v-if="!data.imageName" name="image" />
+      <img v-if="img" :src="img" />
+      <SpinnerComponent size="small" v-else />
     </div>
     <div class="main">
       <h3>{{ data.name || 'n/a' }}</h3>
@@ -85,16 +91,16 @@ const authorName = computed(() => {
 
   .picture {
     margin: auto;
+    margin-bottom: 0.5rem;
     display: flex;
-    height: 150px;
+    height: 120px;
     justify-content: center;
     align-items: center;
-    width: 150px;
     overflow: hidden;
     border-radius: $border-radius;
 
     img {
-      height: 100px;
+      height: 100%;
       border-radius: $border-radius;
     }
 
