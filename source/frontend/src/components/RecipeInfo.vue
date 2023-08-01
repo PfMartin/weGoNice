@@ -125,8 +125,6 @@ const updateImage = async () => {
       }-${fName}.${fType}`;
     }
 
-    console.log('Getting Image: ', recipeImageName);
-
     url = await getImage(recipeImageName);
   } else if (props.mode === OperationMode.Create && fileToUpload) {
     const [fName, typeExtension] = uploadFileName.value.split('.');
