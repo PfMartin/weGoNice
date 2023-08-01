@@ -21,5 +21,6 @@ func RegisterFilesRoutesTmp(r *mux.Router, h Handler) {
 	filesR := r.PathPrefix(prefix).Subrouter()
 
 	filesR.HandleFunc("/{filename}", auth.CheckTokenHandler(logging.LogRequest(h.ServeFileTmp))).Methods(http.MethodGet)
+	filesR.HandleFunc("/{filename}", auth.CheckTokenHandler(logging.LogRequest(h.RemoveFileTmp))).Methods(http.MethodDelete)
 	filesR.HandleFunc("", auth.CheckTokenHandler(logging.LogRequest(h.SaveFileTmp))).Methods(http.MethodPost)
 }

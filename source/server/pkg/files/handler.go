@@ -46,6 +46,21 @@ func (h *Handler) ServeFileTmp(w http.ResponseWriter, r *http.Request) {
 	h.serveFile(w, r, true)
 }
 
+func (h *Handler) RemoveFileTmp(w http.ResponseWriter, r *http.Request) {
+	fileDepot := os.Getenv("TMP_FILE_DEPOT")
+	filename := mux.Vars(r)["filename"]
+
+	filePath := fmt.Sprintf("%s/%s", fileDepot, filename)
+
+	if err := os.Remove(filePath); err != nil {
+		h.logger.Error().Err(err).Str("filePath", filePath).Msg("Failed to delete image with path")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary bool) {
 	r.ParseMultipartForm(10 << 20)
 

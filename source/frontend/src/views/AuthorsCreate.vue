@@ -6,6 +6,7 @@ import AuthorInfo from '@/components/AuthorInfo.vue';
 import { ButtonType, OperationMode } from '@/utils/constants';
 import { ref } from 'vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
+import { removeImageTmp } from '@/apis/weGoNice/files';
 
 const router = useRouter();
 
@@ -23,7 +24,11 @@ const setData = (data: Authors.Author): void => {
   author.value = data;
 };
 
-const cancel = () => {
+const cancel = async () => {
+  if (author.value.imageName) {
+    await removeImageTmp(author.value.imageName);
+  }
+
   router.push({ name: 'AuthorsOverview' });
 };
 
@@ -61,17 +66,12 @@ const submit = async (): Promise<void> => {
       @on-change="setData"
     />
     <div class="buttons">
-      <RouterLink
-        :to="{
-          name: 'AuthorsOverview',
-        }"
-      >
-        <ButtonComponent
-          :buttonType="ButtonType.Default"
-          buttonText=""
-          buttonIconName="arrow-back-outline"
-        />
-      </RouterLink>
+      <ButtonComponent
+        :buttonType="ButtonType.Default"
+        buttonText=""
+        buttonIconName="arrow-back-outline"
+        @on-click="cancel"
+      />
       <div class="control-buttons">
         <ButtonComponent
           :buttonType="ButtonType.Delete"
