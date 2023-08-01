@@ -1,4 +1,9 @@
-import { url, handleError, addAuthorization } from './utils';
+import {
+  url,
+  handleError,
+  headers,
+  addAuthorization,
+} from '@/apis/weGoNice/utils';
 import axios from 'axios';
 
 export const uploadFile = async (
@@ -85,6 +90,20 @@ export const getImageTmp = async (
     );
 
     return `data:;base64,${base64}`;
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const removeImageTmp = async (filename: string) => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.delete(`${url}/files_tmp/${filename}`, {
+      headers,
+    });
+
+    return res;
   } catch (error) {
     return handleError(error);
   }

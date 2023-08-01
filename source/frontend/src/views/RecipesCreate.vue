@@ -7,6 +7,7 @@ import { ButtonType } from '@/utils/constants';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { createRecipe } from '@/apis/weGoNice/recipes';
 import notificationService from '@/services/notification.service';
+import { removeImageTmp } from '@/apis/weGoNice/files';
 
 const router = useRouter();
 
@@ -18,6 +19,7 @@ const recipe = ref<Recipes.Recipe>({
   category: '',
   ingredients: [],
   steps: [],
+  imageName: '',
 });
 
 const setData = (r: Recipes.Recipe): void => {
@@ -60,7 +62,11 @@ const submit = async (): Promise<void> => {
 
 const hasTitle = computed(() => recipe.value.name);
 
-const cancel = (): void => {
+const cancel = async (): Promise<void> => {
+  if (recipe.value.imageName) {
+    await removeImageTmp(recipe.value.imageName);
+  }
+
   router.push({ name: 'RecipesOverview' });
 };
 </script>
@@ -70,17 +76,12 @@ const cancel = (): void => {
     <div class="container">
       <RecipeInfo :mode="OperationMode.Create" @on-change="setData" />
       <div class="buttons">
-        <RouterLink
-          :to="{
-            name: 'RecipesOverview',
-          }"
-        >
-          <ButtonComponent
-            :buttonType="ButtonType.Default"
-            buttonText=""
-            buttonIconName="arrow-back-outline"
-          />
-        </RouterLink>
+        <ButtonComponent
+          :buttonType="ButtonType.Default"
+          buttonText=""
+          buttonIconName="arrow-back-outline"
+          @on-click="cancel"
+        />
         <div class="control-buttons">
           <ButtonComponent
             :buttonType="ButtonType.Delete"
