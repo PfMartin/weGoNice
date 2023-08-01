@@ -246,7 +246,7 @@ const updateImage = async (): Promise<void> => {
     const fileType = fileNameArray[1].toLowerCase();
 
     name = `${fileNameArray[0]}.${fileType}`;
-    url = await getImage(name);
+    url = await getImageTmp(name);
   }
 
   imageName.value = name;
