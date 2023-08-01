@@ -21,6 +21,7 @@ var TestRecipeAll = models.Recipe{
 	Ingredients: []models.Ingredient{{Rank: 1, Name: "Ingredient1", Amount: 5, Unit: "g"}, {Rank: 2, Name: "Ingredient2", Amount: 10, Unit: "ml"}, {Rank: 3, Name: "Ingredient3", Amount: 15, Unit: "l"}},
 	Steps:       []models.Step{{Name: "Step1", Rank: 1}, {Name: "Step2", Rank: 2}, {Name: "Step3", Rank: 3}, {Name: "Step4", Rank: 4}},
 	CreatedAt:   testDate,
+	ImageName:   "testImage.png",
 	ModifiedAt:  testDate,
 }
 
@@ -59,6 +60,7 @@ func CreateTestRecipe(db *mongo.Client, userID string, authorID string) (string,
 		"steps":       TestRecipeAll.Steps,
 		"userId":      userObjectID,
 		"modifiedAt":  TestRecipeAll.ModifiedAt,
+		"imageName":   TestRecipeAll.ImageName,
 		"createdAt":   TestRecipeAll.CreatedAt,
 	}
 	cursor, err := coll.InsertOne(context.TODO(), data)

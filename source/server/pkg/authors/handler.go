@@ -309,7 +309,6 @@ func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 		h.logger.Error().Err(err).Str("filePath", filePath).Msg("Failed to remove image for author")
 	}
 
-	coll = h.DB.Database(h.dbName).Collection(h.collection)
 	coll.DeleteOne(context.TODO(), filter)
 
 	w.Header().Add("Content-Type", "application/json")

@@ -9,11 +9,25 @@ import {
   CATEGORY_OPTIONS,
   AmountUnit,
 } from '@/utils/constants';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
+import { checkFileTypeValid } from '@/utils/validation';
+import NotificationService from '@/services/notification.service';
+import {
+  getImage,
+  getImageTmp,
+  uploadFile,
+  uploadFileTmp,
+} from '@/apis/weGoNice/files';
+import { dateToString } from '@/utils/utility-functions';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
+
+const timeout = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
 const validationService = new ValidationService();
 
@@ -83,6 +97,112 @@ const updatePrepSteps = (recipeSteps: Recipes.PrepStep[]): void => {
   publishBody();
 };
 
+/* Handle File Input */
+const imgSrc = ref('');
+const imageName = ref('');
+const fileInput = ref<HTMLInputElement | null>(null);
+const openUploadWindow = (): void => {
+  fileInput.value?.click();
+};
+
+const updateImage = async () => {
+  let url!: string | WeGoNiceApi.RequestResponse;
+
+  const id = props.initialData?.id;
+  const fileToUpload = fileInput.value?.files?.length
+    ? fileInput.value?.files[0]
+    : null;
+
+  let recipeImageName = props.initialData?.imageName || '';
+
+  if (props.mode === OperationMode.Edit && id) {
+    if (fileToUpload) {
+      const [fName, typeExtension] = uploadFileName.value.split('.');
+      const fType = typeExtension.toLowerCase();
+
+      recipeImageName = `${dateToString(new Date())}-${
+        props.initialData.id
+      }-${fName}.${fType}`;
+    }
+
+    url = await getImage(recipeImageName);
+  } else if (props.mode === OperationMode.Create && fileToUpload) {
+    const [fName, typeExtension] = uploadFileName.value.split('.');
+    const fType = typeExtension.toLowerCase();
+
+    recipeImageName = `${fName}.${fType}`;
+    url = await getImageTmp(recipeImageName);
+  }
+
+  imageName.value = recipeImageName;
+  imgSrc.value = url as string;
+  isFileLoading.value = false;
+};
+
+const uploadFileName = ref('');
+watch(uploadFileName, async (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    await timeout(200);
+    await updateImage();
+  }
+});
+
+const isFileLoading = ref(false);
+const executeUpload = async () => {
+  isFileLoading.value = true;
+
+  const pathArray = fileInput.value?.value.split('\\') || [];
+  const uploadFileNameArray = pathArray[pathArray.length - 1].split('.');
+  const fName = uploadFileNameArray[0];
+  const fType = uploadFileNameArray[1].toLowerCase();
+
+  const validationErr = checkFileTypeValid(fType);
+  if (validationErr) {
+    NotificationService.addNotification('error', validationErr);
+    return;
+  }
+
+  uploadFileName.value = `${fName}.${fType}`;
+
+  const fileToUpload =
+    fileInput.value && fileInput.value.files?.length
+      ? fileInput.value?.files[0]
+      : null;
+
+  if (
+    props.mode === OperationMode.Edit &&
+    fileToUpload &&
+    props.initialData?.id
+  ) {
+    const res = await uploadFile(props.initialData?.id, fileToUpload);
+    if (res.status !== 200) {
+      NotificationService.addNotification(
+        'error',
+        'Something went wrong while uploading the picture.'
+      );
+    }
+
+    publishBody();
+    return;
+  } else if (props.mode === OperationMode.Create && fileToUpload) {
+    const res = await uploadFileTmp(fileToUpload);
+    if (res.status !== 200) {
+      NotificationService.addNotification(
+        'error',
+        `Something went wrong while uploading the picture: Status ${res.status}`
+      );
+      return;
+    }
+
+    publishBody();
+  }
+};
+
+const hasPictureOverlay = ref(false);
+const togglePictureOverlay = () => {
+  hasPictureOverlay.value = !hasPictureOverlay.value;
+};
+
 const publishBody = (): void => {
   const authorToSave = authors.value.find(
     (a) =>
@@ -98,6 +218,7 @@ const publishBody = (): void => {
     category: recipeCategory.value,
     ingredients: ingredients.value,
     steps: prepSteps.value,
+    imageName: uploadFileName.value,
   };
 
   emit('on-change', body);
@@ -135,6 +256,28 @@ const populateWithInitialData = (): void => {
     props.initialData.steps.forEach((s) => {
       prepSteps.value.push(s);
     });
+
+    uploadFileName.value = props.initialData.imageName;
+  }
+};
+
+const populateIngredientsEditor = (): void => {
+  if (!ingredients.value.length) {
+    ingredients.value.push({
+      rank: 1,
+      name: '',
+      amount: 0,
+      unit: AmountUnit.G,
+    });
+  }
+};
+
+const populateStepsEditor = (): void => {
+  if (!prepSteps.value.length) {
+    prepSteps.value.push({
+      rank: 1,
+      name: '',
+    });
   }
 };
 
@@ -145,33 +288,53 @@ onMounted(async () => {
     document.getElementById('recipeTitle')?.focus();
     selectedAuthor.value = authorOptions.value[0];
   } else {
+    isFileLoading.value = true;
     populateWithInitialData();
   }
 
-  if (!ingredients.value.length) {
-    ingredients.value.push({
-      rank: 1,
-      name: '',
-      amount: 0,
-      unit: AmountUnit.G,
-    });
-  }
-
-  if (!prepSteps.value.length) {
-    prepSteps.value.push({
-      rank: 1,
-      name: '',
-    });
-  }
+  populateIngredientsEditor();
+  populateStepsEditor();
 });
 </script>
 
 <template>
   <div class="recipe-info">
+    <div
+      class="picture"
+      @click="openUploadWindow"
+      @mouseenter="togglePictureOverlay"
+      @mouseleave="togglePictureOverlay"
+    >
+      <Transition name="fade">
+        <div v-show="hasPictureOverlay" class="picture-overlay">
+          <input
+            type="file"
+            name="picture"
+            id="fileInput"
+            ref="fileInput"
+            @change="executeUpload"
+          />
+          <ion-icon name="create"></ion-icon>
+          <p>
+            {{
+              uploadFileName.length > 30
+                ? `${uploadFileName.slice(0, 30)}...`
+                : uploadFileName || 'No file chosen...'
+            }}
+          </p>
+        </div>
+      </Transition>
+      <SpinnerComponent v-if="isFileLoading" />
+      <ion-icon v-else-if="!uploadFileName && !imgSrc" name="image" />
+      <img
+        v-else-if="uploadFileName && imgSrc"
+        :src="imgSrc"
+        alt="Recipe Picture"
+      />
+    </div>
     <div class="info">
       <div class="recipe-header">
         <div class="info-section">
-          <h2>Recipe Details</h2>
           <TextInputField
             headline="Recipe name"
             type="text"
@@ -265,16 +428,63 @@ onMounted(async () => {
   border-radius: $border-radius;
   box-shadow: $shadow;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   max-width: 1200px;
 
-  h2 {
-    padding: 0;
-    margin: 0;
-    margin-bottom: 0.5rem;
+  .picture {
+    position: relative;
+    border-radius: $border-radius;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 400px;
+    max-height: 400px;
+    width: 600px;
+    margin: 1rem 1rem 0 1rem;
+    background-color: $bg-color-dark;
+
+    img {
+      max-height: 400px;
+      border-radius: $border-radius;
+    }
+
+    .picture-overlay {
+      position: absolute;
+      z-index: 5;
+      background: rgba($bg-color-lighter, 0.6);
+      height: 100%;
+      width: 100%;
+      border-radius: $border-radius;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: pointer;
+
+      input {
+        position: fixed;
+        left: 100vw;
+      }
+
+      ion-icon {
+        opacity: 1;
+        font-size: 3rem;
+        color: $bg-color-mid;
+      }
+    }
+
+    ion-icon {
+      font-size: 6rem;
+      color: $text-color;
+      z-index: 1;
+    }
   }
 
   .info {
-    width: 100%;
     color: $text-color;
     padding: 1rem;
 
@@ -304,5 +514,15 @@ onMounted(async () => {
       }
     }
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

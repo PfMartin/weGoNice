@@ -3,12 +3,16 @@ package recipes
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
+	"github.com/PfMartin/weGoNice/server/pkg/files"
 	"github.com/PfMartin/weGoNice/server/pkg/logging"
 	"github.com/PfMartin/weGoNice/server/pkg/models"
 	"github.com/PfMartin/weGoNice/server/pkg/utils"
@@ -28,6 +32,7 @@ var projectStage = bson.D{
 		"steps":       1,
 		"createdAt":   1,
 		"modifiedAt":  1,
+		"imageName":   1,
 		"user":        bson.M{"$first": "$user"},
 		"author":      bson.M{"$first": "$author"},
 	}},
@@ -111,6 +116,7 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		"userId":      userID,
 		"createdAt":   time.Now(),
 		"modifiedAt":  time.Now(),
+		"imageName":   recipe.ImageName,
 	}
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
@@ -123,6 +129,39 @@ func (h *Handler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	recipeID := cursor.InsertedID.(primitive.ObjectID)
+
+	if recipe.ImageName != "" {
+		// Set image name after retrieving the recipe id
+		currentDate := time.Now().Format("2006-01-02")
+		imageName := fmt.Sprintf("%s-%s-%s", currentDate, recipeID.Hex(), recipe.ImageName)
+
+		filter := bson.M{"_id": recipeID}
+		update := bson.M{"$set": bson.M{
+			"imageName": imageName,
+		}}
+
+		coll = h.DB.Database(h.dbName).Collection(h.collection)
+		_, err = coll.UpdateOne(context.TODO(), filter, update)
+		if err != nil {
+			h.logger.Error().Err(err).Msg("Failed to update recipe with new imageName")
+			http.Error(w, "Failed to update recipe with new imageName", http.StatusInternalServerError)
+			return
+		}
+
+		tmpFileDepot := os.Getenv("TMP_FILE_DEPOT")
+		tmpFilePath := fmt.Sprintf("%s/%s", tmpFileDepot, recipe.ImageName)
+
+		fileDepot := os.Getenv("FILE_DEPOT")
+		filePath := fmt.Sprintf("%s/%s", fileDepot, imageName)
+
+		fileHandler := files.NewHandler()
+
+		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
+		if err != nil {
+			h.logger.Error().Err(err).Send()
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -187,6 +226,23 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	var existingRecipe models.Recipe
+	filter := bson.M{"_id": recipeID}
+	err = coll.FindOne(context.TODO(), filter).Decode(&existingRecipe)
+	if err != nil {
+		h.logger.Error().Err(err).Str("recipeID", id).Msg("Failed to find existing recipe with ID")
+		http.Error(w, "Failed to find existing recipe with the provided ID", http.StatusBadRequest)
+	}
+
+	if existingRecipe.ImageName != recipe.ImageName {
+		existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingRecipe.ImageName)
+		if err = os.Remove(existingFilePath); err != nil {
+			h.logger.Error().Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
+		}
+	}
+
 	userID, err := auth.GetUserIDFromCtx(r)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Failed to create ObjectID for user from request context")
@@ -201,11 +257,16 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	coll := h.DB.Database(h.dbName).Collection(h.collection)
+	imageName := recipe.ImageName
+	if !strings.Contains(recipe.ImageName, id) {
+		fileNameSlice := strings.Split(recipe.ImageName, ".")
+		currentDate := time.Now().Format("2006-01-02")
+		iName := fileNameSlice[0]
+		iNameType := strings.ToLower(fileNameSlice[1])
+		imageName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, iName, iNameType)
+	}
 
-	h.logger.Info().Msgf("AUTHOR ID: %s", recipe.AuthorID)
-
-	filter := bson.M{"_id": recipeID}
+	filter = bson.M{"_id": recipeID}
 	update := bson.M{"$set": bson.M{
 		"name":        recipe.Name,
 		"authorId":    authorID,
@@ -214,6 +275,7 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 		"category":    recipe.Category,
 		"ingredients": recipe.Ingredients,
 		"steps":       recipe.Steps,
+		"imageName":   imageName,
 		"userId":      userID,
 		"modifiedAt":  time.Now(),
 	}}
@@ -242,6 +304,21 @@ func (h *Handler) DeleteRecipeByID(w http.ResponseWriter, r *http.Request) {
 
 	coll := h.DB.Database(h.dbName).Collection(h.collection)
 	filter := bson.M{"_id": recipeID}
+
+	var recipe models.Recipe
+	err = coll.FindOne(context.TODO(), filter).Decode(&recipe)
+	if err != nil {
+		h.logger.Error().Err(err).Msg("Failed to find recipe")
+		http.Error(w, "Failed to find recipe", http.StatusNotFound)
+		return
+	}
+
+	filePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), recipe.ImageName)
+
+	err = os.Remove(filePath)
+	if err != nil {
+		h.logger.Error().Err(err).Str("filePath", filePath).Msg("Failed to remove image for author")
+	}
 
 	coll.DeleteOne(context.TODO(), filter)
 

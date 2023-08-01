@@ -43,11 +43,12 @@ const openUploadWindow = () => {
   fileInput.value?.click();
 };
 
-const fileName = ref(props.initialData.imageName);
+const uploadFileName = ref(props.initialData.imageName);
 const executeUpload = async () => {
   if (!isValid.value) {
     return;
   }
+  isFileLoading.value = true;
 
   const pathArray = fileInput.value?.value.split('\\') || [];
   const fileNameArray = pathArray[pathArray.length - 1].split('.');
@@ -60,44 +61,35 @@ const executeUpload = async () => {
     return;
   }
 
-  fileName.value = `${fName}.${fType}`;
+  uploadFileName.value = `${fName}.${fType}`;
 
-  const file =
-    fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
+  const fileToUpload =
+    fileInput.value && fileInput.value.files?.length
+      ? fileInput.value?.files[0]
+      : null;
 
-  if (props.mode === OperationMode.Edit && file) {
-    const res = await uploadFile(route.params.id, file);
+  if (props.mode === OperationMode.Edit && fileToUpload) {
+    const res = await uploadFile(route.params.id, fileToUpload);
     if (res.status !== 200) {
       notificationService.addNotification(
         'error',
         'Something went wrong while uploading the picture.'
       );
     }
-    emitInput();
+
+    publishBody();
     return;
-  } else if (props.mode === OperationMode.Create && file) {
-    const res = await uploadFileTmp(file);
+  } else if (props.mode === OperationMode.Create && fileToUpload) {
+    const res = await uploadFileTmp(fileToUpload);
     if (res.status !== 200) {
       notificationService.addNotification(
         'error',
         'Something went wrong while uploading the picture.'
       );
     }
-    emitInput();
+    publishBody();
     return;
   }
-
-  const body = {
-    name: name.value,
-    firstName: firstName.value,
-    lastName: lastName.value,
-    website: website.value,
-    instagram: instagram.value,
-    youTube: youTube.value,
-    imageName: fileName.value,
-  };
-
-  emit('on-change', body);
 };
 
 /* Handle User Input */
@@ -105,7 +97,7 @@ const name = ref(props.initialData.name);
 const updateName = (newValue: string) => {
   if (newValue !== name.value) {
     name.value = newValue;
-    emitInput();
+    publishBody();
   }
 };
 
@@ -113,7 +105,7 @@ const firstName = ref(props.initialData.firstName);
 const updateFirstname = (newValue: string): void => {
   if (newValue !== firstName.value) {
     firstName.value = newValue;
-    emitInput();
+    publishBody();
   }
 };
 
@@ -121,7 +113,7 @@ const lastName = ref(props.initialData.lastName);
 const updateLastname = (newValue: string): void => {
   if (newValue !== lastName.value) {
     lastName.value = newValue;
-    emitInput();
+    publishBody();
   }
 };
 
@@ -129,7 +121,7 @@ const website = ref(props.initialData.website);
 const updateWebsite = (newValue: string) => {
   if (newValue !== website.value) {
     website.value = newValue;
-    emitInput();
+    publishBody();
   }
 };
 
@@ -137,7 +129,7 @@ const instagram = ref(props.initialData.instagram);
 const updateInstagram = (newValue: string) => {
   if (newValue !== instagram.value) {
     instagram.value = newValue;
-    emitInput();
+    publishBody();
   }
 };
 
@@ -145,13 +137,14 @@ const youTube = ref(props.initialData.youTube);
 const updateYouTube = (newValue: string) => {
   if (newValue !== youTube.value) {
     youTube.value = newValue;
-    emitInput();
+    publishBody();
   }
 };
 
+const isFileLoading = ref(false);
 const imageName = ref(props.initialData.imageName);
 
-watch(fileName, () => {
+watch(uploadFileName, () => {
   setTimeout(() => {
     updateImage();
   }, 200);
@@ -196,7 +189,7 @@ const isValid = computed((): boolean => {
 
 /* Emit Input */
 const route = useRoute();
-const emitInput = async (): Promise<void> => {
+const publishBody = async (): Promise<void> => {
   if (!isValid.value) {
     return;
   }
@@ -208,7 +201,7 @@ const emitInput = async (): Promise<void> => {
     website: website.value,
     instagram: instagram.value,
     youTube: youTube.value,
-    imageName: fileName.value,
+    imageName: uploadFileName.value,
   };
 
   if (props.mode === OperationMode.Edit) {
@@ -227,45 +220,47 @@ const emitInput = async (): Promise<void> => {
   emit('on-change', body);
 };
 
-const img = ref('');
+const imgSrc = ref('');
 const updateImage = async (): Promise<void> => {
-  let name = fileName.value;
+  let url!: string | WeGoNiceApi.RequestResponse;
 
-  const id = props.initialData.id || undefined;
-  const file =
+  let name = uploadFileName.value;
+
+  const id = props.initialData?.id;
+  const fileToUpload =
     fileInput.value && fileInput.value.files ? fileInput.value?.files[0] : null;
 
-  if (props.mode === OperationMode.Edit && id && file) {
-    const fileNameArray = name.split('.');
-    const fileType = fileNameArray[1].toLowerCase();
+  if (props.mode === OperationMode.Edit && id) {
+    if (fileToUpload) {
+      const fileNameArray = name.split('.');
+      const fileType = fileNameArray[1].toLowerCase();
 
-    name = `${dateToString(new Date())}-${props.initialData.id}-${
-      fileNameArray[0]
-    }.${fileType}`;
-  } else if (props.mode === OperationMode.Create && file) {
+      name = `${dateToString(new Date())}-${props.initialData.id}-${
+        fileNameArray[0]
+      }.${fileType}`;
+    }
+
+    url = await getImage(name);
+  } else if (props.mode === OperationMode.Create && fileToUpload) {
     const fileNameArray = name.split('.');
     const fileType = fileNameArray[1].toLowerCase();
 
     name = `${fileNameArray[0]}.${fileType}`;
-  }
-
-  let url!: string | WeGoNiceApi.RequestResponse;
-
-  if (props.mode === OperationMode.Create && file) {
     url = await getImageTmp(name);
-  } else if (props.mode === OperationMode.Edit) {
-    url = await getImage(name);
   }
 
-  img.value = url as string;
   imageName.value = name;
+  imgSrc.value = url as string;
+  isFileLoading.value = false;
 };
 
 onMounted(() => {
-  updateImage();
   if (props.mode === OperationMode.Create) {
     document.getElementById('name')?.focus();
+  } else {
+    isFileLoading.value = true;
   }
+  updateImage();
 });
 </script>
 
@@ -289,18 +284,20 @@ onMounted(() => {
           <ion-icon name="create"></ion-icon>
           <p>
             {{
-              fileName.length > 30
-                ? `${fileName.slice(0, 30)}...`
-                : fileName || 'No file chosen...'
+              uploadFileName.length > 30
+                ? `${uploadFileName.slice(0, 30)}...`
+                : uploadFileName || 'No file chosen...'
             }}
           </p>
         </div>
       </Transition>
-      <SpinnerComponent
-        v-if="imageName && mode === OperationMode.Edit && !img"
+      <SpinnerComponent v-if="isFileLoading" />
+      <ion-icon v-else-if="!uploadFileName && !imgSrc" name="person" />
+      <img
+        v-else-if="uploadFileName && imgSrc"
+        :src="imgSrc"
+        alt="Author Picture"
       />
-      <ion-icon v-if="!imageName" name="person" />
-      <img v-if="img" :src="img" alt="Author Picture" />
     </div>
     <div class="info">
       <div class="info-section">
