@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getImage } from '@/apis/weGoNice/files';
 import { computed, onMounted, ref } from 'vue';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 const props = defineProps<{
   data: Recipes.Recipe;
