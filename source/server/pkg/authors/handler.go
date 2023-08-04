@@ -234,7 +234,7 @@ func (h *Handler) UpdateAuthorByID(w http.ResponseWriter, r *http.Request) {
 
 	if existingAuthor.ImageName != author.ImageName {
 		existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingAuthor.ImageName)
-		if err = os.Remove(existingFilePath); err != nil {
+		if err = files.RemoveCompressedFile(existingFilePath); err != nil {
 			h.logger.Error().Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
 		}
 	}
@@ -304,7 +304,7 @@ func (h *Handler) DeleteAuthorByID(w http.ResponseWriter, r *http.Request) {
 
 	filePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), author.ImageName)
 
-	err = os.Remove(filePath)
+	err = files.RemoveCompressedFile(filePath)
 	if err != nil {
 		h.logger.Error().Err(err).Str("filePath", filePath).Msg("Failed to remove image for author")
 	}

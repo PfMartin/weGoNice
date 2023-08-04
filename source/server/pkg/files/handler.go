@@ -177,7 +177,6 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithD
 	errMsg := "Failed to update author with new imageName"
 
 	compressedTmpFilePath := fmt.Sprintf("%s.gz", tmpFilePath)
-
 	tmpFile, err := os.Open(compressedTmpFilePath)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Failed to open temporary file during file copy")
@@ -200,7 +199,7 @@ func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithD
 	}
 
 	if isWithDelete {
-		err = os.Remove(compressedTmpFilePath)
+		err = RemoveCompressedFile(tmpFilePath)
 		if err != nil {
 			h.logger.Error().Err(err).Msg("Failed to remove temp file")
 			return fmt.Errorf("%s: %s", errMsg, err)
