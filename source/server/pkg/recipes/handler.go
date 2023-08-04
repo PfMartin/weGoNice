@@ -238,7 +238,7 @@ func (h *Handler) UpdateRecipeByID(w http.ResponseWriter, r *http.Request) {
 
 	if existingRecipe.ImageName != recipe.ImageName {
 		existingFilePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), existingRecipe.ImageName)
-		if err = os.Remove(existingFilePath); err != nil {
+		if err = files.RemoveCompressedFile(existingFilePath); err != nil {
 			h.logger.Error().Err(err).Str("existingFilePath", existingFilePath).Msg("Failed to delete image with path")
 		}
 	}
@@ -315,7 +315,7 @@ func (h *Handler) DeleteRecipeByID(w http.ResponseWriter, r *http.Request) {
 
 	filePath := fmt.Sprintf("%s/%s", os.Getenv("FILE_DEPOT"), recipe.ImageName)
 
-	err = os.Remove(filePath)
+	err = files.RemoveCompressedFile(filePath)
 	if err != nil {
 		h.logger.Error().Err(err).Str("filePath", filePath).Msg("Failed to remove image for author")
 	}
