@@ -3,6 +3,7 @@ package files
 import (
 	"bufio"
 	"bytes"
+	"compress/gzip"
 	"errors"
 	"fmt"
 	"io"
@@ -90,13 +91,15 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 	fileType := strings.ToLower(name[1])
 
 	fileDepot := os.Getenv("TMP_FILE_DEPOT")
-	fileName := fmt.Sprintf("%s.%s", nameString, fileType)
+	fileName := nameString
 	if !isTemporary {
 		fileDepot = os.Getenv("FILE_DEPOT")
 		id := mux.Vars(r)["id"]
 		currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
-		fileName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, nameString, fileType)
+		fileName = fmt.Sprintf("%s-%s-%s", currentDate, id, nameString)
 	}
+
+	fileNameWithExt := fmt.Sprintf("%s.%s", fileName, fileType)
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
 		h.logger.Error().Err(err).Str("directory", fileDepot).Msg("Directory doesn't exist. Creating directory")
@@ -107,13 +110,19 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 		}
 	}
 
-	filepath := fmt.Sprintf("%s/%s", fileDepot, fileName)
-
-	// TODO: Compress file before writing it to os
+	filepath := fmt.Sprintf("%s/%s", fileDepot, fileNameWithExt)
 
 	err = os.WriteFile(filepath, content, 0644)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Error while writing the file")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	gzipFilepath := fmt.Sprintf("%s/%s.gz", fileDepot, fileName)
+	err = gzipFile(filepath, gzipFilepath)
+	if err != nil {
+		h.logger.Error().Err(err).Msg("Error while gzipping the file")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -128,12 +137,13 @@ func (h *Handler) serveFile(w http.ResponseWriter, r *http.Request, isTemporary 
 		fileDepot = os.Getenv("FILE_DEPOT")
 	}
 	filename := mux.Vars(r)["filename"]
-
 	filePath := fmt.Sprintf("%s/%s", fileDepot, filename)
 
-	// TODO: Decompress file before writing it to os
+	archivePathSlice := strings.Split(filePath, ".")
+	archivePathSlice = archivePathSlice[:len(archivePathSlice)-1]
+	archivePath := fmt.Sprintf("%s.gz", strings.Join(archivePathSlice, "."))
 
-	file, err := os.Open(filePath)
+	file, err := os.Open(archivePath)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Failed to open file")
 		http.Error(w, "Failed to open file", http.StatusInternalServerError)
@@ -208,4 +218,29 @@ func validateFileExtension(fileExtension string) error {
 	}
 
 	return nil
+}
+
+func gzipFile(sourcePath string, targetPath string) error {
+	sourceFile, err := os.Open(sourcePath)
+	if err != nil {
+		return err
+	}
+	defer sourceFile.Close()
+
+	targetFile, err := os.Create(targetPath)
+	if err != nil {
+		return err
+	}
+	defer targetFile.Close()
+
+	archiver := gzip.NewWriter(targetFile)
+	defer archiver.Close()
+
+	_, err = io.Copy(archiver, sourceFile)
+	if err != nil {
+		return err
+	}
+
+	err = os.Remove(sourcePath)
+	return err
 }
