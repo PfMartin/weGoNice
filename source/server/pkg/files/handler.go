@@ -119,7 +119,7 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 		return
 	}
 
-	gzipFilepath := fmt.Sprintf("%s/%s.gz", fileDepot, fileName)
+	gzipFilepath := fmt.Sprintf("%s/%s.gz", fileDepot, fileNameWithExt)
 	err = gzipFile(filepath, gzipFilepath)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Error while gzipping the file")
@@ -139,9 +139,7 @@ func (h *Handler) serveFile(w http.ResponseWriter, r *http.Request, isTemporary 
 	filename := mux.Vars(r)["filename"]
 	filePath := fmt.Sprintf("%s/%s", fileDepot, filename)
 
-	archivePathSlice := strings.Split(filePath, ".")
-	archivePathSlice = archivePathSlice[:len(archivePathSlice)-1]
-	archivePath := fmt.Sprintf("%s.gz", strings.Join(archivePathSlice, "."))
+	archivePath := fmt.Sprintf("%s.gz", filePath)
 
 	file, err := os.Open(archivePath)
 	if err != nil {

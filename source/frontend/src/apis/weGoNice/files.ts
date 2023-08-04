@@ -5,6 +5,7 @@ import {
   addAuthorization,
 } from '@/apis/weGoNice/utils';
 import axios from 'axios';
+import { inflate } from 'pako';
 
 export const uploadFile = async (
   id: string | string[],
@@ -52,19 +53,16 @@ export const getImage = async (
     const res = await axios.get(`${url}/files/${filename}`, {
       responseType: 'arraybuffer',
       headers: {
-        'Content-Type': 'image',
         Authorization: addAuthorization(),
       },
     });
 
-    const base64 = btoa(
-      new Uint8Array(res.data).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ''
-      )
-    );
+    const decompressedImage = inflate(res.data);
 
-    return `data:;base64,${base64}`;
+    const blob = new Blob([decompressedImage], { type: 'image/png' });
+    const imageObjectURL = URL.createObjectURL(blob);
+
+    return imageObjectURL;
   } catch (error) {
     return handleError(error);
   }
