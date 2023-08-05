@@ -80,7 +80,7 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 
 	name := strings.Split(fileHandler.Filename, ".")
 
-	if err := validateFileExtension(name[1]); err != nil {
+	if err := ValidateFileExtension(name[1]); err != nil {
 		h.logger.Error().Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -90,13 +90,15 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 	fileType := strings.ToLower(name[1])
 
 	fileDepot := os.Getenv("TMP_FILE_DEPOT")
-	fileName := fmt.Sprintf("%s.%s", nameString, fileType)
+	fileName := nameString
 	if !isTemporary {
 		fileDepot = os.Getenv("FILE_DEPOT")
 		id := mux.Vars(r)["id"]
 		currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
-		fileName = fmt.Sprintf("%s-%s-%s.%s", currentDate, id, nameString, fileType)
+		fileName = fmt.Sprintf("%s-%s-%s", currentDate, id, nameString)
 	}
+
+	fileNameWithExt := fmt.Sprintf("%s.%s", fileName, fileType)
 
 	if _, err := os.Stat(fileDepot); errors.Is(err, os.ErrNotExist) {
 		h.logger.Error().Err(err).Str("directory", fileDepot).Msg("Directory doesn't exist. Creating directory")
@@ -107,13 +109,19 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 		}
 	}
 
-	filepath := fmt.Sprintf("%s/%s", fileDepot, fileName)
-
-	// TODO: Compress file before writing it to os
+	filepath := fmt.Sprintf("%s/%s", fileDepot, fileNameWithExt)
 
 	err = os.WriteFile(filepath, content, 0644)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Error while writing the file")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	gzipFilepath := fmt.Sprintf("%s/%s.gz", fileDepot, fileNameWithExt)
+	err = GzipFile(filepath, gzipFilepath)
+	if err != nil {
+		h.logger.Error().Err(err).Msg("Error while gzipping the file")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -128,12 +136,11 @@ func (h *Handler) serveFile(w http.ResponseWriter, r *http.Request, isTemporary 
 		fileDepot = os.Getenv("FILE_DEPOT")
 	}
 	filename := mux.Vars(r)["filename"]
-
 	filePath := fmt.Sprintf("%s/%s", fileDepot, filename)
 
-	// TODO: Decompress file before writing it to os
+	archivePath := fmt.Sprintf("%s.gz", filePath)
 
-	file, err := os.Open(filePath)
+	file, err := os.Open(archivePath)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Failed to open file")
 		http.Error(w, "Failed to open file", http.StatusInternalServerError)
@@ -163,49 +170,4 @@ func (h *Handler) serveFile(w http.ResponseWriter, r *http.Request, isTemporary 
 	w.Header().Add("Content-Type", filetype)
 	w.WriteHeader(http.StatusOK)
 	w.Write(bytes)
-}
-
-func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithDelete bool) error {
-	errMsg := "Failed to update author with new imageName"
-
-	tmpFile, err := os.Open(tmpFilePath)
-	if err != nil {
-		h.logger.Error().Err(err).Msg("Failed to open temporary file during file copy")
-		return fmt.Errorf("%s: %s", errMsg, err)
-	}
-
-	permFile, err := os.Create(filePath)
-	if err != nil {
-		tmpFile.Close()
-		return fmt.Errorf("%s: %s", errMsg, err)
-	}
-	defer permFile.Close()
-
-	_, err = io.Copy(permFile, tmpFile)
-	tmpFile.Close()
-	if err != nil {
-		h.logger.Error().Err(err).Msg("Failed to copy temporary file to file")
-		return fmt.Errorf("%s: %s", errMsg, err)
-	}
-
-	if isWithDelete {
-		err = os.Remove(tmpFilePath)
-		if err != nil {
-			h.logger.Error().Err(err).Msg("Failed to remove temp file")
-			return fmt.Errorf("%s: %s", errMsg, err)
-		}
-	}
-
-	return nil
-}
-
-func validateFileExtension(fileExtension string) error {
-	lowerExtension := strings.ToLower(fileExtension)
-	possibleExtensions := []string{"jpg", "png"}
-
-	if lowerExtension != possibleExtensions[0] && lowerExtension != possibleExtensions[1] {
-		return fmt.Errorf("image must be '.%s' or '.%s'", possibleExtensions[0], possibleExtensions[1])
-	}
-
-	return nil
 }

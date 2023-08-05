@@ -5,6 +5,7 @@ import {
   addAuthorization,
 } from '@/apis/weGoNice/utils';
 import axios from 'axios';
+import Pako, { inflate } from 'pako';
 
 export const uploadFile = async (
   id: string | string[],
@@ -52,19 +53,11 @@ export const getImage = async (
     const res = await axios.get(`${url}/files/${filename}`, {
       responseType: 'arraybuffer',
       headers: {
-        'Content-Type': 'image',
         Authorization: addAuthorization(),
       },
     });
 
-    const base64 = btoa(
-      new Uint8Array(res.data).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ''
-      )
-    );
-
-    return `data:;base64,${base64}`;
+    return createImageUrl(res.data);
   } catch (error) {
     return handleError(error);
   }
@@ -82,14 +75,7 @@ export const getImageTmp = async (
       },
     });
 
-    const base64 = btoa(
-      new Uint8Array(res.data).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ''
-      )
-    );
-
-    return `data:;base64,${base64}`;
+    return createImageUrl(res.data);
   } catch (error) {
     return handleError(error);
   }
@@ -107,4 +93,13 @@ export const removeImageTmp = async (filename: string) => {
   } catch (error) {
     return handleError(error);
   }
+};
+
+const createImageUrl = (compressedData: Pako.Data): string => {
+  const decompressedImage = inflate(compressedData);
+
+  const blob = new Blob([decompressedImage], { type: 'image/png' });
+  const imageObjectURL = URL.createObjectURL(blob);
+
+  return imageObjectURL;
 };

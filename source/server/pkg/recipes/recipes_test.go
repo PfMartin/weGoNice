@@ -135,6 +135,11 @@ func TestCreateRecipe(t *testing.T) {
 
 		got := w.Code
 		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %d | Got: %d", tt.name, tt.expectedStatus, got)
+
+		err = testUtils.ClearTestFileDepot()
+		if err != nil {
+			t.Errorf("Failed to clear test file depot")
+		}
 	}
 }
 
