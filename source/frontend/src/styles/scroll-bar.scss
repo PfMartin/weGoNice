@@ -1,0 +1,15 @@
+@import '@/styles/colors';
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg-color-mid;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $accent-color;
+  border-radius: $border-radius;
+}
