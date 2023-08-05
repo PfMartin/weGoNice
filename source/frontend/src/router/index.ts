@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
-import { isAuthenticated } from '@/auth';
+import { isAuthenticated, isTokenExpired } from '@/auth';
+import { refreshToken } from '@/apis/weGoNice/auth';
 import authorsRoutes from '@/router/authors-routes';
 import recipesRoutes from '@/router/recipes-routes';
+import { useStore } from 'vuex';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -21,6 +23,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/recipes',
     name: 'Recipes',
+    alias: '/',
     meta: { requiresAuth: true },
     redirect: { name: 'RecipesOverview' },
     component: () =>
@@ -43,7 +46,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach(async (to, from) => {
   if (!isAuthenticated() && to.meta.requiresAuth) {
     if (from.name === 'Login') {
       return { name: 'Register' };
@@ -51,6 +54,14 @@ router.beforeEach((to, from) => {
     return { name: 'Login' };
   } else if (isAuthenticated() && !to.meta.requiresAuth) {
     return { name: 'Recipes' };
+  }
+
+  if (isAuthenticated() && isTokenExpired()) {
+    console.warn('refreshing Token');
+    const refreshSuccess = await refreshToken();
+    if (!refreshSuccess) {
+      return { name: 'Login' };
+    }
   }
 
   return true;

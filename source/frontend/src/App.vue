@@ -24,7 +24,10 @@ const notifications = computed(
         :notifications="notifications"
       />
       <router-view v-slot="{ Component, route }">
-        <Transition :name="route.meta?.transition || ''" mode="out-in">
+        <Transition
+          :name="(route.meta?.transition as string) || ''"
+          mode="out-in"
+        >
           <component :is="Component" />
         </Transition>
       </router-view>
