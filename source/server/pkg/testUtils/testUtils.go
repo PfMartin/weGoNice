@@ -72,7 +72,7 @@ func CompareFileContent(file1 string, file2 string) bool {
 
 func PrepareFile() error {
 	// Copy testfile to tmp file depot
-	testFilePath := "../testUtils/files/test-image.png"
+	testFilePath := "../testUtils/files/test-image.png.gz"
 	tmpFileDepot := os.Getenv("TMP_FILE_DEPOT")
 
 	fileIn, err := os.Open(testFilePath)
@@ -81,7 +81,7 @@ func PrepareFile() error {
 	}
 	defer fileIn.Close()
 
-	destination := fmt.Sprintf("%s/testImage.png", tmpFileDepot)
+	destination := fmt.Sprintf("%s/testImage.png.gz", tmpFileDepot)
 	fileOut, err := os.Create(destination)
 	if err != nil {
 		return fmt.Errorf("could not create file destination '%s': %s", destination, err)
