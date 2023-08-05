@@ -52,6 +52,9 @@ func CompareFileContent(file1 string, file2 string) bool {
 		b2 := make([]byte, chunkSize)
 		_, err2 := f2.Read(b2)
 
+		fmt.Println(b1)
+		fmt.Println(b2)
+
 		if err1 != nil || err2 != nil {
 			if err1 == io.EOF && err2 == io.EOF {
 				return true

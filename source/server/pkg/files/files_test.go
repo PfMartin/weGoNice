@@ -2,6 +2,7 @@ package files
 
 import (
 	"bytes"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -11,8 +12,11 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"testing"
+	"time"
 
+	"github.com/PfMartin/weGoNice/server/pkg/testUtils"
 	"github.com/rs/zerolog/log"
 
 	"github.com/gorilla/mux"
@@ -86,24 +90,53 @@ func TestUploadImage(t *testing.T) {
 
 		assert.Equal(t, tt.expectedCode, got, "Test failed:\nExpected: %d | Got: %d", tt.expectedCode, got)
 
-		// if tt.isSameFileExpected {
+		if tt.isSameFileExpected {
+			currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
+			depotDir := os.Getenv("FILE_DEPOT")
 
-		// 	currentDate := time.Now().Format("2006-01-02") // Very strange formatting with go standard library
-		// 	depotDir := os.Getenv("FILE_DEPOT")
+			fileNameSlice := strings.Split(tt.testFileName, ".")
+			fName := fileNameSlice[0]
+			fType := fileNameSlice[1]
 
-		// 	fileNameSlice := strings.Split(tt.testFileName, ".")
-		// 	fName := fileNameSlice[0]
-		// 	fType := fileNameSlice[1]
+			depotFilePath := fmt.Sprintf("%s/%s-%s-%s.%s.gz", depotDir, currentDate, authorId, fName, fType)
 
-		// 	depotFilePath := fmt.Sprintf("%s/%s-%s-%s.%s", depotDir, currentDate, authorId, fName, fType)
-		// 	isSameFile := testUtils.CompareFileContent(depotFilePath, fmt.Sprintf("../testUtils/files/%s.gz", tt.testFileName))
+			// Decompress uploaded file
+			compressedFile, err := os.Open(depotFilePath)
+			if err != nil {
+				t.Errorf("Error while opening the compressed perm file: %s", err)
+			}
+			defer compressedFile.Close()
 
-		// 	assert.Equal(t, tt.isSameFileExpected, isSameFile, "Test failed:\nExpected: %b | Got: %b", tt.isSameFileExpected, isSameFile)
+			archive, err := gzip.NewReader(compressedFile)
+			if err != nil {
+				t.Errorf("Error while reading the compressed perm file with gzip reader: %s", err)
+			}
+			defer archive.Close()
 
-		// 	if err := os.Remove(depotFilePath); err != nil {
-		// 		t.Errorf("Error while removing the test image: %s", err)
-		// 	}
-		// }
+			decompressedFilePath := strings.Split(depotFilePath, ".gz")[0]
+			decompressedFile, err := os.Create(decompressedFilePath)
+			if err != nil {
+				t.Errorf("Error creating the decompressed file path: %s", err)
+			}
+			defer decompressedFile.Close()
+
+			_, err = io.Copy(decompressedFile, archive)
+			if err != nil {
+				t.Errorf("Error while copying content to decompressed file: %s", err)
+			}
+
+			isSameFile := testUtils.CompareFileContent(decompressedFilePath, fmt.Sprintf("../testUtils/files/%s", tt.testFileName))
+
+			assert.Equal(t, tt.isSameFileExpected, isSameFile, "Test failed:\nExpected: %b | Got: %b", tt.isSameFileExpected, isSameFile)
+
+			if err := os.Remove(depotFilePath); err != nil {
+				t.Errorf("Error while removing the test image: %s", err)
+			}
+
+			if err := os.Remove(decompressedFilePath); err != nil {
+				t.Errorf("Error while removing the decompressed test image: %s", err)
+			}
+		}
 	}
 }
 
