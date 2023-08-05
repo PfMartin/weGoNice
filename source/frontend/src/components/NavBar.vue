@@ -12,10 +12,6 @@
         <p>Account</p>
       </div>
       <nav>
-        <router-link :to="{ name: 'Home' }"
-          ><ion-icon name="home" />
-          <p>Home</p></router-link
-        >
         <router-link :to="{ name: 'Recipes' }">
           <ion-icon name="book" />
           <p>Recipes</p>

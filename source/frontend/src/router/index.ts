@@ -19,14 +19,6 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: false, transition: 'slide-fade' },
   },
   {
-    path: '/home',
-    name: 'Home',
-    meta: { requiresAuth: true },
-    component: () =>
-      import(/* webpackChunkName: "home" */ '@/views/HomeView.vue'),
-    alias: '/',
-  },
-  {
     path: '/recipes',
     name: 'Recipes',
     meta: { requiresAuth: true },
@@ -58,7 +50,7 @@ router.beforeEach((to, from) => {
     }
     return { name: 'Login' };
   } else if (isAuthenticated() && !to.meta.requiresAuth) {
-    return { name: 'Home' };
+    return { name: 'Recipes' };
   }
 
   return true;

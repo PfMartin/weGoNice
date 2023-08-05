@@ -33,5 +33,5 @@ export const loginSuccess = (id: string, sessionToken: string) => {
   store.dispatch('auth/setUserId', id);
   store.dispatch('auth/setSessionToken', sessionToken);
 
-  router.push({ name: 'Home' });
+  router.push({ name: 'Recipes' });
 };
