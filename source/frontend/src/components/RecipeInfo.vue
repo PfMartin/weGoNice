@@ -126,7 +126,6 @@ const updateImage = async () => {
     }
 
     url = await getImage(recipeImageName);
-    console.warn(url);
   } else if (props.mode === OperationMode.Create && fileToUpload) {
     const [fName, typeExtension] = uploadFileName.value.split('.');
     const fType = typeExtension.toLowerCase();
