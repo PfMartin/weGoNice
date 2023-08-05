@@ -190,9 +190,7 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		fileDepot := os.Getenv("FILE_DEPOT")
 		filePath := fmt.Sprintf("%s/%s", fileDepot, imageName)
 
-		fileHandler := files.NewHandler()
-
-		err = fileHandler.MoveTmpFileToPerm(tmpFilePath, filePath, true)
+		err = files.MoveTmpFileToPerm(tmpFilePath, filePath, true, h.logger)
 		if err != nil {
 			h.logger.Error().Err(err).Send()
 			http.Error(w, err.Error(), http.StatusInternalServerError)

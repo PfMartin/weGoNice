@@ -225,7 +225,7 @@ func TestMoveImage(t *testing.T) {
 	defer tmpTestFile.Close()
 
 	testFilePath := path.Join(dir, "../testUtils/files/perm/test-image.png")
-	err = h.MoveTmpFileToPerm(tmpTestFilePath, testFilePath, true)
+	err = MoveTmpFileToPerm(tmpTestFilePath, testFilePath, true, h.logger)
 	if err != nil {
 		t.Errorf("Failed to move temp file to perm: %s", err)
 	}

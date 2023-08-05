@@ -3,7 +3,6 @@ package files
 import (
 	"bufio"
 	"bytes"
-	"compress/gzip"
 	"errors"
 	"fmt"
 	"io"
@@ -81,7 +80,7 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 
 	name := strings.Split(fileHandler.Filename, ".")
 
-	if err := validateFileExtension(name[1]); err != nil {
+	if err := ValidateFileExtension(name[1]); err != nil {
 		h.logger.Error().Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -120,7 +119,7 @@ func (h *Handler) saveFile(w http.ResponseWriter, r *http.Request, isTemporary b
 	}
 
 	gzipFilepath := fmt.Sprintf("%s/%s.gz", fileDepot, fileNameWithExt)
-	err = gzipFile(filepath, gzipFilepath)
+	err = GzipFile(filepath, gzipFilepath)
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Error while gzipping the file")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -171,76 +170,4 @@ func (h *Handler) serveFile(w http.ResponseWriter, r *http.Request, isTemporary 
 	w.Header().Add("Content-Type", filetype)
 	w.WriteHeader(http.StatusOK)
 	w.Write(bytes)
-}
-
-func (h *Handler) MoveTmpFileToPerm(tmpFilePath string, filePath string, isWithDelete bool) error {
-	errMsg := "Failed to update author with new imageName"
-
-	compressedTmpFilePath := fmt.Sprintf("%s.gz", tmpFilePath)
-	tmpFile, err := os.Open(compressedTmpFilePath)
-	if err != nil {
-		h.logger.Error().Err(err).Msg("Failed to open temporary file during file copy")
-		return fmt.Errorf("%s: %s", errMsg, err)
-	}
-
-	compressedPermFilePath := fmt.Sprintf("%s.gz", filePath)
-	permFile, err := os.Create(compressedPermFilePath)
-	if err != nil {
-		tmpFile.Close()
-		return fmt.Errorf("%s: %s", errMsg, err)
-	}
-	defer permFile.Close()
-
-	_, err = io.Copy(permFile, tmpFile)
-	tmpFile.Close()
-	if err != nil {
-		h.logger.Error().Err(err).Msg("Failed to copy temporary file to file")
-		return fmt.Errorf("%s: %s", errMsg, err)
-	}
-
-	if isWithDelete {
-		err = RemoveCompressedFile(tmpFilePath)
-		if err != nil {
-			h.logger.Error().Err(err).Msg("Failed to remove temp file")
-			return fmt.Errorf("%s: %s", errMsg, err)
-		}
-	}
-
-	return nil
-}
-
-func validateFileExtension(fileExtension string) error {
-	lowerExtension := strings.ToLower(fileExtension)
-	possibleExtensions := []string{"jpg", "png"}
-
-	if lowerExtension != possibleExtensions[0] && lowerExtension != possibleExtensions[1] {
-		return fmt.Errorf("image must be '.%s' or '.%s'", possibleExtensions[0], possibleExtensions[1])
-	}
-
-	return nil
-}
-
-func gzipFile(sourcePath string, targetPath string) error {
-	sourceFile, err := os.Open(sourcePath)
-	if err != nil {
-		return err
-	}
-	defer sourceFile.Close()
-
-	targetFile, err := os.Create(targetPath)
-	if err != nil {
-		return err
-	}
-	defer targetFile.Close()
-
-	archiver := gzip.NewWriter(targetFile)
-	defer archiver.Close()
-
-	_, err = io.Copy(archiver, sourceFile)
-	if err != nil {
-		return err
-	}
-
-	err = os.Remove(sourcePath)
-	return err
 }
