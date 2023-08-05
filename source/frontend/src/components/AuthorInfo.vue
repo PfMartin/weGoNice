@@ -33,21 +33,11 @@ const togglePictureOverlay = () => {
 /* Handle File Input */
 const fileInput = ref<HTMLInputElement | null>(null);
 const openUploadWindow = () => {
-  if (!isValid.value) {
-    notificationService.addNotification(
-      'error',
-      `Please make sure there aren't any errors in the input fields before you add an image.`
-    );
-    return;
-  }
   fileInput.value?.click();
 };
 
 const uploadFileName = ref(props.initialData.imageName);
 const executeUpload = async () => {
-  if (!isValid.value) {
-    return;
-  }
   isFileLoading.value = true;
 
   const pathArray = fileInput.value?.value.split('\\') || [];
@@ -191,6 +181,7 @@ const isValid = computed((): boolean => {
 const route = useRoute();
 const publishBody = async (): Promise<void> => {
   if (!isValid.value) {
+    console.log('return');
     return;
   }
 

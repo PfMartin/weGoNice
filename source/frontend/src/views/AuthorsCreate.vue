@@ -4,7 +4,7 @@ import NotificationService from '@/services/notification.service';
 import { useRouter } from 'vue-router';
 import AuthorInfo from '@/components/AuthorInfo.vue';
 import { ButtonType, OperationMode } from '@/utils/constants';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { removeImageTmp } from '@/apis/weGoNice/files';
 
@@ -33,6 +33,14 @@ const cancel = async () => {
 };
 
 const submit = async (): Promise<void> => {
+  if (!hasName.value) {
+    NotificationService.addNotification(
+      'error',
+      'Please provide all the information required for creating a new author'
+    );
+    return;
+  }
+
   const { status, data } = await createAuthor(author.value);
 
   switch (status) {
@@ -56,6 +64,8 @@ const submit = async (): Promise<void> => {
       );
   }
 };
+
+const hasName = computed(() => author.value.name);
 </script>
 
 <template>
