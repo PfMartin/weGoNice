@@ -60,13 +60,14 @@ const executeUpload = async () => {
 
   if (props.mode === OperationMode.Edit && fileToUpload) {
     const res = await uploadFile(route.params.id, fileToUpload);
+
     if (res.status !== 200) {
       notificationService.addNotification(
         'error',
         'Something went wrong while uploading the picture.'
       );
     }
-
+    await updateImage();
     publishBody();
     return;
   } else if (props.mode === OperationMode.Create && fileToUpload) {
@@ -77,6 +78,7 @@ const executeUpload = async () => {
         'Something went wrong while uploading the picture.'
       );
     }
+    await updateImage();
     publishBody();
     return;
   }
@@ -134,12 +136,6 @@ const updateYouTube = (newValue: string) => {
 const isFileLoading = ref(false);
 const imageName = ref(props.initialData.imageName);
 
-watch(uploadFileName, () => {
-  setTimeout(() => {
-    updateImage();
-  }, 200);
-});
-
 /* Validation */
 const validationService = new ValidationService();
 
@@ -181,7 +177,6 @@ const isValid = computed((): boolean => {
 const route = useRoute();
 const publishBody = async (): Promise<void> => {
   if (!isValid.value) {
-    console.log('return');
     return;
   }
 
@@ -245,13 +240,13 @@ const updateImage = async (): Promise<void> => {
   isFileLoading.value = false;
 };
 
-onMounted(() => {
+onMounted(async () => {
   if (props.mode === OperationMode.Create) {
     document.getElementById('name')?.focus();
   } else {
     isFileLoading.value = true;
   }
-  updateImage();
+  await updateImage();
 });
 </script>
 

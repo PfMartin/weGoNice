@@ -140,12 +140,6 @@ const updateImage = async () => {
 };
 
 const uploadFileName = ref('');
-watch(uploadFileName, async (newValue, oldValue) => {
-  if (newValue !== oldValue) {
-    await timeout(200);
-    await updateImage();
-  }
-});
 
 const isFileLoading = ref(false);
 const executeUpload = async () => {
@@ -182,6 +176,7 @@ const executeUpload = async () => {
       );
     }
 
+    await updateImage();
     publishBody();
     return;
   } else if (props.mode === OperationMode.Create && fileToUpload) {
@@ -194,6 +189,7 @@ const executeUpload = async () => {
       return;
     }
 
+    await updateImage();
     publishBody();
   }
 };
@@ -294,6 +290,7 @@ onMounted(async () => {
 
   populateIngredientsEditor();
   populateStepsEditor();
+  await updateImage();
 });
 </script>
 
