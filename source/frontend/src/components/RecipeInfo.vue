@@ -9,7 +9,7 @@ import {
   CATEGORY_OPTIONS,
   AmountUnit,
 } from '@/utils/constants';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import DropdownInput from '@/components/DropdownInput.vue';
 import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';

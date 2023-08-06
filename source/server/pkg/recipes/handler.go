@@ -324,3 +324,38 @@ func (h *Handler) DeleteRecipeByID(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Deleted recipe")
 }
+
+func (h *Handler) GetRecipeByAuthorID(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["authorId"]
+
+	authorID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		h.logger.Error().Err(err).Msgf("Failed to parse id to authorID: %s", err)
+		http.Error(w, "Failed to parse id to authorID", http.StatusBadRequest)
+		return
+	}
+
+	coll := h.DB.Database(h.dbName).Collection(h.collection)
+
+	var recipes []models.Recipe
+	matchStage := bson.D{{Key: "$match", Value: bson.M{"authorId": authorID}}}
+	limitStage := bson.D{{Key: "$limit", Value: 1}}
+
+	cursor, err := coll.Aggregate(r.Context(), mongo.Pipeline{matchStage, utils.UserLookup, utils.AuthorLookup, projectStage, limitStage})
+	if err != nil {
+		h.logger.Error().Err(err).Msgf("No recipes found for authorID: %s", authorID)
+		http.Error(w, "No recipes found for the provided authorID", http.StatusNotFound)
+		return
+	}
+
+	if err = cursor.All(r.Context(), &recipes); err != nil {
+		h.logger.Error().Err(err).Msgf("Failed to parse recipes: %s", err)
+		http.Error(w, "Failed to parse recipes", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(recipes)
+
+}
