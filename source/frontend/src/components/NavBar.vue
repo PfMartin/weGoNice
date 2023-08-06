@@ -12,10 +12,6 @@
         <p>Account</p>
       </div>
       <nav>
-        <router-link :to="{ name: 'Home' }"
-          ><ion-icon name="home" />
-          <p>Home</p></router-link
-        >
         <router-link :to="{ name: 'Recipes' }">
           <ion-icon name="book" />
           <p>Recipes</p>
@@ -80,8 +76,8 @@ const logout = () => {
 </script>
 
 <style scoped lang="scss">
-@import '../styles/colors.scss';
-@import '../styles/outline.scss';
+@import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 
 .navbar {
   position: relative;

@@ -32,6 +32,11 @@ const init = async () => {
 init();
 
 const deleteAuthor = async () => {
+  /**
+   TODO: Check if author has recipes
+   - return before deleting Author
+   - show notifiation
+  */
   const res = await deleteAuthorById(route.params.id);
 
   if (res.status !== 200) {
