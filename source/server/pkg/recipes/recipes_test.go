@@ -2,6 +2,7 @@ package recipes
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -297,4 +298,73 @@ func TestUpdateRecipeByID(t *testing.T) {
 		got := w.Code
 		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedStatus, got)
 	}
+}
+
+func TestGetRecipesByAuthorID(t *testing.T) {
+	tests := []testArgs{
+		{name: "gets all recipes", expectedStatus: http.StatusOK, expectedRecipe: testUtils.TestRecipeAll},
+		// {name: "can't find recipes with provided id", expectedStatus: http.StatusNotFound, expectedRecipe: {}},
+	}
+
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+
+		if err := testUtils.ClearDatabase(DB); err != nil {
+			t.Errorf("Could not clear database")
+		}
+
+		insertedUserID, err := testUtils.CreateTestUser(DB)
+		if err != nil {
+			t.Errorf("User could not be created, %v", err)
+		}
+
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
+		if err != nil {
+			t.Errorf("Author could not be created, %v", err)
+		}
+
+		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
+		if err != nil {
+			t.Errorf("Recipe could not be created, %v", err)
+		}
+
+		requestUrl := fmt.Sprintf("%s/author", url)
+
+		// id := "64cf69c5b9bc285a02612ad4"
+
+		req := httptest.NewRequest(http.MethodGet, requestUrl, nil)
+		req = mux.SetURLVars(req, map[string]string{"authorId": insertedAuthorID})
+
+		w := httptest.NewRecorder()
+
+		context.Set(req, "userId", insertedUserID)
+
+		h.GetRecipeByAuthorID(w, req)
+
+		res := w.Result()
+		defer res.Body.Close()
+		data, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			t.Errorf("Failed to read body of response %s", err)
+		}
+
+		var recipeRes []models.Recipe
+		err = json.Unmarshal(data, &recipeRes)
+		if err != nil {
+			t.Errorf("Failed to unmarshal response to recipes: %s", err)
+		}
+
+		tt.expectedRecipe.ID = insertedRecipeID
+		tt.expectedRecipe.Author.ID = insertedAuthorID
+		tt.expectedRecipe.Author.UserID = insertedUserID
+		tt.expectedRecipe.User.ID = insertedUserID
+
+		expectedRecipes := []models.Recipe{tt.expectedRecipe}
+
+		got := recipeRes
+
+		assert.Equal(t, expectedRecipes, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, expectedRecipes, got)
+	}
+
 }

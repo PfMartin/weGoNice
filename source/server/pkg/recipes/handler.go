@@ -343,13 +343,13 @@ func (h *Handler) GetRecipeByAuthorID(w http.ResponseWriter, r *http.Request) {
 
 	cursor, err := coll.Aggregate(r.Context(), mongo.Pipeline{matchStage, utils.UserLookup, utils.AuthorLookup, projectStage, limitStage})
 	if err != nil {
-		h.logger.Error().Err(err).Msgf("No recipes found for authorID: %s", authorID)
+		h.logger.Error().Err(err).Msg("No recipes found for the provided authorID")
 		http.Error(w, "No recipes found for the provided authorID", http.StatusNotFound)
 		return
 	}
 
 	if err = cursor.All(r.Context(), &recipes); err != nil {
-		h.logger.Error().Err(err).Msgf("Failed to parse recipes: %s", err)
+		h.logger.Error().Err(err).Msg("Failed to parse recipes")
 		http.Error(w, "Failed to parse recipes", http.StatusInternalServerError)
 		return
 	}
