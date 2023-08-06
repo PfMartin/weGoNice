@@ -301,9 +301,16 @@ func TestUpdateRecipeByID(t *testing.T) {
 }
 
 func TestGetRecipesByAuthorID(t *testing.T) {
-	tests := []testArgs{
-		{name: "gets all recipes", expectedStatus: http.StatusOK, expectedRecipe: testUtils.TestRecipeAll},
-		// {name: "can't find recipes with provided id", expectedStatus: http.StatusNotFound, expectedRecipe: {}},
+	type testCase struct {
+		name           string
+		authorID       string
+		expectedStatus int
+		expectedRecipe models.Recipe
+	}
+
+	tests := []testCase{
+		{name: "gets all recipes", authorID: "", expectedStatus: http.StatusOK, expectedRecipe: testUtils.TestRecipeAll},
+		{name: "can't find recipes with provided id", authorID: "64cd21331247489aeb81e2b2", expectedStatus: http.StatusOK},
 	}
 
 	for _, tt := range tests {
@@ -331,10 +338,14 @@ func TestGetRecipesByAuthorID(t *testing.T) {
 
 		requestUrl := fmt.Sprintf("%s/author", url)
 
-		// id := "64cf69c5b9bc285a02612ad4"
-
 		req := httptest.NewRequest(http.MethodGet, requestUrl, nil)
-		req = mux.SetURLVars(req, map[string]string{"authorId": insertedAuthorID})
+
+		authorID := tt.authorID
+		if tt.authorID == "" {
+			authorID = insertedAuthorID
+		}
+
+		req = mux.SetURLVars(req, map[string]string{"authorId": authorID})
 
 		w := httptest.NewRecorder()
 
@@ -342,7 +353,11 @@ func TestGetRecipesByAuthorID(t *testing.T) {
 
 		h.GetRecipeByAuthorID(w, req)
 
+		fmt.Println(tt.expectedStatus)
+
 		res := w.Result()
+		assert.Equal(t, tt.expectedStatus, res.StatusCode, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedStatus, res.StatusCode)
+
 		defer res.Body.Close()
 		data, err := ioutil.ReadAll(res.Body)
 		if err != nil {
@@ -355,12 +370,15 @@ func TestGetRecipesByAuthorID(t *testing.T) {
 			t.Errorf("Failed to unmarshal response to recipes: %s", err)
 		}
 
-		tt.expectedRecipe.ID = insertedRecipeID
-		tt.expectedRecipe.Author.ID = insertedAuthorID
-		tt.expectedRecipe.Author.UserID = insertedUserID
-		tt.expectedRecipe.User.ID = insertedUserID
+		expectedRecipes := []models.Recipe(nil)
 
-		expectedRecipes := []models.Recipe{tt.expectedRecipe}
+		if tt.expectedRecipe.Name != "" {
+			tt.expectedRecipe.ID = insertedRecipeID
+			tt.expectedRecipe.Author.ID = insertedAuthorID
+			tt.expectedRecipe.Author.UserID = insertedUserID
+			tt.expectedRecipe.User.ID = insertedUserID
+			expectedRecipes = []models.Recipe{tt.expectedRecipe}
+		}
 
 		got := recipeRes
 

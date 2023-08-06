@@ -343,8 +343,8 @@ func (h *Handler) GetRecipeByAuthorID(w http.ResponseWriter, r *http.Request) {
 
 	cursor, err := coll.Aggregate(r.Context(), mongo.Pipeline{matchStage, utils.UserLookup, utils.AuthorLookup, projectStage, limitStage})
 	if err != nil {
-		h.logger.Error().Err(err).Msg("No recipes found for the provided authorID")
-		http.Error(w, "No recipes found for the provided authorID", http.StatusNotFound)
+		h.logger.Error().Err(err).Msg("Failed to retrieve recipes for the proved author ID")
+		http.Error(w, "Failed to retrieve recipes for the proved author ID", http.StatusNotFound)
 		return
 	}
 
@@ -357,5 +357,4 @@ func (h *Handler) GetRecipeByAuthorID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(recipes)
-
 }
