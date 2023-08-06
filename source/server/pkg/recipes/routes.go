@@ -9,11 +9,13 @@ import (
 )
 
 func RegisterRecipeRoutes(r *mux.Router, h Handler) {
-	usersR := r.PathPrefix("/recipes").Subrouter()
+	recipesR := r.PathPrefix("/recipes").Subrouter()
 
-	usersR.HandleFunc("", auth.CheckTokenHandler(logging.LogRequest(h.GetAllRecipes))).Methods(http.MethodGet)
-	usersR.HandleFunc("/{id}", auth.CheckTokenHandler(logging.LogRequest(h.GetRecipeByID))).Methods(http.MethodGet)
-	usersR.HandleFunc("", auth.CheckTokenHandler(logging.LogRequest(h.CreateRecipe))).Methods(http.MethodPost)
-	usersR.HandleFunc("/{id}", auth.CheckTokenHandler(logging.LogRequest(h.UpdateRecipeByID))).Methods(http.MethodPut)
-	usersR.HandleFunc("/{id}", auth.CheckTokenHandler(logging.LogRequest(h.DeleteRecipeByID))).Methods(http.MethodDelete)
+	recipesR.HandleFunc("", auth.CheckTokenHandler(logging.LogRequest(h.GetAllRecipes))).Methods(http.MethodGet)
+	recipesR.HandleFunc("/{id}", auth.CheckTokenHandler(logging.LogRequest(h.GetRecipeByID))).Methods(http.MethodGet)
+	recipesR.HandleFunc("", auth.CheckTokenHandler(logging.LogRequest(h.CreateRecipe))).Methods(http.MethodPost)
+	recipesR.HandleFunc("/{id}", auth.CheckTokenHandler(logging.LogRequest(h.UpdateRecipeByID))).Methods(http.MethodPut)
+	recipesR.HandleFunc("/{id}", auth.CheckTokenHandler(logging.LogRequest(h.DeleteRecipeByID))).Methods(http.MethodDelete)
+
+	recipesR.HandleFunc("/author/{authorId}", auth.CheckTokenHandler(logging.LogRequest(h.GetRecipeByAuthorID))).Methods(http.MethodGet)
 }

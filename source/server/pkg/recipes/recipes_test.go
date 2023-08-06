@@ -2,6 +2,7 @@ package recipes
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -297,4 +298,91 @@ func TestUpdateRecipeByID(t *testing.T) {
 		got := w.Code
 		assert.Equal(t, tt.expectedStatus, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedStatus, got)
 	}
+}
+
+func TestGetRecipesByAuthorID(t *testing.T) {
+	type testCase struct {
+		name           string
+		authorID       string
+		expectedStatus int
+		expectedRecipe models.Recipe
+	}
+
+	tests := []testCase{
+		{name: "gets all recipes", authorID: "", expectedStatus: http.StatusOK, expectedRecipe: testUtils.TestRecipeAll},
+		{name: "can't find recipes with provided id", authorID: "64cd21331247489aeb81e2b2", expectedStatus: http.StatusOK},
+	}
+
+	for _, tt := range tests {
+		DB := db.Init(false)
+		h := NewHandler(DB)
+
+		if err := testUtils.ClearDatabase(DB); err != nil {
+			t.Errorf("Could not clear database")
+		}
+
+		insertedUserID, err := testUtils.CreateTestUser(DB)
+		if err != nil {
+			t.Errorf("User could not be created, %v", err)
+		}
+
+		insertedAuthorID, err := testUtils.CreateTestAuthor(DB, insertedUserID)
+		if err != nil {
+			t.Errorf("Author could not be created, %v", err)
+		}
+
+		insertedRecipeID, err := testUtils.CreateTestRecipe(DB, insertedUserID, insertedAuthorID)
+		if err != nil {
+			t.Errorf("Recipe could not be created, %v", err)
+		}
+
+		requestUrl := fmt.Sprintf("%s/author", url)
+
+		req := httptest.NewRequest(http.MethodGet, requestUrl, nil)
+
+		authorID := tt.authorID
+		if tt.authorID == "" {
+			authorID = insertedAuthorID
+		}
+
+		req = mux.SetURLVars(req, map[string]string{"authorId": authorID})
+
+		w := httptest.NewRecorder()
+
+		context.Set(req, "userId", insertedUserID)
+
+		h.GetRecipeByAuthorID(w, req)
+
+		fmt.Println(tt.expectedStatus)
+
+		res := w.Result()
+		assert.Equal(t, tt.expectedStatus, res.StatusCode, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedStatus, res.StatusCode)
+
+		defer res.Body.Close()
+		data, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			t.Errorf("Failed to read body of response %s", err)
+		}
+
+		var recipeRes []models.Recipe
+		err = json.Unmarshal(data, &recipeRes)
+		if err != nil {
+			t.Errorf("Failed to unmarshal response to recipes: %s", err)
+		}
+
+		expectedRecipes := []models.Recipe(nil)
+
+		if tt.expectedRecipe.Name != "" {
+			tt.expectedRecipe.ID = insertedRecipeID
+			tt.expectedRecipe.Author.ID = insertedAuthorID
+			tt.expectedRecipe.Author.UserID = insertedUserID
+			tt.expectedRecipe.User.ID = insertedUserID
+			expectedRecipes = []models.Recipe{tt.expectedRecipe}
+		}
+
+		got := recipeRes
+
+		assert.Equal(t, expectedRecipes, got, "Test %s failed:\nExpected: %v | Got: %v", tt.name, expectedRecipes, got)
+	}
+
 }
