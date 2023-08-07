@@ -339,9 +339,8 @@ func (h *Handler) GetRecipeByAuthorID(w http.ResponseWriter, r *http.Request) {
 
 	var recipes []models.Recipe
 	matchStage := bson.D{{Key: "$match", Value: bson.M{"authorId": authorID}}}
-	limitStage := bson.D{{Key: "$limit", Value: 1}}
 
-	cursor, err := coll.Aggregate(r.Context(), mongo.Pipeline{matchStage, utils.UserLookup, utils.AuthorLookup, projectStage, limitStage})
+	cursor, err := coll.Aggregate(r.Context(), mongo.Pipeline{matchStage, utils.UserLookup, utils.AuthorLookup, projectStage})
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Failed to retrieve recipes for the proved author ID")
 		http.Error(w, "Failed to retrieve recipes for the proved author ID", http.StatusNotFound)

@@ -17,18 +17,16 @@ const route = useRoute();
 const router = useRouter();
 
 const author = ref<Authors.Author | null>(null);
+const recipes = ref<Recipes.Recipe[] | null>(null);
 
 const init = async () => {
-  const res = await getAuthorById(route.params.id);
-  author.value = res;
-};
+  const authorRes = await getAuthorById(route.params.id);
+  const recipesRes = await getRecipesByAuthorId(route.params.id);
 
-// const recipeData: Recipes.Recipe[] = [
-//   {
-//     title: 'First Recipe',
-//   },
-//   { title: 'Second Recipe' },
-// ];
+  author.value = authorRes;
+  recipes.value = recipesRes.data;
+  console.log(recipesRes);
+};
 
 init();
 
@@ -101,12 +99,7 @@ const deleteAuthor = async (): Promise<void> => {
         @on-click="deleteAuthor"
       />
     </div>
-    <!-- <RecipesList
-      v-if="author"
-      :author="author?.name || 'unknown'"
-      :data="recipeData"
-    />
-    <div v-else>spinner</div> -->
+    <RecipesList v-if="author" :author="author.name" :data="recipes" />
   </div>
 </template>
 

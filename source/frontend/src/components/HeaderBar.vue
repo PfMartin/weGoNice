@@ -96,7 +96,7 @@ body {
       display: flex;
       align-items: center;
       color: $bg-color-dark;
-      width: 500px;
+      min-width: 400px;
       transition: background 0.3s;
 
       &.has-focus {
