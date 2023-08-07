@@ -4,6 +4,7 @@ import OverviewControl from '@/components/OverviewControl.vue';
 import { onMounted, ref } from 'vue';
 import { SortDirections } from '@/utils/constants';
 import { RECIPE_SORTING_OPTIONS } from '@/utils/constants';
+import { sortRecipes } from '@/utils/sorting';
 
 const props = defineProps<{
   author?: string;
@@ -13,7 +14,11 @@ const props = defineProps<{
 const selectedSortingKey = ref('Name');
 const setSortingKey = (key: string): void => {
   selectedSortingKey.value = key;
-  sortRecipes();
+  sortRecipes(
+    sortDirection.value,
+    selectedSortingKey.value,
+    visibleRecipes.value
+  );
 };
 
 const sortDirection = ref(SortDirections.ASC);
@@ -22,55 +27,14 @@ const toggleSortDirection = (): void => {
     sortDirection.value === SortDirections.ASC
       ? SortDirections.DESC
       : SortDirections.ASC;
-  sortRecipes();
+  sortRecipes(
+    sortDirection.value,
+    selectedSortingKey.value,
+    visibleRecipes.value
+  );
 };
 
 const visibleRecipes = ref<Recipes.Recipe[]>([]);
-
-const sortRecipes = (): void => {
-  const sortKey: string =
-    selectedSortingKey.value.charAt(0).toLowerCase() +
-    selectedSortingKey.value.slice(1);
-
-  visibleRecipes.value = visibleRecipes.value.sort((a: any, b: any) => {
-    switch (selectedSortingKey.value) {
-      case 'Author':
-        if (a.author.name && b.author.name) {
-          if (a.author.name < b.author.name) {
-            return sortDirection.value === SortDirections.ASC ? -1 : 1;
-          } else {
-            return sortDirection.value === SortDirections.ASC ? 1 : -1;
-          }
-        } else if (a.author.lastName && b.author.lastName) {
-          if (a.author.lastName < b.author.lastName) {
-            return sortDirection.value === SortDirections.ASC ? -1 : 1;
-          } else {
-            return sortDirection.value === SortDirections.ASC ? 1 : -1;
-          }
-        } else if (a.author.firstName && b.author.firstName) {
-          if (a.author.firstName < b.author.firstName) {
-            return sortDirection.value === SortDirections.ASC ? -1 : 1;
-          } else {
-            return sortDirection.value === SortDirections.ASC ? 1 : -1;
-          }
-        }
-        return sortDirection.value === SortDirections.ASC ? 1 : -1;
-      case 'Time':
-        if (
-          a.timeHours * 60 + a.timeMinutes <
-          b.timeHours * 60 + b.timeMinutes
-        ) {
-          return sortDirection.value === SortDirections.ASC ? -1 : 1;
-        }
-        return sortDirection.value === SortDirections.ASC ? 1 : -1;
-      default:
-        if (a[sortKey] < b[sortKey]) {
-          return sortDirection.value === SortDirections.ASC ? -1 : 1;
-        }
-        return sortDirection.value === SortDirections.ASC ? 1 : -1;
-    }
-  });
-};
 
 onMounted(() => {
   visibleRecipes.value = props.data;
