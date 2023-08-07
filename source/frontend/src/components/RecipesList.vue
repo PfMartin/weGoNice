@@ -39,9 +39,11 @@ defineProps<{
     padding: 0.5rem 1rem;
     border-radius: $border-radius;
     color: $text-color;
+    box-shadow: $shadow;
   }
   .recipes {
-    max-height: calc(100vh - 590px);
+    margin-top: 0.5rem;
+    max-height: calc(100vh - 610px);
     overflow: auto;
     color: $text-color;
     display: flex;
