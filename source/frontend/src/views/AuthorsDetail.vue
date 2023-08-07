@@ -28,13 +28,6 @@ const init = async () => {
   console.log(recipesRes);
 };
 
-// const recipeData: Recipes.Recipe[] = [
-//   {
-//     name: 'First Recipe',
-//   },
-//   { name: 'Second Recipe' },
-// ];
-
 init();
 
 const authorHasRecipes = async (): Promise<boolean> => {
@@ -106,11 +99,7 @@ const deleteAuthor = async (): Promise<void> => {
         @on-click="deleteAuthor"
       />
     </div>
-    <RecipesList
-      v-if="author"
-      :author="author?.name || 'unknown'"
-      :data="recipes"
-    />
+    <RecipesList v-if="author" :author="author.name" :data="recipes" />
   </div>
 </template>
 
