@@ -11,7 +11,18 @@ defineProps<{
   <div class="recipes-list">
     <h1>Recipes by {{ author }}</h1>
     <div class="recipes">
-      <RecipeCard v-for="recipe in data" :data="recipe" :key="recipe.name" />
+      <template v-for="recipe in data" :key="recipe.name">
+        <RouterLink
+          :to="{
+            name: 'RecipesDetail',
+            params: {
+              id: recipe.id,
+            },
+          }"
+        >
+          <RecipeCard :data="recipe" />
+        </RouterLink>
+      </template>
     </div>
   </div>
 </template>
@@ -22,15 +33,21 @@ defineProps<{
 .recipes-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  .recipes {
-    background: $bg-color-mid;
+
+  h1 {
+    background-color: $bg-color-mid;
+    padding: 0.5rem 1rem;
     border-radius: $border-radius;
     color: $text-color;
+  }
+  .recipes {
+    max-height: calc(100vh - 590px);
+    overflow: auto;
+    color: $text-color;
     display: flex;
-    gap: 5px;
+    gap: 1rem;
     padding: 1rem;
-    box-shadow: $shadow;
+    flex-wrap: wrap;
   }
 }
 </style>
