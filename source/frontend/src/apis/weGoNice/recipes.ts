@@ -78,3 +78,17 @@ export const deleteRecipeById = async (id: string | string[]) => {
     return handleError(error);
   }
 };
+
+export const getRecipesByAuthorId = async (authorId: string | string[]) => {
+  headers.Authorization = addAuthorization();
+
+  try {
+    const res = await axios.get(`${url}/recipes/author/${authorId}`, {
+      headers,
+    });
+
+    return res;
+  } catch (error) {
+    return handleError(error);
+  }
+};

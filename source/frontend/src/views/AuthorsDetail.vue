@@ -9,6 +9,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
 import notificationService from '@/services/notification.service';
 import { ButtonType } from '@/utils/constants';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
+import { getRecipesByAuthorId } from '@/apis/weGoNice/recipes';
 
 const mode = OperationMode.Edit;
 
@@ -31,12 +32,30 @@ const init = async () => {
 
 init();
 
-const deleteAuthor = async () => {
-  /**
-   TODO: Check if author has recipes
-   - return before deleting Author
-   - show notifiation
-  */
+const authorHasRecipes = async (): Promise<boolean> => {
+  if (!author.value?.id) {
+    return true;
+  }
+  const res = await getRecipesByAuthorId(author.value.id);
+  if (res.status !== 200) {
+    notificationService.addNotification(
+      'error',
+      `Attempt to get recipes associated with this author failed. This author can't be deleted at the moment.`
+    );
+  }
+
+  return res.data !== null;
+};
+
+const deleteAuthor = async (): Promise<void> => {
+  if (await authorHasRecipes()) {
+    notificationService.addNotification(
+      'error',
+      'There are recipes associated with this author. Please delete associated recipes before deleting the author.'
+    );
+    return;
+  }
+
   const res = await deleteAuthorById(route.params.id);
 
   if (res.status !== 200) {
@@ -47,9 +66,13 @@ const deleteAuthor = async () => {
     return;
   }
 
+  const authorName =
+    author.value?.name ||
+    `${author.value?.firstName} ${author.value?.lastName}`;
+
   notificationService.addNotification(
     'success',
-    `Successfully deleted ${author.value?.name}`
+    `Successfully deleted author '${authorName}'`
   );
   router.push({ name: 'AuthorsOverview' });
 };
