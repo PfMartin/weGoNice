@@ -107,11 +107,10 @@ const deleteAuthor = async (): Promise<void> => {
       />
     </div>
     <RecipesList
-      v-if="author && recipes"
+      v-if="author"
       :author="author?.name || 'unknown'"
       :data="recipes"
     />
-    <div v-else>spinner</div>
   </div>
 </template>
 
