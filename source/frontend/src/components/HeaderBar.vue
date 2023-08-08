@@ -12,23 +12,18 @@ interface HeaderConfig {
 
 const emit = defineEmits<{
   (e: 'button-click'): void;
-  (e: 'search-input', searchValue: string): void;
 }>();
 
 const props = defineProps<{
   config: HeaderConfig;
 }>();
-
-const onSearchInput = (searchValue: string): void => {
-  emit('search-input', searchValue);
-};
 </script>
 
 <template lang="html">
   <body>
     <header>
       <h2>{{ props.config.pageTitle }}</h2>
-      <SearchBox @search-input="onSearchInput" />
+      <SearchBox />
     </header>
     <ButtonComponent
       @click="emit('button-click')"

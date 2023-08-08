@@ -2,6 +2,9 @@
 import DropdownInput from '@/components/DropdownInput.vue';
 import { SortDirections } from '@/utils/constants';
 import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const props = defineProps<{
   sortingKeys: string[];
@@ -17,6 +20,10 @@ const emit = defineEmits<{
 const sortDirectionIcon = computed((): string =>
   props.sortingDirection === SortDirections.ASC ? 'arrow-down' : 'arrow-up'
 );
+
+const resetFilter = (): void => {
+  store.dispatch('search/setSearchInput', '');
+};
 </script>
 
 <template>
@@ -37,6 +44,7 @@ const sortDirectionIcon = computed((): string =>
         <span @click="emit('toggle-sorting-direction')" class="sort-direction"
           ><ion-icon :name="sortDirectionIcon"
         /></span>
+        <span @click="resetFilter"><ion-icon name="filter" /></span>
       </div>
     </div>
   </div>

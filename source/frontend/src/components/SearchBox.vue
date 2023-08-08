@@ -1,27 +1,34 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { useStore } from 'vuex';
 
-const emit = defineEmits<{
-  (e: 'search-input', searchValue: string): void;
-}>();
+const store = useStore();
 
-const searchBoxStyle = ref({
-  ['search-box']: true,
-  ['has-focus']: false,
-});
+const hasFocus = ref(false);
 const toggleSearchBoxFocus = (): void => {
-  searchBoxStyle.value['has-focus'] = !searchBoxStyle.value['has-focus'];
+  hasFocus.value = !hasFocus.value;
 };
 const searchInputElement = ref<HTMLInputElement | null>(null);
 const focusSearchInput = (): void => {
   searchInputElement.value && searchInputElement.value.focus();
 };
 
-// Search box
-const searchInput = ref('');
-watch(searchInput, (newValue) => {
-  emit('search-input', newValue);
+const searchInput = ref(store.getters['search/searchInput']);
+watch(searchInput, () => {
+  store.dispatch('search/setSearchInput', searchInput.value);
 });
+
+const storedInput = computed(() => store.getters['search/searchInput']);
+watch(storedInput, () => {
+  if (storedInput.value === '') {
+    searchInput.value = '';
+  }
+});
+
+const searchBoxStyle = computed(() => ({
+  'search-box': true,
+  'has-focus': hasFocus.value,
+}));
 </script>
 
 <template>
