@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
+import search from '@/store/search';
 import auth from '@/store/auth';
 import notifications from '@/store/notifications';
 
@@ -12,5 +13,6 @@ export default createStore({
   modules: {
     auth,
     notifications,
+    search,
   },
 });

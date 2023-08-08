@@ -7,12 +7,8 @@ export default {
     userId: '',
   },
   getters: {
-    sessionToken: (state: Store.State) => {
-      return state.sessionToken;
-    },
-    userId: (state: Store.State) => {
-      return state.userId;
-    },
+    sessionToken: (state: Store.State) => state.sessionToken,
+    userId: (state: Store.State) => state.userId,
   },
   mutations: {
     setSessionToken: (state: Store.State, token: string) => {

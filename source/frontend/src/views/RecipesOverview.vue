@@ -34,9 +34,9 @@ const visibleRecipes = ref<Recipes.Recipe[]>([]);
 const listHeight = ref(0);
 const computeListHeight = () => (listHeight.value = window.innerHeight - 180);
 
+const recipes = ref<Recipes.Recipe[]>([]);
 const isReady = computed(() => !!recipes.value.length);
 
-const recipes = ref<Recipes.Recipe[]>([]);
 onMounted(async () => {
   recipes.value = (await getAllRecipes()) || [];
   visibleRecipes.value = recipes.value;
