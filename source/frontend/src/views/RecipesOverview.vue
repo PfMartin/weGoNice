@@ -6,7 +6,6 @@ import RecipeCard from '@/components/RecipeCard.vue';
 import OverviewControl from '@/components/OverviewControl.vue';
 import { sortRecipes } from '@/utils/sorting';
 import { useStore } from 'vuex';
-import search from '@/store/search';
 
 const store = useStore();
 

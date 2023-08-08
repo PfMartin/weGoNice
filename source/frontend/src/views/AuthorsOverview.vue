@@ -5,6 +5,9 @@ import AuthorCard from '@/components/AuthorCard.vue';
 import { AUTHOR_SORTING_OPTIONS, SortDirections } from '@/utils/constants';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import OverviewControl from '@/components/OverviewControl.vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 // Searching, sorting and filtering
 const selectedSortingKey = ref('Name');
@@ -20,9 +23,7 @@ const toggleSortDirection = (): void => {
       : SortDirections.ASC;
   sortAuthors();
 };
-const sortDirectionIcon = computed((): string =>
-  sortDirection.value === SortDirections.ASC ? 'arrow-down' : 'arrow-up'
-);
+
 const sortAuthors = (): void => {
   const sortKey: string =
     selectedSortingKey.value.charAt(0).toLowerCase() +
@@ -35,7 +36,21 @@ const sortAuthors = (): void => {
     return sortDirection.value === SortDirections.ASC ? 1 : -1;
   });
 };
-const visibleAuthors = ref<Authors.Author[]>([]);
+const visibleAuthors = computed(() => {
+  const searchInput = store.getters['search/searchInput'].toLowerCase();
+
+  return authors.value.filter((a) => {
+    const name = a.name.toLowerCase();
+    const authorFirstName = a.firstName.toLowerCase();
+    const authorLastName = a.lastName.toLowerCase();
+
+    return (
+      name.includes(searchInput) ||
+      authorFirstName?.includes(searchInput) ||
+      authorLastName?.includes(searchInput)
+    );
+  });
+});
 
 const listHeight = ref(0);
 const computeListHeight = () => (listHeight.value = window.innerHeight - 180);
@@ -44,7 +59,6 @@ const authors = ref<Authors.Author[]>([]);
 // Get All Authors
 onMounted(async (): Promise<void> => {
   authors.value = (await getAllAuthors()) || [];
-  visibleAuthors.value = authors.value;
   computeListHeight();
   addEventListener('resize', computeListHeight);
 });
