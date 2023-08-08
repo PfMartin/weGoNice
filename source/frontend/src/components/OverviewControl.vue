@@ -21,6 +21,8 @@ const sortDirectionIcon = computed((): string =>
   props.sortingDirection === SortDirections.ASC ? 'arrow-down' : 'arrow-up'
 );
 
+const searchFilter = computed(() => store.getters['search/searchInput']);
+
 const resetFilter = (): void => {
   store.dispatch('search/setSearchInput', '');
 };
@@ -44,7 +46,11 @@ const resetFilter = (): void => {
         <span @click="emit('toggle-sorting-direction')" class="sort-direction"
           ><ion-icon :name="sortDirectionIcon"
         /></span>
-        <span @click="resetFilter"><ion-icon name="filter" /></span>
+        <Transition name="fade" mode="out-in">
+          <div v-if="searchFilter" class="reset-filter" @click="resetFilter">
+            <ion-icon name="funnel" /><span>Filter active</span>
+          </div>
+        </Transition>
       </div>
     </div>
   </div>
@@ -52,6 +58,7 @@ const resetFilter = (): void => {
 
 <style scoped lang="scss">
 @import '@/styles/colors.scss';
+@import '@/styles/outline.scss';
 .overview-control {
   padding: 0 1rem;
   h1 {
@@ -67,24 +74,55 @@ const resetFilter = (): void => {
     .sorting {
       display: flex;
       margin-right: 1rem;
+      gap: 0.5rem;
       .sort-direction {
-        margin-left: 0.2rem;
-        font-size: 1.5rem;
-        color: $bg-color-mid;
+        background: $bg-color-mid;
+        padding: 0.5rem;
+        border-radius: $border-radius;
+        font-size: 1.4rem;
+        color: $text-color;
         display: flex;
         align-items: center;
+        transition:
+          color 0.2s,
+          background-color 0.2s;
 
         &:hover {
           cursor: pointer;
-          color: $bg-color-dark;
+          color: $accent-color;
+          background-color: $bg-color-dark;
         }
       }
     }
 
-    .filter-switches {
+    .reset-filter {
       display: flex;
+      align-items: center;
       gap: 0.5rem;
+      background: $bg-color-mid;
+      padding: 0.5rem;
+      border-radius: $border-radius;
+      color: $text-color;
+      transition:
+        color 0.2s,
+        background-color 0.2s;
+
+      &:hover {
+        background-color: $bg-color-dark;
+        color: $accent-color;
+        cursor: pointer;
+      }
     }
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
