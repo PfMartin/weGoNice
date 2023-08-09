@@ -1,4 +1,5 @@
 FROM nginx:stable-alpine
+LABEL org.opencontainers.image.source="https://github.com/PfMartin/weGoNice"
 
 COPY dist /usr/share/nginx/html
 EXPOSE 80
