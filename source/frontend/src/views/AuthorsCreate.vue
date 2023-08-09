@@ -86,7 +86,7 @@ const hasName = computed(() => author.value.name);
         <ButtonComponent
           :buttonType="ButtonType.Delete"
           buttonText="Cancel"
-          buttonIconName="close-circle"
+          buttonIconName="trash"
           @on-click="cancel"
         />
         <ButtonComponent

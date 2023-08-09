@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { getAllRecipes } from '@/apis/weGoNice/recipes';
 import { RECIPE_SORTING_OPTIONS, SortDirections } from '@/utils/constants';
 import RecipeCard from '@/components/RecipeCard.vue';

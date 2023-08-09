@@ -5,12 +5,15 @@ export const sortRecipes = (
   selectedSortingKey: string,
   recipes: Recipes.Recipe[]
 ) => {
-  const sortKey: string =
-    selectedSortingKey.charAt(0).toLowerCase() + selectedSortingKey.slice(1);
+  const sortKey = (selectedSortingKey.charAt(0).toLowerCase() +
+    selectedSortingKey.slice(1)) as keyof Recipes.Recipe;
 
-  return recipes.sort((a: any, b: any) => {
+  return recipes.sort((a: Recipes.Recipe, b: Recipes.Recipe) => {
     switch (selectedSortingKey) {
       case 'Author':
+        if (!a.author || !b.author) {
+          return -1;
+        }
         if (a.author.name && b.author.name) {
           if (a.author.name < b.author.name) {
             return sortDirection === SortDirections.ASC ? -1 : 1;
@@ -40,7 +43,9 @@ export const sortRecipes = (
         }
         return sortDirection === SortDirections.ASC ? 1 : -1;
       default:
-        if (a[sortKey] < b[sortKey]) {
+        const aVal = a[sortKey];
+        const bVal = b[sortKey];
+        if (aVal && bVal && aVal < bVal) {
           return sortDirection === SortDirections.ASC ? -1 : 1;
         }
         return sortDirection === SortDirections.ASC ? 1 : -1;
