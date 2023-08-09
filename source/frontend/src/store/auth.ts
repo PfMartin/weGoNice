@@ -22,14 +22,8 @@ export default {
     setSessionToken: (
       context: ActionContext<Store.State, Store.State>,
       token: string
-    ) => {
-      context.commit('setSessionToken', token);
-    },
-    setUserId: (
-      context: ActionContext<Store.State, Store.State>,
-      id: string
-    ) => {
-      context.commit('setUserId', id);
-    },
+    ) => context.commit('setSessionToken', token),
+    setUserId: (context: ActionContext<Store.State, Store.State>, id: string) =>
+      context.commit('setUserId', id),
   },
 };

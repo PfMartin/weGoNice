@@ -21,8 +21,6 @@ export default {
     [SearchActions.SetSearchInput]: (
       context: ActionContext<Store.State, Store.State>,
       input: string
-    ) => {
-      context.commit(SearchActions.SetSearchInput, input);
-    },
+    ) => context.commit(SearchActions.SetSearchInput, input),
   },
 };

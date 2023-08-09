@@ -7,9 +7,7 @@ export default {
     notificationCounter: 0,
   },
   getters: {
-    notifications: (state: Store.State) => {
-      return state.notifications;
-    },
+    notifications: (state: Store.State) => state.notifications,
   },
   mutations: {
     pushNotification: (
@@ -35,14 +33,10 @@ export default {
     pushNotification: (
       context: ActionContext<Store.State, Store.State>,
       notification: Store.Notification
-    ) => {
-      context.commit('pushNotification', notification);
-    },
+    ) => context.commit('pushNotification', notification),
     removeNotification: (
       context: ActionContext<Store.State, Store.State>,
       notificationId: number
-    ) => {
-      context.commit('removeNotification', notificationId);
-    },
+    ) => context.commit('removeNotification', notificationId),
   },
 };
