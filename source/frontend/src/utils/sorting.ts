@@ -9,6 +9,9 @@ export const sortRecipes = (
     selectedSortingKey.slice(1)) as keyof Recipes.Recipe;
 
   return recipes.sort((a: Recipes.Recipe, b: Recipes.Recipe) => {
+    const aValue = a[sortKey];
+    const bValue = b[sortKey];
+
     switch (selectedSortingKey) {
       case 'Author':
         if (!a.author || !b.author) {
@@ -43,9 +46,7 @@ export const sortRecipes = (
         }
         return sortDirection === SortDirections.ASC ? 1 : -1;
       default:
-        const aVal = a[sortKey];
-        const bVal = b[sortKey];
-        if (aVal && bVal && aVal < bVal) {
+        if (aValue && bValue && aValue < bValue) {
           return sortDirection === SortDirections.ASC ? -1 : 1;
         }
         return sortDirection === SortDirections.ASC ? 1 : -1;
