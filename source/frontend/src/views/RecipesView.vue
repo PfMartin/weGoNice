@@ -10,11 +10,6 @@ const headerConfig = {
   buttonText: 'New Recipe',
 };
 
-// Searching, sorting and filtering
-const onSearchInput = (searchValue: string): void => {
-  console.log(searchValue);
-};
-
 const pushRecipesCreate = (): void => {
   router.push({ name: 'RecipesCreate' });
 };
@@ -23,11 +18,7 @@ const pushRecipesCreate = (): void => {
 <template>
   <div class="recipes-overview">
     <body>
-      <HeaderBar
-        :config="headerConfig"
-        @search-input="onSearchInput"
-        @button-click="pushRecipesCreate"
-      />
+      <HeaderBar :config="headerConfig" @button-click="pushRecipesCreate" />
 
       <RouterView />
     </body>

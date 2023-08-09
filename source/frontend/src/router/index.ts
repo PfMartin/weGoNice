@@ -5,7 +5,6 @@ import { isAuthenticated, isTokenExpired } from '@/auth';
 import { refreshToken } from '@/apis/weGoNice/auth';
 import authorsRoutes from '@/router/authors-routes';
 import recipesRoutes from '@/router/recipes-routes';
-import { useStore } from 'vuex';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -57,7 +56,6 @@ router.beforeEach(async (to, from) => {
   }
 
   if (isAuthenticated() && isTokenExpired()) {
-    console.warn('refreshing Token');
     const refreshSuccess = await refreshToken();
     if (!refreshSuccess) {
       return { name: 'Login' };

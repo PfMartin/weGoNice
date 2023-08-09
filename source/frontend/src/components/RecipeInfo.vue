@@ -25,10 +25,6 @@ import {
 import { dateToString } from '@/utils/utility-functions';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
-const timeout = (ms: number) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
-
 const validationService = new ValidationService();
 
 const props = defineProps<{

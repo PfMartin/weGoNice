@@ -11,5 +11,6 @@ declare namespace Store {
     userId: string;
     notifications: Notification[];
     notificationCounter: number;
+    searchInput: string;
   }
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import RecipeCard from '@/components/RecipeCard.vue';
 import OverviewControl from '@/components/OverviewControl.vue';
-import { onMounted, popScopeId, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { SortDirections } from '@/utils/constants';
 import { RECIPE_SORTING_OPTIONS } from '@/utils/constants';
 import { sortRecipes } from '@/utils/sorting';
