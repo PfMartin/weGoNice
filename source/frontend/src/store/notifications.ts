@@ -1,5 +1,10 @@
 import { ActionContext, Store } from 'vuex';
 
+enum NotificationActions {
+  PushNotification = 'pushNotification',
+  RemoveNotification = 'removeNotification',
+}
+
 export default {
   namespaced: true,
   state: {
@@ -10,7 +15,7 @@ export default {
     notifications: (state: Store.State) => state.notifications,
   },
   mutations: {
-    pushNotification: (
+    [NotificationActions.PushNotification]: (
       state: Store.State,
       notification: Store.Notification
     ) => {
@@ -23,20 +28,23 @@ export default {
       };
       state.notifications.push(newNotification);
     },
-    removeNotification: (state: Store.State, notificationId: number) => {
+    [NotificationActions.RemoveNotification]: (
+      state: Store.State,
+      notificationId: number
+    ) => {
       state.notifications = state.notifications.filter(
         (notification: Store.Notification) => notification.id !== notificationId
       );
     },
   },
   actions: {
-    pushNotification: (
+    [NotificationActions.PushNotification]: (
       context: ActionContext<Store.State, Store.State>,
       notification: Store.Notification
-    ) => context.commit('pushNotification', notification),
-    removeNotification: (
+    ) => context.commit(NotificationActions.PushNotification, notification),
+    [NotificationActions.RemoveNotification]: (
       context: ActionContext<Store.State, Store.State>,
       notificationId: number
-    ) => context.commit('removeNotification', notificationId),
+    ) => context.commit(NotificationActions.RemoveNotification, notificationId),
   },
 };
