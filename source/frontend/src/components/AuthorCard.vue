@@ -18,7 +18,7 @@ onMounted(async () => {
   <div class="author-card">
     <div class="picture">
       <ion-icon v-if="!data.imageName" name="person" />
-      <img v-if="img" :src="img" />
+      <img v-else-if="img" :src="img" />
       <SpinnerComponent size="small" v-else />
     </div>
     <div class="main">
