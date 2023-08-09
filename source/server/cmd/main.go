@@ -41,7 +41,7 @@ func main() {
 
 	url := "localhost:8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
-	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://localhost", "localhost"})
+	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://127.0.0.1:8080", "http://127.0.0.1", "http://127.0.0.1:80"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
 	logger.Info().Str("url", url).Msg("Starting api")

@@ -3,7 +3,7 @@ name: build-frontend
 on: [push]
 
 jobs:
-  build:
+  build-frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,3 +20,25 @@ jobs:
           cd ./source/frontend
           npm ci
           npm run build
+
+      - name: Upload result as binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend-build
+          path: ./source/frontend/dist
+
+  build-container:
+    runs-on: ubuntu-latest
+    needs: build-frontend
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: frontend-build
+          path: ./source/frontend/dist
+
+      - name: Build container
+        run: |
+          cd ./source/frontend
+          docker build -t wegonice/frontend .
