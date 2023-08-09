@@ -2,6 +2,10 @@ name: build-frontend
 
 on: [push]
 
+env:
+  NODE_VERSION: 18.16.1
+  FRONTEND_DIR: ./source/frontend
+
 jobs:
   prettier-check:
     runs-on: ubuntu-latest
@@ -13,11 +17,11 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v3
         with:
-          node-version: 18.16.1
+          node-version: ${{env.NODE_VERSION}}
 
       - name: Check prettier for files in ./src
         run: |
-          cd ./source/frontend
+          cd ${{env.FRONTEND_DIR}}
           npm run prettier:check
 
   build-frontend:
@@ -31,11 +35,11 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v3
         with:
-          node-version: 18.16.1
+          node-version: ${{env.NODE_VERSION}}
 
       - name: Build package
         run: |
-          cd ./source/frontend
+          cd ${{env.FRONTEND_DIR}}
           npm ci
           npm run build
 
@@ -43,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: frontend-build
-          path: ./source/frontend/dist
+          path: ${{env.FRONTEND_DIR}}/dist
 
   build-container:
     runs-on: ubuntu-latest
@@ -57,10 +61,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: frontend-build
-          path: ./source/frontend/dist
+          path: ${{env.FRONTEND_DIR}}/dist
 
       - name: Build container
         run: |
-          cd ./source/frontend
+          cd ${{env.FRONTEND_DIR}}
           ls -l
           docker build -t wegonice/frontend .
