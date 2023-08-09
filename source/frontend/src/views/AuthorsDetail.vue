@@ -25,7 +25,6 @@ const init = async () => {
 
   author.value = authorRes;
   recipes.value = recipesRes.data;
-  console.log(recipesRes);
 };
 
 init();
