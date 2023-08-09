@@ -41,4 +41,5 @@ jobs:
       - name: Build container
         run: |
           cd ./source/frontend
+          ls -l
           docker build -t wegonice/frontend .
