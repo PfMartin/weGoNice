@@ -91,7 +91,7 @@ init();
         <ButtonComponent
           :buttonType="ButtonType.Delete"
           buttonText="Delete"
-          buttonIconName="close-circle"
+          buttonIconName="trash"
           @on-click="deleteRecipe"
         />
       </div>

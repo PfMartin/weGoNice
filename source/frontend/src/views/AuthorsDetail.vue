@@ -95,7 +95,7 @@ const deleteAuthor = async (): Promise<void> => {
       <ButtonComponent
         :buttonType="ButtonType.Delete"
         buttonText="Delete"
-        buttonIconName="close-circle"
+        buttonIconName="trash"
         @on-click="deleteAuthor"
       />
     </div>

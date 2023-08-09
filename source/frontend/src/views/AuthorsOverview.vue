@@ -55,15 +55,16 @@ const visibleAuthors = computed(() => {
 const listHeight = ref(0);
 const computeListHeight = () => (listHeight.value = window.innerHeight - 180);
 
+const isLoading = ref(true);
 const authors = ref<Authors.Author[]>([]);
 // Get All Authors
 onMounted(async (): Promise<void> => {
+  isLoading.value = true;
   authors.value = (await getAllAuthors()) || [];
   computeListHeight();
   addEventListener('resize', computeListHeight);
+  isLoading.value = false;
 });
-
-const isReady = computed((): boolean => !!authors.value.length);
 </script>
 
 <template>
@@ -76,7 +77,11 @@ const isReady = computed((): boolean => !!authors.value.length);
       @toggle-sorting-direction="toggleSortDirection"
     />
 
-    <div class="authors" v-if="isReady" :style="`max-height: ${listHeight}px`">
+    <div
+      class="authors"
+      v-if="!isLoading"
+      :style="`max-height: ${listHeight}px`"
+    >
       <template v-for="author in visibleAuthors" :key="author.name">
         <RouterLink
           :to="{
@@ -105,10 +110,9 @@ const isReady = computed((): boolean => !!authors.value.length);
   padding: 1rem 1rem;
   .authors {
     margin: 2rem 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 1rem;
-    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
     margin-right: 5px;
   }
 

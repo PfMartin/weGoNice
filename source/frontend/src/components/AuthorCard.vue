@@ -63,6 +63,7 @@ onMounted(async () => {
   grid-gap: 0.5rem;
   align-items: center;
   min-height: 100px;
+  width: 380px;
   transition: all 0.3s;
   box-shadow: $shadow;
 

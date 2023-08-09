@@ -6,6 +6,7 @@ import RecipeCard from '@/components/RecipeCard.vue';
 import OverviewControl from '@/components/OverviewControl.vue';
 import { sortRecipes } from '@/utils/sorting';
 import { useStore } from 'vuex';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 const store = useStore();
 
@@ -36,7 +37,6 @@ const listHeight = ref(0);
 const computeListHeight = () => (listHeight.value = window.innerHeight - 180);
 
 const recipes = ref<Recipes.Recipe[]>([]);
-const isReady = computed(() => !!recipes.value.length);
 
 const visibleRecipes = computed(() => {
   const searchInput = store.getters['search/searchInput'].toLowerCase();
@@ -56,10 +56,14 @@ const visibleRecipes = computed(() => {
   });
 });
 
+const isLoading = ref(true);
+
 onMounted(async () => {
+  isLoading.value = true;
   recipes.value = (await getAllRecipes()) || [];
   computeListHeight();
   addEventListener('resize', computeListHeight);
+  isLoading.value = false;
 });
 </script>
 
@@ -74,7 +78,11 @@ onMounted(async () => {
       :hasFilter="visibleRecipes.length < recipes.length"
     />
 
-    <div class="recipes" v-if="isReady" :style="`max-height: ${listHeight}px`">
+    <div
+      class="recipes"
+      v-if="!isLoading"
+      :style="`max-height: ${listHeight}px`"
+    >
       <template v-for="recipe in visibleRecipes" :key="recipe.name">
         <RouterLink
           :to="{
@@ -87,6 +95,9 @@ onMounted(async () => {
           <RecipeCard :data="recipe" />
         </RouterLink>
       </template>
+    </div>
+    <div class="spinner-container" v-else>
+      <SpinnerComponent size="large" />
     </div>
   </div>
 </template>
@@ -103,6 +114,12 @@ onMounted(async () => {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+  }
+
+  .spinner-container {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
   }
 }
 </style>
