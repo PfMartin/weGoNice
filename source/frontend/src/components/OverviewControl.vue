@@ -46,7 +46,7 @@ const resetFilter = (): void => {
         <span @click="emit('toggle-sorting-direction')" class="sort-direction"
           ><ion-icon :name="sortDirectionIcon"
         /></span>
-        <Transition>
+        <Transition name="fade">
           <div v-if="searchFilter" class="reset-filter" @click="resetFilter">
             <ion-icon name="funnel" /><span>Filter active</span>
           </div>
@@ -117,13 +117,13 @@ const resetFilter = (): void => {
   }
 }
 
-.v-enter-active,
-.v-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s ease;
 }
 
-.v-enter-from,
-.v-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
