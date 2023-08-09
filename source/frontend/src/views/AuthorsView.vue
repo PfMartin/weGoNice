@@ -10,11 +10,6 @@ const headerConfig = {
   buttonText: 'New Author',
 };
 
-// Searching, sorting and filtering
-const onSearchInput = (searchValue: string): void => {
-  console.log(searchValue);
-};
-
 const pushAuthorsCreate = (): void => {
   router.push({ name: 'AuthorsCreate' });
 };
@@ -23,11 +18,7 @@ const pushAuthorsCreate = (): void => {
 <template>
   <div class="authors-overview">
     <body>
-      <HeaderBar
-        :config="headerConfig"
-        @search-input="onSearchInput"
-        @button-click="pushAuthorsCreate"
-      />
+      <HeaderBar :config="headerConfig" @button-click="pushAuthorsCreate" />
 
       <RouterView />
     </body>

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import RecipeCard from '@/components/RecipeCard.vue';
 import OverviewControl from '@/components/OverviewControl.vue';
-import { onMounted, ref } from 'vue';
+import { ref, computed } from 'vue';
 import { SortDirections } from '@/utils/constants';
 import { RECIPE_SORTING_OPTIONS } from '@/utils/constants';
 import { sortRecipes } from '@/utils/sorting';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const props = defineProps<{
   author?: string;
@@ -34,17 +37,32 @@ const toggleSortDirection = (): void => {
   );
 };
 
-const visibleRecipes = ref<Recipes.Recipe[]>([]);
+const visibleRecipes = computed(() => {
+  if (!props.data) {
+    return [];
+  }
+  const searchInput = store.getters['search/searchInput'].toLowerCase();
 
-onMounted(() => {
-  visibleRecipes.value = props.data || [];
+  return props.data.filter((r) => {
+    const name = r.name.toLowerCase();
+    const authorName = r.author?.name.toLowerCase();
+    const authorFirstName = r.author?.firstName.toLowerCase();
+    const authorLastName = r.author?.lastName.toLowerCase();
+
+    return (
+      name.includes(searchInput) ||
+      authorName?.includes(searchInput) ||
+      authorFirstName?.includes(searchInput) ||
+      authorLastName?.includes(searchInput)
+    );
+  });
 });
 </script>
 
 <template>
   <div class="recipes-list">
     <h3><ion-icon name="book" /> Recipes by {{ author }}</h3>
-    <div v-if="visibleRecipes.length" class="overview-controls">
+    <div v-if="data && data.length" class="overview-controls">
       <OverviewControl
         :sortingKeys="RECIPE_SORTING_OPTIONS"
         :selectedSortingKey="selectedSortingKey"
@@ -53,7 +71,7 @@ onMounted(() => {
         @toggle-sorting-direction="toggleSortDirection"
       />
     </div>
-    <div v-if="visibleRecipes.length" class="recipes">
+    <div v-if="data && data.length" class="recipes">
       <template v-for="recipe in visibleRecipes" :key="recipe.name">
         <RouterLink
           :to="{
@@ -100,7 +118,7 @@ onMounted(() => {
     color: $text-color;
     display: flex;
     gap: 1rem;
-    padding: 1rem;
+    padding: 1rem 0;
     flex-wrap: wrap;
   }
 

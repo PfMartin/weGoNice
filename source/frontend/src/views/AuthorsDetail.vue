@@ -25,7 +25,6 @@ const init = async () => {
 
   author.value = authorRes;
   recipes.value = recipesRes.data;
-  console.log(recipesRes);
 };
 
 init();
@@ -95,7 +94,7 @@ const deleteAuthor = async (): Promise<void> => {
       <ButtonComponent
         :buttonType="ButtonType.Delete"
         buttonText="Delete"
-        buttonIconName="close-circle"
+        buttonIconName="trash"
         @on-click="deleteAuthor"
       />
     </div>
