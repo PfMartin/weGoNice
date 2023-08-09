@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { ButtonType } from '@/utils/constants';
-import { ref, watch } from 'vue';
-import SearchBox from './SearchBox.vue';
+import SearchBox from '@/components/SearchBox.vue';
 
 interface HeaderConfig {
   pageTitle: string;
@@ -14,7 +13,7 @@ const emit = defineEmits<{
   (e: 'button-click'): void;
 }>();
 
-const props = defineProps<{
+defineProps<{
   config: HeaderConfig;
 }>();
 </script>
@@ -22,13 +21,13 @@ const props = defineProps<{
 <template lang="html">
   <body>
     <header>
-      <h2>{{ props.config.pageTitle }}</h2>
+      <h2>{{ config.pageTitle }}</h2>
       <SearchBox />
     </header>
     <ButtonComponent
       @click="emit('button-click')"
-      :buttonText="props.config.buttonText"
-      :buttonIconName="props.config.buttonIconName"
+      :buttonText="config.buttonText"
+      :buttonIconName="config.buttonIconName"
       :buttonType="ButtonType.Primary"
     />
   </body>
