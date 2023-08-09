@@ -73,5 +73,5 @@ jobs:
       - name: Push container to GitHub Container Registry
         run: |
           cd ${{env.FRONTEND_DIR}}
-          docker build --tag ghcr.io/PfMartin/wegonice-frontend:latest .
-          docker push ghcr.io/PfMartin/wegonice-frontend:latest
+          docker build --tag ghcr.io/pfmartin/wegonice-frontend:latest .
+          docker push ghcr.io/pfmartin/wegonice-frontend:latest
