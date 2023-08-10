@@ -46,11 +46,11 @@ func Init(isProduction bool) *mongo.Client {
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	dbClient, err := mongo.Connect(ctx, clientOpts)
 	if err != nil {
-		logger.Fatal().Msg("An error occurred while connecting to the database")
+		logger.Fatal().Msgf("An error occurred while connecting to the database: %s", err)
 	}
 
 	if err = dbClient.Ping(ctx, readpref.Primary()); err != nil {
-		logger.Fatal().Msg("Failed to ping mongo db service")
+		logger.Fatal().Msgf("Failed to ping mongo db service: %s", err)
 	}
 
 	logger.Info().Msg("Connected to database")

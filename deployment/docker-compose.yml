@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  database:
+    image: 'mongo:latest'
+    container_name: 'wegonice-db'
+    environment:
+      - MONGO_INITDB_DATABASE=weGoNice
+      - MONGO_INITDB_USERNAME=NiceUser
+      - MONGO_INITDB_PASSWORD=nicePassword
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./volumes/deployment/data:/data/db
+    ports:
+      - '27017-27019:27017-27019'
+    tty: true
+
+  backend:
+    image: 'wegonice-backend:latest'
+    container_name: 'wegonice-backend'
+    depends_on:
+      - 'database'
+    environment:
+      - ACCESS_SECRET=secret-key
+      - ADMIN_EMAIL=wego@nice.com
+      - DATABASE_NAME=weGoNice
+      - DATABASE_USERNAME=NiceUser
+      - DATABASE_PASSWORD=nicePassword
+      - DATABASE_URI=mongodb://wegonice-db:27017
+      - FILE_DEPOT=/files/files
+      - TMP_FILE_DEPOT=/files/files_tmp
+      - LOG_FILE=/logs/wegonice-backend.log
+    volumes:
+      - ./volumes/deployment/logs:/logs
+    ports:
+      - '8000:8000'
+    tty: true
+
+  frontend:
+    image: 'wegonice-frontend:latest'
+    container_name: 'wegonice-frontend'
+    environment:
+      - BACKEND_HOST='wegonice-backend'
+    ports:
+      - '80:80'
+    tty: true

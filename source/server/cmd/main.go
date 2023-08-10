@@ -41,7 +41,7 @@ func main() {
 
 	url := "localhost:8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
-	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://127.0.0.1:8080", "http://127.0.0.1", "http://127.0.0.1:80"})
+	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://127.0.0.1:8080", "http://127.0.0.1", "http://127.0.0.1:80", "http://wegonice-frontend:80", "http://wegonice-frontend"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
 	logger.Info().Str("url", url).Msg("Starting api")
@@ -49,8 +49,9 @@ func main() {
 }
 
 func loadEnvFile() {
-	err := godotenv.Load("../.env")
 	logger := logging.Get()
+
+	err := godotenv.Load("../.env")
 	if err != nil {
 		logger.Error().Msg(".env file not loaded. Using environment variables on machine.")
 	}

@@ -21,4 +21,4 @@ jobs:
       - name: Build package
         run: |
           cd ./source/server/cmd
-          go build -v -o server
+          go build -v -o wegonice-backend
