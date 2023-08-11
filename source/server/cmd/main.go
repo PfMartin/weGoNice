@@ -39,13 +39,13 @@ func main() {
 	files.RegisterFilesRoutes(r, filesHandler)
 	files.RegisterFilesRoutesTmp(r, filesHandler)
 
-	url := "localhost:8000"
+	port := ":8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://127.0.0.1:8080", "http://127.0.0.1", "http://127.0.0.1:80", "http://wegonice-frontend:80", "http://wegonice-frontend"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
-	logger.Info().Str("url", url).Msg("Starting api")
-	logger.Fatal().Err(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
+	logger.Info().Str("port", port).Msg("Starting api")
+	logger.Fatal().Err(http.ListenAndServe(port, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
 }
 
 func loadEnvFile() {
