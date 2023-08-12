@@ -9,7 +9,7 @@ services:
       - MONGO_INITDB_PASSWORD=nicePassword
     volumes:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./volumes/deployment/data:/data/db
+      - ./volumes/deployment/data:/data/db # Adjust this volume path
     ports:
       - '27017-27019:27017-27019'
     tty: true
@@ -29,17 +29,17 @@ services:
       - FILE_DEPOT=/files/files
       - TMP_FILE_DEPOT=/files/files_tmp
       - LOG_FILE=/logs/wegonice-backend.log
-    volumes:
+    volumes: # Adjust the volume paths
       - ./volumes/deployment/logs:/logs
+      - ./volumes/deployment/files/files_tmp:/files/files
+      - ./volumes/deployment/files/files:/files/files_tmp
     ports:
       - '8000:8000'
     tty: true
 
   frontend:
-    image: 'wegonice-frontend:latest'
+    image: 'ghcr.io/pfmartin/wegonice-frontend:latest'
     container_name: 'wegonice-frontend'
-    environment:
-      - BACKEND_HOST='wegonice-backend'
     ports:
       - '80:80'
     tty: true
