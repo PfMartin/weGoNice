@@ -34,6 +34,7 @@ export const registerUser = async (body: {
   email: string;
   password: string;
 }): Promise<WeGoNiceApi.RequestResponse> => {
+  console.warn(url);
   try {
     const res = await axios.post(`${url}/auth/register`, body, {
       headers,
@@ -49,6 +50,7 @@ export const loginUser = async (body: {
   email: string;
   password: string;
 }): Promise<WeGoNiceApi.RequestResponse> => {
+  console.warn(url);
   try {
     const res = await axios.post(`${url}/auth/login`, body, {
       headers,

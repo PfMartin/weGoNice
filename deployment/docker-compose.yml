@@ -40,6 +40,8 @@ services:
   frontend:
     image: 'ghcr.io/pfmartin/wegonice-frontend:latest'
     container_name: 'wegonice-frontend'
+    environment:
+      - BACKEND_HOST: wegonice-backend
     ports:
       - '80:80'
     tty: true

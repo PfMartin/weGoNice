@@ -1,7 +1,7 @@
 import axios from 'axios';
 import store from '@/store';
 
-export const url = 'http://wegonice-backend:8000';
+export const url = `http://${process.env.BACKEND_HOST || 'localhost'}:8000`;
 export const headers = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
