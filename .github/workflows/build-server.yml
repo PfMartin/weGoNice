@@ -6,6 +6,7 @@ env:
   GO_VERSION: 1.18
   BACKEND_DIR: ./source/server
   BINARY_NAME: wegonice-backend
+  CONTAINER_REGISTRY: ghcr.io
 
 jobs:
   build-backend:
@@ -45,8 +46,15 @@ jobs:
           name: backend-binary
           path: ${{env.BACKEND_DIR}}/cmd/${{env.BINARY_NAME}}
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{env.CONTAINER_REGISTRY}}
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
       - name: Push container to GitHub Container Registry
         run: |
           cd ${{env.BACKEND_DIR}}
-          docker build --tag ghcr.io/pfmartin/wegonice-backend:latest .
-          docker push ghcr.io/pfmartin/wegonice-backend:latest
+          docker build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.BINARY_NAME}}:latest .
+          docker push ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.BINARY_NAME}}:latest
