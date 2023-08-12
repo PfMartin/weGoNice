@@ -1,4 +1,4 @@
-FROM nginx-alpine:latest
+FROM nginx:latest
 
 RUN mkdir /app
 COPY dist /app
