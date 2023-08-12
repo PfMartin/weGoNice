@@ -15,7 +15,7 @@ services:
     tty: true
 
   backend:
-    image: 'wegonice-backend:latest'
+    image: 'ghcr.io/pfmartin/wegonice-backend:latest'
     container_name: 'wegonice-backend'
     depends_on:
       - 'database'
