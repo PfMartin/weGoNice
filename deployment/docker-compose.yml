@@ -20,11 +20,6 @@ services:
     depends_on:
       - 'database'
     environment:
-      # - ACCESS_SECRET=secret-key
-      # - ADMIN_EMAIL=wego@nice.com
-      # - DATABASE_NAME=weGoNice
-      # - DATABASE_USERNAME=NiceUser
-      # - DATABASE_PASSWORD=nicePassword
       - DATABASE_URI=mongodb://wegonice-db:27017
       - FILE_DEPOT=/files/files
       - TMP_FILE_DEPOT=/files/files_tmp
