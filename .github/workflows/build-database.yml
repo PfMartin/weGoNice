@@ -1,0 +1,31 @@
+name: build-database
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  CONTAINER_NAME: wegonice-database
+  CONTAINER_REGISTRY: ghcr.io
+
+jobs:
+  publish-container:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{env.CONTAINER_REGISTRY}}
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Push container to GitHub Container Registry
+        run: |
+          cd ./source/database
+          docker build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:latest .
+          docker push ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:latest
