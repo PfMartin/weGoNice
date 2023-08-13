@@ -29,7 +29,7 @@ services:
     tty: true
 
   frontend:
-    image: 'ghcr.io/pfmartin/wegonice-frontend:0.2.0'
+    image: 'ghcr.io/pfmartin/wegonice-frontend:1.0.1'
     container_name: 'wegonice-frontend'
     ports:
       - '80:80'
