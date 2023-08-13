@@ -1,6 +1,9 @@
 name: build-database
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 env:
   CONTAINER_NAME: wegonice-database
