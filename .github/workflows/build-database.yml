@@ -48,7 +48,7 @@ jobs:
 
       - name: Push container to GitHub Container Registry
         run: |
-          echo "The Tag name is $TAG_NAME"
+          echo "Tagging with tag: $TAG_NAME"
           cd ./source/database
           docker build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:$TAG_NAME .
           docker push ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:$TAG_NAME
