@@ -42,7 +42,7 @@ func main() {
 
 	port := ":8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
-	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://localhost:80", "http://127.0.0.1:80", "http://wegonice-frontend:80", os.Getenv("FRONTEND_HOST")})
+	originsOk := handlers.AllowedOrigins([]string{"http://localhost", "http://localhost:8080", "http://127.0.0.1", "http://127.0.0.1:8080", os.Getenv("FRONTEND_HOST")})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
 	logger.Info().Str("port", port).Msg("Starting api")
