@@ -1,6 +1,9 @@
 name: server-test-build
 
-on: [push]
+on:
+  push:
+    branches: '*'
+    tags: '*'
 
 env:
   GO_VERSION: 1.18

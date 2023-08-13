@@ -1,6 +1,9 @@
 name: build-frontend
 
-on: [push]
+on:
+  push:
+    branches: '*'
+    tags: '*'
 
 env:
   NODE_VERSION: 18.16.1
