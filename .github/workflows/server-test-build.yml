@@ -1,0 +1,109 @@
+name: server-test-build
+
+on: [push]
+
+env:
+  GO_VERSION: 1.18
+  BACKEND_DIR: ./source/server
+  BINARY_NAME: wegonice-backend
+  CONTAINER_REGISTRY: ghcr.io
+  TEST_DB_URI: mongodb://localhost:27017
+  MONGO_INIT_ROOT_USERNAME: TestUser
+  MONGO_INITDB_ROOT_PASSWORD: testPassword
+  MONGO_INITDB_DATABASE: weGoNice
+
+jobs:
+  test-server:
+    name: server-test
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:latest
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{env.MONGO_INIT_ROOT_USERNAME}}
+          MONGO_INITDB_ROOT_PASSWORD: ${{env.MONGO_INITDB_ROOT_PASSWORD}}
+          MONGO_INITDB_DATABASE: ${{env.MONGO_INITDB_DATABASE}}
+        ports:
+          - 27017-27019:27017-27019
+        options: >-
+          --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 5
+          --name mongodb
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Setup database
+        run: |
+          docker exec mongodb mongosh weGoNice -u ${{env.MONGO_INIT_ROOT_USERNAME}} -p ${{env.MONGO_INITDB_ROOT_PASSWORD}} --authenticationDatabase admin --eval "db.createUser({user: 'TestUser', pwd: 'testPassword', roles: [{role: 'readWrite', db: 'weGoNice'}]})"
+
+      - name: File Depots for Tests
+        run: |
+          cd ./source/server/pkg/testUtils/files
+          mkdir perm
+          mkdir tmp
+
+      - name: Run tests
+        run: |
+          cd ./source/server/pkg
+          go test ./users
+          go test ./authors
+          go test ./recipes
+          go test ./files
+
+  build-backend:
+    runs-on: ubuntu-latest
+    needs: test-server
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{env.GO_VERSION}}
+
+      - name: Build package
+        run: |
+          cd ./source/server/cmd
+          go build -v -o ${{env.BINARY_NAME}}
+
+      - name: Upload binary as artifact
+        uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: backend-binary
+          path: ${{env.BACKEND_DIR}}/cmd
+
+  publish-container:
+    runs-on: ubuntu-latest
+    needs: build-backend
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Download server binary
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-binary
+          path: ${{env.BACKEND_DIR}}/cmd
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{env.CONTAINER_REGISTRY}}
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Push container to GitHub Container Registry
+        run: |
+          cd ${{env.BACKEND_DIR}}
+          docker build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.BINARY_NAME}}:latest .
+          docker push ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.BINARY_NAME}}:latest
