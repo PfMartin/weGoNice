@@ -24,6 +24,7 @@ services:
       - FILE_DEPOT=/files/files
       - TMP_FILE_DEPOT=/files/files_tmp
       - LOG_FILE=/logs/wegonice-backend.log
+      - FRONTEND_HOST=http://192.168.178.39:80
     volumes: # Adjust the volume paths
       - ./volumes/deployment/logs:/logs
       - ./volumes/deployment/files/files_tmp:/files/files
