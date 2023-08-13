@@ -16,12 +16,6 @@ WeGoNice is an App taylored for Vegans and especially wannabe Vegans. The App sh
 - Manage recipes
 - References
 
-#### Health
-
-- Facts
-- Book recommendations
-- References
-
 #### Environment
 
 - Facts
