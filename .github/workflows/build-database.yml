@@ -1,0 +1,54 @@
+name: build-database
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+on: [push]
+
+env:
+  CONTAINER_NAME: wegonice-database
+  CONTAINER_REGISTRY: ghcr.io
+
+jobs:
+  publish-container:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Get branch name
+        run: echo "BRANCH_NAME=$(git symbolic-ref --short HEAD)" >> $GITHUB_ENV
+
+      - name: Get tags for current branch
+        run: |
+          git fetch --tags
+          TAGS=$(git tag --contains $BRANCH_NAME)
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
+
+      - name: Display tags
+        run: echo "Tags for current branch - $TAGS"
+
+      - name: Set container tag
+        run: |
+          if [ -z "$TAGS" ]; then
+            echo "TAG_NAME=latest" >> $GITHUB_ENV
+          else
+            echo "TAG_NAME=$TAGS" >> $GITHUB_ENV
+          fi
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{env.CONTAINER_REGISTRY}}
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Push container to GitHub Container Registry
+        run: |
+          echo "The Tag name is $TAG_NAME"
+          cd ./source/database
+          docker build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:$TAG_NAME .
+          docker push ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:$TAG_NAME

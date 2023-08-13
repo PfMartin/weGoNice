@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/PfMartin/weGoNice/server/pkg/auth"
 	"github.com/PfMartin/weGoNice/server/pkg/authors"
@@ -39,18 +40,19 @@ func main() {
 	files.RegisterFilesRoutes(r, filesHandler)
 	files.RegisterFilesRoutesTmp(r, filesHandler)
 
-	url := "localhost:8000"
+	port := ":8000"
 	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
-	originsOk := handlers.AllowedOrigins([]string{"http://localhost:8080", "http://localhost", "localhost"})
+	originsOk := handlers.AllowedOrigins([]string{"http://localhost", "http://localhost:8080", "http://127.0.0.1", "http://127.0.0.1:8080", os.Getenv("FRONTEND_HOST")})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
-	logger.Info().Str("url", url).Msg("Starting api")
-	logger.Fatal().Err(http.ListenAndServe(url, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
+	logger.Info().Str("port", port).Msg("Starting api")
+	logger.Fatal().Err(http.ListenAndServe(port, handlers.CORS(originsOk, headersOk, methodsOk)(r))).Send()
 }
 
 func loadEnvFile() {
-	err := godotenv.Load("../.env")
 	logger := logging.Get()
+
+	err := godotenv.Load("../.env")
 	if err != nil {
 		logger.Error().Msg(".env file not loaded. Using environment variables on machine.")
 	}

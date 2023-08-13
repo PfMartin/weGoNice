@@ -1,0 +1,79 @@
+name: build-frontend
+
+on: [push]
+
+env:
+  NODE_VERSION: 18.16.1
+  FRONTEND_DIR: ./source/frontend
+
+jobs:
+  prettier-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE_VERSION}}
+
+      - name: Check prettier for files in ./src
+        run: |
+          cd ${{env.FRONTEND_DIR}}
+          npm run prettier:check
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    needs: prettier-check
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE_VERSION}}
+
+      - name: Build package
+        run: |
+          cd ${{env.FRONTEND_DIR}}
+          npm ci
+          npm run build
+
+      - name: Upload result as binary
+        uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: frontend-build
+          path: ${{env.FRONTEND_DIR}}/dist
+
+  publish-container:
+    runs-on: ubuntu-latest
+    needs: build-frontend
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: ${{env.FRONTEND_DIR}}/dist
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Push container to GitHub Container Registry
+        run: |
+          cd ${{env.FRONTEND_DIR}}
+          docker build --tag ghcr.io/pfmartin/wegonice-frontend:latest .
+          docker push ghcr.io/pfmartin/wegonice-frontend:latest

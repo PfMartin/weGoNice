@@ -1,7 +1,7 @@
 import axios from 'axios';
 import store from '@/store';
 
-export const url = 'http://localhost:8000';
+export const url = `http://${window.location.hostname}:8000`;
 export const headers = {
   'Content-Type': 'application/json',
   Accept: 'application/json',

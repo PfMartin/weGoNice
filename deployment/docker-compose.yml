@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  database:
+    image: 'ghcr.io/pfmartin/wegonice-database:latest'
+    container_name: 'wegonice-db'
+    volumes:
+      - ./volumes/deployment/data:/data/db # Adjust this volume path
+    ports:
+      - '27017-27019:27017-27019'
+    tty: true
+
+  backend:
+    image: 'ghcr.io/pfmartin/wegonice-backend:latest'
+    container_name: 'wegonice-backend'
+    depends_on:
+      - 'database'
+    environment:
+      - DATABASE_URI=mongodb://wegonice-db:27017
+      - FILE_DEPOT=/files/files
+      - TMP_FILE_DEPOT=/files/files_tmp
+      - LOG_FILE=/logs/wegonice-backend.log
+      - FRONTEND_HOST=http://192.168.178.39 # Address or name of the frontend host. If on different port than 80, also add the port here 'http://192.168.178.39:8080'
+    volumes: # Adjust the volume paths
+      - ./volumes/deployment/logs:/logs
+      - ./volumes/deployment/files/files_tmp:/files/files
+      - ./volumes/deployment/files/files:/files/files_tmp
+    ports:
+      - '8000:8000'
+    tty: true
+
+  frontend:
+    image: 'ghcr.io/pfmartin/wegonice-frontend:latest'
+    container_name: 'wegonice-frontend'
+    ports:
+      - '80:80'
+    tty: true

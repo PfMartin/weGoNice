@@ -9,13 +9,13 @@ source/server/cmd/main
 source/server/files
 source/server/files_tmp
 **/*.env
+wegonice-backend
 
 # Frontend
 node_modules
 
 # Container
-volumes/production
-volumes/development
+**/volumes
 
 # Scripts
 start_weGoNice.sh
