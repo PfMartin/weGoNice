@@ -49,6 +49,5 @@ jobs:
         run: |
           echo "Tagging with tag: $TAG_NAME"
           cd ./source/database
-          export DOCKER_DEFAULT_PLATFORM=linux/arm/v7
-          docker build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:$TAG_NAME-arm .
-          docker push ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:$TAG_NAME-arm
+          docker build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:$TAG_NAME .
+          docker push ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.CONTAINER_NAME}}:$TAG_NAME
