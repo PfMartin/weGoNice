@@ -14,8 +14,11 @@ wegonice-backend
 # Frontend
 node_modules
 
-# Container
+# Deployment
 **/volumes
+deployment/docker-compose.yml
+deployment/init-mongo.js
+
 
 # Scripts
 start_weGoNice.sh
