@@ -128,5 +128,6 @@ jobs:
         run: |
           echo "Tagging with tag: $TAG_NAME"
           cd ${{env.BACKEND_DIR}}
+          export DOCKER_DEFAULT_PLATFORM=linux/arm/v7
           docker build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.BINARY_NAME}}:$TAG_NAME .
           docker push ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.BINARY_NAME}}:$TAG_NAME
