@@ -4,16 +4,18 @@ set -e
 
 cd ./cmd
 
+BINARY_NAME=wegonice-backend
+
 ARCH=$(uname -m)
 case "$ARCH" in
   armv7l)
-    ./wegonice-backend-armv7
+    ./$BINARY_NAME-armv7l
     ;;
   arch64)
-    ./wegonice-backend-arm64
+    ./$BINARY_NAME-arm64
     ;;
   x86_64)
-    ./wegonice-backend-amd64
+    ./$BINARY_NAME-amd64
     ;;
   *)
     echo "Unsupported architecture: $ARCH"
