@@ -1,4 +1,4 @@
-FROM mongo:latest
+FROM mongo:4.4
 
 ENV MONGO_INITDB_DATABASE=weGoNice
 ENV MONGO_INITDB_USERNAME=NiceUser

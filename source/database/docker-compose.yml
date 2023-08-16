@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   database:
-    image: 'mongo:latest'
+    image: 'mongo:4.4'
     container_name: 'weGoNice-db'
     environment:
       - MONGO_INITDB_DATABASE=weGoNice
