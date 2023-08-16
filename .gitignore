@@ -9,7 +9,7 @@ source/server/cmd/main
 source/server/files
 source/server/files_tmp
 **/*.env
-wegonice-backend
+wegonice-backend-*
 
 # Frontend
 node_modules

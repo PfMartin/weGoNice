@@ -70,16 +70,18 @@ jobs:
         with:
           go-version: ${{env.GO_VERSION}}
 
-      - name: Build package
+      - name: Build binaries
         run: |
           cd ./source/server/cmd
-          go build -v -o ${{env.BINARY_NAME}}
+          GOOS=linux GOARCH=amd64 go build -v -o ${{env.BINARY_NAME}}-amd64
+          GOOS=linux GOARCH=arm go build -v -o ${{env.BINARY_NAME}}-armv7l
+          GOOS=linux GOARCH=arm64 go build -v -o ${{env.BINARY_NAME}}-arm64
 
-      - name: Upload binary as artifact
+      - name: Upload binaries as artifact
         uses: actions/upload-artifact@v3
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         with:
-          name: backend-binary
+          name: backend-binaries
           path: ${{env.BACKEND_DIR}}/cmd
 
   publish-container:
@@ -111,10 +113,10 @@ jobs:
             echo "TAG_NAME=$TAGS" >> $GITHUB_ENV
           fi
 
-      - name: Download server binary
+      - name: Download binaries
         uses: actions/download-artifact@v3
         with:
-          name: backend-binary
+          name: backend-binaries
           path: ${{env.BACKEND_DIR}}/cmd
 
       - name: Login to GitHub Container Registry
