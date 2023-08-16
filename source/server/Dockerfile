@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM debian:latest
 
 WORKDIR /app
 
@@ -14,4 +14,6 @@ RUN chmod +x ./cmd/wegonice-backend
 
 EXPOSE 8000
 
-CMD ["./cmd/wegonice-backend"]
+WORKDIR /app/cmd
+
+CMD ["./wegonice-backend"]
