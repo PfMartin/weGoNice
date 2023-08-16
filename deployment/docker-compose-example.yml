@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   database:
-    image: 'ghcr.io/pfmartin/wegonice-database:1.0.1'
+    image: 'ghcr.io/pfmartin/wegonice-database:latest'
     container_name: 'wegonice-db'
     volumes:
       - ./volumes/deployment/data:/data/db # Adjust this volume path
@@ -10,7 +10,7 @@ services:
     tty: true
 
   backend:
-    image: 'ghcr.io/pfmartin/wegonice-backend:1.0.1'
+    image: 'ghcr.io/pfmartin/wegonice-backend:latest'
     container_name: 'wegonice-backend'
     depends_on:
       - 'database'
@@ -29,7 +29,7 @@ services:
     tty: true
 
   frontend:
-    image: 'ghcr.io/pfmartin/wegonice-frontend:1.0.1'
+    image: 'ghcr.io/pfmartin/wegonice-frontend:latest'
     container_name: 'wegonice-frontend'
     ports:
       - '80:80'
