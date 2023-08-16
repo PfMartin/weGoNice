@@ -74,7 +74,6 @@ jobs:
         run: |
           cd ./source/server/cmd
           GOOS=linux GOARCH=amd64 go build -v -o ${{env.BINARY_NAME}}-amd64
-          GOOS=linux GOARCH=arm go build -v -o ${{env.BINARY_NAME}}-armv7l
           GOOS=linux GOARCH=arm64 go build -v -o ${{env.BINARY_NAME}}-arm64
 
       - name: Upload binaries as artifact
@@ -131,4 +130,4 @@ jobs:
           echo "Tagging with tag: $TAG_NAME"
           cd ${{env.BACKEND_DIR}}
           docker buildx create --use --name multi-arch
-          docker buildx build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.BINARY_NAME}}:$TAG_NAME --platform="linux/amd64,linux/arm64,linux/arm/v7" . --push
+          docker buildx build --tag ${{env.CONTAINER_REGISTRY}}/pfmartin/${{env.BINARY_NAME}}:$TAG_NAME --platform="linux/amd64,linux/arm64" . --push
