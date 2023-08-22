@@ -30,7 +30,7 @@ onMounted(async () => {
       </div>
       <footer class="footer">
         <div class="recipes-count">
-          <p>5 recipes</p>
+          <p>{{ data.recipeCount }} recipes</p>
         </div>
         <div class="social-media" @click.stop>
           <a v-if="data.website" :href="data.website"

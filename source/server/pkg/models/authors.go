@@ -16,17 +16,18 @@ type AuthorRequest struct {
 }
 
 type AuthorResponse struct {
-	ID         string       `bson:"_id" json:"id"`
-	FirstName  string       `bson:"firstName" json:"firstName"`
-	LastName   string       `bson:"lastName" json:"lastName"`
-	Name       string       `bson:"name" json:"name"`
-	Website    string       `bson:"website" json:"website"`
-	Instagram  string       `bson:"instagram" json:"instagram"`
-	YouTube    string       `bson:"youTube" json:"youTube"`
-	ImageName  string       `bson:"imageName" json:"imageName"`
-	User       UserResponse `bson:"user" json:"user"`
-	CreatedAt  time.Time    `bson:"createdAt" json:"createdAt"`
-	ModifiedAt time.Time    `bson:"modifiedAt" json:"modifiedAt"`
+	ID          string       `bson:"_id" json:"id"`
+	FirstName   string       `bson:"firstName" json:"firstName"`
+	LastName    string       `bson:"lastName" json:"lastName"`
+	Name        string       `bson:"name" json:"name"`
+	Website     string       `bson:"website" json:"website"`
+	Instagram   string       `bson:"instagram" json:"instagram"`
+	YouTube     string       `bson:"youTube" json:"youTube"`
+	ImageName   string       `bson:"imageName" json:"imageName"`
+	RecipeCount int          `bson:"recipeCount" json:"recipeCount"`
+	User        UserResponse `bson:"user" json:"user"`
+	CreatedAt   time.Time    `bson:"createdAt" json:"createdAt"`
+	ModifiedAt  time.Time    `bson:"modifiedAt" json:"modifiedAt"`
 }
 
 type AuthorDB struct {
