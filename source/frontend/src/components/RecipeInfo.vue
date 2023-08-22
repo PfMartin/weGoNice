@@ -15,7 +15,6 @@ import PrepStepsEditor from '@/components/PrepStepsEditor.vue';
 import { getAllAuthors } from '@/apis/weGoNice/authors';
 import ValidationService from '@/services/validation.service';
 import { checkFileTypeValid } from '@/utils/validation';
-import NotificationService from '@/services/notification.service';
 import {
   getImage,
   getImageTmp,
@@ -24,6 +23,7 @@ import {
 } from '@/apis/weGoNice/files';
 import { dateToString } from '@/utils/utility-functions';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
+import notificationService from '@/services/notification.service';
 
 const validationService = new ValidationService();
 
@@ -113,20 +113,26 @@ const updateImage = async () => {
 
   if (props.mode === OperationMode.Edit && id) {
     if (fileToUpload) {
-      const [fName, typeExtension] = uploadFileName.value.split('.');
-      const fType = typeExtension.toLowerCase();
+      const fName = getFileName(uploadFileName.value.split('.'));
+
+      if (!fName) {
+        return;
+      }
 
       recipeImageName = `${dateToString(new Date())}-${
         props.initialData.id
-      }-${fName}.${fType}`;
+      }-${fName}`;
     }
 
     url = await getImage(recipeImageName);
   } else if (props.mode === OperationMode.Create && fileToUpload) {
-    const [fName, typeExtension] = uploadFileName.value.split('.');
-    const fType = typeExtension.toLowerCase();
+    const fName = getFileName(uploadFileName.value.split('.'));
 
-    recipeImageName = `${fName}.${fType}`;
+    if (!fName) {
+      return;
+    }
+
+    recipeImageName = fName;
     url = await getImageTmp(recipeImageName);
   }
 
@@ -143,16 +149,14 @@ const executeUpload = async () => {
 
   const pathArray = fileInput.value?.value.split('\\') || [];
   const uploadFileNameArray = pathArray[pathArray.length - 1].split('.');
-  const fName = uploadFileNameArray[0];
-  const fType = uploadFileNameArray[1].toLowerCase();
 
-  const validationErr = checkFileTypeValid(fType);
-  if (validationErr) {
-    NotificationService.addNotification('error', validationErr);
+  const fName = getFileName(uploadFileNameArray);
+
+  if (!fName) {
     return;
   }
 
-  uploadFileName.value = `${fName}.${fType}`;
+  uploadFileName.value = fName;
 
   const fileToUpload =
     fileInput.value && fileInput.value.files?.length
@@ -166,7 +170,7 @@ const executeUpload = async () => {
   ) {
     const res = await uploadFile(props.initialData?.id, fileToUpload);
     if (res.status !== 200) {
-      NotificationService.addNotification(
+      notificationService.addNotification(
         'error',
         'Something went wrong while uploading the picture.'
       );
@@ -178,7 +182,7 @@ const executeUpload = async () => {
   } else if (props.mode === OperationMode.Create && fileToUpload) {
     const res = await uploadFileTmp(fileToUpload);
     if (res.status !== 200) {
-      NotificationService.addNotification(
+      notificationService.addNotification(
         'error',
         `Something went wrong while uploading the picture: Status ${res.status}`
       );
@@ -188,6 +192,20 @@ const executeUpload = async () => {
     await updateImage();
     publishBody();
   }
+};
+
+const getFileName = (fileArray: string[]): string | null => {
+  const [fName, typeExtension] = fileArray;
+
+  const validationErr = checkFileTypeValid(typeExtension);
+  if (validationErr) {
+    notificationService.addNotification('error', validationErr);
+    isFileLoading.value = false;
+    return null;
+  }
+  const fType = typeExtension.toLowerCase();
+
+  return `${fName}.${fType}`;
 };
 
 const hasPictureOverlay = ref(false);

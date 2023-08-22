@@ -36,22 +36,33 @@ const openUploadWindow = () => {
   fileInput.value?.click();
 };
 
+const getFileName = (fileArray: string[]): string | null => {
+  const [fName, typeExtension] = fileArray;
+
+  const validationErr = checkFileTypeValid(typeExtension);
+  if (validationErr) {
+    notificationService.addNotification('error', validationErr);
+    isFileLoading.value = false;
+    return null;
+  }
+  const fType = typeExtension.toLowerCase();
+
+  return `${fName}.${fType}`;
+};
+
 const uploadFileName = ref(props.initialData.imageName);
 const executeUpload = async () => {
   isFileLoading.value = true;
 
   const pathArray = fileInput.value?.value.split('\\') || [];
-  const fileNameArray = pathArray[pathArray.length - 1].split('.');
-  const fName = fileNameArray[0];
-  const fType = fileNameArray[1].toLowerCase();
 
-  const validationErr = checkFileTypeValid(fType);
-  if (validationErr) {
-    notificationService.addNotification('error', validationErr);
+  const fName = getFileName(pathArray[pathArray.length - 1].split('.'));
+
+  if (!fName) {
     return;
   }
 
-  uploadFileName.value = `${fName}.${fType}`;
+  uploadFileName.value = fName;
 
   const fileToUpload =
     fileInput.value && fileInput.value.files?.length
@@ -218,20 +229,25 @@ const updateImage = async (): Promise<void> => {
 
   if (props.mode === OperationMode.Edit && id) {
     if (fileToUpload) {
-      const fileNameArray = name.split('.');
-      const fileType = fileNameArray[1].toLowerCase();
+      const fName = getFileName(name.split('.'));
 
-      name = `${dateToString(new Date())}-${props.initialData.id}-${
-        fileNameArray[0]
-      }.${fileType}`;
+      if (!fName) {
+        return;
+      }
+
+      name = `${dateToString(new Date())}-${props.initialData.id}-${fName}`;
     }
 
     url = await getImage(name);
   } else if (props.mode === OperationMode.Create && fileToUpload) {
-    const fileNameArray = name.split('.');
-    const fileType = fileNameArray[1].toLowerCase();
+    const fName = getFileName(name.split('.'));
 
-    name = `${fileNameArray[0]}.${fileType}`;
+    if (!fName) {
+      return;
+    }
+
+    name = fName;
+
     url = await getImageTmp(name);
   }
 
