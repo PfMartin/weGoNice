@@ -35,6 +35,29 @@ var projectStage = bson.D{
 		{Key: "modifiedAt", Value: 1},
 		{Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}}}}}
 
+var getAllAuthorsProject = bson.D{
+	{Key: "$project", Value: bson.D{
+		{Key: "name", Value: 1},
+		{Key: "firstName", Value: 1},
+		{Key: "lastName", Value: 1},
+		{Key: "website", Value: 1},
+		{Key: "instagram", Value: 1},
+		{Key: "youTube", Value: 1},
+		{Key: "createdAt", Value: 1},
+		{Key: "imageName", Value: 1},
+		{Key: "modifiedAt", Value: 1},
+		{Key: "recipeCount", Value: bson.D{{Key: "$size", Value: "$recipes"}}},
+		{Key: "user", Value: bson.D{{Key: "$first", Value: "$user"}}}}}}
+
+var recipeCountLookup = bson.D{
+	{Key: "$lookup", Value: bson.D{
+		{Key: "from", Value: "recipes"},
+		{Key: "localField", Value: "_id"},
+		{Key: "foreignField", Value: "authorId"},
+		{Key: "as", Value: "recipes"},
+	}},
+}
+
 type Handler struct {
 	DB         *mongo.Client
 	dbName     string
@@ -57,7 +80,7 @@ func (h *Handler) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	sortingStage := bson.D{
 		{Key: "$sort", Value: bson.D{{Key: "name", Value: 1}}},
 	}
-	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{utils.UserLookup, projectStage, sortingStage})
+	cursor, err := coll.Aggregate(context.TODO(), mongo.Pipeline{utils.UserLookup, recipeCountLookup, getAllAuthorsProject, sortingStage})
 	if err != nil {
 		h.logger.Error().Err(err).Msg("Failed to find authors")
 		http.Error(w, "Failed to find authors", http.StatusNotFound)

@@ -4,7 +4,7 @@ export const AUTHOR_SORTING_OPTIONS = [
   'Name',
   'CreatedAt',
   'ModifiedAt',
-  'Amount of Recipes', // Still has to be implemented
+  'Number of recipes',
 ];
 
 export const RECIPE_SORTING_OPTIONS = ['Name', 'Category', 'Author', 'Time'];

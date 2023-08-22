@@ -8,5 +8,6 @@ declare namespace Authors {
     [youTube: string]: string;
     [instagram: string]: string;
     [imageUrl: string]: string;
+    [recipeCount: string]: number;
   }
 }

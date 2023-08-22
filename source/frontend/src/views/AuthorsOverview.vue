@@ -25,9 +25,13 @@ const toggleSortDirection = (): void => {
 };
 
 const sortAuthors = (): void => {
-  const sortKey: string =
+  let sortKey: string =
     selectedSortingKey.value.charAt(0).toLowerCase() +
     selectedSortingKey.value.slice(1);
+
+  if (sortKey === 'number of recipes') {
+    sortKey = 'recipeCount';
+  }
 
   authors.value = authors.value.sort((a: Authors.Author, b: Authors.Author) => {
     if (a[sortKey] < b[sortKey]) {
@@ -61,6 +65,7 @@ const authors = ref<Authors.Author[]>([]);
 onMounted(async (): Promise<void> => {
   isLoading.value = true;
   authors.value = (await getAllAuthors()) || [];
+
   computeListHeight();
   addEventListener('resize', computeListHeight);
   isLoading.value = false;
