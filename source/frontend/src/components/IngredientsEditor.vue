@@ -202,7 +202,7 @@ onMounted(() => {
               :selectedOption="i.unit"
               @select-option="(unit) => selectUnit(unit, idx)"
               id="amountUnit"
-              width="2.5rem"
+              width="3.5rem"
               isDark
             />
 
