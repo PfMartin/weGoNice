@@ -30,6 +30,8 @@ export enum AmountUnit {
   Ml = 'ml',
   L = 'l',
   Pc = 'pc',
+  Tsp = 'tsp',
+  Tbsp = 'tbsp'
 }
 
 export enum OperationMode {
