@@ -7,6 +7,7 @@ type Recipe struct {
 	Name        string       `bson:"name" json:"name"`
 	AuthorID    string       `bson:"authorId" json:"authorId"`
 	Author      AuthorDB     `bson:"author" json:"author"`
+	Url         string       `bson:"url" json:"url"`
 	TimeMinutes int          `bson:"timeMinutes" json:"timeMinutes"`
 	TimeHours   int          `bson:"timeHours" json:"timeHours"`
 	Category    string       `bson:"category" json:"category"`
