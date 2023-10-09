@@ -47,6 +47,15 @@ const updateRecipeTitle = (newrecipeTitle: string) => {
   publishBody();
 };
 
+const recipeUrl = ref('');
+const recipeUrlError = ref('');
+const updateRecipeUrl = (newRecipeUrl: string) => {
+  recipeUrl.value = newRecipeUrl;
+  recipeUrlError.value = validationService.validateWebUrl(recipeUrl.value);
+
+  publishBody();
+};
+
 const prepTimeHours = ref(0);
 const prepTimeMinutes = ref(0);
 const selectPrepTime = (prepTimeType: PrepTimeType, value: string) => {
@@ -222,6 +231,7 @@ const publishBody = (): void => {
 
   const body = {
     name: recipeTitle.value,
+    url: recipeUrl.value,
     authorId: authorToSave?.id || '',
     timeHours: prepTimeHours.value,
     timeMinutes: prepTimeMinutes.value,
@@ -245,6 +255,7 @@ const getAuthors = async (): Promise<void> => {
 const populateWithInitialData = (): void => {
   if (props.initialData) {
     recipeTitle.value = props.initialData.name;
+    recipeUrl.value = props.initialData.url;
     prepTimeHours.value = props.initialData.timeHours;
     prepTimeMinutes.value = props.initialData.timeMinutes;
     recipeCategory.value = props.initialData.category;
@@ -356,6 +367,18 @@ onMounted(async () => {
             :inputError="recipeTitleError"
             @changed="updateRecipeTitle"
             :isDark="recipeTitle !== ''"
+            :withErrorHandling="true"
+          />
+          <TextInputField
+            headline="Recipe URL"
+            type="text"
+            iconName="link-outline"
+            id="recipeUrl"
+            :initialValue="recipeUrl"
+            placeholder="Insert the recipe's URL"
+            :inputError="recipeUrlError"
+            @changed="updateRecipeUrl"
+            :isDark="recipeUrl !== ''"
             :withErrorHandling="true"
           />
           <div class="prep-time">

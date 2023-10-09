@@ -4,6 +4,7 @@ declare namespace Recipes {
   interface Recipe {
     id?: string;
     name: string;
+    url: string;
     author?: Authors.Author;
     authorId: string;
     timeHours: number;

@@ -54,4 +54,7 @@ export default class ValidationService {
 
   public validatePrepStepTitle = (title: string) =>
     title ? '' : 'Please provide a description for the preparation step';
+
+  public validateWebUrl = (url: string) =>
+    url && !url.includes('https://') ? 'Please provide a valid URL' : '';
 }
