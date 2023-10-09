@@ -369,18 +369,25 @@ onMounted(async () => {
             :isDark="recipeTitle !== ''"
             :withErrorHandling="true"
           />
-          <TextInputField
-            headline="Recipe URL"
-            type="text"
-            iconName="link-outline"
-            id="recipeUrl"
-            :initialValue="recipeUrl"
-            placeholder="Insert the recipe's URL"
-            :inputError="recipeUrlError"
-            @changed="updateRecipeUrl"
-            :isDark="recipeUrl !== ''"
-            :withErrorHandling="true"
-          />
+          <div class="url-field">
+            <div class="url-input">
+              <TextInputField
+                headline="Recipe URL"
+                type="text"
+                iconName="link-outline"
+                id="recipeUrl"
+                :initialValue="recipeUrl"
+                placeholder="Insert the recipe's URL"
+                :inputError="recipeUrlError"
+                @changed="updateRecipeUrl"
+                :isDark="recipeUrl !== ''"
+                :withErrorHandling="true"
+              />
+            </div>
+            <a class="url-icon" :href="recipeUrl" target="_blank">
+              <ion-icon name="open-outline" size="small" />
+            </a>
+          </div>
           <div class="prep-time">
             <p class="label"><ion-icon name="time" />&nbsp;Preparation Time</p>
 
@@ -536,6 +543,33 @@ onMounted(async () => {
       padding-right: 2rem;
       flex-wrap: wrap;
       justify-content: space-between;
+
+      .url-field {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+
+        .url-input {
+          width: 90%;
+        }
+
+        .url-icon {
+          padding: 0.4rem 0.5rem;
+          border-radius: 5px;
+          background: $accent-color;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: $bg-color-mid;
+          transition: background-color 0.2s;
+
+          &:hover {
+            cursor: pointer;
+            background-color: $accent-hover-color;
+          }
+        }
+      }
 
       p.label {
         display: flex;
