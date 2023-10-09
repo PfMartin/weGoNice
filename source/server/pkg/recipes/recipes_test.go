@@ -3,7 +3,7 @@ package recipes
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -64,7 +64,7 @@ func TestGetAllRecipes(t *testing.T) {
 
 		res := w.Result()
 		defer res.Body.Close()
-		data, err := ioutil.ReadAll(res.Body)
+		data, err := io.ReadAll(res.Body)
 		if err != nil {
 			t.Errorf("Failed to read body of response %s", err)
 		}
@@ -184,7 +184,7 @@ func TestGetRecipeByID(t *testing.T) {
 		res := w.Result()
 
 		defer res.Body.Close()
-		data, err := ioutil.ReadAll(res.Body)
+		data, err := io.ReadAll(res.Body)
 		if err != nil {
 			t.Errorf("Failed to read body of response %v", err)
 		}
@@ -359,7 +359,7 @@ func TestGetRecipesByAuthorID(t *testing.T) {
 		assert.Equal(t, tt.expectedStatus, res.StatusCode, "Test %s failed:\nExpected: %v | Got: %v", tt.name, tt.expectedStatus, res.StatusCode)
 
 		defer res.Body.Close()
-		data, err := ioutil.ReadAll(res.Body)
+		data, err := io.ReadAll(res.Body)
 		if err != nil {
 			t.Errorf("Failed to read body of response %s", err)
 		}
